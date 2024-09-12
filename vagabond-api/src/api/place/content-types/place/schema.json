@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "places",
+  "info": {
+    "singularName": "place",
+    "pluralName": "places",
+    "displayName": "place",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text",
+      "required": true
+    },
+    "hidden": {
+      "type": "boolean",
+      "default": false,
+      "required": true
+    },
+    "coordinates": {
+      "type": "customField",
+      "customField": "plugin::location-plugin.location"
+    },
+    "mediaURL": {
+      "type": "string"
+    }
+  }
+}
