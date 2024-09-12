@@ -377,9 +377,8 @@ export interface ApiPlacePlace extends Schema.CollectionType {
     title: Attribute.String & Attribute.Required;
     description: Attribute.Text & Attribute.Required;
     hidden: Attribute.Boolean & Attribute.Required & Attribute.DefaultTo<false>;
-    coordinates: Attribute.JSON &
-      Attribute.CustomField<'plugin::location-plugin.location'>;
     mediaURL: Attribute.String;
+    position: Attribute.Component<'gps.location'> & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;

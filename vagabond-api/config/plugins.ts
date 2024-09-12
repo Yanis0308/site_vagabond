@@ -1,5 +1,5 @@
 export default () => ({
-  "location-plugin": {
-    enabled:  true,
-  },
+  // "location-plugin": {
+  //   enabled:  false,
+  // },
 });

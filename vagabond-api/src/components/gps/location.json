@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_gps_locations",
+  "info": {
+    "displayName": "Location",
+    "icon": "pinMap"
+  },
+  "options": {},
+  "attributes": {
+    "latitude": {
+      "type": "float",
+      "required": true
+    },
+    "longitude": {
+      "type": "float"
+    }
+  }
+}

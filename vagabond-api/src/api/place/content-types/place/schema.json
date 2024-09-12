@@ -25,12 +25,14 @@
       "default": false,
       "required": true
     },
-    "coordinates": {
-      "type": "customField",
-      "customField": "plugin::location-plugin.location"
-    },
     "mediaURL": {
       "type": "string"
+    },
+    "position": {
+      "type": "component",
+      "repeatable": false,
+      "component": "gps.location",
+      "required": true
     }
   }
 }
