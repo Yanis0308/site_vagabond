@@ -33,6 +33,12 @@
       "repeatable": false,
       "component": "gps.location",
       "required": true
+    },
+    "note": {
+      "type": "decimal",
+      "required": false,
+      "max": 10,
+      "min": 0
     }
   }
 }

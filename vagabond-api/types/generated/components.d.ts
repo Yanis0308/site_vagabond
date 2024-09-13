@@ -1,10 +1,10 @@
-import type { Schema, Attribute } from '@strapi/strapi';
+import type { Schema, Attribute } from "@strapi/strapi";
 
 export interface GpsLocation extends Schema.Component {
-  collectionName: 'components_gps_locations';
+  collectionName: "components_gps_locations";
   info: {
-    displayName: 'Location';
-    icon: 'pinMap';
+    displayName: "Location";
+    icon: "pinMap";
   };
   attributes: {
     latitude: Attribute.Float & Attribute.Required;
@@ -12,10 +12,10 @@ export interface GpsLocation extends Schema.Component {
   };
 }
 
-declare module '@strapi/types' {
+declare module "@strapi/types" {
   export module Shared {
     export interface Components {
-      'gps.location': GpsLocation;
+      "gps.location": GpsLocation;
     }
   }
 }
