@@ -22,7 +22,7 @@ export const ClusterMaker = ({ onPress, data }: ClusterMakerProps) => {
     redrawOnMap();
   });
 
-  console.log("rendering cluster", properties.cluster_id);
+  // console.log("rendering cluster", properties.cluster_id);
 
   const onPressMemoized = useCallback(() => {
     onPress(data);

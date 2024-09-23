@@ -6,6 +6,9 @@ import { Place, PlaceMarker } from "@/components/PlaceMarker";
 import useSupercluster from "use-supercluster";
 import Supercluster, { ClusterProperties } from "supercluster";
 import { ClusterMaker } from "@/components/ClusterMaker";
+import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
+import { PlaceDetailsSheet } from "@/components/PlaceDetailsSheet";
 
 const isClusterPoint = (
   pointProperties: Supercluster.PointFeature<Place | ClusterProperties>,
@@ -15,6 +18,8 @@ const isClusterPoint = (
 
 export default function MapsTab() {
   const mapRef = useRef<MapView>(null);
+
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
 
   // const [location, setLocation] = useState<LocationObject | null>(null);
   // const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -70,25 +75,6 @@ export default function MapsTab() {
     }, // Paramètres du clustering
   });
 
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       setErrorMsg("Permission to access location was denied");
-  //       return;
-  //     }
-  //
-  //     let location = await Location.getCurrentPositionAsync({});
-  //     setLocation(location);
-  //   })();
-  // }, []);
-
-  // let text = "Waiting..";
-  // if (errorMsg) {
-  //   text = errorMsg;
-  // } else if (location) {
-  //   text = JSON.stringify(location);
-  // }
 
   console.log("maps rendering");
 
@@ -108,7 +94,8 @@ export default function MapsTab() {
   );
 
   return (
-    <View style={styles.container}>
+    <Box style={styles.container}>
+      <PlaceDetailsSheet place={selectedPlace} handleClose={() => setSelectedPlace(null)}/>
       <MapView
         ref={mapRef}
         style={styles.map}
@@ -131,12 +118,16 @@ export default function MapsTab() {
               <PlaceMarker
                 key={`place-${cluster.properties.id}`}
                 place={cluster.properties}
+                onSelect={() => setSelectedPlace(cluster.properties)}
               />
             );
           }
         })}
       </MapView>
-    </View>
+      <Button onPress={() => setSelectedPlace(placesData.data[0])}>
+        <ButtonText>Open</ButtonText>
+      </Button>
+    </Box>
   );
 }
 
@@ -145,7 +136,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   map: {
-    width: "100%",
-    height: "100%",
+    // width: "100%",
+    // height: "100%",
+    flex:1
   },
 });

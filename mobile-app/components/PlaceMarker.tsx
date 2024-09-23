@@ -7,14 +7,13 @@ export type Place = (typeof placesData)["data"][number];
 
 type PlaceMarkerProps = {
   place: Place;
+  onSelect: () => void
 };
 
-export const PlaceMarker = ({ place }: PlaceMarkerProps) => {
+export const PlaceMarker = ({ place, onSelect }: PlaceMarkerProps) => {
   const markerSize = 50;
   const imgSize = markerSize * 0.9;
-  if (place.id === 33 || true) {
-    console.log("rendering place", place.id);
-  }
+  // console.log("rendering place", place.id);
 
   const markerRef = useRef<MapMarker>(null);
 
@@ -33,6 +32,7 @@ export const PlaceMarker = ({ place }: PlaceMarkerProps) => {
       title={place.attributes.title}
       description={place.attributes.description}
       tracksViewChanges={false}
+      onSelect={onSelect}
     >
       <View
         style={{
