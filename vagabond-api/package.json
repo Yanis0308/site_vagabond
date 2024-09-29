@@ -1,39 +1,38 @@
 {
   "name": "vagabond-api",
-  "private": true,
   "version": "0.1.0",
+  "private": true,
   "description": "A Strapi application",
-  "scripts": {
-    "develop": "strapi develop",
-    "develop-debug": "strapi develop --debug",
-    "start": "strapi start",
-    "build": "strapi build",
-    "strapi": "strapi",
-    "deploy": "strapi deploy"
-  },
-  "dependencies": {
-    "@strapi/plugin-cloud": "4.25.12",
-    "@strapi/plugin-documentation": "^4.25.11",
-    "@strapi/plugin-i18n": "4.25.12",
-    "@strapi/plugin-users-permissions": "4.25.12",
-    "@strapi/strapi": "4.25.12",
-    "better-sqlite3": "8.6.0",
-    "pg": "^8.12.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
-    "react-router-dom": "5.3.4",
-    "styled-components": "5.3.3"
-  },
+  "license": "MIT",
   "author": {
     "name": "A Strapi developer"
   },
-  "strapi": {
-    "uuid": "4a0ef165-18e0-4e19-80bd-b4a19e47f776",
-    "telemetryDisabled": true
+  "scripts": {
+    "build": "strapi build",
+    "deploy": "strapi deploy",
+    "develop": "strapi develop",
+    "develop-debug": "strapi develop --debug",
+    "start": "strapi start",
+    "strapi": "strapi"
+  },
+  "dependencies": {
+    "@strapi/email": "^5.0.0-rc.30",
+    "@strapi/plugin-cloud": "5.0.1",
+    "@strapi/plugin-documentation": "^5.0.1",
+    "@strapi/plugin-users-permissions": "5.0.1",
+    "@strapi/strapi": "5.0.1",
+    "pg": "^8.12.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "^6.0.0",
+    "styled-components": "^6.0.0"
   },
   "engines": {
     "node": "20",
     "npm": ">=6.0.0"
   },
-  "license": "MIT"
+  "strapi": {
+    "uuid": "4a0ef165-18e0-4e19-80bd-b4a19e47f776",
+    "telemetryDisabled": true
+  }
 }
