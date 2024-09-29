@@ -1,13 +1,13 @@
-import { View, Text, ImageBackground } from "react-native";
-import { useEffect, useRef } from "react";
-import { MapMarker, Marker } from "react-native-maps";
+import { Text } from "@/components/ui/text";
 import { placesData } from "@/constants/Places";
-
+import { useEffect, useRef } from "react";
+import { ImageBackground, View } from "react-native";
+import { MapMarker, Marker } from "react-native-maps";
 export type Place = (typeof placesData)["data"][number];
 
 type PlaceMarkerProps = {
   place: Place;
-  onSelect: () => void
+  onSelect: () => void;
 };
 
 export const PlaceMarker = ({ place, onSelect }: PlaceMarkerProps) => {
@@ -18,7 +18,9 @@ export const PlaceMarker = ({ place, onSelect }: PlaceMarkerProps) => {
   const markerRef = useRef<MapMarker>(null);
 
   const redrawOnMap = () => {
-    if (markerRef.current?.redraw) markerRef.current?.redraw();
+    if (markerRef.current !== null && "redraw" in markerRef.current) {
+      // markerRef.current.redraw();
+    }
   };
 
   useEffect(() => {
@@ -34,6 +36,10 @@ export const PlaceMarker = ({ place, onSelect }: PlaceMarkerProps) => {
       tracksViewChanges={false}
       onSelect={onSelect}
     >
+      {/* This not works without reason and made entire app blank crash */}
+      {/*<Callout>*/}
+      {/*  <Text>Empty me</Text>*/}
+      {/*</Callout>*/}
       <View
         style={{
           flex: 1,

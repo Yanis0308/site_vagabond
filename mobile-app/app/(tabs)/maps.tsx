@@ -1,14 +1,15 @@
-import React, { useCallback, useRef, useState } from "react";
-import MapView from "react-native-maps";
-import { StyleSheet, View } from "react-native";
-import { placesData } from "@/constants/Places";
-import { Place, PlaceMarker } from "@/components/PlaceMarker";
-import useSupercluster from "use-supercluster";
-import Supercluster, { ClusterProperties } from "supercluster";
 import { ClusterMaker } from "@/components/ClusterMaker";
-import { Box } from "@/components/ui/box";
-import { Button, ButtonText } from "@/components/ui/button";
 import { PlaceDetailsSheet } from "@/components/PlaceDetailsSheet";
+import { Place, PlaceMarker } from "@/components/PlaceMarker";
+import { Box } from "@/components/ui/box";
+import { placesData } from "@/constants/Places";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { router } from "expo-router";
+import React, { useCallback, useRef, useState } from "react";
+import { StyleSheet } from "react-native";
+import MapView from "react-native-maps";
+import Supercluster, { ClusterProperties } from "supercluster";
+import useSupercluster from "use-supercluster";
 
 const isClusterPoint = (
   pointProperties: Supercluster.PointFeature<Place | ClusterProperties>,
@@ -19,7 +20,7 @@ const isClusterPoint = (
 export default function MapsTab() {
   const mapRef = useRef<MapView>(null);
 
-  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null)
+  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
 
   // const [location, setLocation] = useState<LocationObject | null>(null);
   // const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -75,9 +76,6 @@ export default function MapsTab() {
     }, // Paramètres du clustering
   });
 
-
-  console.log("maps rendering");
-
   const onPressCluster = useCallback(
     ({ id, geometry }: Supercluster.PointFeature<ClusterProperties>) => {
       const [longitude, latitude] = geometry.coordinates;
@@ -93,41 +91,62 @@ export default function MapsTab() {
     [mapRef.current],
   );
 
+  console.log("maps rendering");
+
   return (
-    <Box style={styles.container}>
-      <PlaceDetailsSheet place={selectedPlace} handleClose={() => setSelectedPlace(null)}/>
-      <MapView
-        ref={mapRef}
-        style={styles.map}
-        initialRegion={region}
-        onRegionChangeComplete={setRegion}
-        showsUserLocation
-        showsMyLocationButton
-      >
-        {clusters.map((cluster) => {
-          if (isClusterPoint(cluster)) {
-            return (
-              <ClusterMaker
-                key={`cluster-${cluster.id}`}
-                onPress={onPressCluster}
-                data={cluster}
-              />
-            );
-          } else {
-            return (
-              <PlaceMarker
-                key={`place-${cluster.properties.id}`}
-                place={cluster.properties}
-                onSelect={() => setSelectedPlace(cluster.properties)}
-              />
-            );
-          }
-        })}
-      </MapView>
-      <Button onPress={() => setSelectedPlace(placesData.data[0])}>
-        <ButtonText>Open</ButtonText>
-      </Button>
-    </Box>
+    <BottomSheetModalProvider>
+      <Box style={styles.container}>
+        <PlaceDetailsSheet
+          place={selectedPlace}
+          onPressLink={() => {
+            router.push({
+              pathname: "/place-details/[place]",
+              params: { place: `${selectedPlace?.id ?? 33}` },
+            });
+          }}
+        />
+        <MapView
+          ref={mapRef}
+          style={styles.map}
+          initialRegion={region}
+          onRegionChangeComplete={setRegion}
+          showsUserLocation
+          showsMyLocationButton
+          mapType={"hybrid"}
+          showsPointsOfInterest={false}
+          customMapStyle={[
+            {
+              elementType: "labels",
+              stylers: [
+                {
+                  visibility: "off",
+                },
+              ],
+            },
+          ]}
+        >
+          {clusters.map((cluster) => {
+            if (isClusterPoint(cluster)) {
+              return (
+                <ClusterMaker
+                  key={`cluster-${cluster.id}`}
+                  onPress={onPressCluster}
+                  data={cluster}
+                />
+              );
+            } else {
+              return (
+                <PlaceMarker
+                  key={`place-${cluster.properties.id}`}
+                  place={cluster.properties}
+                  onSelect={() => setSelectedPlace(cluster.properties)}
+                />
+              );
+            }
+          })}
+        </MapView>
+      </Box>
+    </BottomSheetModalProvider>
   );
 }
 
@@ -138,6 +157,6 @@ const styles = StyleSheet.create({
   map: {
     // width: "100%",
     // height: "100%",
-    flex:1
+    flex: 1,
   },
 });

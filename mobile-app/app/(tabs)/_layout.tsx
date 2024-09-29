@@ -16,6 +16,16 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
+        name="maps"
+        options={{
+          title: "Map",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? "map" : "map-outline"} color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
         name="index"
         options={{
           title: "Home",
