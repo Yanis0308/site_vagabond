@@ -4,6 +4,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "mobile-app",
   slug: "mobile-app",
+  owner: "vagabond-app", // Expo account name
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
@@ -71,7 +72,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       origin: false,
     },
     eas: {
-      projectId: process.env.EAS_PROJECT_ID,
+      projectId: "1ab4c082-bc8a-41b0-826f-fc4d53216d2d",
     },
   },
 });

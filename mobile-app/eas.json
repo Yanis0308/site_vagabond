@@ -5,13 +5,31 @@
   },
   "build": {
     "development": {
+      "android": {
+        "image": "latest"
+      },
+      "ios": {
+        "image": "latest"
+      },
       "developmentClient": true,
       "distribution": "internal"
     },
     "preview": {
+      "android": {
+        "image": "latest"
+      },
+      "ios": {
+        "image": "latest"
+      },
       "distribution": "internal"
     },
     "production": {
+      "android": {
+        "image": "latest"
+      },
+      "ios": {
+        "image": "latest"
+      },
       "autoIncrement": true
     }
   },
