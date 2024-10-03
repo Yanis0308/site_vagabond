@@ -1,6 +1,6 @@
 import { Text } from "@/components/ui/text";
 import { placesData } from "@/constants/Places";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ImageBackground, View } from "react-native";
 import { MapMarker, Marker } from "react-native-maps";
 export type Place = (typeof placesData)["data"][number];
@@ -11,7 +11,7 @@ type PlaceMarkerProps = {
 };
 
 export const PlaceMarker = ({ place, onSelect }: PlaceMarkerProps) => {
-  const markerSize = 50;
+  const markerSize = 40;
   const imgSize = markerSize * 0.9;
   // console.log("rendering place", place.id);
 
@@ -19,13 +19,16 @@ export const PlaceMarker = ({ place, onSelect }: PlaceMarkerProps) => {
 
   const redrawOnMap = () => {
     if (markerRef.current !== null && "redraw" in markerRef.current) {
-      // markerRef.current.redraw();
+      console.log("redraw", place.id);
+      markerRef.current.redraw();
     }
   };
 
-  useEffect(() => {
-    redrawOnMap();
-  });
+  // C'est trop fréquent pour peu de raison
+  // useEffect(() => {
+  //   console.log("redraw", place.id);
+  //   redrawOnMap();
+  // });
 
   return (
     <Marker

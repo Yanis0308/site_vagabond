@@ -1,14 +1,15 @@
+import "dotenv/config";
 import { ConfigContext, ExpoConfig } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
-  name: "mobile-app",
-  slug: "mobile-app",
+  name: "vagabond-app", // For Expo Go and standalone app
+  slug: "mobile-app", // For Expo EAS project
   owner: "vagabond-app", // Expo account name
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
-  scheme: "myapp",
+  scheme: "vagabond-app", // URL Scheme to open the app, here vagabond://mylinkexample
   userInterfaceStyle: "automatic",
   splash: {
     image: "./assets/images/splash.png",
@@ -16,6 +17,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     backgroundColor: "#ffffff",
   },
   ios: {
+    bundleIdentifier: "com.vagabond.explore.tourism",
     supportsTablet: true,
   },
   android: {
@@ -27,7 +29,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "android.permission.ACCESS_COARSE_LOCATION",
       "android.permission.ACCESS_FINE_LOCATION",
     ],
-    package: "com.benoitctrl.mobileapp",
+    package: "com.vagabond.explore.tourism",
     config: {
       googleMaps: {
         apiKey: process.env.GOOGLE_MAPS_API_KEY,
@@ -55,6 +57,19 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         photosPermission:
           "The app accesses your photos to let you share them with your friends.",
+      },
+    ],
+    [
+      "@react-native-google-signin/google-signin",
+      {
+        iosUrlScheme: process.env.GOOGLE_SIGN_IN_IOS_REVERSED_CLIENT_ID,
+      },
+    ],
+    [
+      "expo-secure-store",
+      {
+        faceIDPermission:
+          "Allow $(PRODUCT_NAME) to access your Face ID biometric data.",
       },
     ],
     [

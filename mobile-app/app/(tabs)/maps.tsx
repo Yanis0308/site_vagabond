@@ -3,9 +3,11 @@ import { PlaceDetailsSheet } from "@/components/PlaceDetailsSheet";
 import { Place, PlaceMarker } from "@/components/PlaceMarker";
 import { Box } from "@/components/ui/box";
 import { placesData } from "@/constants/Places";
+import { useUserMe } from "@/hooks/queries/useUserMe";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
-import React, { useCallback, useRef, useState } from "react";
+import { BBox } from "geojson";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { StyleSheet } from "react-native";
 import MapView from "react-native-maps";
 import Supercluster, { ClusterProperties } from "supercluster";
@@ -18,6 +20,8 @@ const isClusterPoint = (
 };
 
 export default function MapsTab() {
+  const { data, isPending } = useUserMe();
+  // console.log("userData", data);
   const mapRef = useRef<MapView>(null);
 
   const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
@@ -25,21 +29,23 @@ export default function MapsTab() {
   // const [location, setLocation] = useState<LocationObject | null>(null);
   // const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const points: Supercluster.PointFeature<Place>[] = placesData.data.map(
-    (place) => {
-      return {
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [
-            // Longitude is before Latitude in GeoJSON
-            place.attributes.position.longitude,
-            place.attributes.position.latitude,
-          ],
-        },
-        properties: place,
-      };
-    },
+  const points: Supercluster.PointFeature<Place>[] = useMemo(
+    () =>
+      placesData.data.map((place) => {
+        return {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [
+              // Longitude is before Latitude in GeoJSON
+              place.attributes.position.longitude,
+              place.attributes.position.latitude,
+            ],
+          },
+          properties: place,
+        };
+      }),
+    [],
   );
 
   // Dimensions et région de la carte
@@ -50,23 +56,26 @@ export default function MapsTab() {
     longitudeDelta: 0.05,
   });
 
-  const bounds = {
-    // Calculer les limites de la carte (bounding box) pour Supercluster
-    // Divide by 2 for only displaying inside view clusters
-    north: region.latitude + region.latitudeDelta * 2,
-    south: region.latitude - region.latitudeDelta * 2,
-    east: region.longitude + region.longitudeDelta * 2,
-    west: region.longitude - region.longitudeDelta * 2,
-  };
+  const bounds = useMemo<BBox>(
+    () =>
+      // Calculer les limites de la carte (bounding box) pour Supercluster
+      // Divide by 2 for only displaying inside view clusters
+      [
+        region.longitude - region.longitudeDelta * 2, // west
+        region.latitude - region.latitudeDelta * 2, // south
+        region.longitude + region.longitudeDelta * 2, // east
+        region.latitude + region.latitudeDelta * 2, // north
+      ],
+    [region],
+  );
 
-  // Utilisation du hook useSupercluster
   const { clusters, supercluster } = useSupercluster({
     points,
-    bounds: [bounds.west, bounds.south, bounds.east, bounds.north],
+    bounds,
     zoom: Math.round(Math.log(360 / region.longitudeDelta) / Math.LN2), // Calcul du zoom à partir de la delta
     options: {
       minZoom: 0, // default
-      maxZoom: 20, // default 20
+      maxZoom: 10, // default 20
       minPoints: 3, // default 2
       radius: 75, // default 40 in pixels
       // extent: 512
@@ -78,6 +87,10 @@ export default function MapsTab() {
 
   const onPressCluster = useCallback(
     ({ id, geometry }: Supercluster.PointFeature<ClusterProperties>) => {
+      if (mapRef.current === null) {
+        return;
+      }
+
       const [longitude, latitude] = geometry.coordinates;
 
       const expansionZoom = supercluster
@@ -88,9 +101,11 @@ export default function MapsTab() {
         zoom: expansionZoom,
       });
     },
-    [mapRef.current],
+    [supercluster],
   );
 
+  //TODO: effectuer le calcul des cluster avec onRegionChange au lieu de onRegionChangeComplete
+  // mais avec un debounce ou throttle
   console.log("maps rendering");
 
   return (

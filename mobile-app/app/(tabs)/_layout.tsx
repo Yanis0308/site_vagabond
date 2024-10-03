@@ -1,12 +1,19 @@
-import { Tabs } from "expo-router";
+import { Redirect, Tabs } from "expo-router";
 import React from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
+import { useSession } from "@/contexts/AuthContext";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const { session } = useSession();
+
+  if (!session) {
+    console.log("--- You're disconnected and redirected to sign-in page");
+    return <Redirect href="/sign-in" />;
+  }
 
   return (
     <Tabs

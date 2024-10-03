@@ -1,7 +1,7 @@
-import { MapMarker, Marker } from "react-native-maps";
 import React, { useCallback, useEffect, useRef } from "react";
+import { Text, View } from "react-native";
+import { MapMarker, Marker } from "react-native-maps";
 import Supercluster, { ClusterProperties } from "supercluster";
-import { View, Text } from "react-native";
 
 type ClusterMakerProps = {
   onPress: (data: Supercluster.PointFeature<ClusterProperties>) => void;

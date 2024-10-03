@@ -80,7 +80,8 @@ export const PlaceDetailsSheet = ({
             </Button>
           </Center>
           <Text size={"lg"}>
-            {place?.attributes.description} {randomParagraph}
+            {place?.attributes.description}
+            {/*{randomParagraph}*/}
           </Text>
         </VStack>
       </BottomSheetView>
