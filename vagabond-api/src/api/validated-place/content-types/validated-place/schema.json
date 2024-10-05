@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "validated_places",
+  "info": {
+    "singularName": "validated-place",
+    "pluralName": "validated-places",
+    "displayName": "Validated Place",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "position": {
+      "type": "component",
+      "repeatable": false,
+      "component": "gps.location",
+      "required": true,
+      "private": true
+    },
+    "photo": {
+      "type": "media",
+      "multiple": false,
+      "required": true,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "place": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::place.place"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}

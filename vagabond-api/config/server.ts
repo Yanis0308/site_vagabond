@@ -8,4 +8,6 @@ export default ({ env }) => ({
   webhooks: {
     populateRelations: env.bool("WEBHOOKS_POPULATE_RELATIONS", false),
   },
+  //TODO: ne fonctionne pas ?
+  logger: { config: { level: "debug" } },
 });

@@ -5,7 +5,7 @@ export interface ApiPlacePlace extends Struct.CollectionTypeSchema {
   info: {
     singularName: "place";
     pluralName: "places";
-    displayName: "place";
+    displayName: "Place";
     description: "";
   };
   options: {
@@ -37,6 +37,43 @@ export interface ApiPlacePlace extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     locale: Schema.Attribute.String;
     localizations: Schema.Attribute.Relation<"oneToMany", "api::place.place">;
+  };
+}
+
+export interface ApiValidatedPlaceValidatedPlace
+  extends Struct.CollectionTypeSchema {
+  collectionName: "validated_places";
+  info: {
+    singularName: "validated-place";
+    pluralName: "validated-places";
+    displayName: "Validated Place";
+    description: "";
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    position: Schema.Attribute.Component<"gps.location", false> &
+      Schema.Attribute.Required &
+      Schema.Attribute.Private;
+    photo: Schema.Attribute.Media<"images"> & Schema.Attribute.Required;
+    place: Schema.Attribute.Relation<"oneToOne", "api::place.place">;
+    users_permissions_user: Schema.Attribute.Relation<
+      "oneToOne",
+      "plugin::users-permissions.user"
+    >;
+    createdAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    publishedAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+    updatedBy: Schema.Attribute.Relation<"oneToOne", "admin::user"> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String;
+    localizations: Schema.Attribute.Relation<
+      "oneToMany",
+      "api::validated-place.validated-place"
+    >;
   };
 }
 
@@ -891,6 +928,7 @@ declare module "@strapi/strapi" {
   export module Public {
     export interface ContentTypeSchemas {
       "api::place.place": ApiPlacePlace;
+      "api::validated-place.validated-place": ApiValidatedPlaceValidatedPlace;
       "plugin::upload.file": PluginUploadFile;
       "plugin::upload.folder": PluginUploadFolder;
       "plugin::i18n.locale": PluginI18NLocale;
