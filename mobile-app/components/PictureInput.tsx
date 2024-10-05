@@ -11,25 +11,24 @@ import {
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { UploadFileParams } from "@/hooks/mutations/useUploadFileMutation";
 import * as ImagePicker from "expo-image-picker";
 import { Camera, ImagePlus, Images } from "lucide-react-native";
 import { useState } from "react";
 
 type PictureInputProps = {
   //TODO: problème de typage du watch
-  currentImage: string | undefined;
-  setImage: (newImage: string) => void;
+  currentImageInfo: UploadFileParams | undefined;
+  setImageInfo: (newImageInfo: UploadFileParams) => void;
   resetImage: () => void;
 };
 
 export const PictureInput = ({
-  currentImage,
-  setImage,
+  currentImageInfo,
+  setImageInfo,
   resetImage,
 }: PictureInputProps) => {
   const [showModal, setShowModal] = useState(false);
-
-  console.log("currentImage", currentImage);
 
   const openCamera = async () => {
     await ImagePicker.requestCameraPermissionsAsync();
@@ -41,8 +40,8 @@ export const PictureInput = ({
 
     console.log(result);
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
+    if (!result.canceled && result.assets && result.assets[0] !== undefined) {
+      setImageInfo(result.assets[0]);
       setShowModal(false);
     }
   };
@@ -55,8 +54,8 @@ export const PictureInput = ({
 
     console.log(result);
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
+    if (!result.canceled && result.assets && result.assets[0] !== undefined) {
+      setImageInfo(result.assets[0]);
       setShowModal(false);
     }
   };
@@ -65,14 +64,14 @@ export const PictureInput = ({
     <Box className={"h-full flex-1"}>
       <Pressable
         onPress={() => setShowModal(true)}
-        disabled={currentImage !== undefined}
+        disabled={currentImageInfo !== undefined}
       >
         <VStack
           className={
             "h-52 flex-1 flex-col items-center justify-center rounded border border-gray-300"
           }
         >
-          {currentImage === undefined ? (
+          {currentImageInfo === undefined ? (
             <>
               <Icon
                 className="h-32 w-full text-typography-500"
@@ -85,7 +84,7 @@ export const PictureInput = ({
           ) : (
             <>
               <Image
-                source={{ uri: currentImage }}
+                source={{ uri: currentImageInfo.uri }}
                 alt={"your image"}
                 resizeMode={"contain"}
                 className={"h-full w-full"}

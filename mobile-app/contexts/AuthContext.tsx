@@ -15,18 +15,20 @@ export const AuthContext = createContext<{
 
 // This hook can be used to access the user info.
 export function useSession() {
-  const value = useContext(AuthContext);
-  if (process.env.NODE_ENV !== "production") {
-    if (!value) {
-      throw new Error("useSession must be wrapped in a <SessionProvider />");
-    }
-  }
-
-  return value;
+  return useContext(AuthContext);
 }
 
-export function SessionProvider({ children }: PropsWithChildren) {
-  const [[isLoading, session], setSession] = useStorageState("session");
+type SessionProviderProps = PropsWithChildren & {
+  defaultSession: string | null;
+};
+export function SessionProvider({
+  defaultSession,
+  children,
+}: SessionProviderProps) {
+  const [[isLoading, session], setSession] = useStorageState(
+    "session",
+    defaultSession,
+  );
 
   return (
     <AuthContext.Provider

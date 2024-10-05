@@ -1,10 +1,10 @@
-import { Place } from "@/components/PlaceMarker";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
 import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
+import { PlaceType } from "@/http/places";
 import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import React, {
   useCallback,
@@ -16,7 +16,7 @@ import React, {
 import { StyleSheet } from "react-native";
 
 type PlaceDetailsSheetV2Props = {
-  place: Place | null;
+  place: PlaceType | null;
   // handleClose: () => void;
   onPressLink: () => void;
 };
@@ -66,7 +66,7 @@ export const PlaceDetailsSheet = ({
         <VStack className="w-full gap-5 px-10 pb-10">
           <Center className={"gap-5"}>
             <Heading size={"2xl"} className={"text-center"}>
-              🏛️ {place?.attributes.title}
+              🏛️ {place?.title}
             </Heading>
             <Image
               size="2xl"
@@ -80,7 +80,7 @@ export const PlaceDetailsSheet = ({
             </Button>
           </Center>
           <Text size={"lg"}>
-            {place?.attributes.description}
+            {place?.description}
             {/*{randomParagraph}*/}
           </Text>
         </VStack>

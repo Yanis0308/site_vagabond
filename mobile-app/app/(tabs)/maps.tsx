@@ -1,9 +1,9 @@
 import { ClusterMaker } from "@/components/ClusterMaker";
 import { PlaceDetailsSheet } from "@/components/PlaceDetailsSheet";
-import { Place, PlaceMarker } from "@/components/PlaceMarker";
+import { PlaceMarker } from "@/components/PlaceMarker";
 import { Box } from "@/components/ui/box";
-import { placesData } from "@/constants/Places";
-import { useUserMe } from "@/hooks/queries/useUserMe";
+import { usePlaces } from "@/hooks/queries/usePlaces";
+import { PlaceType } from "@/http/places";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { router } from "expo-router";
 import { BBox } from "geojson";
@@ -14,39 +14,36 @@ import Supercluster, { ClusterProperties } from "supercluster";
 import useSupercluster from "use-supercluster";
 
 const isClusterPoint = (
-  pointProperties: Supercluster.PointFeature<Place | ClusterProperties>,
+  pointProperties: Supercluster.PointFeature<PlaceType | ClusterProperties>,
 ): pointProperties is Supercluster.PointFeature<ClusterProperties> => {
   return "cluster" in pointProperties.properties;
 };
 
 export default function MapsTab() {
-  const { data, isPending } = useUserMe();
-  // console.log("userData", data);
   const mapRef = useRef<MapView>(null);
+  const { data: placesData } = usePlaces();
 
-  const [selectedPlace, setSelectedPlace] = useState<Place | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<PlaceType | null>(null);
 
-  // const [location, setLocation] = useState<LocationObject | null>(null);
-  // const [errorMsg, setErrorMsg] = useState<string | null>(null);
-
-  const points: Supercluster.PointFeature<Place>[] = useMemo(
-    () =>
-      placesData.data.map((place) => {
-        return {
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [
-              // Longitude is before Latitude in GeoJSON
-              place.attributes.position.longitude,
-              place.attributes.position.latitude,
-            ],
-          },
-          properties: place,
-        };
-      }),
-    [],
-  );
+  const points: Supercluster.PointFeature<PlaceType>[] = useMemo(() => {
+    if (placesData === undefined) {
+      return [];
+    }
+    return placesData.map((place) => {
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [
+            // Longitude is before Latitude in GeoJSON
+            place.position.longitude,
+            place.position.latitude,
+          ],
+        },
+        properties: place,
+      };
+    });
+  }, [placesData]);
 
   // Dimensions et région de la carte
   const [region, setRegion] = useState({
@@ -92,6 +89,9 @@ export default function MapsTab() {
       }
 
       const [longitude, latitude] = geometry.coordinates;
+      if (longitude === undefined || latitude === undefined) {
+        return;
+      }
 
       const expansionZoom = supercluster
         ? Math.min(supercluster.getClusterExpansionZoom(Number(id)), 20)

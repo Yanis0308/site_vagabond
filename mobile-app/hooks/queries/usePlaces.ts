@@ -1,14 +1,14 @@
 import { useSession } from "@/contexts/AuthContext";
-import { getUsersMe } from "@/http/users-me";
+import { getPlaces } from "@/http/places";
 import { useQuery } from "@tanstack/react-query";
 
-export const useUserMe = () => {
+export const usePlaces = () => {
   const { session } = useSession();
 
   return useQuery({
-    queryKey: ["users-me"],
+    queryKey: ["places"],
     queryFn: async () => {
-      return await getUsersMe(session);
+      return await getPlaces(session);
     },
   });
 };

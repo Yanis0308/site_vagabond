@@ -7,22 +7,22 @@ import {
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { queryClient } from "@/constants/QueryClient";
 import { SessionProvider } from "@/contexts/AuthContext";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import * as Location from "expo-location";
+import * as SecureStore from "expo-secure-store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "../global.css";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-const queryClient = new QueryClient();
+void SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   void Location.enableNetworkProviderAsync();
@@ -32,9 +32,11 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
 
+  const [defaultSession] = useState(SecureStore.getItem("session"));
+
   useEffect(() => {
     if (loaded) {
-      SplashScreen.hideAsync();
+      void SplashScreen.hideAsync();
     }
   }, [loaded]);
 
@@ -43,7 +45,7 @@ export default function RootLayout() {
   }
 
   return (
-    <SessionProvider>
+    <SessionProvider defaultSession={defaultSession}>
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <GluestackUIProvider>

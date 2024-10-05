@@ -51,6 +51,7 @@
     "expo-status-bar": "~1.12.1",
     "expo-system-ui": "~3.0.7",
     "expo-web-browser": "~13.0.3",
+    "geojson": "^0.5.0",
     "ky": "^1.7.2",
     "lucide-react-native": "^0.446.0",
     "nativewind": "4.0.36",
@@ -72,6 +73,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/geojson": "^7946.0.14",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.45",
     "@types/react-test-renderer": "^18.0.7",

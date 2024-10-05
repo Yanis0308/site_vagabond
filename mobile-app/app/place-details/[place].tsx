@@ -14,7 +14,9 @@ import {
 import { Input, InputField } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { placesData } from "@/constants/Places";
+import { useUploadFileMutation } from "@/hooks/mutations/useUploadFileMutation";
+import { useValidatePlaceMutation } from "@/hooks/mutations/useValidatePlaceMutation";
+import { usePlaces } from "@/hooks/queries/usePlaces";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Location from "expo-location";
 import { useLocalSearchParams } from "expo-router";
@@ -24,29 +26,23 @@ import { Controller, useForm } from "react-hook-form";
 import { ScrollView } from "react-native";
 import { z } from "zod";
 
-type PlaceDetailsProps = {};
-
 const ValidatePlaceSchema = z.object({
   position: z.object({ lat: z.number(), lng: z.number() }),
-  imageUrl: z.string().url(),
+  imageInfo: z.object({
+    uri: z.string().url(),
+    fileName: z.string(),
+    mimeType: z.string(),
+  }),
 });
 
 type ValidatePlaceType = z.infer<typeof ValidatePlaceSchema>;
-type ValidatePlacePartial = Partial<z.infer<typeof ValidatePlaceSchema>>;
 
-export default function PlaceDetails({}: PlaceDetailsProps) {
+export default function PlaceDetails() {
+  const { data: placesData } = usePlaces();
   const { place: placeId } = useLocalSearchParams<{ place: string }>();
-  const place = placesData.data.find(
+  const place = placesData?.find(
     (placeElement) => `${placeElement.id}` === placeId,
   );
-
-  if (place === undefined) {
-    return (
-      <Box>
-        <Text>Error - Missing place</Text>
-      </Box>
-    );
-  }
 
   const {
     handleSubmit,
@@ -54,15 +50,32 @@ export default function PlaceDetails({}: PlaceDetailsProps) {
     control,
     watch,
     setValue,
-    resetField,
+    formState: { isSubmitting },
   } = useForm<ValidatePlaceType>({
     resolver: zodResolver(ValidatePlaceSchema),
     mode: "all",
-    defaultValues: { imageUrl: undefined },
+    defaultValues: { imageInfo: undefined },
   });
 
-  const onSubmit = (data: ValidatePlaceType) => {
+  const uploadFile = useUploadFileMutation();
+  const validatePlace = useValidatePlaceMutation();
+
+  const onSubmit = async (data: ValidatePlaceType) => {
     console.log("submiting with ", data);
+    try {
+      const [{ id: uploadedFileId }] = await uploadFile.mutateAsync(
+        data.imageInfo,
+      );
+      console.log("uploadedFileId", uploadedFileId);
+      await validatePlace.mutateAsync({
+        place: placeId,
+        users_permissions_user: 2,
+        position: { latitude: data.position.lat, longitude: data.position.lng },
+        photo: uploadedFileId,
+      });
+    } catch (error) {
+      console.error("error in submitting", error);
+    }
   };
 
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -85,13 +98,21 @@ export default function PlaceDetails({}: PlaceDetailsProps) {
         { shouldValidate: true },
       );
     })();
-  }, []);
+  }, [setValue]);
 
   let text = "Waiting..";
   if (errorMsg) {
     text = errorMsg;
   } else if (watch("position") !== undefined) {
     text = JSON.stringify(watch("position"));
+  }
+
+  if (place === undefined) {
+    return (
+      <Box>
+        <Text>Error - Missing place</Text>
+      </Box>
+    );
   }
 
   console.log("errors", errors);
@@ -143,12 +164,12 @@ export default function PlaceDetails({}: PlaceDetailsProps) {
           </FormControlLabel>
           <Controller
             control={control}
-            name="imageUrl"
+            name="imageInfo"
             render={({ field: { value, onChange } }) => (
               <PictureInput
-                currentImage={value}
-                setImage={(newImage: string) => {
-                  onChange(newImage);
+                currentImageInfo={value}
+                setImageInfo={(newImageInfo) => {
+                  onChange(newImageInfo);
                 }}
                 resetImage={() => onChange(undefined)}
               />
@@ -163,8 +184,13 @@ export default function PlaceDetails({}: PlaceDetailsProps) {
             <FormControlErrorText>Your photo is needed</FormControlErrorText>
           </FormControlError>
         </FormControl>
-
-        <Button className="mt-10" size="sm" onPress={handleSubmit(onSubmit)}>
+        {/*TODO: utiliser une librairie du style classnames cx()*/}
+        <Button
+          className={`mt-10 ${isSubmitting ? "opacity-50" : ""}`}
+          size="sm"
+          onPress={handleSubmit(onSubmit)}
+          disabled={isSubmitting}
+        >
           <ButtonText>Submit</ButtonText>
         </Button>
       </VStack>

@@ -1,0 +1,17 @@
+import { apiClient } from "@/http/api-client";
+import { z } from "zod";
+
+const UsersMeSchema = z.object({
+  id: z.number(),
+  username: z.string(),
+  email: z.string().email(),
+  // "createdAt": "2024-09-30T11:15:08.583Z",
+});
+export type UsersMeType = z.infer<typeof UsersMeSchema>;
+
+export const getUsersMe = async (
+  accessToken: string | null,
+): Promise<UsersMeType> => {
+  const rawResult = await apiClient(accessToken).get("users/me").json();
+  return UsersMeSchema.parse(rawResult);
+};
