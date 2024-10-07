@@ -23,7 +23,7 @@ export const uploadFile = async (
     type: params.mimeType,
   } as any);
   const rawResult = await apiClient(accessToken)
-    .post("upload", { body: formData })
+    .post("api/upload", { body: formData })
     .json();
   return UploadFileResultSchema.parse(rawResult);
 };

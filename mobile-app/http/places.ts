@@ -20,7 +20,7 @@ export const getPlaces = async (
   accessToken: string | null,
 ): Promise<PlaceType[]> => {
   const rawResult = await apiClient(accessToken)
-    .get("places", {
+    .get("api/places", {
       searchParams: {
         "pagination[pageSize]": 1000,
         populate: "*",

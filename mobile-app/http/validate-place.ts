@@ -16,7 +16,7 @@ export const validatePlace = async (
   data: ValidatePlaceCreate,
 ): Promise<void> => {
   const rawResult = await apiClient(accessToken)
-    .post("validated-places", { json: { data } })
+    .post("api/validated-places", { json: { data } })
     .json();
   console.log("=== validate place result:", JSON.stringify(rawResult));
 };
@@ -47,7 +47,7 @@ export const getValidatedPlaces = async (
   userId: number,
 ): Promise<ValidatedPlaceType[]> => {
   const rawResult = await apiClient(accessToken)
-    .get("validated-places", {
+    .get("api/validated-places", {
       searchParams: {
         "pagination[pageSize]": 1000,
         populate: "*",

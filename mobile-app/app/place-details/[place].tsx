@@ -17,6 +17,7 @@ import { VStack } from "@/components/ui/vstack";
 import { useUploadFileMutation } from "@/hooks/mutations/useUploadFileMutation";
 import { useValidatePlaceMutation } from "@/hooks/mutations/useValidatePlaceMutation";
 import { usePlaces } from "@/hooks/queries/usePlaces";
+import { useUserMe } from "@/hooks/queries/useUserMe";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Location from "expo-location";
 import { useLocalSearchParams } from "expo-router";
@@ -39,6 +40,7 @@ type ValidatePlaceType = z.infer<typeof ValidatePlaceSchema>;
 
 export default function PlaceDetails() {
   const { data: placesData } = usePlaces();
+  const { data: usersMeData } = useUserMe();
   const { place: placeId } = useLocalSearchParams<{ place: string }>();
   const place = placesData?.find(
     (placeElement) => `${placeElement.id}` === placeId,
@@ -67,9 +69,14 @@ export default function PlaceDetails() {
         data.imageInfo,
       );
       console.log("uploadedFileId", uploadedFileId);
+      const currentUserId = usersMeData?.id;
+      if (currentUserId === undefined) {
+        //TODO: mieux gérer cela avec un load et bloquer le bouton du formulaire, ou le gérer côté backend
+        return;
+      }
       await validatePlace.mutateAsync({
         place: placeId,
-        users_permissions_user: 2,
+        users_permissions_user: currentUserId,
         position: { latitude: data.position.lat, longitude: data.position.lng },
         photo: uploadedFileId,
       });

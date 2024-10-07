@@ -17,6 +17,7 @@ export const useValidatePlaceMutation = () => {
           // @ts-ignore
           JSON.stringify(error.response.body),
         );
+        throw error;
       }
     },
     onSuccess: async () => {

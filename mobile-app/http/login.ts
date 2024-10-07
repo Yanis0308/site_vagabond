@@ -8,7 +8,7 @@ export const loginWithGoogle = async (
   accessToken: string,
 ): Promise<UserAuthInfo> => {
   const rawResult = await apiClient(null)
-    .get("auth/google/callback", {
+    .get("api/auth/google/callback", {
       searchParams: { access_token: accessToken },
     })
     .json();

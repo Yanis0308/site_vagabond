@@ -12,6 +12,6 @@ export type UsersMeType = z.infer<typeof UsersMeSchema>;
 export const getUsersMe = async (
   accessToken: string | null,
 ): Promise<UsersMeType> => {
-  const rawResult = await apiClient(accessToken).get("users/me").json();
+  const rawResult = await apiClient(accessToken).get("api/users/me").json();
   return UsersMeSchema.parse(rawResult);
 };
