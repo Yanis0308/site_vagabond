@@ -1,6 +1,7 @@
 import { config } from "@/constants/Config";
 import { useSession } from "@/contexts/AuthContext";
 import { loginWithGoogle } from "@/http/login";
+import { log } from "@/utils/logger";
 import {
   GoogleSignin,
   isErrorWithCode,
@@ -56,9 +57,11 @@ export const useLoginMutation = () => {
         } else {
           // an error that's not related to google sign in occurred
         }
+        throw error;
       }
     },
     onSuccess: () => {
+      log("success sign-in");
       router.replace("/");
     },
   });

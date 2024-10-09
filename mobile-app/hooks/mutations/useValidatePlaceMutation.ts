@@ -15,7 +15,7 @@ export const useValidatePlaceMutation = () => {
           "=== error in validate place :",
           error,
           // @ts-ignore
-          JSON.stringify(error.response.body),
+          JSON.stringify(error?.response?.body ?? {}),
         );
         throw error;
       }

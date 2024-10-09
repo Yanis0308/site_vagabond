@@ -20,7 +20,7 @@ import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useUserMe } from "@/hooks/queries/useUserMe";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Location from "expo-location";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { AlertCircle } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -80,6 +80,7 @@ export default function PlaceDetails() {
         position: { latitude: data.position.lat, longitude: data.position.lng },
         photo: uploadedFileId,
       });
+      router.replace("/");
     } catch (error) {
       console.error("error in submitting", error);
     }

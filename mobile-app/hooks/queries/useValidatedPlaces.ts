@@ -1,6 +1,6 @@
 import { useSession } from "@/contexts/AuthContext";
 import { useUserMe } from "@/hooks/queries/useUserMe";
-import { getValidatedPlaces } from "@/http/validate-place";
+import { getValidatedPlaces, ValidatedPlaceType } from "@/http/validate-place";
 import { useQuery } from "@tanstack/react-query";
 
 export const useValidatedPlaces = () => {
@@ -10,9 +10,14 @@ export const useValidatedPlaces = () => {
   return useQuery({
     queryKey: ["validated-places", usersMeData],
     queryFn: async () => {
-      if (usersMeData === undefined) return [];
+      const validatedPlacesMap = new Map<number, ValidatedPlaceType>();
+      if (usersMeData === undefined) return validatedPlacesMap;
       console.log("get validated places");
-      return await getValidatedPlaces(session, usersMeData.id);
+      const validatedPlaces = await getValidatedPlaces(session, usersMeData.id);
+      for (const validatedPlace of validatedPlaces) {
+        validatedPlacesMap.set(validatedPlace.place.id, validatedPlace);
+      }
+      return validatedPlacesMap;
     },
   });
 };

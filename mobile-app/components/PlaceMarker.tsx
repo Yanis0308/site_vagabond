@@ -1,8 +1,9 @@
 import { Text } from "@/components/ui/text";
 import { useValidatedPlaces } from "@/hooks/queries/useValidatedPlaces";
 import { PlaceType } from "@/http/places";
-import { useMemo, useRef } from "react";
-import { ImageBackground, View } from "react-native";
+import { log } from "@/utils/logger";
+import { useCallback, useMemo, useRef } from "react";
+import { ImageBackground, Platform, View } from "react-native";
 import { MapMarker, Marker } from "react-native-maps";
 
 type PlaceMarkerProps = {
@@ -11,27 +12,28 @@ type PlaceMarkerProps = {
 };
 
 export const PlaceMarker = ({ place, onSelect }: PlaceMarkerProps) => {
-  const { data: validatedPlacesData } = useValidatedPlaces();
-  const placeIsValidated = useMemo(
-    () =>
-      validatedPlacesData?.find(
-        (validatedPlace) => validatedPlace.place.id === place.id,
-      ),
-    [validatedPlacesData, place],
-  );
-
+  const { data: validatePlacesData } = useValidatedPlaces();
   const markerSize = 40;
   const imgSize = markerSize * 0.9;
   // console.log("rendering place", place.id);
 
   const markerRef = useRef<MapMarker>(null);
 
-  const redrawOnMap = () => {
-    if (markerRef.current !== null && "redraw" in markerRef.current) {
-      console.log("redraw", place.id);
-      // markerRef.current.redraw();
+  const redrawOnMap = useCallback(() => {
+    // There is a issue in iOS but the redraw is automatically made
+    if (
+      Platform.OS === "android" &&
+      markerRef.current !== null &&
+      "redraw" in markerRef.current
+    ) {
+      log("redraw", place.id);
+      markerRef.current.redraw();
     }
-  };
+  }, [markerRef.current]);
+
+  const placeIsValidated = useMemo<boolean>(() => {
+    return !!validatePlacesData?.has(place.id);
+  }, [validatePlacesData, place.id]);
 
   // C'est trop fréquent pour peu de raison
   // useEffect(() => {
@@ -44,7 +46,6 @@ export const PlaceMarker = ({ place, onSelect }: PlaceMarkerProps) => {
       ref={markerRef}
       coordinate={place.position}
       title={place.title}
-      description={place.description}
       tracksViewChanges={false}
       onSelect={onSelect}
     >

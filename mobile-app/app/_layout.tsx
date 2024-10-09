@@ -19,6 +19,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import * as Location from "expo-location";
 import * as SecureStore from "expo-secure-store";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../global.css";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -52,11 +53,19 @@ export default function RootLayout() {
             <ThemeProvider
               value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
             >
-              <Stack>
-                <Stack.Screen name="sign-in" options={{ headerShown: true }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen name="+not-found" />
-              </Stack>
+              <SafeAreaProvider>
+                <Stack>
+                  <Stack.Screen
+                    name="sign-in"
+                    options={{ headerShown: true }}
+                  />
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="+not-found" />
+                </Stack>
+              </SafeAreaProvider>
             </ThemeProvider>
           </GluestackUIProvider>
         </GestureHandlerRootView>

@@ -1,6 +1,7 @@
 import { Box } from "@/components/ui/box";
 import { useSession } from "@/contexts/AuthContext";
 import { useLoginMutation } from "@/hooks/mutations/useLoginMutation";
+import { log } from "@/utils/logger";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
 import { useEffect } from "react";
@@ -9,7 +10,7 @@ export default function SignInScreen() {
   const { isPending, mutate } = useLoginMutation();
   const { session } = useSession();
 
-  console.log("=== in sign-in, session:", session);
+  log("=== in sign-in, session:", session);
 
   useEffect(() => {
     if (session !== null) {

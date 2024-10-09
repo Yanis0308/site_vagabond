@@ -1,9 +1,10 @@
 "use client";
+import { replaceLocalhost } from "@/utils/image";
 import { createImage } from "@gluestack-ui/image";
 import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { cssInterop } from "nativewind";
-import React from "react";
+import React, { useMemo } from "react";
 import { Platform, Image as RNImage } from "react-native";
 
 const imageStyle = tva({
@@ -30,12 +31,20 @@ type ImageProps = VariantProps<typeof imageStyle> &
 const Image = React.forwardRef<
   React.ElementRef<typeof UIImage>,
   ImageProps & { className?: string }
->(({ size = "md", className, ...props }, ref) => {
+>(({ size = "md", className, source, ...props }, ref) => {
+  const sourceModified = useMemo(() => {
+    if (typeof source === "string") {
+      return replaceLocalhost(source);
+    } else {
+      return source;
+    }
+  }, [source]);
   return (
     <UIImage
       className={imageStyle({ size, class: className })}
       {...props}
       ref={ref}
+      source={sourceModified}
       //@ts-ignore
       style={
         Platform.OS === "web"
