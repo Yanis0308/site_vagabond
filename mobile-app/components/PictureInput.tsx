@@ -1,7 +1,7 @@
+import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { Box } from "@/components/ui/box";
 import { Button, ButtonIcon, ButtonText } from "@/components/ui/button";
 import { Icon } from "@/components/ui/icon";
-import { Image } from "@/components/ui/image";
 import {
   Modal,
   ModalBackdrop,
@@ -83,7 +83,7 @@ export const PictureInput = ({
             </>
           ) : (
             <>
-              <Image
+              <CustomImage
                 source={{ uri: currentImageInfo.uri }}
                 alt={"your image"}
                 resizeMode={"contain"}

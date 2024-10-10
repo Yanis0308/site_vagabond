@@ -1,5 +1,7 @@
 import { ConfigContext, ExpoConfig } from "expo/config";
 
+// Ajouter dotenv pour les builds locaux ? ios development-simulator n'a pas fonctionné avec dotenvx
+
 export default ({ config }: ConfigContext): ExpoConfig => {
   const isDevelopmentBuild = ["development-simulator", "development"].includes(
     process.env.EAS_BUILD_PROFILE ?? "",

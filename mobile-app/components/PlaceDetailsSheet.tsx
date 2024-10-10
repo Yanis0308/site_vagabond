@@ -1,7 +1,7 @@
+import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
-import { Image } from "@/components/ui/image";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { PlaceType } from "@/http/places";
@@ -60,10 +60,11 @@ export const PlaceDetailsSheet = ({
             <Heading size={"2xl"} className={"text-center"}>
               🏛️ {place?.title}
             </Heading>
-            <Image
-              size="2xl"
+            <CustomImage
               source={`https://picsum.photos/seed/${place?.id}/1000/1000`}
               alt="Place photo illustration"
+              className={"h-52 w-full"}
+              contentFit={"cover"}
             />
             {validatedPlace !== null ? null : (
               <Button onPress={onPressLink}>
@@ -75,10 +76,11 @@ export const PlaceDetailsSheet = ({
           {validatedPlace !== null ? (
             <VStack className={"items-center gap-1"}>
               <Heading size={"xl"}>Your photo :</Heading>
-              <Image
-                size="2xl"
+              <CustomImage
                 source={`${validatedPlace.photo.formats.large.url}`}
                 alt="Place photo illustration"
+                className={"h-52 w-full"}
+                contentFit={"contain"}
               />
             </VStack>
           ) : null}

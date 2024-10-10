@@ -6,12 +6,9 @@ import {
   FormControlError,
   FormControlErrorIcon,
   FormControlErrorText,
-  FormControlHelper,
-  FormControlHelperText,
   FormControlLabel,
   FormControlLabelText,
 } from "@/components/ui/form-control";
-import { Input, InputField } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useUploadFileMutation } from "@/hooks/mutations/useUploadFileMutation";
@@ -20,7 +17,8 @@ import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useUserMe } from "@/hooks/queries/useUserMe";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Location from "expo-location";
-import { router, useLocalSearchParams } from "expo-router";
+import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
+import { router, Stack, useLocalSearchParams } from "expo-router";
 import { AlertCircle } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -45,14 +43,16 @@ export default function PlaceDetails() {
   const place = placesData?.find(
     (placeElement) => `${placeElement.id}` === placeId,
   );
+  const [locationPermissionStatus, setLocationPermissionStatus] =
+    useState<PermissionStatus | null>(null);
 
   const {
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     control,
     watch,
     setValue,
-    formState: { isSubmitting },
+    register,
   } = useForm<ValidatePlaceType>({
     resolver: zodResolver(ValidatePlaceSchema),
     mode: "all",
@@ -80,19 +80,22 @@ export default function PlaceDetails() {
         position: { latitude: data.position.lat, longitude: data.position.lng },
         photo: uploadedFileId,
       });
-      router.replace("/");
+      router.back();
     } catch (error) {
       console.error("error in submitting", error);
     }
   };
 
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  useEffect(() => {
+    register("position");
+  }, [register]);
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
+      setLocationPermissionStatus(status);
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
-        console.log("Permission to access location was denied");
+        alert("permission not granted");
         return;
       }
 
@@ -108,13 +111,6 @@ export default function PlaceDetails() {
     })();
   }, [setValue]);
 
-  let text = "Waiting..";
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (watch("position") !== undefined) {
-    text = JSON.stringify(watch("position"));
-  }
-
   if (place === undefined) {
     return (
       <Box>
@@ -127,8 +123,12 @@ export default function PlaceDetails() {
 
   return (
     <ScrollView className={"flex-1"}>
+      <Stack.Screen
+        options={{
+          title: place?.title,
+        }}
+      />
       <VStack className="w-full flex-1 p-4">
-        <Text>Location: {text}</Text>
         <FormControl
           isInvalid={"position" in errors}
           size="md"
@@ -137,23 +137,10 @@ export default function PlaceDetails() {
           isRequired={true}
         >
           <FormControlLabel>
-            <FormControlLabelText>Your current location</FormControlLabelText>
+            <FormControlLabelText>
+              Your current location is {JSON.stringify(watch("position"))}
+            </FormControlLabelText>
           </FormControlLabel>
-          <Controller
-            control={control}
-            name="position"
-            render={({ field: { value } }) => (
-              <Input className="my-1">
-                <InputField value={JSON.stringify(value)} />
-              </Input>
-            )}
-          />
-
-          <FormControlHelper>
-            <FormControlHelperText>
-              Allow Vagabond to access your position
-            </FormControlHelperText>
-          </FormControlHelper>
           <FormControlError>
             <FormControlErrorIcon as={AlertCircle} />
             <FormControlErrorText>Your position is needed</FormControlErrorText>
@@ -183,10 +170,6 @@ export default function PlaceDetails() {
               />
             )}
           />
-
-          <FormControlHelper>
-            <FormControlHelperText>Add a photo</FormControlHelperText>
-          </FormControlHelper>
           <FormControlError>
             <FormControlErrorIcon as={AlertCircle} />
             <FormControlErrorText>Your photo is needed</FormControlErrorText>
