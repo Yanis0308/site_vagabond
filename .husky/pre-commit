@@ -1,0 +1,3 @@
+nx typescript-check mobile-app
+nx lint-check mobile-app
+nx prettier-check

@@ -1,0 +1,104 @@
+{
+  "name": "mobile-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mobile-app",
+  "projectType": "application",
+  "targets": {
+    "start": {
+      "executor": "@nx/expo:start",
+      "options": {
+        "port": 8081,
+        "clear": true
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx start mobile-app"
+      }
+    },
+    "run-ios": {
+      "executor": "@nx/expo:run",
+      "options": {
+        "platform": "ios"
+      }
+    },
+    "run-android": {
+      "executor": "@nx/expo:run",
+      "options": {
+        "platform": "android"
+      }
+    },
+    "build": {
+      "executor": "@nx/expo:build",
+      "options": {
+        "platform": "all"
+      }
+    },
+    "build-ios": {
+      "executor": "@nx/expo:build",
+      "options": {
+        "platform": "ios"
+      }
+    },
+    "build-android": {
+      "executor": "@nx/expo:build",
+      "options": {
+        "platform": "android"
+      }
+    },
+    "build-web": {
+      "executor": "@nx/expo:build",
+      "options": {
+        "platform": "web"
+      }
+    },
+    "publish": {
+      "executor": "@nx/expo:publish",
+      "options": {}
+    },
+    "lint-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint .",
+        "cwd": "apps/mobile-app"
+      }
+    },
+    "lint-write": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "eslint . --fix",
+        "cwd": "apps/mobile-app"
+      }
+    },
+    "prettier-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prettier . --check",
+        "cwd": "apps/mobile-app"
+      }
+    },
+    "prettier-write": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "prettier . --write",
+        "cwd": "apps/mobile-app"
+      }
+    },
+    "typescript-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "apps/mobile-app"
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/mobile-app/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
