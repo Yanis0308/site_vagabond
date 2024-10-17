@@ -55,6 +55,7 @@ export const PlaceDetailsSheet = memo(
         onChange={handleSheetChanges}
         style={{ marginHorizontal: 10 }}
         enablePanDownToClose={false}
+        enableDynamicSizing={false}
       >
         <BottomSheetScrollView>
           <VStack className="w-full gap-5 px-5 pb-10">
