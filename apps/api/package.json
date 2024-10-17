@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "strapi build",
+    "scalingo-prebuild": "cp ../../tsconfig.base.json tsconfig.base.json && npx json -I -f tsconfig.json -e \"this.extends[0] = './tsconfig.base.json'\" && npx json -I -f src/admin/tsconfig.json -e \"this.extends[0] = '../../tsconfig.base.json'\"",
     "deploy": "strapi deploy",
     "develop": "strapi develop",
     "develop-debug": "strapi develop --debug",
