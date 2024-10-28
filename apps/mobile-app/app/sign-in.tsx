@@ -1,7 +1,8 @@
+import { AppleButton } from "@invertase/react-native-apple-authentication";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import { ReactElement, useEffect } from "react";
+import { ReactElement, useCallback, useEffect } from "react";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { Box } from "@/components/ui/box";
@@ -9,12 +10,18 @@ import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useSession } from "@/contexts/AuthContext";
-import { useLoginMutation } from "@/hooks/mutations/useLoginMutation";
+import { useAppleLoginMutation } from "@/hooks/mutations/useAppleLoginMutation";
+import { useGoogleLoginMutation } from "@/hooks/mutations/useGoogleLoginMutation";
 import { logger } from "@/utils/logger";
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function SignInScreen(): ReactElement {
-  const { isPending, mutate } = useLoginMutation();
+  const { isPending: googleLoginPending, mutate: googleLoginMutate } =
+    useGoogleLoginMutation();
+  const { mutate: appleLoginMutate } = useAppleLoginMutation();
+  const appleLogin = useCallback(() => {
+    appleLoginMutate();
+  }, [appleLoginMutate]);
   const { session } = useSession();
 
   logger("=== in sign-in, session:", session);
@@ -53,11 +60,17 @@ export default function SignInScreen(): ReactElement {
         <GoogleSigninButton
           size={GoogleSigninButton.Size.Wide}
           color={GoogleSigninButton.Color.Dark}
-          //eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- will fix later
-          onPress={() => {
-            mutate();
+          onPress={googleLoginMutate}
+          disabled={googleLoginPending}
+        />
+        <AppleButton
+          buttonStyle={AppleButton.Style.WHITE}
+          buttonType={AppleButton.Type.SIGN_IN}
+          style={{
+            width: 160, // You must specify a width
+            height: 45, // You must specify a height
           }}
-          disabled={isPending}
+          onPress={appleLogin}
         />
       </VStack>
     </Box>

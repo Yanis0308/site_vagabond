@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import { z } from "zod";
 
 import { apiClient } from "@/http/api-client";
@@ -12,6 +13,16 @@ export const loginWithGoogle = async (
   const rawResult = await apiClient(null)
     .get("api/auth/google/callback", {
       searchParams: { access_token: accessToken },
+    })
+    .json();
+  logger("data", JSON.stringify(rawResult));
+  return UserAuthInfoSchema.parse(rawResult);
+};
+
+export const loginWithApple = async (code: string): Promise<UserAuthInfo> => {
+  const rawResult = await apiClient(null)
+    .get("api/auth/apple/callback", {
+      searchParams: { code, platform: Platform.OS },
     })
     .json();
   logger("data", JSON.stringify(rawResult));

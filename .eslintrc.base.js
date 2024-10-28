@@ -13,7 +13,6 @@ module.exports = {
   },
   plugins: [
     "@typescript-eslint",
-    "@nx",
     "@arthurgeron/react-usememo",
     "prettier",
     "simple-import-sort",

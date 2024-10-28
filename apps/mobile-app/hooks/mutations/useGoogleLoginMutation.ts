@@ -25,7 +25,11 @@ GoogleSignin.configure({
   // profileImageSize: 120, // [iOS] The desired height (and width) of the profile image. Defaults to 120px
 });
 
-export const useLoginMutation = (): UseMutationResult<void, Error, void> => {
+export const useGoogleLoginMutation = (): UseMutationResult<
+  void,
+  Error,
+  void
+> => {
   const { signIn } = useSession();
 
   return useMutation({

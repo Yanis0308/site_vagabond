@@ -10,35 +10,47 @@
       "ios": {
         "simulator": true,
         "image": "latest"
+      },
+      "env": {
+        "BUILD_PROFILE": "development-simulator"
       }
     },
     "development": {
+      "developmentClient": true,
+      "distribution": "internal",
       "android": {
         "image": "latest"
       },
       "ios": {
         "image": "latest"
       },
-      "developmentClient": true,
-      "distribution": "internal"
+      "env": {
+        "BUILD_PROFILE": "development"
+      }
     },
     "preview": {
+      "distribution": "internal",
       "android": {
         "image": "latest"
       },
       "ios": {
         "image": "latest"
       },
-      "distribution": "internal"
+      "env": {
+        "BUILD_PROFILE": "preview"
+      }
     },
     "production": {
+      "autoIncrement": true,
       "android": {
         "image": "latest"
       },
       "ios": {
         "image": "latest"
       },
-      "autoIncrement": true
+      "env": {
+        "BUILD_PROFILE": "production"
+      }
     }
   },
   "submit": {

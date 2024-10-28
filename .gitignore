@@ -24,3 +24,6 @@ cache/
 
 # IDE files
 .vscode/
+
+# Build and release
+**/builds-and-releases/

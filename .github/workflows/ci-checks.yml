@@ -29,6 +29,7 @@ jobs:
             package-lock.json
             apps/api/package-lock.json
       - run: npm ci
-      - run: npx nx typescript-check mobile-app
-      - run: npx nx lint-check mobile-app
-      - run: npx nx prettier-check
+      - run: npm --prefix ./apps/mobile-app/ ci
+      - run: npm --prefix ./apps/mobile-app/ run typescript-check
+      - run: npm --prefix ./apps/mobile-app/ run lint-check
+      - run: npm --prefix ./apps/mobile-app/ run prettier-check

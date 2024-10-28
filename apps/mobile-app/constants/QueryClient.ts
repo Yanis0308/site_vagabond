@@ -1,5 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 
+import { logger } from "@/utils/logger";
+
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -7,7 +9,11 @@ export const queryClient = new QueryClient({
       throwOnError: true,
     },
     mutations: {
-      throwOnError: true,
+      throwOnError: false,
+      onError: (error): void => {
+        logger("mutationerror", error);
+        alert(error.message);
+      },
     },
   },
 });
