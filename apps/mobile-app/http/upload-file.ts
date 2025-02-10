@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { UploadFileParams } from "@/hooks/mutations/useUploadFileMutation";
+import { type UploadFileParams } from "@/hooks/mutations/useUploadFileMutation";
 import { apiClient } from "@/http/api-client";
 
 const UploadFileResultSchema = z
@@ -14,7 +14,6 @@ const UploadFileResultSchema = z
 type UploadFileResult = z.infer<typeof UploadFileResultSchema>;
 
 export const uploadFile = async (
-  accessToken: string | null,
   params: UploadFileParams,
 ): Promise<UploadFileResult> => {
   const formData = new FormData();
@@ -24,7 +23,7 @@ export const uploadFile = async (
     name: params.fileName,
     type: params.mimeType,
   });
-  const rawResult = await apiClient(accessToken)
+  const rawResult = await apiClient
     .post("api/upload", { body: formData })
     .json();
   return UploadFileResultSchema.parse(rawResult);

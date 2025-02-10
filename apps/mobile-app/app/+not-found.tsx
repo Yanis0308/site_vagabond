@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { ReactElement } from "react";
+import { type ReactElement } from "react";
 
 //eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function NotFoundScreen(): ReactElement {

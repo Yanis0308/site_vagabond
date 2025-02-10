@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useSession } from "@/contexts/AuthContext";
 import { getPlaces } from "@/http/places";
+import { type BoundingBoxType } from "@/utils/types";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- not important
-export const usePlaces = () => {
-  const { session } = useSession();
-
+//eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- OK for mutation
+export const usePlaces = (boundingBox: BoundingBoxType) => {
   return useQuery({
-    queryKey: ["places"],
+    queryKey: ["places", boundingBox],
     queryFn: async () => {
-      return await getPlaces(session);
+      return await getPlaces(boundingBox);
     },
+    placeholderData: (previousData) => previousData,
   });
 };

@@ -14,10 +14,9 @@ export interface ValidatePlaceCreate {
 }
 
 export const validatePlace = async (
-  accessToken: string | null,
   data: ValidatePlaceCreate,
 ): Promise<void> => {
-  const rawResult = await apiClient(accessToken)
+  const rawResult = await apiClient
     .post("api/validated-places", { json: { data } })
     .json();
   logger("=== validate place result:", JSON.stringify(rawResult));
@@ -41,21 +40,20 @@ const ValidatedPlaceSchema = z.object({
     id: z.number(),
   }),
 });
+// eslint-disable-next-line @typescript-eslint/no-unused-vars -- TODO: fix this
 const ValidatedPlacesSchema = z.object({ data: z.array(ValidatedPlaceSchema) });
 export type ValidatedPlaceType = z.infer<typeof ValidatedPlaceSchema>;
 
-export const getValidatedPlaces = async (
-  accessToken: string | null,
-  userId: number,
-): Promise<ValidatedPlaceType[]> => {
-  const rawResult = await apiClient(accessToken)
-    .get("api/validated-places", {
-      searchParams: {
-        "pagination[pageSize]": 1000,
-        populate: "*",
-        "filters[users_permissions_user][id][$eq]": userId,
-      },
-    })
-    .json();
-  return ValidatedPlacesSchema.parse(rawResult).data;
+export const getValidatedPlaces = (userId: number): ValidatedPlaceType[] => {
+  // const rawResult = await apiClient(accessToken)
+  //   .get("api/validated-places", {
+  //     searchParams: {
+  //       "pagination[pageSize]": 1000,
+  //       populate: "*",
+  //       "filters[users_permissions_user][id][$eq]": userId,
+  //     },
+  //   })
+  //   .json();
+  // return ValidatedPlacesSchema.parse(rawResult).data;
+  return [];
 };

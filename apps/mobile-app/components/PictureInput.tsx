@@ -1,6 +1,7 @@
 import * as ImagePicker from "expo-image-picker";
 import { Camera, ImagePlus, Images } from "lucide-react-native";
-import { memo, ReactElement, useMemo, useState } from "react";
+import { memo, type ReactElement, useMemo, useState } from "react";
+import React from "react";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { Box } from "@/components/ui/box";
@@ -15,7 +16,7 @@ import {
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { UploadFileParams } from "@/hooks/mutations/useUploadFileMutation";
+import { type UploadFileParams } from "@/hooks/mutations/useUploadFileMutation";
 import { logger } from "@/utils/logger";
 
 interface PictureInputProps {
@@ -37,7 +38,7 @@ export const PictureInput = memo(
       await ImagePicker.requestCameraPermissionsAsync();
 
       const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: "images",
         quality: 1,
       });
 
@@ -51,7 +52,7 @@ export const PictureInput = memo(
 
     const pickImage = async (): Promise<void> => {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: "images",
         quality: 1,
       });
 
@@ -84,20 +85,15 @@ export const PictureInput = memo(
           >
             {currentImageInfo === undefined ? (
               <>
-                <Icon
-                  className="h-32 w-full text-typography-500"
-                  as={ImagePlus}
-                />
-                <Text size={"2xl"} className={"text-typography-500"}>
-                  Add your photo
-                </Text>
+                <Icon className=" h-32 w-full" as={ImagePlus} />
+                <Text size={"2xl"}>Add your photo</Text>
               </>
             ) : (
               <>
                 <CustomImage
                   source={source}
                   alt={"your image"}
-                  resizeMode={"contain"}
+                  contentFit={"contain"}
                   className={"size-full"}
                 />
                 <Button onPress={resetImage}>

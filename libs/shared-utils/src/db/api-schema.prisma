@@ -1,0 +1,104 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions", "strictUndefinedChecks", "typedSql"]
+  //output   = "generated/client"
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("API_DATABASE_URL")
+  extensions = [postgis]
+}
+
+model User {
+  id        String   @id @map("user_id") @db.VarChar(1000)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  email          String?  @map("email") @db.VarChar(1000)
+  fullName       String?  @map("full_name") @db.VarChar(1000)
+  oauthProviders String[] @map("oauth_providers") @db.VarChar(1000)
+  lastLogin      DateTime @default(now()) @map("last_login")
+
+  visitedPois VisitedPoi[]
+
+  @@map("users")
+}
+
+model Poi {
+  id        String   @id @map("id") @db.VarChar(1000) // format is {source}-{sourceId}, for example "OSM-N-1234567890"
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  source         PoiSourceEnum                        @map("source")
+  sourceId       String                               @map("source_id") @db.VarChar(1000)
+  coords         Unsupported("geometry(Point, 4326)") @map("coords")
+  disabled       Boolean                              @default(false) @map("disabled")
+  disabledReason String?                              @map("disabled_reason") @db.VarChar(1000)
+
+  visitedPois VisitedPoi[]
+  poiDatas    PoiData[]
+
+  @@unique(name: "unique_source_and_source_id", [source, sourceId])
+  @@index([coords], name: "coords_index", type: Gist)
+  @@map("pois")
+}
+
+enum PoiSourceEnum {
+  OSM
+}
+
+model PoiData {
+  id        Int      @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  name        String            @map("name") @db.VarChar(1000)
+  description String            @map("description") @db.VarChar(1000)
+  rawInfo     Json              @map("raw_info")
+  source      PoiDataSourceEnum @map("source")
+  sourceId    String            @map("source_id") @db.VarChar(1000)
+  language    LanguageEnum      @map("language")
+
+  //TODO: retirer la contrainte de clef étrangère pour éviter de forcer la suppression en cascade
+  poi   Poi    @relation(fields: [poiId], references: [id])
+  poiId String @map("poi_id") @db.VarChar(1000)
+
+  @@unique(name: "unique_source_and_source_id_and_language", [source, sourceId, language])
+  @@unique(name: "unique_source_and_poi_id_and_language", [source, poiId, language])
+  @@map("poi_data")
+}
+
+enum PoiDataSourceEnum {
+  OSM
+  AI
+  CUSTOM
+}
+
+enum LanguageEnum {
+  EN
+  FR
+}
+
+model VisitedPoi {
+  id        Int      @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  status VisitedPoiStatus                     @default(PENDING) @map("status")
+  coords Unsupported("geometry(Point, 4326)") @map("coords")
+
+  poi   Poi    @relation(fields: [poiId], references: [id])
+  poiId String @map("poi_id") @db.VarChar(1000)
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id") @db.VarChar(1000)
+
+  @@unique(name: "unique_user_poi", [userId, poiId])
+  @@map("visited_pois")
+}
+
+enum VisitedPoiStatus {
+  PENDING
+  CONFIRMED
+}

@@ -1,7 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import type { ImagePickerAsset } from "expo-image-picker";
 
-import { useSession } from "@/contexts/AuthContext";
 import { uploadFile } from "@/http/upload-file";
 
 export type UploadFileParams = Pick<
@@ -11,11 +10,9 @@ export type UploadFileParams = Pick<
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- not important
 export const useUploadFileMutation = () => {
-  const { session } = useSession();
-
   return useMutation({
     mutationFn: async (params: UploadFileParams) => {
-      return await uploadFile(session, params);
+      return await uploadFile(params);
     },
   });
 };

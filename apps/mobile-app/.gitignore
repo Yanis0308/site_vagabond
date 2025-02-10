@@ -21,3 +21,6 @@ expo-env.d.ts
 
 # Builds and releases directory
 builds-and-releases
+
+# Firebase - comment for EAS builds (online and local)
+firebase/

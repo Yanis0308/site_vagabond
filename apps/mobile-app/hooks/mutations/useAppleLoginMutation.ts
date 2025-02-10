@@ -1,32 +1,32 @@
 import {
-  AndroidSigninResponse,
+  type AndroidSigninResponse,
   appleAuth,
   appleAuthAndroid,
-  AppleRequestResponse,
+  type AppleRequestResponse,
 } from "@invertase/react-native-apple-authentication";
-import { useMutation, UseMutationResult } from "@tanstack/react-query";
+import { firebase } from "@react-native-firebase/auth";
+import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Platform } from "react-native";
 
 import { config } from "@/constants/Config";
-import { useSession } from "@/contexts/AuthContext";
-import { loginWithApple } from "@/http/login";
 import { logger } from "@/utils/logger";
 
-const iosFunction = async (): Promise<AppleRequestResponse> => {
+const iosFunction = async (nonce: string): Promise<AppleRequestResponse> => {
   const appleAuthRequestResponse = await appleAuth.performRequest({
     requestedOperation: appleAuth.Operation.LOGIN,
     // Note: it appears putting FULL_NAME first is important, see issue #293
     requestedScopes: [appleAuth.Scope.FULL_NAME, appleAuth.Scope.EMAIL],
+    nonce,
   });
   logger("appleAuthRequestResponse", appleAuthRequestResponse);
 
   return appleAuthRequestResponse;
 };
 
-const androidFunction = async (): Promise<AndroidSigninResponse> => {
-  // Generate secure, random values for state and nonce, like an uuid
-  const rawNonce = Math.random().toString(36).substring(2);
+const androidFunction = async (
+  nonce: string,
+): Promise<AndroidSigninResponse> => {
   // const state = Math.random().toString(36).substring(2);
 
   // Configure the request
@@ -41,7 +41,7 @@ const androidFunction = async (): Promise<AndroidSigninResponse> => {
     // The amount of user information requested from Apple.
     scope: appleAuthAndroid.Scope.ALL,
     // Random nonce value that will be SHA256 hashed before sending to Apple.
-    nonce: rawNonce,
+    nonce,
     // Unique state value used to prevent CSRF attacks. A UUID will be generated if nothing is provided.
     // state,
   });
@@ -58,28 +58,42 @@ export const useAppleLoginMutation = (): UseMutationResult<
   Error,
   void
 > => {
-  const { signIn } = useSession();
-
   return useMutation({
     mutationFn: async () => {
+      // Generate secure, random values for state and nonce, like an uuid
+      const nonce = Math.random().toString(36).substring(2);
+      let identityToken: string | null | undefined = null;
+
       if (Platform.OS === "ios") {
-        const appleAuthRequestResponse = await iosFunction();
-        const { jwt } = await loginWithApple(
-          appleAuthRequestResponse.authorizationCode ?? "empty token",
-        );
-        signIn(jwt);
+        const appleAuthRequestResponse = await iosFunction(nonce);
+        identityToken = appleAuthRequestResponse.identityToken;
       } else if (Platform.OS === "android") {
         if (appleAuthAndroid.isSupported) {
-          const appleAuthRequestResponse = await androidFunction();
-          const { jwt } = await loginWithApple(appleAuthRequestResponse.code);
-          signIn(jwt);
+          const appleAuthRequestResponse = await androidFunction(nonce);
+          identityToken = appleAuthRequestResponse.id_token;
         } else {
           throw new Error("Apple authentication is not supported on Android");
         }
       }
+
+      if (identityToken === null || identityToken === undefined) {
+        throw new Error("No identity token found");
+      }
+      const appleCredential = firebase.auth.AppleAuthProvider.credential(
+        identityToken,
+        nonce,
+      );
+      const userCredential = await firebase
+        .auth()
+        .signInWithCredential(appleCredential);
+
+      // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
+      logger(
+        `Firebase authenticated via Apple, UID: ${userCredential.user.uid}`,
+      );
     },
     onSuccess: () => {
-      logger("success sign-in");
+      logger("success apple login");
       router.replace("/");
     },
   });

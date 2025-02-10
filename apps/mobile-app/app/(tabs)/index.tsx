@@ -1,63 +1,58 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { firebase } from "@react-native-firebase/auth";
 import { router } from "expo-router";
-import { BBox } from "geojson";
+import { type BBox } from "geojson";
 import React, {
-  ReactElement,
+  type ReactElement,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
 } from "react";
 import { StyleSheet } from "react-native";
-import MapView from "react-native-maps";
-import Supercluster, { ClusterProperties } from "supercluster";
+import MapView, {
+  type MapPressEvent,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
+import type Supercluster from "supercluster";
+import { type ClusterProperties } from "supercluster";
 import useSupercluster from "use-supercluster";
 
-import { ClusterMaker } from "@/components/ClusterMaker";
+import { ClusterMarker } from "@/components/ClusterMarker";
 import { PlaceDetailsSheet } from "@/components/PlaceDetailsSheet";
 import { PlaceMarker } from "@/components/PlaceMarker";
 import { Box } from "@/components/ui/box";
+import { mapStyle } from "@/constants/MapStyle";
 import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useValidatedPlaces } from "@/hooks/queries/useValidatedPlaces";
-import { PlaceType } from "@/http/places";
 import { logger } from "@/utils/logger";
+import { type PoiType } from "@/utils/types";
 
 const isClusterPoint = (
-  pointProperties: Supercluster.PointFeature<PlaceType | ClusterProperties>,
+  pointProperties: Supercluster.PointFeature<PoiType | ClusterProperties>,
 ): pointProperties is Supercluster.PointFeature<ClusterProperties> => {
   return "cluster" in pointProperties.properties;
 };
 
-//eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
-export default function MapsTab(): ReactElement {
+export default React.memo(function MapsTab(): ReactElement {
+  useEffect(() => {
+    void firebase
+      .auth()
+      .currentUser?.getIdToken()
+      .then((token) => {
+        // logger("idToken", token);
+      });
+  }, []);
+
   const mapRef = useRef<MapView>(null);
-  const { data: placesData } = usePlaces();
+
   const { data: validatedPlacesData } = useValidatedPlaces();
 
   const [selectedPlaceInfo, setSelectedPlaceInfo] = useState<{
-    place: PlaceType;
+    place: PoiType;
     isValidated: boolean;
   } | null>(null);
-
-  const points: Supercluster.PointFeature<PlaceType>[] = useMemo(() => {
-    if (placesData === undefined) {
-      return [];
-    }
-    return placesData.map((place) => {
-      return {
-        type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [
-            // Longitude is before Latitude in GeoJSON
-            place.position.longitude,
-            place.position.latitude,
-          ],
-        },
-        properties: place,
-      };
-    });
-  }, [placesData]);
 
   // Dimensions et région de la carte
   const [region, setRegion] = useState({
@@ -80,6 +75,39 @@ export default function MapsTab(): ReactElement {
     [region],
   );
 
+  // arrondir à x mètres
+  const { data: placesData } = usePlaces(
+    useMemo(() => {
+      return {
+        minLat: bounds[1],
+        maxLat: bounds[3],
+        minLng: bounds[0],
+        maxLng: bounds[2],
+      };
+    }, [bounds]),
+  );
+  logger("placesData.length", placesData?.length);
+
+  const points: Supercluster.PointFeature<PoiType>[] = useMemo(() => {
+    if (placesData === undefined) {
+      return [];
+    }
+    return placesData.map((place) => {
+      return {
+        type: "Feature",
+        geometry: {
+          type: "Point",
+          coordinates: [
+            // Longitude is before Latitude in GeoJSON
+            place.coords.longitude,
+            place.coords.latitude,
+          ],
+        },
+        properties: place,
+      };
+    });
+  }, [placesData]);
+
   const { clusters, supercluster } = useSupercluster(
     useMemo(
       () => ({
@@ -88,9 +116,9 @@ export default function MapsTab(): ReactElement {
         zoom: Math.round(Math.log(360 / region.longitudeDelta) / Math.LN2), // Calcul du zoom à partir de la delta
         options: {
           minZoom: 0, // default
-          maxZoom: 10, // default 20
+          maxZoom: 20, // default 20
           minPoints: 3, // default 2
-          radius: 75, // default 40 in pixels
+          radius: 20, // default 40 in pixels
           // extent: 512
           // nodeSize: 64
           // log: true, // default false
@@ -112,9 +140,10 @@ export default function MapsTab(): ReactElement {
         return;
       }
 
-      const expansionZoom = supercluster
-        ? Math.min(supercluster.getClusterExpansionZoom(Number(id)), 20)
-        : 0;
+      const expansionZoom =
+        supercluster !== undefined
+          ? Math.min(supercluster.getClusterExpansionZoom(Number(id)), 20)
+          : 0;
       mapRef.current.animateCamera({
         center: { latitude, longitude },
         zoom: expansionZoom,
@@ -136,7 +165,7 @@ export default function MapsTab(): ReactElement {
       clusters.map((cluster) => {
         if (isClusterPoint(cluster)) {
           return (
-            <ClusterMaker
+            <ClusterMarker
               key={`cluster-${cluster.id}`}
               onPress={onPressCluster}
               data={cluster}
@@ -150,8 +179,8 @@ export default function MapsTab(): ReactElement {
               onSelect={() => {
                 setSelectedPlaceInfo({
                   place: cluster.properties,
-                  isValidated: !!validatedPlacesData?.has(
-                    cluster.properties.id,
+                  isValidated: Boolean(
+                    validatedPlacesData?.has(Number(cluster.properties.id)),
                   ),
                 });
               }}
@@ -162,14 +191,20 @@ export default function MapsTab(): ReactElement {
     [clusters, onPressCluster, validatedPlacesData],
   );
 
+  const onPress = useCallback((event: MapPressEvent) => {
+    if (event.nativeEvent.action !== "marker-press") {
+      setSelectedPlaceInfo(null);
+    }
+  }, []);
   return (
     <BottomSheetModalProvider>
       <Box style={styles.container}>
         <PlaceDetailsSheet
           place={selectedPlaceInfo?.place ?? null}
           validatedPlace={
-            selectedPlaceInfo?.place.id
-              ? (validatedPlacesData?.get(selectedPlaceInfo.place.id) ?? null)
+            selectedPlaceInfo?.place.id !== undefined
+              ? (validatedPlacesData?.get(Number(selectedPlaceInfo.place.id)) ??
+                null)
               : null
           }
           // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- will fix later
@@ -188,33 +223,19 @@ export default function MapsTab(): ReactElement {
           onRegionChangeComplete={setRegion}
           showsUserLocation
           showsMyLocationButton
-          mapType={"hybrid"}
           showsPointsOfInterest={false}
           moveOnMarkerPress={false}
-          // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- will fix later
-          customMapStyle={[
-            {
-              elementType: "labels",
-              stylers: [
-                {
-                  visibility: "off",
-                },
-              ],
-            },
-          ]}
-          // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- will fix later
-          onPress={(event): void => {
-            if (event.nativeEvent.action !== "marker-press") {
-              setSelectedPlaceInfo(null);
-            }
-          }}
+          provider={PROVIDER_GOOGLE}
+          customMapStyle={mapStyle}
+          // // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- will fix later
+          onPress={onPress}
         >
           {markers}
         </MapView>
       </Box>
     </BottomSheetModalProvider>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

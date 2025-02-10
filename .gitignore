@@ -27,3 +27,5 @@ cache/
 
 # Build and release
 **/builds-and-releases/
+
+**/.DS_Store

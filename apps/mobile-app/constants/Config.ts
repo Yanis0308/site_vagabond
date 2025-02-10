@@ -3,9 +3,9 @@ import { z } from "zod";
 
 const ConfigSchema = z.object({
   apiBaseUrl: z.string().url(),
-  googleSignInIosClientId: z.string(),
   appleSignInServiceId: z.string(),
   appleSignInRedirectUrl: z.string().url(),
+  googleSignInWebClientId: z.string(),
   isLocalDev: z.boolean(),
 });
 

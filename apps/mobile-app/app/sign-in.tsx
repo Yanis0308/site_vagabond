@@ -1,36 +1,32 @@
 import { AppleButton } from "@invertase/react-native-apple-authentication";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
-import { router } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import { ReactElement, useCallback, useEffect } from "react";
+import { type ReactElement, useCallback, useEffect, useMemo } from "react";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { useSession } from "@/contexts/AuthContext";
 import { useAppleLoginMutation } from "@/hooks/mutations/useAppleLoginMutation";
 import { useGoogleLoginMutation } from "@/hooks/mutations/useGoogleLoginMutation";
-import { logger } from "@/utils/logger";
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function SignInScreen(): ReactElement {
   const { isPending: googleLoginPending, mutate: googleLoginMutate } =
     useGoogleLoginMutation();
-  const { mutate: appleLoginMutate } = useAppleLoginMutation();
+  const { isPending: appleLoginPending, mutate: appleLoginMutate } =
+    useAppleLoginMutation();
+
+  const loginPending = useMemo(() => {
+    return googleLoginPending || appleLoginPending;
+  }, [googleLoginPending, appleLoginPending]);
+
   const appleLogin = useCallback(() => {
-    appleLoginMutate();
-  }, [appleLoginMutate]);
-  const { session } = useSession();
-
-  logger("=== in sign-in, session:", session);
-
-  useEffect(() => {
-    if (session !== null) {
-      router.replace("/");
+    if (!loginPending) {
+      appleLoginMutate();
     }
-  }, [session]);
+  }, [appleLoginMutate, loginPending]);
 
   useEffect(() => {
     void WebBrowser.warmUpAsync();
@@ -44,7 +40,7 @@ export default function SignInScreen(): ReactElement {
     <Box className={"flex size-full items-center gap-4 bg-cyan-700"}>
       <VStack className={"items-center pt-[50%]"}>
         <CustomImage
-          //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- will fix later
+          //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-require-imports -- will fix later
           source={require("../assets/images/cropped_logo.jpg")}
           alt={"Vagabond app logo"}
           className={"size-52"}
@@ -61,7 +57,7 @@ export default function SignInScreen(): ReactElement {
           size={GoogleSigninButton.Size.Wide}
           color={GoogleSigninButton.Color.Dark}
           onPress={googleLoginMutate}
-          disabled={googleLoginPending}
+          disabled={loginPending}
         />
         <AppleButton
           buttonStyle={AppleButton.Style.WHITE}
@@ -69,6 +65,7 @@ export default function SignInScreen(): ReactElement {
           style={{
             width: 160, // You must specify a width
             height: 45, // You must specify a height
+            opacity: loginPending ? 50 : undefined,
           }}
           onPress={appleLogin}
         />

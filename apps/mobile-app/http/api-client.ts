@@ -1,14 +1,18 @@
-import ky, { KyInstance } from "ky";
+import { firebase } from "@react-native-firebase/auth";
+import ky, { type KyInstance } from "ky";
 
 import { config } from "@/constants/Config";
-import { logger } from "@/utils/logger";
 
-export const apiClient = (apiAccessToken: string | null): KyInstance => {
-  logger("apiAccessToken", config.isLocalDev && apiAccessToken);
-  return ky.create({
-    prefixUrl: config.apiBaseUrl,
-    headers: {
-      Authorization: apiAccessToken ? `Bearer ${apiAccessToken}` : undefined,
-    },
-  });
-};
+export const apiClient: KyInstance = ky.create({
+  prefixUrl: config.apiBaseUrl,
+  hooks: {
+    beforeRequest: [
+      async (request): Promise<void> => {
+        request.headers.set(
+          "Authorization",
+          `Bearer ${await firebase.auth().currentUser?.getIdToken()}`,
+        );
+      },
+    ],
+  },
+});

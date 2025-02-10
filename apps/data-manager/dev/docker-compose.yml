@@ -1,0 +1,40 @@
+version: "3.8"
+name: vagabond-data-manager
+services:
+  db:
+    container_name: postgresql-postgis-data-manager
+    image: postgis/postgis:17-3.5-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: vagabond-data-manager
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5442:5432"
+    networks:
+      - backend
+
+  # nominatim:
+  #   container_name: nominatim
+  #   image: mediagis/nominatim:4.4
+  #   ports:
+  #     - "8182:8080"
+  #   environment:
+  #     # see https://github.com/mediagis/nominatim-docker/tree/master/4.4#configuration for more options
+  #     PBF_URL: https://download.geofabrik.de/europe/france/nord-pas-de-calais-latest.osm.pbf
+  #     #REPLICATION_URL: https://download.geofabrik.de/europe/monaco-updates/
+  #     NOMINATIM_PASSWORD: F980CQqbKzi2uKwgAJXHSe6Yp8jgAz9idBG
+  #   volumes:
+  #     - nominatim-data:/var/lib/postgresql/14/main
+  #   shm_size: 1gb
+
+volumes:
+  db-data:
+  # nominatim-data:
+
+networks:
+  backend:
+    driver: bridge
+# osm2pgsql --database=vagabond-data-manager --user=user --password --host=localhost --port=5442 --output=flex --style=import-pois.lua pbf-files/nord-pas-de-calais-latest.osm.pbf

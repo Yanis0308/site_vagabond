@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as Location from "expo-location";
-import { PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
+import { type PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
 import { router, Stack, useLocalSearchParams } from "expo-router";
 import { AlertCircle } from "lucide-react-native";
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { type ReactElement, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ScrollView } from "react-native";
 import { z } from "zod";
@@ -24,7 +24,6 @@ import { VStack } from "@/components/ui/vstack";
 import { useUploadFileMutation } from "@/hooks/mutations/useUploadFileMutation";
 import { useValidatePlaceMutation } from "@/hooks/mutations/useValidatePlaceMutation";
 import { usePlaces } from "@/hooks/queries/usePlaces";
-import { useUserMe } from "@/hooks/queries/useUserMe";
 import { logger } from "@/utils/logger";
 
 const ValidatePlaceSchema = z.object({
@@ -40,12 +39,19 @@ type ValidatePlaceType = z.infer<typeof ValidatePlaceSchema>;
 
 //eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function PlaceDetails(): ReactElement {
-  const { data: placesData } = usePlaces();
-  const { data: usersMeData } = useUserMe();
-  const { place: placeId } = useLocalSearchParams<{ place: string }>();
-  const place = placesData?.find(
-    (placeElement) => `${placeElement.id}` === placeId,
+  const { data: placesData } = usePlaces(
+    useMemo(
+      () => ({
+        minLat: -90,
+        maxLat: 90,
+        minLng: -180,
+        maxLng: 180,
+      }),
+      [],
+    ),
   );
+  const { place: placeId } = useLocalSearchParams<{ place: string }>();
+  const place = placesData?.find((placeElement) => placeElement.id === placeId);
   const [, setLocationPermissionStatus] = useState<PermissionStatus | null>(
     null,
   );
@@ -78,14 +84,9 @@ export default function PlaceDetails(): ReactElement {
         data.imageInfo,
       );
       logger("uploadedFileId", uploadedFileId);
-      const currentUserId = usersMeData?.id;
-      if (currentUserId === undefined) {
-        //TODO: mieux gérer cela avec un load et bloquer le bouton du formulaire, ou le gérer côté backend
-        return;
-      }
       await validatePlace.mutateAsync({
         place: placeId,
-        users_permissions_user: currentUserId,
+        users_permissions_user: 0,
         position: { latitude: data.position.lat, longitude: data.position.lng },
         photo: uploadedFileId,
       });
@@ -138,7 +139,7 @@ export default function PlaceDetails(): ReactElement {
     <ScrollView className={"flex-1"}>
       <Stack.Screen
         options={{
-          title: place.title,
+          title: place.data[0]?.name,
         }}
       />
       <VStack className="w-full flex-1 p-4">

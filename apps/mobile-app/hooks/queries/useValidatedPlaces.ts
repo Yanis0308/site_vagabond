@@ -1,22 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { useSession } from "@/contexts/AuthContext";
-import { useUserMe } from "@/hooks/queries/useUserMe";
-import { getValidatedPlaces, ValidatedPlaceType } from "@/http/validate-place";
+import {
+  getValidatedPlaces,
+  type ValidatedPlaceType,
+} from "@/http/validate-place";
 import { logger } from "@/utils/logger";
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- not important
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- OK for mutation
 export const useValidatedPlaces = () => {
-  const { session } = useSession();
-  const { data: usersMeData } = useUserMe();
-
   return useQuery({
-    queryKey: ["validated-places", usersMeData],
-    queryFn: async () => {
+    queryKey: ["validated-places"],
+    queryFn: () => {
       const validatedPlacesMap = new Map<number, ValidatedPlaceType>();
-      if (usersMeData === undefined) return validatedPlacesMap;
       logger("get validated places");
-      const validatedPlaces = await getValidatedPlaces(session, usersMeData.id);
+      const validatedPlaces = getValidatedPlaces(0);
       for (const validatedPlace of validatedPlaces) {
         validatedPlacesMap.set(validatedPlace.place.id, validatedPlace);
       }

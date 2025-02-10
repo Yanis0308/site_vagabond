@@ -1,75 +1,21 @@
 "use client";
+import React from "react";
 import { createIcon } from "@gluestack-ui/icon";
-import { VariantProps } from "@gluestack-ui/nativewind-utils";
+import { Path } from "react-native-svg";
 import { tva } from "@gluestack-ui/nativewind-utils/tva";
 import { cssInterop } from "nativewind";
-import React, { useMemo } from "react";
-import { Path, Svg } from "react-native-svg";
-
-type IPrimitiveIcon = {
-  height?: number | string;
-  width?: number | string;
-  fill?: string;
-  color?: string;
-  size?: number | string;
-  stroke?: string;
-  as?: React.ElementType;
-  className?: string;
-  classNameColor?: string;
-};
-
-const PrimitiveIcon = React.forwardRef<
-  React.ElementRef<typeof Svg>,
-  IPrimitiveIcon
->(
-  (
-    {
-      height,
-      width,
-      fill,
-      color,
-      classNameColor,
-      size,
-      stroke,
-      as: AsComp,
-      ...props
-    },
-    ref,
-  ) => {
-    color = color ?? classNameColor;
-    const sizeProps = useMemo(() => {
-      if (size) return { size };
-      if (height && width) return { height, width };
-      if (height) return { height };
-      if (width) return { width };
-      return {};
-    }, [size, height, width]);
-
-    let colorProps = {};
-    if (fill) {
-      colorProps = { ...colorProps, fill: fill };
-    }
-    if (stroke !== "currentColor") {
-      colorProps = { ...colorProps, stroke: stroke };
-    } else if (stroke === "currentColor" && color !== undefined) {
-      colorProps = { ...colorProps, stroke: color };
-    }
-
-    if (AsComp) {
-      return <AsComp ref={ref} {...props} {...sizeProps} {...colorProps} />;
-    }
-    return (
-      <Svg ref={ref} height={height} width={width} {...colorProps} {...props} />
-    );
-  },
-);
+import { VariantProps } from "@gluestack-ui/nativewind-utils";
+import { PrimitiveIcon, IPrimitiveIcon, Svg } from "@gluestack-ui/icon";
 
 export const UIIcon = createIcon({
   Root: PrimitiveIcon,
-});
+}) as React.ForwardRefExoticComponent<
+  React.ComponentPropsWithoutRef<typeof PrimitiveIcon> &
+    React.RefAttributes<React.ElementRef<typeof Svg>>
+>;
 
 const iconStyle = tva({
-  base: "pointer-events-none fill-none text-typography-950",
+  base: "text-typography-950 fill-none pointer-events-none",
   variants: {
     size: {
       "2xs": "h-3 w-3",
@@ -86,12 +32,9 @@ cssInterop(UIIcon, {
   className: {
     target: "style",
     nativeStyleToProp: {
-      //@ts-expect-error
       height: true,
-      //@ts-expect-error
       width: true,
       fill: true,
-      //@ts-expect-error
       color: "classNameColor",
       stroke: true,
     },
@@ -102,7 +45,7 @@ type IIConProps = IPrimitiveIcon &
   VariantProps<typeof iconStyle> &
   React.ComponentPropsWithoutRef<typeof UIIcon>;
 
-export const Icon = React.forwardRef<React.ElementRef<typeof Svg>, IIConProps>(
+const Icon = React.forwardRef<React.ElementRef<typeof Svg>, IIConProps>(
   ({ size = "md", className, ...props }, ref) => {
     if (typeof size === "number") {
       return (
@@ -135,26 +78,33 @@ export const Icon = React.forwardRef<React.ElementRef<typeof Svg>, IIConProps>(
   },
 );
 
+export { Icon };
+
 type ParameterTypes = Omit<Parameters<typeof createIcon>[0], "Root">;
 
 const createIconUI = ({ ...props }: ParameterTypes) => {
-  const UIIconCreateIcon = createIcon({ Root: Svg, ...props });
+  const UIIconCreateIcon = createIcon({
+    Root: Svg,
+    ...props,
+  }) as React.ForwardRefExoticComponent<
+    React.ComponentPropsWithoutRef<typeof PrimitiveIcon> &
+      React.RefAttributes<React.ElementRef<typeof Svg>>
+  >;
 
   return React.forwardRef<React.ElementRef<typeof Svg>>(
     (
       {
         className,
         size,
-        ...props
+        ...inComingProps
       }: VariantProps<typeof iconStyle> &
         React.ComponentPropsWithoutRef<typeof UIIconCreateIcon>,
       ref,
     ) => {
       return (
         <UIIconCreateIcon
-          // @ts-ignore
           ref={ref}
-          {...props}
+          {...inComingProps}
           className={iconStyle({ size, class: className })}
         />
       );
@@ -308,7 +258,7 @@ ArrowDownIcon.displayName = "ArrowDownIcon";
 ArrowRightIcon.displayName = "ArrowRightIcon";
 ArrowLeftIcon.displayName = "ArrowLeftIcon";
 
-export { ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon };
+export { ArrowUpIcon, ArrowDownIcon, ArrowRightIcon, ArrowLeftIcon };
 
 const AtSignIcon = createIcon({
   Root: Svg,
@@ -474,7 +424,7 @@ const CheckCircleIcon = createIcon({
 CheckIcon.displayName = "CheckIcon";
 CheckCircleIcon.displayName = "CheckCircleIcon";
 
-export { CheckCircleIcon, CheckIcon };
+export { CheckIcon, CheckCircleIcon };
 
 const ChevronUpIcon = createIcon({
   Root: Svg,
@@ -613,13 +563,13 @@ ChevronsRightIcon.displayName = "ChevronsRightIcon";
 ChevronsUpDownIcon.displayName = "ChevronsUpDownIcon";
 
 export {
+  ChevronUpIcon,
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronsLeftIcon,
   ChevronsRightIcon,
   ChevronsUpDownIcon,
-  ChevronUpIcon,
 };
 
 const CircleIcon = createIcon({
@@ -717,7 +667,7 @@ const CloseCircleIcon = createIcon({
 CloseIcon.displayName = "CloseIcon";
 CloseCircleIcon.displayName = "CloseCircleIcon";
 
-export { CloseCircleIcon, CloseIcon };
+export { CloseIcon, CloseCircleIcon };
 
 const CopyIcon = createIcon({
   Root: Svg,
@@ -1064,7 +1014,7 @@ const ExternalLinkIcon = createIcon({
 });
 
 ExternalLinkIcon.displayName = "ExternalLinkIcon";
-export { ExternalLinkIcon, LinkIcon };
+export { LinkIcon, ExternalLinkIcon };
 
 const LoaderIcon = createIcon({
   Root: Svg,
@@ -1352,7 +1302,7 @@ const Repeat1Icon = createIcon({
 });
 
 Repeat1Icon.displayName = "Repeat1Icon";
-export { Repeat1Icon, RepeatIcon };
+export { RepeatIcon, Repeat1Icon };
 
 const SearchIcon = createIcon({
   Root: Svg,

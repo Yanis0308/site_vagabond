@@ -1,7 +1,7 @@
 import { BottomSheetModal, BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import React, {
   memo,
-  ReactElement,
+  type ReactElement,
   useCallback,
   useEffect,
   useMemo,
@@ -14,12 +14,12 @@ import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { PlaceType } from "@/http/places";
-import { ValidatedPlaceType } from "@/http/validate-place";
+import { type ValidatedPlaceType } from "@/http/validate-place";
 import { logger } from "@/utils/logger";
+import { type PoiType } from "@/utils/types";
 
 interface PlaceDetailsSheetV2Props {
-  place: PlaceType | null;
+  place: PoiType | null;
   validatedPlace: ValidatedPlaceType | null;
   onPressLink: () => void;
 }
@@ -61,7 +61,7 @@ export const PlaceDetailsSheet = memo(
           <VStack className="w-full gap-5 px-5 pb-10">
             <Center className={"gap-5"}>
               <Heading size={"2xl"} className={"text-center"}>
-                🏛️ {place?.title}
+                🏛️ {place?.data[0]?.name}
               </Heading>
               <CustomImage
                 source={`https://picsum.photos/seed/${place?.id}/1000/1000`}
@@ -75,7 +75,7 @@ export const PlaceDetailsSheet = memo(
                 </Button>
               )}
             </Center>
-            <Text size={"lg"}>{place?.description}</Text>
+            <Text size={"lg"}>{place?.data[0]?.description}</Text>
             {validatedPlace !== null ? (
               <VStack className={"items-center gap-1"}>
                 <Heading size={"xl"}>Your photo :</Heading>

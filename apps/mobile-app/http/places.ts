@@ -1,32 +1,24 @@
-import { z } from "zod";
+import { jsonSchemas, logger } from "@vagabond/shared-utils";
+import { generateValidator } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
-
-const PlaceSchema = z.object({
-  id: z.number(),
-  title: z.string(),
-  description: z.string(),
-  hidden: z.boolean(),
-  mediaURL: z.string().nullable(),
-  note: z.number().nullable(),
-  position: z.object({
-    latitude: z.number(),
-    longitude: z.number(),
-  }),
-});
-const PlacesSchema = z.object({ data: z.array(PlaceSchema) });
-export type PlaceType = z.infer<typeof PlaceSchema>;
+import { type BoundingBoxType, type PoiType } from "@/utils/types";
+const validateResponse = generateValidator(jsonSchemas.GetPoisResponseSchema);
 
 export const getPlaces = async (
-  accessToken: string | null,
-): Promise<PlaceType[]> => {
-  const rawResult = await apiClient(accessToken)
-    .get("api/places", {
-      searchParams: {
-        "pagination[pageSize]": 1000,
-        populate: "*",
-      },
+  boundingBox: BoundingBoxType,
+): Promise<PoiType[]> => {
+  const rawResult = await apiClient
+    .get("api/pois", {
+      searchParams: boundingBox,
     })
     .json();
-  return PlacesSchema.parse(rawResult).data;
+
+  if (!validateResponse(rawResult)) {
+    throw new Error("Invalid response");
+  }
+
+  logger.info("places length:", rawResult.data.length);
+
+  return rawResult.data;
 };

@@ -1,0 +1,8 @@
+import { type Static } from "@sinclair/typebox";
+import { type jsonSchemas } from "@vagabond/shared-utils";
+
+export type PoiType = Static<
+  typeof jsonSchemas.GetPoisResponseSchema.properties.data
+>[0];
+
+export type BoundingBoxType = Static<typeof jsonSchemas.BoundingBoxSchema>;

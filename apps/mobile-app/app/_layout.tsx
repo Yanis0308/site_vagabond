@@ -2,70 +2,70 @@ import "@/global.css";
 import "react-native-reanimated";
 import "../global.css";
 
+import auth from "@react-native-firebase/auth";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { useFonts } from "expo-font";
-import * as Location from "expo-location";
 import { Stack } from "expo-router";
-import * as SecureStore from "expo-secure-store";
 import * as SplashScreen from "expo-splash-screen";
-import { ReactElement, useEffect, useMemo, useState } from "react";
+import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { queryClient } from "@/constants/QueryClient";
-import { SessionProvider } from "@/contexts/AuthContext";
+import { logger } from "@/utils/logger";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 void SplashScreen.preventAutoHideAsync();
 
 //eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function RootLayout(): ReactElement | null {
-  void Location.enableNetworkProviderAsync();
+  // void Location.enableNetworkProviderAsync();
 
-  const [loaded] = useFonts(
-    useMemo(
-      () => ({
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok it's a font
-        SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-      }),
-      [],
-    ),
-  );
-
-  const [defaultSession] = useState(SecureStore.getItem("session"));
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    if (loaded) {
-      void SplashScreen.hideAsync();
-    }
-  }, [loaded]);
+    const subscriber = auth().onAuthStateChanged((user) => {
+      logger("onAuthStateChanged user:", typeof user);
+      setInitializing((prevInitializing) => {
+        if (prevInitializing) {
+          return false;
+        }
+        return prevInitializing;
+      });
+    });
+    return subscriber; // unsubscribe on unmount
+  }, [initializing]);
 
-  if (!loaded) {
+  const onLayoutRootView = useCallback(() => {
+    if (!initializing) {
+      SplashScreen.hide();
+    }
+  }, [initializing]);
+
+  if (initializing) {
+    logger("=== RootLayout return null");
     return null;
   }
 
   return (
-    <SessionProvider defaultSession={defaultSession}>
+    <GluestackUIProvider>
       <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <GluestackUIProvider>
-            <SafeAreaProvider>
-              <Stack>
-                <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-                <Stack.Screen
-                  name="place-details/[place]"
-                  options={{
-                    headerBackTitleVisible: false,
-                  }}
-                />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-            </SafeAreaProvider>
-          </GluestackUIProvider>
+        <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+          <SafeAreaView style={{ flex: 1 }}>
+            <Stack>
+              <Stack.Screen name="sign-in" options={{ headerShown: false }} />
+              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+              <Stack.Screen
+                name="place-details/[place]"
+                options={{
+                  headerBackTitle: "Back",
+                }}
+              />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </SafeAreaView>
         </GestureHandlerRootView>
       </QueryClientProvider>
-    </SessionProvider>
+    </GluestackUIProvider>
   );
 }

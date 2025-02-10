@@ -1,4 +1,3 @@
-npm --prefix ./apps/mobile-app/ run typescript-check
-npm --prefix ./apps/mobile-app/ run lint-check
-npm --prefix ./apps/mobile-app/ run prettier-check
-
+pnpm run -r typescript-check
+pnpm run -r lint-check
+pnpm run -r prettier-check

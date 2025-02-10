@@ -1,30 +1,25 @@
 "use client";
+import React from "react";
 import { createModal } from "@gluestack-ui/modal";
-import type { VariantProps } from "@gluestack-ui/nativewind-utils";
-import { tva } from "@gluestack-ui/nativewind-utils/tva";
+import { Pressable, View, ScrollView } from "react-native";
 import {
-  useStyleContext,
-  withStyleContext,
-} from "@gluestack-ui/nativewind-utils/withStyleContext";
-import { withStyleContextAndStates } from "@gluestack-ui/nativewind-utils/withStyleContextAndStates";
-import {
+  Motion,
   AnimatePresence,
   createMotionAnimatedComponent,
-  Motion,
 } from "@legendapp/motion";
+import { tva } from "@gluestack-ui/nativewind-utils/tva";
+import {
+  withStyleContext,
+  useStyleContext,
+} from "@gluestack-ui/nativewind-utils/withStyleContext";
 import { cssInterop } from "nativewind";
-import React from "react";
-import { Platform, Pressable, ScrollView, View } from "react-native";
+import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 
 const AnimatedPressable = createMotionAnimatedComponent(Pressable);
-
 const SCOPE = "MODAL";
 
 const UIModal = createModal({
-  Root:
-    Platform.OS === "web"
-      ? withStyleContext(View, SCOPE)
-      : withStyleContextAndStates(View, SCOPE),
+  Root: withStyleContext(View, SCOPE),
   Backdrop: AnimatedPressable,
   Content: Motion.View,
   Body: ScrollView,
@@ -33,20 +28,12 @@ const UIModal = createModal({
   Header: View,
   AnimatePresence: AnimatePresence,
 });
-cssInterop(UIModal, { className: "style" });
-cssInterop(UIModal.Backdrop, { className: "style" });
-cssInterop(UIModal.Content, { className: "style" });
-cssInterop(UIModal.CloseButton, { className: "style" });
-cssInterop(UIModal.Header, { className: "style" });
-cssInterop(UIModal.Body, {
-  className: "style",
-  contentContainerClassName: "contentContainerStyle",
-  indicatorClassName: "indicatorStyle",
-});
-cssInterop(UIModal.Footer, { className: "style" });
+
+cssInterop(AnimatedPressable, { className: "style" });
+cssInterop(Motion.View, { className: "style" });
 
 const modalStyle = tva({
-  base: "group/modal h-full w-full items-center justify-center web:pointer-events-none",
+  base: "group/modal w-full h-full justify-center items-center web:pointer-events-none",
   variants: {
     size: {
       xs: "",
@@ -59,11 +46,11 @@ const modalStyle = tva({
 });
 
 const modalBackdropStyle = tva({
-  base: "absolute bottom-0 left-0 right-0 top-0 bg-background-dark web:cursor-default",
+  base: "absolute left-0 top-0 right-0 bottom-0 bg-background-dark web:cursor-default",
 });
 
 const modalContentStyle = tva({
-  base: "overflow-hidden rounded-md border border-outline-100 bg-background-0 p-6 shadow-hard-2",
+  base: "bg-background-0 rounded-md overflow-hidden border border-outline-100 shadow-hard-2 p-6",
   parentVariants: {
     size: {
       xs: "w-[60%] max-w-[360px]",
@@ -76,19 +63,19 @@ const modalContentStyle = tva({
 });
 
 const modalBodyStyle = tva({
-  base: "mb-6 mt-4",
+  base: "mt-2 mb-6",
 });
 
 const modalCloseButtonStyle = tva({
-  base: "group/modal-close-button z-10 cursor-pointer rounded web:outline-0 data-[focus-visible=true]:web:bg-background-100",
+  base: "group/modal-close-button z-10 rounded data-[focus-visible=true]:web:bg-background-100 web:outline-0 cursor-pointer",
 });
 
 const modalHeaderStyle = tva({
-  base: "flex-row items-center justify-between",
+  base: "justify-between items-center flex-row",
 });
 
 const modalFooterStyle = tva({
-  base: "flex-row items-center justify-end gap-2",
+  base: "flex-row justify-end items-center gap-2",
 });
 
 type IModalProps = React.ComponentProps<typeof UIModal> &
@@ -271,9 +258,9 @@ ModalCloseButton.displayName = "ModalCloseButton";
 export {
   Modal,
   ModalBackdrop,
-  ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
+  ModalCloseButton,
   ModalHeader,
+  ModalBody,
+  ModalFooter,
 };

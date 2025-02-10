@@ -1,13 +1,14 @@
-import { Redirect, Tabs } from "expo-router";
-import React, { ReactElement, useMemo } from "react";
+import auth from "@react-native-firebase/auth";
+import { Redirect, Tabs, usePathname } from "expo-router";
+import React, { type ReactElement, useMemo } from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { useSession } from "@/contexts/AuthContext";
 import { logger } from "@/utils/logger";
 
 //eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function TabLayout(): ReactElement {
-  const { session } = useSession();
+  const user = auth().currentUser;
+  const pathname = usePathname();
 
   const screenOptions = useMemo(
     () => ({
@@ -16,9 +17,12 @@ export default function TabLayout(): ReactElement {
     [],
   );
 
-  if (!session) {
+  if (user === null) {
     logger("--- You're disconnected and redirected to sign-in page");
     return <Redirect href="/sign-in" />;
+  } else if (pathname === "/sign-in") {
+    logger("--- You're connected and redirected to home page");
+    return <Redirect href="/" />;
   }
 
   return (

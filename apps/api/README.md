@@ -1,61 +1,84 @@
-# 🚀 Getting started with Strapi
+# Getting Started with [Fastify-CLI](https://www.npmjs.com/package/fastify-cli)
 
-Strapi comes with a full featured [Command Line Interface](https://docs.strapi.io/dev-docs/cli) (CLI) which lets you scaffold and manage your project in seconds.
+This project was bootstrapped with Fastify-CLI.
 
-### `develop`
+## Available Scripts
 
-Start your Strapi application with autoReload enabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-develop)
+In the project directory, you can run:
 
-```
-npm run develop
-# or
-yarn develop
-```
+### `pnpm run dev`
 
-### `start`
+To start the app in dev mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Start your Strapi application with autoReload disabled. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-start)
+### `pnpm run start`
 
-```
-npm run start
-# or
-yarn start
-```
+For production mode
 
-### `build`
+### `pnpm run test`
 
-Build your admin panel. [Learn more](https://docs.strapi.io/dev-docs/cli#strapi-build)
+Run the test cases.
 
-```
-npm run build
-# or
-yarn build
-```
+## Learn More
 
-## ⚙️ Deployment
+To learn Fastify, check out the [Fastify documentation](https://fastify.dev/docs/latest/).
 
-Strapi gives you many possible deployment options for your project including [Strapi Cloud](https://cloud.strapi.io). Browse the [deployment section of the documentation](https://docs.strapi.io/dev-docs/deployment) to find the best solution for your use case.
+# Tokens
+
+## Expired token
 
 ```
-yarn strapi deploy
+eyJhbGciOiJSUzI1NiIsImtpZCI6IjkyODg2OGRjNDRlYTZhOThjODhiMzkzZDM2NDQ1MTM2NWViYjMwZDgiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoiQmVub8OudCBSZW15IiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0otMVRzUUhVd2pXVTlGRE4yUU5HbEtPYkVkM2xaMWhoRlk3WTVNRlJXbUlkVHB5MTlldnc9czk2LWMiLCJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vdmFnYWJvbmQtZGV2LWExMjQxIiwiYXVkIjoidmFnYWJvbmQtZGV2LWExMjQxIiwiYXV0aF90aW1lIjoxNzMyMjExMTE0LCJ1c2VyX2lkIjoibENTTVBUWmZRVVhPWnl6NDBTT013RUdLM2laMiIsInN1YiI6ImxDU01QVFpmUVVYT1p5ejQwU09Nd0VHSzNpWjIiLCJpYXQiOjE3MzIyMTExMTQsImV4cCI6MTczMjIxNDcxNCwiZW1haWwiOiJiZW5vaXQucmVteWxhbmdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImZpcmViYXNlIjp7ImlkZW50aXRpZXMiOnsiZ29vZ2xlLmNvbSI6WyIxMTE5NTU1MTQ0Njk0Mzg0MDgyODQiXSwiZW1haWwiOlsiYmVub2l0LnJlbXlsYW5nQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6Imdvb2dsZS5jb20ifX0.fwrnfjcuGzCsaGhWUv4iHj-siIPDZcYMoOmdMUOuYdTjhifanoE7uv6pRl-HVl04GMdeDN34WOtwnCUNPTqKeU01eK8Lbh1MHXoA0FkqLpUezYDv4PelY8Av3HYh9n-l4gOSpv1NFdI6J6IfR6C2FcQNXpSfnxC1jW8g5LS1RB95lJgTX2uznXY6rZ4R3bobsXYO4rZAbpHEe6_v6oIYI7WmUY-dzgmW5HigLqV3RakyUpn6NtyMSHnXlpzhmDTjlqJWmDYgeeYbdKx96OOGiuAUFp6KNWri3qMAtuZgukKLjKweDpfZ3BW7bR9WNYNvTESHZpf5G3RzqF9By-xsKQ
 ```
 
-## 📚 Learn more
+# Seed data
 
-- [Resource center](https://strapi.io/resource-center) - Strapi resource center.
-- [Strapi documentation](https://docs.strapi.io) - Official Strapi documentation.
-- [Strapi tutorials](https://strapi.io/tutorials) - List of tutorials made by the core team and the community.
-- [Strapi blog](https://strapi.io/blog) - Official Strapi blog containing articles made by the Strapi team and the community.
-- [Changelog](https://strapi.io/changelog) - Find out about the Strapi product updates, new features and general improvements.
-
-Feel free to check out the [Strapi GitHub repository](https://github.com/strapi/strapi). Your feedback and contributions are welcome!
-
-## ✨ Community
-
-- [Discord](https://discord.strapi.io) - Come chat with the Strapi community including the core team.
-- [Forum](https://forum.strapi.io/) - Place to discuss, ask questions and find answers, show your Strapi project and get feedback or just talk with other Community members.
-- [Awesome Strapi](https://github.com/strapi/awesome-strapi) - A curated list of awesome things related to Strapi.
-
----
-
-<sub>🤫 Psst! [Strapi is hiring](https://strapi.io/careers).</sub>
+```sql
+INSERT INTO pois (name, description, source, source_id, coords, created_at, last_updated)
+VALUES
+  (
+    'Grand Place',
+    'Place centrale historique de Lille avec son emblématique Vieille Bourse',
+    'manual',
+    'lille_grand_place',
+    ST_SetSRID(ST_MakePoint(3.063664, 50.636750), 4326),
+    NOW(),
+    NOW()
+  ),
+  (
+    'Palais des Beaux-Arts',
+    'Un des plus grands musées de France, collections exceptionnelles de peintures européennes',
+    'manual',
+    'lille_pba',
+    ST_SetSRID(ST_MakePoint(3.067419, 50.632470), 4326),
+    NOW(),
+    NOW()
+  ),
+  (
+    'Citadelle de Lille',
+    'Fort militaire du XVIIe siècle en forme d''étoile, conçu par Vauban',
+    'manual',
+    'lille_citadelle',
+    ST_SetSRID(ST_MakePoint(3.044944, 50.639722), 4326),
+    NOW(),
+    NOW()
+  ),
+  (
+    'Vieux-Lille',
+    'Quartier historique avec ses rues pavées et son architecture flamande',
+    'manual',
+    'lille_vieux_lille',
+    ST_SetSRID(ST_MakePoint(3.065833, 50.640278), 4326),
+    NOW(),
+    NOW()
+  ),
+  (
+    'Gare Lille Flandres',
+    'Principale gare ferroviaire de Lille, située en plein centre-ville',
+    'manual',
+    'lille_gare_flandres',
+    ST_SetSRID(ST_MakePoint(3.069678, 50.636111), 4326),
+    NOW(),
+    NOW()
+  );
+```

@@ -1,14 +1,12 @@
 import { memo, useCallback, useMemo, useRef } from "react";
 import { ImageBackground, Platform, View } from "react-native";
-import { MapMarker, Marker } from "react-native-maps";
+import { type MapMarker, Marker } from "react-native-maps";
 
 import { Text } from "@/components/ui/text";
 import { useValidatedPlaces } from "@/hooks/queries/useValidatedPlaces";
-import { PlaceType } from "@/http/places";
-import { logger } from "@/utils/logger";
-
+import { type PoiType } from "@/utils/types";
 interface PlaceMarkerProps {
-  place: PlaceType;
+  place: PoiType;
   onSelect: () => void;
 }
 
@@ -27,13 +25,13 @@ export const PlaceMarker = memo(({ place, onSelect }: PlaceMarkerProps) => {
       markerRef.current !== null &&
       "redraw" in markerRef.current
     ) {
-      logger("redraw", place.id);
+      // logger("redraw", place.id);
       markerRef.current.redraw();
     }
-  }, [place.id]);
+  }, []);
 
   const placeIsValidated = useMemo<boolean>(() => {
-    return !!validatePlacesData?.has(place.id);
+    return Boolean(validatePlacesData?.has(Number(place.id)));
   }, [validatePlacesData, place.id]);
 
   // C'est trop fréquent pour peu de raison
@@ -51,8 +49,8 @@ export const PlaceMarker = memo(({ place, onSelect }: PlaceMarkerProps) => {
   return (
     <Marker
       ref={markerRef}
-      coordinate={place.position}
-      title={place.title}
+      coordinate={place.coords}
+      title={place.data[0]?.name}
       tracksViewChanges={false}
       onSelect={onSelect}
     >

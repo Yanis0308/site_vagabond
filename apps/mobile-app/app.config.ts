@@ -1,56 +1,76 @@
-import { ConfigContext, ExpoConfig } from "expo/config";
+import { type ConfigContext, type ExpoConfig } from "expo/config";
 
-// Ajouter dotenv pour les builds locaux ? ios development-simulator n'a pas fonctionné avec dotenvx
+// for Github Actions CI checks
+const process = { env: {} } as { env: Record<string, string | undefined> };
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const buildProfile = process.env.BUILD_PROFILE ?? "";
   const isDevelopmentBuild =
     buildProfile !== "preview" && buildProfile !== "production";
 
+  // eslint-disable-next-line no-console -- AppConfig debug logs
+  console.log(
+    "[AppConfig] buildProfile:",
+    buildProfile,
+    "| isDevelopmentBuild:",
+    isDevelopmentBuild,
+  );
+
+  //TODO: on pourrait peut-être vérifier le contenu de process.env avec Zod -> les valeurs sont peut-être remplacées directement dans le code donc attention à bien mentionner chaque process.env.[VARIABLE_NAME] dans le code
   const variantConfig: {
     appName: string;
     packageAndBundleIdentifier: string;
     googleMapsApiKey: string | undefined;
-    iosUrlScheme: string | undefined;
+    googleServicesFiles: {
+      ios: string | undefined;
+      android: string | undefined;
+    };
     runtimeConfig: {
       apiBaseUrl: string | undefined;
       appleSignInRedirectUrl: string | undefined;
       appleSignInServiceId: string | undefined;
-      googleSignInIosClientId: string | undefined;
+      googleSignInWebClientId: string | undefined;
     };
   } = isDevelopmentBuild
     ? {
         appName: "DEV Vagabond",
         packageAndBundleIdentifier: "dev.com.vagabond.explore.tourism",
         googleMapsApiKey: process.env.DEV_GOOGLE_MAPS_API_KEY,
-        iosUrlScheme: process.env.DEV_GOOGLE_SIGN_IN_IOS_REVERSED_CLIENT_ID,
+        googleServicesFiles: {
+          ios: process.env.DEV_GOOGLE_SERVICES_PLIST,
+          android: process.env.DEV_GOOGLE_SERVICES_JSON,
+        },
         runtimeConfig: {
           apiBaseUrl: process.env.DEV_EXPO_PUBLIC_API_URL,
           appleSignInRedirectUrl:
             process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
           appleSignInServiceId:
             process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
-          googleSignInIosClientId:
-            process.env.DEV_EXPO_PUBLIC_GOOGLE_SIGN_IN_IOS_CLIENT_ID,
+          googleSignInWebClientId:
+            process.env.DEV_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
         },
       }
     : {
         appName: "Vagabond",
         packageAndBundleIdentifier: "com.vagabond.explore.tourism",
         googleMapsApiKey: process.env.TST_GOOGLE_MAPS_API_KEY,
-        iosUrlScheme: process.env.TST_GOOGLE_SIGN_IN_IOS_REVERSED_CLIENT_ID,
+        googleServicesFiles: {
+          ios: process.env.TST_GOOGLE_SERVICES_PLIST,
+          android: process.env.TST_GOOGLE_SERVICES_JSON,
+        },
         runtimeConfig: {
           apiBaseUrl: process.env.TST_EXPO_PUBLIC_API_URL,
           appleSignInRedirectUrl:
             process.env.TST_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
           appleSignInServiceId:
             process.env.TST_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
-          googleSignInIosClientId:
-            process.env.TST_EXPO_PUBLIC_GOOGLE_SIGN_IN_IOS_CLIENT_ID,
+          googleSignInWebClientId:
+            process.env.TST_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
         },
       };
   return {
     ...config,
+    newArchEnabled: false, // Disable new architecture to avoid issues with react-native-maps - 07/02/2025
     name: variantConfig.appName, // For Expo Go and standalone app
     slug: "mobile-app", // For Expo EAS project
     owner: "vagabond-app", // Expo account name
@@ -74,6 +94,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       entitlements: {
         "com.apple.developer.applesignin": ["Default"],
       },
+      googleServicesFile: variantConfig.googleServicesFiles.ios,
+      config: {
+        googleMapsApiKey: variantConfig.googleMapsApiKey,
+        usesNonExemptEncryption: false,
+      },
     },
     android: {
       adaptiveIcon: {
@@ -90,6 +115,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           apiKey: variantConfig.googleMapsApiKey,
         },
       },
+      googleServicesFile: variantConfig.googleServicesFiles.android,
     },
     web: {
       bundler: "metro",
@@ -98,6 +124,12 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     plugins: [
       "expo-router",
+      [
+        "expo-font",
+        {
+          fonts: ["assets/fonts/SpaceMono-Regular.ttf"],
+        },
+      ],
       [
         "expo-location",
         {
@@ -114,12 +146,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             "The app accesses your photos to let you share them with your friends.",
         },
       ],
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          iosUrlScheme: variantConfig.iosUrlScheme,
-        },
-      ],
+      "@react-native-google-signin/google-signin",
       [
         "expo-secure-store",
         {
@@ -131,6 +158,16 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         "expo-dev-launcher",
         {
           launchMode: "most-recent",
+        },
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+      [
+        "expo-build-properties",
+        {
+          ios: {
+            useFrameworks: "static",
+          },
         },
       ],
     ],

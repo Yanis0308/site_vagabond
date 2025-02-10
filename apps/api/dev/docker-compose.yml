@@ -1,8 +1,8 @@
 version: "3.8"
-name: vagabond-api
+name: new-vagabond-api
 services:
   db:
-    container_name: postgresql-postgis
+    container_name: postgresql-postgis-api
     image: postgis/postgis:16-3.4-alpine
     restart: unless-stopped
     environment:
@@ -10,17 +10,17 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: vagabond
     volumes:
-      - db-data:/var/lib/postgresql/data
+      - api-db-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
       - backend
 
   minio-s3:
-    container_name: minio-s3
+    container_name: minio-s3-api
     image: minio/minio:latest
     volumes:
-      - s3-data:/data
+      - api-s3-data:/data
     ports:
       - "9321:9000"
       - "9322:9001"
@@ -30,7 +30,7 @@ services:
     command: server --console-address ":9001" /data
 
   create-minio-buckets:
-    container_name: create-minio-buckets
+    container_name: create-minio-buckets-api
     image: minio/mc:latest
     depends_on:
       - minio-s3
@@ -42,8 +42,8 @@ services:
       exit 0;
       "
 volumes:
-  db-data:
-  s3-data:
+  api-db-data:
+  api-s3-data:
 
 networks:
   backend:
