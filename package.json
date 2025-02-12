@@ -7,7 +7,6 @@
   "packageManager": "pnpm@10.1.0",
   "scripts": {
     "prepare": "husky",
-    "postinstall": "pnpm --filter @vagabond/shared-utils run prisma-generate && pnpm --filter @vagabond/shared-utils run build",
     "prettier-write": "prettier . --write",
     "mobile-app-dev": "pnpm --filter @vagabond/mobile-app run develop"
   },

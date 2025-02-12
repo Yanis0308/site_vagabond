@@ -1,6 +1,6 @@
 import { type Static } from "@sinclair/typebox";
 
-import { type CreateVisitedPoiRequestSchema } from "../schemas/poi/visited-poi.js";
+import { jsonSchemas } from "@vagabond/shared-utils";
 import {
   PoiSourceEnum,
   Prisma,
@@ -78,7 +78,7 @@ export const getPrismaExtendedClient = () => {
       },
       visitedPoi: {
         async createCustom(
-          data: Static<typeof CreateVisitedPoiRequestSchema> & {
+          data: Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema> & {
             userId: string;
           },
         ) {

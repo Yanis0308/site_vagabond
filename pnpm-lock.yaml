@@ -97,6 +97,9 @@ importers:
       '@fastify/type-provider-typebox':
         specifier: ^5.0.1
         version: 5.1.0(@sinclair/typebox@0.33.22)
+      '@vagabond/database-client':
+        specifier: workspace:*
+        version: link:../../libs/database-client
       '@vagabond/shared-utils':
         specifier: workspace:*
         version: link:../../libs/shared-utils
@@ -149,6 +152,9 @@ importers:
 
   apps/data-manager:
     dependencies:
+      '@vagabond/database-client':
+        specifier: workspace:*
+        version: link:../../libs/database-client
       '@vagabond/shared-utils':
         specifier: workspace:*
         version: link:../../libs/shared-utils
@@ -531,17 +537,14 @@ importers:
         specifier: ^5
         version: 5.7.3
 
-  libs/shared-utils:
+  libs/database-client:
     dependencies:
       '@prisma/client':
         specifier: ^6.3.1
         version: 6.3.1(prisma@6.3.1(typescript@5.7.3))(typescript@5.7.3)
-      ajv:
-        specifier: ^8.12.0
-        version: 8.17.1
-      ajv-formats:
-        specifier: ^3.0.1
-        version: 3.0.1(ajv@8.17.1)
+      '@vagabond/shared-utils':
+        specifier: workspace:*
+        version: link:../shared-utils
     devDependencies:
       prisma:
         specifier: ^6.3.1
@@ -550,9 +553,20 @@ importers:
         specifier: ^5.6.2
         version: 5.7.3
 
-  libs/shared-utils/dist/db/generated/client: {}
+  libs/database-client/src/db/generated/client: {}
 
-  libs/shared-utils/src/db/generated/client: {}
+  libs/shared-utils:
+    dependencies:
+      ajv:
+        specifier: ^8.12.0
+        version: 8.17.1
+      ajv-formats:
+        specifier: ^3.0.1
+        version: 3.0.1(ajv@8.17.1)
+    devDependencies:
+      typescript:
+        specifier: ^5.6.2
+        version: 5.7.3
 
 packages:
 

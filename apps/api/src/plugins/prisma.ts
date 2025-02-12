@@ -1,4 +1,4 @@
-import { getPrismaExtendedClient } from "@vagabond/shared-utils";
+import { getPrismaExtendedClient } from "@vagabond/database-client";
 import type { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 
