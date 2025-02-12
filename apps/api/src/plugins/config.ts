@@ -10,6 +10,7 @@ const RawConfigSchema = z.object({
   //NODE_ENV: z.enum(["development", "production", "test"]),
   //PORT: z.string().transform(Number),
   FIREBASE_ADMIN_SERVICE_ACCOUNT_FILE_BASE64: z.string(),
+  API_DATABASE_URL: z.string(),
 });
 
 // Type d'inférence pour TypeScript
