@@ -1,8 +1,5 @@
 import { type ConfigContext, type ExpoConfig } from "expo/config";
 
-// for Github Actions CI checks
-const process = { env: {} } as { env: Record<string, string | undefined> };
-
 export default ({ config }: ConfigContext): ExpoConfig => {
   const buildProfile = process.env.BUILD_PROFILE ?? "";
   const isDevelopmentBuild =

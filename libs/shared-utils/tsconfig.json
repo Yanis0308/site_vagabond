@@ -9,7 +9,6 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "target": "ESNext"
-    // "allowJs": true // for prisma generated client
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

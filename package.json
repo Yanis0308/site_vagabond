@@ -4,10 +4,7 @@
   "description": "",
   "private": true,
   "author": "",
-  "workspaces": [
-    "apps/*",
-    "libs/*"
-  ],
+  "packageManager": "pnpm@10.1.0",
   "scripts": {
     "prepare": "husky",
     "postinstall": "pnpm --filter @vagabond/shared-utils run prisma-generate && pnpm --filter @vagabond/shared-utils run build",
@@ -15,7 +12,6 @@
     "mobile-app-dev": "pnpm --filter @vagabond/mobile-app run develop"
   },
   "dependencies": {
-    "@prisma/client": "^6.3.0",
     "@sinclair/typebox": "^0.33.22",
     "zx": "^8.3.0"
   },
@@ -37,7 +33,6 @@
     "eslint-plugin-tailwindcss": "^3.17.5",
     "husky": "^9.1.6",
     "prettier": "^3.3.3",
-    "prisma": "^6.3.0",
     "typescript": "^5.6.2",
     "typescript-eslint": "^8.15.0"
   }

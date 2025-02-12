@@ -1,8 +1,11 @@
-import { Prisma, PrismaClient } from "@prisma/client";
 import { type Static } from "@sinclair/typebox";
 
 import { type CreateVisitedPoiRequestSchema } from "../schemas/poi/visited-poi.js";
-import { type PoiSourceEnum } from ".prisma/client";
+import {
+  PoiSourceEnum,
+  Prisma,
+  PrismaClient,
+} from "./generated/client/index.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- too complex to type
 export const getPrismaExtendedClient = () => {

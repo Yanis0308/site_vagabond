@@ -1,0 +1,21 @@
+FROM node:20-alpine AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable
+# https://github.com/pnpm/pnpm/issues/9029
+RUN npm i -g corepack@latest
+
+FROM base AS build
+COPY . /app
+WORKDIR /app
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm run --filter @vagabond/api build
+RUN pnpm deploy --filter @vagabond/api --prod /prod/api
+# RUN ls -la /prod/api
+
+FROM base AS api
+COPY --from=build /prod/api /prod/api
+WORKDIR /prod/api
+# RUN ls -la /prod/api
+EXPOSE 3000
+CMD ["pnpm", "--filter", "@vagabond/api", "start"]
