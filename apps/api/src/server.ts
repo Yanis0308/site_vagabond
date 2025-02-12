@@ -34,8 +34,12 @@ const start = async (): Promise<void> => {
 
     app.log.info(`Server listening on port ${port}`);
   } catch (err) {
-    app.log.error("Error starting server:", err);
-    app.log.error(JSON.stringify(err));
+    app.log.error(
+      "Error starting server:",
+      err,
+      ", stringified:",
+      JSON.stringify(err),
+    );
     process.exit(1);
   }
 };
