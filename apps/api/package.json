@@ -20,7 +20,7 @@
     "start": "pnpm run prisma-migrate-deploy && node dist/server.js",
     "build": "tsc",
     "develop": "tsc-watch --onSuccess 'node ./dist/server.js'",
-    "prisma-migrate-deploy": "pnpx prisma migrate deploy --schema=node_modules/@vagabond/shared-utils/src/db/api-schema.prisma"
+    "prisma-migrate-deploy": "pnpx prisma migrate deploy --schema=node_modules/@vagabond/database-client/src/db/api-schema.prisma"
   },
   "keywords": [],
   "author": "",
