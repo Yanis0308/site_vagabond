@@ -21,6 +21,7 @@
     "build-cloud-ios-preview": "dotenvx run -- eas build --platform ios --profile development --clear-cache",
     "build-local-android-dev": "dotenvx run -- eas build --platform android --profile development --clear-cache --local",
     "build-cloud-android-dev": "dotenvx run -- eas build --platform android --profile development --clear-cache",
+    "build-local-android-preview": "dotenvx run -- eas build --platform android --profile preview --clear-cache --local",
     "build-cloud-android-preview": "dotenvx run -- eas build --platform android --profile preview --clear-cache"
   },
   "dependencies": {

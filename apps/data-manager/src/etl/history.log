@@ -1,0 +1,31 @@
+PBF full France - 4 go
+2025-02-12 23:52:25  osm2pgsql version 2.0.1
+2025-02-12 23:52:26  Database version: 17.0
+2025-02-12 23:52:26  PostGIS version: 3.5
+2025-02-12 23:52:26  Initializing properties table '"public"."osm2pgsql_properties"'.
+2025-02-12 23:52:26  Storing properties to table '"public"."osm2pgsql_properties"'.
+2025-02-13 00:01:59  Reading input files done in 573s (9m 33s).
+2025-02-13 00:01:59    Processed 496220603 nodes in 49s - 10127k/s
+2025-02-13 00:01:59    Processed 69773080 ways in 341s (5m 41s) - 205k/s
+2025-02-13 00:01:59    Processed 1019596 relations in 183s (3m 3s) - 6k/s
+2025-02-13 00:01:59  No marked nodes or ways (Skipping stage 2).
+2025-02-13 00:01:59  Clustering table 'raw_pois' by geometry...
+2025-02-13 00:01:59  Clustering table 'boundaries' by geometry...
+2025-02-13 00:02:03  Creating index on table 'raw_pois' ("geom")...
+2025-02-13 00:02:03  Analyzing table 'raw_pois'...
+2025-02-13 00:02:03  All postprocessing on table 'raw_pois' done in 4s.
+2025-02-13 00:02:15  Creating index on table 'boundaries' ("geom")...
+2025-02-13 00:02:15  Analyzing table 'boundaries'...
+2025-02-13 00:02:16  All postprocessing on table 'boundaries' done in 17s.
+2025-02-13 00:02:16  Storing properties to table '"public"."osm2pgsql_properties"'.
+2025-02-13 00:02:16  osm2pgsql took 590s (9m 50s) overall.
+
+- sur la bdd data-manager
+-- pour les boundaries ça fait 40k rows pour 475mo
+-- pour les raw_pois ça fait 268k rows pour 100mo
+
+- sur la bdd de l'API
+-- pour les pois ça fait 132k rows pour 31mo
+-- pour les poi_data ça fait 132k rows pour 66mo
+
+

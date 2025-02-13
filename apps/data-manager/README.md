@@ -8,7 +8,7 @@
 
 ### Transform
 
-`pnpm run transform`
+`pnpm run transform-and-load`
 
 ### Load
 - automatically done by the transform script
