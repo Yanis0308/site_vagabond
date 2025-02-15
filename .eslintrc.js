@@ -56,5 +56,6 @@ module.exports = {
     //   },
     // ],
     "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
+    "@typescript-eslint/no-redundant-type-constituents": "off",
   },
 };

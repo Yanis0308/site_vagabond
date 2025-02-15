@@ -1,7 +1,11 @@
 // https://docs.expo.dev/guides/using-eslint/
 require("dotenv").config();
 
-const ENABLE_SAFEQL = process.env.ENABLE_SAFEQL === "true";
+const SAFEQL_DATABASE_URL = process.env.SAFEQL_DATABASE_URL;
+console.log(
+  "=== ESLint data manager, SAFEQL_DATABASE_URL",
+  SAFEQL_DATABASE_URL,
+);
 
 module.exports = {
   extends: ["../../.eslintrc"],
@@ -11,18 +15,18 @@ module.exports = {
     alwaysTryTypes: true,
   },
 
-  plugins: ENABLE_SAFEQL ? ["@ts-safeql/eslint-plugin"] : [],
+  plugins: SAFEQL_DATABASE_URL ? ["@ts-safeql/eslint-plugin"] : [],
 
   ignorePatterns: ["node_modules/", "*.js", "*.mjs"],
 
   rules: {
-    ...(ENABLE_SAFEQL
+    ...(SAFEQL_DATABASE_URL
       ? {
           "@ts-safeql/check-sql": [
             "error",
             {
               connections: {
-                databaseUrl: process.env.DATA_MANAGER_DATABASE_URL,
+                databaseUrl: SAFEQL_DATABASE_URL,
                 targets: [
                   // This makes knex.raw commands linted
                   {
