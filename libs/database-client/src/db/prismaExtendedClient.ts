@@ -1,11 +1,13 @@
 import { type Static } from "@sinclair/typebox";
+import { type jsonSchemas } from "@vagabond/shared-utils";
 
-import { jsonSchemas } from "@vagabond/shared-utils";
 import {
-  PoiSourceEnum,
+  type PoiSourceEnum,
   Prisma,
   PrismaClient,
 } from "./generated/client/index.js";
+
+/* eslint-disable @typescript-eslint/array-type -- conflict with @ts-safeql/check-sql */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- too complex to type
 export const getPrismaExtendedClient = () => {
@@ -14,13 +16,13 @@ export const getPrismaExtendedClient = () => {
   }).$extends({
     model: {
       poi: {
-        async findInBoundingBox(boundingBox: {
+        async findInBoundingBoxWithData(boundingBox: {
           minLat: number;
           maxLat: number;
           minLng: number;
           maxLng: number;
         }) {
-          const polygon = `POLYGON(( 
+          const polygon = `POLYGON((
             ${boundingBox.minLng} ${boundingBox.minLat},
             ${boundingBox.maxLng} ${boundingBox.minLat},
             ${boundingBox.maxLng} ${boundingBox.maxLat},
@@ -28,29 +30,66 @@ export const getPrismaExtendedClient = () => {
             ${boundingBox.minLng} ${boundingBox.minLat}
           ))`;
 
-          const pois = await prismaExtendedClient.$queryRaw<
+          const poisWithData = await prismaExtendedClient.$queryRaw<
             Array<{
               id: string;
-              // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- SafeQL returns unknown | null
-              longitude: unknown | null;
-              // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- SafeQL returns unknown | null
-              latitude: unknown | null;
+              coords: { longitude: unknown | null; latitude: unknown | null };
+              data:
+                | {
+                    id: number | null;
+                    name: string | null;
+                    description: string | null;
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SafeQL generated type
+                    rawInfo: any | null;
+                    language: "EN" | "FR" | null;
+                    dataSource: "OSM" | "AI" | "CUSTOM" | null;
+                    createdAt: unknown | null;
+                    updatedAt: unknown | null;
+                  }[]
+                | null;
             }>
-          >` 
-            SELECT id,
-              ST_X(coords::geometry) as longitude,
-              ST_Y(coords::geometry) as latitude
-            FROM pois
-            WHERE ST_Within(coords::geometry, ST_GeomFromText(${polygon}, 4326));
-          `;
+          >`SELECT 
+              p.id,
+              json_build_object(
+                'longitude', ST_X(p.coords::geometry),
+                'latitude', ST_Y(p.coords::geometry)
+              ) as coords,
+              json_agg (
+                json_build_object(
+                  'id', pd.id,
+                  'name', pd.name,
+                  'description', pd.description,
+                  'rawInfo', pd.raw_info,
+                  'language', pd.language,
+                    'dataSource', pd.source,
+                    'createdAt', to_char(pd.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
+                    'updatedAt', to_char(pd.updated_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')
+                )
+              ) AS data
+            FROM pois p
+            LEFT JOIN poi_data pd ON p.id = pd.poi_id
+            WHERE ST_Within(p.coords::geometry, ST_GeomFromText(${polygon}, 4326))
+            GROUP BY p.id
+            LIMIT 1000;`;
 
-          return pois.map((poi) => ({
-            id: poi.id,
+          //TODO: au lieu de cast on pourrait utiliser une validation en JS mais cela ajouterait du runtime
+          return poisWithData as unknown as Array<{
+            id: string;
             coords: {
-              latitude: Number(poi.latitude),
-              longitude: Number(poi.longitude),
-            },
-          }));
+              latitude: number;
+              longitude: number;
+            };
+            data: {
+              id: number;
+              name: string;
+              description: string;
+              rawInfo: Record<string, unknown>;
+              language: "EN" | "FR";
+              dataSource: "OSM" | "AI" | "CUSTOM";
+              createdAt: string;
+              updatedAt: string;
+            }[];
+          }>;
         },
         async createManyCustom(
           data: Array<{
@@ -99,3 +138,5 @@ export const getPrismaExtendedClient = () => {
 
   return prismaExtendedClient;
 };
+
+/* eslint-enable @typescript-eslint/array-type -- re-enable linting */

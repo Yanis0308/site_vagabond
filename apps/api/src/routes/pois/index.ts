@@ -18,34 +18,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      // const { minLat, maxLat, minLng, maxLng } = request.query;
-      // const nb: number = minLat;
-
-      const pois = await fastify.prisma.poi.findInBoundingBox(request.query);
-
-      const poiDatas = await fastify.prisma.poiData.findMany({
-        where: {
-          poiId: { in: pois.map((poi) => poi.id) },
-        },
-      });
-
-      const poisWithData = pois.map((poi) => {
-        const poiDatasForThisPoi = poiDatas.filter((p) => p.poiId === poi.id);
-        return {
-          id: poi.id,
-          coords: poi.coords,
-          data: poiDatasForThisPoi.map((poiData) => ({
-            id: poiData.id,
-            name: poiData.name,
-            description: poiData.description,
-            rawInfo: poiData.rawInfo,
-            language: poiData.language,
-            dataSource: poiData.source,
-            createdAt: poiData.createdAt.toISOString(),
-            updatedAt: poiData.updatedAt.toISOString(),
-          })),
-        };
-      });
+      const poisWithData = await fastify.prisma.poi.findInBoundingBoxWithData(
+        request.query,
+      );
 
       return await reply.status(200).send({ data: poisWithData });
     },
