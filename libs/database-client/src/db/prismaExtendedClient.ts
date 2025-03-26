@@ -10,9 +10,11 @@ import {
 /* eslint-disable @typescript-eslint/array-type -- conflict with @ts-safeql/check-sql */
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- too complex to type
-export const getPrismaExtendedClient = () => {
+export const getPrismaExtendedClient = (withQueryLog = false) => {
   const prismaExtendedClient = new PrismaClient({
-    log: ["query", "info", "warn", "error"],
+    log: withQueryLog
+      ? ["info", "warn", "error", "query"]
+      : ["info", "warn", "error"],
   }).$extends({
     model: {
       poi: {
@@ -69,6 +71,7 @@ export const getPrismaExtendedClient = () => {
             FROM pois p
             LEFT JOIN poi_data pd ON p.id = pd.poi_id
             WHERE ST_Within(p.coords::geometry, ST_GeomFromText(${polygon}, 4326))
+            AND p.disabled = false
             GROUP BY p.id
             LIMIT 1000;`;
 
@@ -113,6 +116,43 @@ export const getPrismaExtendedClient = () => {
             )};
           `;
           /* eslint-enable @ts-safeql/check-sql -- re-enable linting */
+        },
+        async manyDisable(ids: string[], reason: string) {
+          return await prismaExtendedClient.poi.updateMany({
+            where: { id: { in: ids } },
+            data: { disabled: true, disabledReason: reason },
+          });
+        },
+      },
+      poiData: {
+        async findDuplicatesByMhsRef() {
+          return await prismaExtendedClient.$queryRaw<
+            Array<{ poi_id: string }>
+          >`
+            WITH duplicate_mhs AS (
+              SELECT 
+                pd.raw_info->>'ref:mhs' as mhs_ref
+              FROM poi_data pd
+              WHERE 
+                pd.raw_info->>'ref:mhs' IS NOT NULL 
+                AND pd.raw_info->>'ref:mhs' != ''
+              GROUP BY pd.raw_info->>'ref:mhs'
+              HAVING COUNT(DISTINCT pd.poi_id) > 1
+            ),
+            
+          ranked_pois AS (
+            SELECT 
+              p.id,
+              pd.raw_info->>'ref:mhs' as mhs_ref,
+              ROW_NUMBER() OVER (PARTITION BY pd.raw_info->>'ref:mhs' ORDER BY p.id) as rn
+            FROM pois p
+            JOIN poi_data pd ON p.id = pd.poi_id
+            WHERE pd.raw_info->>'ref:mhs' IN (SELECT mhs_ref FROM duplicate_mhs)
+            )
+
+            SELECT id as "poi_id" 
+            FROM ranked_pois
+            WHERE rn > 1;`;
         },
       },
       visitedPoi: {

@@ -1,12 +1,12 @@
 import { getPrismaExtendedClient } from "@vagabond/database-client";
-
-import { type ExtractedPoiDatabaseRow } from "./transform";
 import {
   LanguageEnum,
   PoiSourceEnum,
-  Prisma,
+  type Prisma,
 } from "@vagabond/database-client/dist/db/generated/client";
 import { logger } from "@vagabond/shared-utils";
+
+import { type ExtractedPoiDatabaseRow } from "./transform";
 
 export async function load(data: ExtractedPoiDatabaseRow[]): Promise<void> {
   const prismaExtendedClient = getPrismaExtendedClient();

@@ -7,7 +7,13 @@ module.exports = {
     alwaysTryTypes: true,
   },
 
-  ignorePatterns: ["node_modules/", ".expo/", "components/ui/", "*.js"],
+  ignorePatterns: [
+    "node_modules/",
+    ".expo/",
+    "components/ui/",
+    "*.js",
+    "expo-env.d.ts",
+  ],
 
   plugins: ["@arthurgeron/react-usememo"],
 

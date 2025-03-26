@@ -1,4 +1,4 @@
-import { firebase } from "@react-native-firebase/auth";
+import { firebase, getAuth } from "@react-native-firebase/auth";
 import {
   GoogleSignin,
   isErrorWithCode,
@@ -52,7 +52,7 @@ export const useGoogleLoginMutation = (): UseMutationResult<
             firebase.auth.GoogleAuthProvider.credential(idToken);
 
           // Sign-in the user with the credential
-          await firebase.auth().signInWithCredential(googleCredential);
+          await getAuth().signInWithCredential(googleCredential);
         } else {
           // sign in was cancelled by user
           logger("sign-in cancelled by user");

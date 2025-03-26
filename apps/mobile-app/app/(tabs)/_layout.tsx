@@ -1,4 +1,4 @@
-import auth from "@react-native-firebase/auth";
+import { getAuth } from "@react-native-firebase/auth";
 import { Redirect, Tabs, usePathname } from "expo-router";
 import React, { type ReactElement, useMemo } from "react";
 
@@ -7,7 +7,7 @@ import { logger } from "@/utils/logger";
 
 //eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function TabLayout(): ReactElement {
-  const user = auth().currentUser;
+  const user = getAuth().currentUser;
   const pathname = usePathname();
 
   const screenOptions = useMemo(
@@ -27,6 +27,19 @@ export default function TabLayout(): ReactElement {
 
   return (
     <Tabs screenOptions={screenOptions}>
+      <Tabs.Screen
+        name="camera-test"
+        options={{
+          title: "Camera",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "camera" : "camera-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="index"
         options={{

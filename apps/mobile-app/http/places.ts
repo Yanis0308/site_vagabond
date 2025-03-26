@@ -1,7 +1,8 @@
-import { jsonSchemas, logger } from "@vagabond/shared-utils";
+import { jsonSchemas } from "@vagabond/shared-utils";
 import { generateValidator } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
+import { logger } from "@/utils/logger";
 import { type BoundingBoxType, type PoiType } from "@/utils/types";
 const validateResponse = generateValidator(jsonSchemas.GetPoisResponseSchema);
 
@@ -18,7 +19,7 @@ export const getPlaces = async (
     throw new Error("Invalid response");
   }
 
-  logger.info("places length:", rawResult.data.length);
+  logger("places length:", rawResult.data.length);
 
   return rawResult.data;
 };

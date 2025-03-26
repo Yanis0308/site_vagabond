@@ -1,4 +1,4 @@
-import auth from "@react-native-firebase/auth";
+import { getAuth } from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
 import { type ReactElement, useCallback, useState } from "react";
@@ -21,7 +21,7 @@ export default function HomeScreen(): ReactElement {
       } catch (error) {
         logger("Error GoogleSignin revoking access", error);
       }
-      await auth().signOut();
+      await getAuth().signOut();
       router.replace("/sign-in");
     } catch (error) {
       logger("Error signing out", error);

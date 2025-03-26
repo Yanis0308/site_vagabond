@@ -19,9 +19,9 @@ import Supercluster from "supercluster";
 
 import { selectAllPoisByTags } from "@/query/select";
 
-import { ClusterMarker, type PoiCluster } from "./components/ClusterMarker";
-import { type FilterValue, PoiFilters } from "./components/PoiFilters";
-import { PoiPopup } from "./components/PoiPopup";
+import { ClusterMarker, type PoiCluster } from "../../components/ClusterMarker";
+import { type FilterValue, PoiFilters } from "../../components/PoiFilters";
+import { PoiPopup } from "../../components/PoiPopup";
 import { INITIAL_VIEW_STATE } from "./constants";
 import { type RawPoi } from "./types";
 

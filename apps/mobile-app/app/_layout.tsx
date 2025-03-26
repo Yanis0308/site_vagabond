@@ -2,7 +2,8 @@ import "@/global.css";
 import "react-native-reanimated";
 import "../global.css";
 
-import auth from "@react-native-firebase/auth";
+import { getAuth } from "@react-native-firebase/auth";
+import Mapbox from "@rnmapbox/maps";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -11,6 +12,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { config } from "@/constants/Config";
 import { queryClient } from "@/constants/QueryClient";
 import { logger } from "@/utils/logger";
 
@@ -24,7 +26,7 @@ export default function RootLayout(): ReactElement | null {
   const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged((user) => {
+    const subscriber = getAuth().onAuthStateChanged((user) => {
       logger("onAuthStateChanged user:", typeof user);
       setInitializing((prevInitializing) => {
         if (prevInitializing) {
@@ -35,6 +37,16 @@ export default function RootLayout(): ReactElement | null {
     });
     return subscriber; // unsubscribe on unmount
   }, [initializing]);
+
+  useEffect(() => {
+    Mapbox.setAccessToken(config.publicMapboxToken)
+      .then(() => {
+        Mapbox.setTelemetryEnabled(false);
+      })
+      .catch((error: unknown) => {
+        logger("Error setting Mapbox access token:", error);
+      });
+  }, []);
 
   const onLayoutRootView = useCallback(() => {
     if (!initializing) {

@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import knex from "knex";
 
 import { load } from "./load";
+import { postLoad } from "./post-load";
 
 export type ExtractedPoiDatabaseRow = Static<
   typeof jsonSchemas.ExtractedPoiDatabaseRowSchema
@@ -33,11 +34,11 @@ async function transform(): Promise<void> {
           osm_type: string;
           osm_id: string;
           name: string | null;
-          // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- conflict with SafeQL
+
           longitude: unknown | null;
-          // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- conflict with SafeQL
+
           latitude: unknown | null;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-redundant-type-constituents -- conflict with SafeQL
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- conflict with SafeQL
           tags: any | null;
         }>
       >(
@@ -50,8 +51,8 @@ async function transform(): Promise<void> {
       p.tags
     FROM raw_pois p
     WHERE
-    (osm_type <> 'R')
-    AND (p.name IS NOT NULL OR p.name <> '' OR p.tags->>'wikidata' IS NOT NULL OR p.tags->>'wikipedia' IS NOT NULL)
+    -- (osm_type <> 'R') AND
+    (p.name IS NOT NULL OR p.name <> '' OR p.tags->>'wikidata' IS NOT NULL OR p.tags->>'wikipedia' IS NOT NULL)
     AND (
       (p.tags->>'leisure' = 'park')
       OR (
@@ -88,6 +89,8 @@ async function transform(): Promise<void> {
     if (batch.length > 0) {
       await processBatch(batch);
     }
+
+    await postLoad();
 
     logger.info("Transformation des données terminée avec succès");
   } catch (error) {

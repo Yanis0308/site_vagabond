@@ -36,9 +36,6 @@ model Poi {
   disabled       Boolean                              @default(false) @map("disabled")
   disabledReason String?                              @map("disabled_reason") @db.VarChar(1000)
 
-  visitedPois VisitedPoi[]
-  poiDatas    PoiData[]
-
   @@unique(name: "unique_source_and_source_id", [source, sourceId])
   @@index([coords], name: "coords_index", type: Gist)
   @@map("pois")
@@ -60,8 +57,6 @@ model PoiData {
   sourceId    String            @map("source_id") @db.VarChar(1000)
   language    LanguageEnum      @map("language")
 
-  //TODO: retirer la contrainte de clef étrangère pour éviter de forcer la suppression en cascade
-  poi   Poi    @relation(fields: [poiId], references: [id])
   poiId String @map("poi_id") @db.VarChar(1000)
 
   @@unique(name: "unique_source_and_source_id_and_language", [source, sourceId, language])
@@ -88,7 +83,6 @@ model VisitedPoi {
   status VisitedPoiStatus                     @default(PENDING) @map("status")
   coords Unsupported("geometry(Point, 4326)") @map("coords")
 
-  poi   Poi    @relation(fields: [poiId], references: [id])
   poiId String @map("poi_id") @db.VarChar(1000)
 
   user   User   @relation(fields: [userId], references: [id])

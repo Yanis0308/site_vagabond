@@ -2,8 +2,7 @@ import { type ConfigContext, type ExpoConfig } from "expo/config";
 
 export default ({ config }: ConfigContext): ExpoConfig => {
   const buildProfile = process.env.BUILD_PROFILE ?? "";
-  const isDevelopmentBuild =
-    buildProfile !== "preview" && buildProfile !== "production";
+  const isDevelopmentBuild = buildProfile !== "production";
 
   // eslint-disable-next-line no-console -- AppConfig debug logs
   console.log(
@@ -17,26 +16,27 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   const variantConfig: {
     appName: string;
     packageAndBundleIdentifier: string;
-    googleMapsApiKey: string | undefined;
     googleServicesFiles: {
       ios: string | undefined;
       android: string | undefined;
     };
+    privateMapboxToken: string | undefined;
     runtimeConfig: {
       apiBaseUrl: string | undefined;
       appleSignInRedirectUrl: string | undefined;
       appleSignInServiceId: string | undefined;
       googleSignInWebClientId: string | undefined;
+      publicMapboxToken: string | undefined;
     };
   } = isDevelopmentBuild
     ? {
         appName: "DEV Vagabond",
         packageAndBundleIdentifier: "dev.com.vagabond.explore.tourism",
-        googleMapsApiKey: process.env.DEV_GOOGLE_MAPS_API_KEY,
         googleServicesFiles: {
           ios: process.env.DEV_GOOGLE_SERVICES_PLIST,
           android: process.env.DEV_GOOGLE_SERVICES_JSON,
         },
+        privateMapboxToken: process.env.DEV_PRIVATE_MAPBOX_TOKEN,
         runtimeConfig: {
           apiBaseUrl: process.env.DEV_EXPO_PUBLIC_API_URL,
           appleSignInRedirectUrl:
@@ -45,29 +45,32 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
           googleSignInWebClientId:
             process.env.DEV_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
+          publicMapboxToken: process.env.DEV_PUBLIC_MAPBOX_TOKEN,
         },
       }
-    : {
+    : // We have never tested this before
+      {
         appName: "Vagabond",
         packageAndBundleIdentifier: "com.vagabond.explore.tourism",
-        googleMapsApiKey: process.env.TST_GOOGLE_MAPS_API_KEY,
         googleServicesFiles: {
-          ios: process.env.TST_GOOGLE_SERVICES_PLIST,
-          android: process.env.TST_GOOGLE_SERVICES_JSON,
+          ios: process.env.PRD_GOOGLE_SERVICES_PLIST,
+          android: process.env.PRD_GOOGLE_SERVICES_JSON,
         },
+        privateMapboxToken: process.env.PRD_PRIVATE_MAPBOX_TOKEN,
         runtimeConfig: {
-          apiBaseUrl: process.env.TST_EXPO_PUBLIC_API_URL,
+          apiBaseUrl: process.env.PRD_EXPO_PUBLIC_API_URL,
           appleSignInRedirectUrl:
-            process.env.TST_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
+            process.env.PRD_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
           appleSignInServiceId:
-            process.env.TST_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
+            process.env.PRD_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
           googleSignInWebClientId:
-            process.env.TST_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
+            process.env.PRD_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
+          publicMapboxToken: process.env.PRD_PUBLIC_MAPBOX_TOKEN,
         },
       };
   return {
     ...config,
-    newArchEnabled: false, // Disable new architecture to avoid issues with react-native-maps - 07/02/2025
+    newArchEnabled: true,
     name: variantConfig.appName, // For Expo Go and standalone app
     slug: "mobile-app", // For Expo EAS project
     owner: "vagabond-app", // Expo account name
@@ -93,7 +96,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
       googleServicesFile: variantConfig.googleServicesFiles.ios,
       config: {
-        googleMapsApiKey: variantConfig.googleMapsApiKey,
         usesNonExemptEncryption: false,
       },
     },
@@ -107,11 +109,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         "android.permission.ACCESS_FINE_LOCATION",
       ],
       package: variantConfig.packageAndBundleIdentifier,
-      config: {
-        googleMaps: {
-          apiKey: variantConfig.googleMapsApiKey,
-        },
-      },
       googleServicesFile: variantConfig.googleServicesFiles.android,
     },
     web: {
@@ -143,6 +140,23 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             "The app accesses your photos to let you share them with your friends.",
         },
       ],
+      [
+        "expo-media-library",
+        {
+          photosPermission: "Allow $(PRODUCT_NAME) to access your photos.",
+          savePhotosPermission: "Allow $(PRODUCT_NAME) to save photos.",
+          isAccessMediaLocationEnabled: true,
+        },
+      ],
+      [
+        "expo-camera",
+        {
+          cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
+          microphonePermission:
+            "Allow $(PRODUCT_NAME) to access your microphone",
+          recordAudioAndroid: true,
+        },
+      ],
       "@react-native-google-signin/google-signin",
       [
         "expo-secure-store",
@@ -163,8 +177,17 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         "expo-build-properties",
         {
           ios: {
+            // For firebase auth
             useFrameworks: "static",
           },
+        },
+      ],
+      [
+        "@rnmapbox/maps",
+        {
+          RNMapboxMapsDownloadToken: variantConfig.privateMapboxToken,
+          // Manually update the version when needed
+          RNMapboxMapsVersion: "11.10.1",
         },
       ],
     ],

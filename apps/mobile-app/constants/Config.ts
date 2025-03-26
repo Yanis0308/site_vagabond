@@ -1,12 +1,14 @@
 import Constants from "expo-constants";
 import { z } from "zod";
 
+//TODO: remove zod and use typebox to validate the config
 const ConfigSchema = z.object({
   apiBaseUrl: z.string().url(),
   appleSignInServiceId: z.string(),
   appleSignInRedirectUrl: z.string().url(),
   googleSignInWebClientId: z.string(),
   isLocalDev: z.boolean(),
+  publicMapboxToken: z.string(),
 });
 
 // Expo will replace explicitly "process.env.my_key" by the corresponding env var, so we need to use it in plain text

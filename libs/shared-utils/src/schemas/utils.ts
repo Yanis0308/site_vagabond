@@ -1,11 +1,7 @@
-import { TSchema } from "@sinclair/typebox";
-
-import { TObject } from "@sinclair/typebox";
-
-import { TRef } from "@sinclair/typebox";
-
-import { TOptional } from "@sinclair/typebox";
-
+import { type TSchema } from "@sinclair/typebox";
+import { type TObject } from "@sinclair/typebox";
+import { type TRef } from "@sinclair/typebox";
+import { type TOptional } from "@sinclair/typebox";
 import { Type } from "@sinclair/typebox";
 
 import { MetadataSchema } from "./metadata.js";

@@ -4,7 +4,7 @@ import {
   appleAuthAndroid,
   type AppleRequestResponse,
 } from "@invertase/react-native-apple-authentication";
-import { firebase } from "@react-native-firebase/auth";
+import { firebase, getAuth } from "@react-native-firebase/auth";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { Platform } from "react-native";
@@ -83,9 +83,9 @@ export const useAppleLoginMutation = (): UseMutationResult<
         identityToken,
         nonce,
       );
-      const userCredential = await firebase
-        .auth()
-        .signInWithCredential(appleCredential);
+
+      const userCredential =
+        await getAuth().signInWithCredential(appleCredential);
 
       // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
       logger(

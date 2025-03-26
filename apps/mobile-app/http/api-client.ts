@@ -1,4 +1,4 @@
-import { firebase } from "@react-native-firebase/auth";
+import { getAuth } from "@react-native-firebase/auth";
 import ky, { type KyInstance } from "ky";
 
 import { config } from "@/constants/Config";
@@ -10,7 +10,7 @@ export const apiClient: KyInstance = ky.create({
       async (request): Promise<void> => {
         request.headers.set(
           "Authorization",
-          `Bearer ${await firebase.auth().currentUser?.getIdToken()}`,
+          `Bearer ${await getAuth().currentUser?.getIdToken()}`,
         );
       },
     ],

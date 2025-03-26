@@ -6,6 +6,7 @@ module.exports = {
     "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:eslint-comments/recommended",
     "plugin:tailwindcss/recommended",
+    "plugin:@tanstack/query/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {

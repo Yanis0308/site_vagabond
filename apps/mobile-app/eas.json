@@ -12,7 +12,7 @@
         "image": "latest"
       },
       "env": {
-        "BUILD_PROFILE": "development-simulator"
+        "BUILD_PROFILE": "development"
       }
     },
     "development": {
@@ -30,6 +30,7 @@
     },
     "preview": {
       "distribution": "internal",
+      "autoIncrement": true,
       "android": {
         "image": "latest"
       },
@@ -41,6 +42,7 @@
       }
     },
     "production": {
+      "distribution": "store",
       "autoIncrement": true,
       "android": {
         "image": "latest"
