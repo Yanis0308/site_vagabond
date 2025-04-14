@@ -107,7 +107,9 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
           <div className="absolute bottom-0 left-0 p-8 text-white">
-            <h1 className="mb-2 text-5xl font-bold">{tWithCity("name")}</h1>
+            <h1 className="mb-2 text-5xl font-bold">
+              {tWithCity("name")}, {tWithCity("country")}
+            </h1>
             <h2 className="text-2xl italic">{tWithCity("title")}</h2>
           </div>
         </div>

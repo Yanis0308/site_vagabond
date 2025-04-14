@@ -4,6 +4,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
 import { CITIES_WITH_COUNTRIES } from "@/app/[lng]/quizz/recommend-city/data/cities";
+
+import { getRecommendCityPrompt } from "./prompt";
 // Type pour les réponses
 interface QuizResponse {
   question: string;
@@ -57,7 +59,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       input: [
         {
           role: "system",
-          content: `Tu es un conseiller voyage expert et tu dois conseiller les utilisateurs qui t'envoient leurs réponses à un questionnaire sur leurs préférences de voyage. Tu dois recommander une ville parfaite basée sur les préférences de l'utilisateur. Les villes possibles sont les suivantes: ${citiesList}.`,
+          content: getRecommendCityPrompt(citiesList),
         },
         {
           role: "user",

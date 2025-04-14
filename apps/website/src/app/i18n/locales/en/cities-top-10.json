@@ -1,5 +1,4 @@
 {
-  "explore": "Explore {{city}}",
   "top-6-places": "Top 6 Must-See Places",
   "taste": "Must-Try",
   "to-know": {
@@ -31,6 +30,7 @@
   "home": "Home",
   "lisbon": {
     "name": "Lisbon",
+    "country": "Portugal 🇵🇹",
     "image": "https://mediaim.expedia.com/destination/9/2b68ed01acfa78bb3a6d9424e12bbe12.jpg",
     "title": "Lisbon, the city with Atlantic colors",
     "description": "Let yourself be charmed by Lisbon, a city both historic and modern, where cobbled streets meet trendy neighborhoods and miradouros offer breathtaking views of the Atlantic Ocean. Discover our personalized guide that reveals the must-see places, our culinary recommendations, and practical information to prepare for your ideal summer!",
@@ -95,6 +95,7 @@
   },
   "paris": {
     "name": "Paris",
+    "country": "France 🇫🇷",
     "image": "https://media.timeout.com/images/105240236/image.jpg",
     "title": "Paris, the city of light and romance",
     "description": "Immerse yourself in the magic of Paris, where history meets modernity, and every street corner tells a story. From the iconic Eiffel Tower to charming Montmartre, discover our curated guide featuring must-see attractions, culinary delights, and essential tips for your perfect Parisian adventure!",
@@ -159,6 +160,7 @@
   },
   "madrid": {
     "name": "Madrid",
+    "country": "Spain 🇪🇸",
     "image": "https://keystoneacademic-res.cloudinary.com/image/upload/v1696428312/articles/educationscom/article-open-graph-image-17358.jpg",
     "title": "Madrid, the vibrant heart of Spain",
     "description": "Explore Madrid, the Spanish capital, where art, culture and gastronomy meet in a warm and dynamic atmosphere. Stroll through its lively streets, discover its world-renowned museums and taste tapas in traditional bars. Our guide offers a selection of must-see places, culinary specialties to savor, and practical advice for a memorable stay.",
@@ -223,6 +225,7 @@
   },
   "tokyo": {
     "name": "Tokyo",
+    "country": "Japan 🇯🇵",
     "image": "https://destinationjapon.fr/wp-content/uploads/2019/09/tokyo_shinjuku_blog.jpg",
     "title": "Tokyo, the futuristic and traditional Japanese metropolis",
     "description": "Discover Tokyo, a city where modernity and tradition harmoniously coexist. From glittering skyscrapers to ancient temples, Tokyo offers a unique experience around every corner. Immerse yourself in the bustle of its vibrant districts, savor authentic Japanese cuisine, and explore the iconic places that make Tokyo an unmissable destination.",
@@ -287,6 +290,7 @@
   },
   "rome": {
     "name": "Rome",
+    "country": "Italy 🇮🇹",
     "image": "https://media.timeout.com/images/105240236/image.jpg",
     "title": "Rome, the eternal city",
     "description": "Step into the heart of ancient history and modern Italian culture in Rome. From the majestic Colosseum to the Vatican City, discover our comprehensive guide featuring iconic landmarks, authentic cuisine, and essential tips for your unforgettable Roman holiday!",
@@ -351,6 +355,7 @@
   },
   "milan": {
     "name": "Milan",
+    "country": "Italy 🇮🇹",
     "image": "https://images.theconversation.com/files/276383/original/file-20190524-187185-lqo304.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1000&fit=clip",
     "title": "Milan, the capital of fashion and design",
     "description": "Discover Milan, a city where elegance and innovation meet. Known as the fashion capital, Milan is also rich in history and culture. Explore its iconic monuments, stroll through its trendy neighborhoods, and savor Milanese cuisine in traditional trattorias. Our guide offers a selection of must-see places, culinary specialties to taste, and practical advice for an unforgettable stay.",
@@ -415,6 +420,7 @@
   },
   "new-york": {
     "name": "New York",
+    "country": "United States 🇺🇸",
     "image": "https://www.nyc.fr/wp-content/uploads/2015/07/New_York_City-scaled.jpg",
     "title": "New York, the city that never sleeps",
     "description": "Discover New York, a vibrant and cosmopolitan metropolis where each neighborhood offers a unique experience. From the iconic Statue of Liberty to the dazzling lights of Times Square, New York is a city of contrasts and energy. Explore its parks, world-renowned museums, and savor New York cuisine in its numerous restaurants and food trucks.",
@@ -479,6 +485,7 @@
   },
   "amsterdam": {
     "name": "Amsterdam",
+    "country": "Netherlands 🇳🇱",
     "image": "https://media.timeout.com/images/105240236/image.jpg",
     "title": "Amsterdam, the city of canals and culture",
     "description": "Experience the unique charm of Amsterdam, where historic canals meet modern culture. From world-class museums to cozy cafés, discover our comprehensive guide featuring must-see attractions, local delicacies, and essential tips for your perfect Dutch adventure!",
@@ -543,6 +550,7 @@
   },
   "sydney": {
     "name": "Sydney",
+    "country": "Australia 🇦🇺",
     "image": "https://content.r9cdn.net/rimg/dimg/12/98/b1e36771-city-2258-163f4d7f814.jpg?crop=true&width=1020&height=498",
     "title": "Sydney, the pearl of Australia",
     "description": "Discover Sydney, a dynamic and cosmopolitan city where nature and urban development meet harmoniously. From the iconic Sydney Opera House to the golden sand beaches of Bondi, Sydney offers a multitude of activities for all tastes. Explore its lush botanical gardens, historic neighborhoods, and savor Australian cuisine in its many restaurants and cafes.",
@@ -607,6 +615,7 @@
   },
   "singapore": {
     "name": "Singapore",
+    "country": "Singapore 🇸🇬",
     "image": "https://abouttravel.ch/wp-content/uploads/2022/04/Singapore-Skyline-MBS-and-Esplanade-@Singapore-Tourism-Board-scaled-e1678964210575-1392x770.jpg",
     "title": "Singapore, the futuristic garden city",
     "description": "Discover Singapore, a city-state where modernity meets lush vegetation. Known for its iconic skyscrapers and spectacular gardens, Singapore is a must-visit destination for culture, shopping, and gastronomy enthusiasts. Explore its multicultural neighborhoods, savor unique local dishes, and admire panoramic views from its many observation points.",
@@ -671,6 +680,7 @@
   },
   "barcelona": {
     "name": "Barcelona",
+    "country": "Spain 🇪🇸",
     "image": "https://media.timeout.com/images/105240236/image.jpg",
     "title": "Barcelona, where Gaudí meets the Mediterranean",
     "description": "Experience the vibrant energy of Barcelona, a city where modernist architecture meets Mediterranean charm. From Gaudí's masterpieces to the bustling La Rambla, discover our comprehensive guide featuring iconic landmarks, delicious tapas, and essential tips for your perfect Catalan adventure!",
@@ -735,6 +745,7 @@
   },
   "taipei": {
     "name": "Taipei",
+    "country": "Taiwan 🇹🇼",
     "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/d7/dc/f6/bigphotofortaipei.jpg?w=1100&h=1100&s=1",
     "title": "Taipei, the city of thousand flavors and landscapes",
     "description": "Discover Taipei, the dynamic capital of Taiwan, where modernity meets tradition. From iconic skyscrapers like Taipei 101 to lively night markets, Taipei offers a unique experience to every visitor. Explore its historic temples, lush national parks, and savor Taiwanese cuisine that's renowned throughout the world.",
@@ -799,6 +810,7 @@
   },
   "seoul": {
     "name": "Seoul",
+    "country": "South Korea 🇰🇷",
     "image": "https://as2.ftcdn.net/v2/jpg/03/10/19/93/1000_F_310199357_3BLG8tbr1y1rmcUXhjCdbuuRbIUF2UVw.jpg",
     "title": "Seoul, the vibrant metropolis of South Korea",
     "description": "Discover Seoul, a city where tradition meets modernity. From royal palaces to futuristic skyscrapers, Seoul offers a unique experience to every visitor. Explore its lively neighborhoods, savor authentic Korean cuisine, and immerse yourself in the dynamic culture of this Asian capital.",
@@ -863,6 +875,7 @@
   },
   "london": {
     "name": "London",
+    "country": "United Kingdom 🇬🇧",
     "image": "https://cdn.generationvoyage.fr/2019/09/londres-panorama-the-shard.jpg",
     "title": "London, a cosmopolitan and historic city",
     "description": "Explore London, a city where royal history meets vibrant modernity. From iconic landmarks like Buckingham Palace and the Tower of London to the lively neighborhoods of Covent Garden, London offers a unique experience to every visitor. Discover its world-renowned museums, enjoy traditional British cuisine, and experience the dynamic atmosphere of this international metropolis.",
@@ -927,6 +940,7 @@
   },
   "dubai": {
     "name": "Dubai",
+    "country": "United Arab Emirates 🇦🇪",
     "image": "https://www.agoda.com/wp-content/uploads/2024/04/Featured-image-Dubai-UAE.jpg",
     "title": "Dubai, the city of extravagance and innovation",
     "description": "Discover Dubai, a futuristic metropolis where bold architecture meets luxury and innovation. From iconic skyscrapers like the Burj Khalifa to the artificial islands of Palm Jumeirah, Dubai is a destination that never ceases to amaze. Explore its gigantic shopping malls, sunny beaches, and savor local cuisine in its numerous restaurants.",
@@ -991,6 +1005,7 @@
   },
   "berlin": {
     "name": "Berlin",
+    "country": "Germany 🇩🇪",
     "image": "https://media.timeout.com/images/105240236/image.jpg",
     "title": "Berlin, where history meets creativity",
     "description": "Discover Berlin, a city that perfectly blends its rich history with a vibrant contemporary culture. From the iconic Brandenburg Gate to the trendy neighborhoods of Kreuzberg, explore our comprehensive guide featuring must-see landmarks, local cuisine, and essential tips for your perfect Berlin experience!",
@@ -1055,6 +1070,7 @@
   },
   "osaka": {
     "name": "Osaka",
+    "country": "Japan 🇯🇵",
     "image": "https://images.ctfassets.net/bth3mlrehms2/1lSMhsRFLihJX0ZGLtroyq/140c6820e05d22b837122238bfe3d61a/Dotonbori_strasse__Osaka__Japan.jpg",
     "title": "Osaka, street food and Japan's urban energy",
     "description": "Discover Osaka, a dynamic and welcoming city, known for its delicious street food and lively atmosphere. From historic monuments like Osaka Castle to the vibrant neighborhoods of Dotonbori, Osaka offers a unique experience to every visitor. Explore its modern attractions, savor local culinary specialties, and immerse yourself in authentic Japanese culture.",
@@ -1119,6 +1135,7 @@
   },
   "bangkok": {
     "name": "Bangkok",
+    "country": "Thailand 🇹🇭",
     "image": "https://content.r9cdn.net/rimg/dimg/21/e1/c054fc24-city-26166-176726042eb.jpg?width=1366&height=768&xhint=2881&yhint=1499&crop=true",
     "title": "Bangkok, the city of angels and golden temples",
     "description": "Discover Bangkok, a vibrant city where tradition meets modernity. From majestic temples like the Grand Palace and Wat Phra Kaew to the bustling markets of Khao San Road, Bangkok offers a unique experience to every visitor. Explore its floating markets, savor authentic Thai cuisine, and immerse yourself in the energy of this Asian metropolis.",
@@ -1179,6 +1196,7 @@
   },
   "los-angeles": {
     "name": "Los Angeles",
+    "country": "United States 🇺🇸",
     "image": "https://www.agoda.com/wp-content/uploads/2024/02/Featured-image-Los-Angeles-during-sunset.jpg",
     "title": "Los Angeles, the city of angels and cinema",
     "description": "Discover Los Angeles, a city where Hollywood glamour meets the sunny beaches of California. From icons like the Hollywood Sign and the Walk of Fame to modern attractions like Universal Studios, L.A. offers an unforgettable experience. Explore its diverse neighborhoods, savor local cuisine, and enjoy the relaxed atmosphere of the West Coast.",
@@ -1243,6 +1261,7 @@
   },
   "istanbul": {
     "name": "Istanbul",
+    "country": "Turkey 🇹🇷",
     "image": "https://cdn.generationvoyage.fr/2021/01/istanbul.jpg",
     "title": "Istanbul, the city of a thousand and one wonders",
     "description": "Discover Istanbul, a city where East meets West. From historic monuments like Hagia Sophia and the Blue Mosque to the bustling markets of the Grand Bazaar, Istanbul offers a unique experience to every visitor. Explore its majestic palaces, savor authentic Turkish cuisine, and enjoy a cruise on the Bosphorus to admire the city from another angle.",
@@ -1307,6 +1326,7 @@
   },
   "melbourne": {
     "name": "Melbourne",
+    "country": "Australia 🇦🇺",
     "image": "https://www.meltour.com/content/uploads/2024/10/visites-immanquables-melbourne-slider.webp",
     "title": "Melbourne, the cultural capital of Australia",
     "description": "Discover Melbourne, a dynamic and cosmopolitan city, known for its flourishing arts scene and diverse cuisine. From architectural icons like Federation Square to the sunny beaches of St Kilda, Melbourne offers a unique experience to every visitor. Explore its vibrant markets, lush gardens, and savor a Flat White coffee in one of its many trendy cafes.",
@@ -1371,6 +1391,7 @@
   },
   "dublin": {
     "name": "Dublin",
+    "country": "Ireland 🇮🇪",
     "image": "https://img.lonelyplanet.fr/s3fs-public/styles/wide/public/import/destination/slider/descktop/500px_100904953.jpg.webp?itok=AsvMv5vb",
     "title": "Dublin, the vibrant capital of Ireland",
     "description": "Discover Dublin, a city rich in history and culture, where Irish tradition meets a modern and dynamic atmosphere. From iconic institutions like Trinity College and St. Patrick's Cathedral to the lively pubs of Temple Bar, Dublin offers a unique experience to every visitor. Explore its castles, savor local cuisine, and enjoy a pint of Guinness in one of its famous pubs.",
@@ -1435,6 +1456,7 @@
   },
   "kyoto": {
     "name": "Kyoto",
+    "country": "Japan 🇯🇵",
     "image": "https://content.r9cdn.net/rimg/dimg/83/d4/85f68013-city-20339-16489ec9b8b.jpg?width=1200&height=630&xhint=1444&yhint=1011&crop=true",
     "title": "Kyoto, the city of temples and tradition",
     "description": "Discover Kyoto, the ancient capital of Japan, famous for its historic temples, zen gardens, and traditional culture. From iconic sites like Kinkaku-ji (Golden Pavilion) and Fushimi Inari Taisha to the picturesque streets of Gion, Kyoto offers an unforgettable experience. Explore its bamboo forests, savor kaiseki cuisine, and be enchanted by the serene atmosphere of this unique city.",
@@ -1499,6 +1521,7 @@
   },
   "vienna": {
     "name": "Vienna",
+    "country": "Austria 🇦🇹",
     "image": "https://media.timeout.com/images/105240236/image.jpg",
     "title": "Vienna, the imperial city of music",
     "description": "Experience the elegance of Vienna, where imperial history meets musical heritage. From the magnificent Schönbrunn Palace to the vibrant coffee house culture, discover our comprehensive guide featuring must-see attractions, Viennese delicacies, and essential tips for your perfect Austrian adventure!",
@@ -1563,6 +1586,7 @@
   },
   "venice": {
     "name": "Venice",
+    "country": "Italy 🇮🇹",
     "image": "https://www.votretourdumonde.com/wp-content/uploads/2017/04/que-visiter-a-venise-1.jpg",
     "title": "Venice, the city of canals and gondolas",
     "description": "Discover Venice, a unique city built on water, famous for its romantic canals, historic bridges, and breathtaking architecture. From the majestic St. Mark's Square to the beautiful Doge's Palace, every corner of Venice is a true masterpiece. Enjoy a gondola ride, explore the island of Murano, and savor the delicious Venetian cuisine.",
@@ -1627,6 +1651,7 @@
   },
   "kuala-lumpur": {
     "name": "Kuala Lumpur",
+    "country": "Malaysia 🇲🇾",
     "image": "https://content.r9cdn.net/rimg/dimg/1e/f2/0916f4b2-city-4723-1628829b6c4.jpg?width=1366&height=768&xhint=1334&yhint=1020&crop=true",
     "title": "Kuala Lumpur, the dynamic capital of Malaysia",
     "description": "Discover Kuala Lumpur, a modern and cosmopolitan city, famous for its iconic skyscrapers and diverse culture. From the Petronas Twin Towers to the Batu Caves, Kuala Lumpur offers a unique experience blending tradition and modernity. Explore its museums, lush parks, and savor delicious Malaysian cuisine in its numerous restaurants and markets.",
@@ -1691,6 +1716,7 @@
   },
   "athens": {
     "name": "Athens",
+    "country": "Greece 🇬🇷",
     "image": "https://hiddendoorwaystravel.com/wp-content/uploads/2024/09/jim-niakaris-L1_JWFc_s3M-unsplash.jpg",
     "title": "Athens, the city of gods and history",
     "description": "Discover Athens, the capital of Greece and the cradle of Western civilization. From iconic monuments like the Acropolis and the Parthenon to the charming streets of Plaka, Athens is a city where history and culture meet. Explore its fascinating museums, savor delicious Greek cuisine, and immerse yourself in the vibrant atmosphere of this historic metropolis.",
@@ -1755,6 +1781,7 @@
   },
   "toronto": {
     "name": "Toronto",
+    "country": "Canada 🇨🇦",
     "image": "https://www.canada-en-liberte.com/uploads/sites/72/2020/10/vue-maritime-building-ville-toronto-canada.jpeg",
     "title": "Toronto, the dynamic Canadian metropolis",
     "description": "Discover Toronto, Canada's largest city, known for its cultural diversity, iconic skyscrapers, and vibrant atmosphere. From the famous CN Tower to the Toronto Islands, this city offers a multitude of activities and sites to explore. Enjoy its lively markets, historic neighborhoods, and savor delicious local cuisine in its numerous restaurants.",
@@ -1819,6 +1846,7 @@
   },
   "miami": {
     "name": "Miami",
+    "country": "United States 🇺🇸",
     "image": "https://www.partir-en-voyage.com/wp-content/uploads/2024/06/visiter-miami-floride.jpg",
     "title": "Miami, the sunny and vibrant city",
     "description": "Discover Miami, a dynamic city known for its sunny beaches, diverse culture, and festive atmosphere. From iconic neighborhoods like South Beach and Little Havana to the colorful artworks of Wynwood Walls, Miami offers a unique experience. Enjoy its museums, lush gardens, and savor the delicious local cuisine in its numerous restaurants and markets.",
