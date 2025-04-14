@@ -16,7 +16,7 @@ export function middleware(req: NextRequest): NextResponse {
   let lng;
   if (req.cookies.has(cookieName))
     lng = acceptLanguage.get(req.cookies.get(cookieName)?.value);
-  if (lng === null)
+  if (lng === null || lng === undefined)
     lng = acceptLanguage.get(req.headers.get("Accept-Language"));
   if (lng === null) lng = fallbackLng;
 
