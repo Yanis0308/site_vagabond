@@ -1,0 +1,150 @@
+{
+  "title": "Vagabond",
+  "description": "Answer a few questions and find the perfect city for your vacation!",
+  "quiz": {
+    "main_title": "✈️ What's your perfect summer destination? 🏝️",
+    "start_button": "START THE ADVENTURE 🚀",
+    "question_progress": "Question {{current}} of {{total}}",
+    "loading": "Analyzing your answers... AI is searching for your perfect destination 🧠",
+    "result_title": "🎉 Your ideal country is:",
+    "country_prefix": "🗺️ Country: ",
+    "email_form_title": "📧 To discover the perfect city in this country and receive your complete practical guide",
+    "email_placeholder": "Your email address",
+    "email_submit": "GET MY FREE GUIDE",
+    "email_submitting": "SENDING...",
+    "email_thanks": "📝 Thank you! We've sent you an email with details about your ideal city",
+    "perfect_match": "We found the perfect city for you in this country! ✨",
+    "city_reveal": "This city in {{country}} perfectly matches your traveler profile!",
+    "email_guide": "You'll receive more details about this destination in your email.",
+    "email_sent": "📨 We've sent you a complete guide with all the details about places to visit and our insider tips!",
+    "confirmation_title": "Discover your ideal destination in your inbox!",
+    "confirmation_intro": "We've sent you an email containing:",
+    "confirmation_city": "The city that best matches your profile",
+    "confirmation_activities": "A guide to must-do activities",
+    "confirmation_tips": "Tips to prepare for your stay",
+    "check_spam": "Don't forget to check your spam if you don't see our email!",
+    "activities_title": "🏆 Top 10 activities in {{city}}",
+    "retry_button": "Try Again",
+    "error_generic": "An error occurred. Please try again.",
+    "error_api": "We couldn't determine your ideal destination. Please try again later.",
+    "error_email": "Error saving your email. Please try again.",
+    "intro_text": "In just <strong>{{questionCount}} questions</strong>, our AI will analyze your traveler profile and recommend the perfect destination for your next vacation.",
+    "features": {
+      "quick": {
+        "title": "Quick",
+        "description": "2 minutes to discover your ideal destination"
+      },
+      "custom": {
+        "title": "Customized",
+        "description": "A recommendation based on your unique preferences"
+      },
+      "magic": {
+        "title": "Magical",
+        "description": "Let yourself be surprised by our AI's relevance"
+      }
+    }
+  },
+  "age": {
+    "question": "🎂 How old are you?",
+    "options": {
+      "-18": "👶 Under 18",
+      "18-24": "🧑 18-24 years",
+      "25-34": "👨 25-34 years",
+      "35-44": "👨‍🦱 35-44 years",
+      "45+": "👴 45+"
+    }
+  },
+  "gender": {
+    "question": "👤 What's your gender?",
+    "options": {
+      "male": "👨 Male",
+      "female": "👩 Female",
+      "other": "🌈 Other"
+    }
+  },
+  "travel_mode": {
+    "question": "🧳 How do you usually travel?",
+    "options": {
+      "solo": "🙋 Solo",
+      "couple": "💑 As a couple",
+      "friends": "👯 With friends",
+      "family": "👨‍👩‍👧‍👦 With family"
+    }
+  },
+  "travel_style": {
+    "question": "🧭 What's your travel style?",
+    "options": {
+      "backpacker": "🎒 Backpacker / Low budget",
+      "classic_traveler": "🏨 Classic traveler (hotels, restaurants, sightseeing)",
+      "local_traveler": "🏡 Local traveler (I stay close to home)",
+      "digital_nomad": "💻 Digital nomad / Working while traveling"
+    }
+  },
+  "travel_preferences": {
+    "question": "❤️ Your travel preferences",
+    "options": {
+      "adventure": "🧗 Adventure and exploration",
+      "relaxation": "🏖️ Relaxation and leisure",
+      "culture": "🏛️ Culture and discoveries",
+      "nightlife": "🍸 Parties and nightlife"
+    }
+  },
+  "travel_climate": {
+    "question": "☀️ What climate do you prefer?",
+    "options": {
+      "hot": "🔥 Hot and sunny",
+      "temperate": "🌤️ Temperate and pleasant",
+      "cold": "❄️ Rather cool"
+    }
+  },
+  "travel_destination_type": {
+    "question": "🏞️ Sea, mountains, or city?",
+    "options": {
+      "sea": "🏝️ Paradise beaches",
+      "mountain": "⛰️ Mountain landscapes",
+      "city": "🏙️ Vibrant and lively cities"
+    }
+  },
+  "travel_food": {
+    "question": "🍽️ How important is gastronomy in your travels?",
+    "options": {
+      "important": "🍷 Important, I love trying local specialties",
+      "medium": "🍴 I like it, but it's not my main criterion",
+      "not_important": "🥪 Not important, I'm fine with whatever I find"
+    }
+  },
+  "travel_duration": {
+    "question": "⏱️ How long are you planning to travel?",
+    "options": {
+      "weekend": "🏃 A weekend",
+      "week": "📅 A week",
+      "more_than_10_days": "🗓️ More than 10 days"
+    }
+  },
+  "travel_budget": {
+    "question": "💰 What's your approximate budget for this trip?",
+    "options": {
+      "small": "💸 Small budget (-500€)",
+      "medium": "💵 Medium budget (500-1500€)",
+      "large": "💎 Comfort (1500€+)"
+    }
+  },
+  "travel_change_of_scene": {
+    "question": "🌄 What level of change of scenery are you looking for?",
+    "options": {
+      "total": "🚀 Total, I want a cultural shock!",
+      "mix": "🔄 A mix between familiar landmarks and discoveries",
+      "european": "🇪🇺 Rather in a European or Western setting"
+    }
+  },
+  "travel_music": {
+    "question": "🎵 If your trip was a song, it would be...",
+    "options": {
+      "electro": "🎧 An electro banger (techno, house, festivals)",
+      "indie": "🎸 A good chill indie track (acoustic, folk, road trip)",
+      "pop": "🎤 A feel-good pop hit (summer, sun, positive vibes)",
+      "lofi": "🎻 A lo-fi or classical vibe (relaxation, introspection, slow travel)",
+      "rap": "🎙️ A motivating rap/trap sound (rhythmic, urban, energetic)"
+    }
+  }
+}

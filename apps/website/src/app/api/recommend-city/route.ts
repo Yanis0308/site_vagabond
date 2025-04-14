@@ -1,18 +1,21 @@
-import { CITIES } from "@/app/honey-one/data/cities";
-import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@supabase/supabase-js";
+import { logger } from "@vagabond/shared-utils";
+import { type NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
+import { CITIES_WITH_COUNTRIES } from "@/app/[lng]/quizz/recommend-city/data/cities";
 // Type pour les réponses
 interface QuizResponse {
   question: string;
   answer: string;
+  raw_question: string;
+  raw_answer: string;
 }
 
 // Type pour la réponse de l'API
 interface CityRecommendation {
   city: string;
   country: string;
-  activities: Array<{ activity: string }>;
 }
 
 // Créer un client OpenAI
@@ -20,37 +23,53 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-export async function POST(request: NextRequest) {
+const supabase = createClient(
+  process.env.SUPABASE_URL ?? "",
+  process.env.SUPABASE_SERVICE_KEY ?? "",
+);
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Récupérer les données de la requête
-    const { responses } = await request.json();
+    const { responses, locale } = (await request.json()) as {
+      responses: QuizResponse[];
+      locale: string;
+    };
 
-    if (!responses || !Array.isArray(responses)) {
+    if (!Array.isArray(responses)) {
       return NextResponse.json(
         { error: "Format de données invalide" },
         { status: 400 },
       );
     }
 
+    const randomTemperature = Math.random();
+
+    // Préparer la liste des villes pour le prompt
+    const citiesList = CITIES_WITH_COUNTRIES.map(
+      (item) => `${item.city} (${item.country})`,
+    ).join(", ");
+
     // Faire l'appel à l'API OpenAI
     const response = await openai.responses.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
+      // model: "gpt-4o-mini",
       input: [
         {
           role: "system",
-          content: `Tu es un conseiller voyage expert et tu dois conseiller les utilisateurs qui t'envoient leurs réponses à un questionnaire sur leurs préférences de voyage. Tu dois recommander une ville parfaite basée sur les préférences de l'utilisateur. Les villes possibles sont les suivantes: ${CITIES.join(", ")}. Tu dois inclure le pays et les 10 meilleures activités à y faire dans ta réponse JSON.`,
+          content: `Tu es un conseiller voyage expert et tu dois conseiller les utilisateurs qui t'envoient leurs réponses à un questionnaire sur leurs préférences de voyage. Tu dois recommander une ville parfaite basée sur les préférences de l'utilisateur. Les villes possibles sont les suivantes: ${citiesList}.`,
         },
         {
           role: "user",
           content: responses
             .map(
               (item: QuizResponse) =>
-                `Q: "${item.question}"\n A: "${item.answer}"`,
+                `Question: "${item.question}" Réponse: "${item.answer}"`,
             )
-            .join(""),
+            .join("\n"),
         },
       ],
-      //   temperature: 0,
+      temperature: randomTemperature,
       text: {
         format: {
           type: "json_schema",
@@ -58,21 +77,12 @@ export async function POST(request: NextRequest) {
           schema: {
             type: "object",
             properties: {
-              city: { type: "string" },
-              country: { type: "string" },
-              activities: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    activity: { type: "string" },
-                  },
-                  required: ["activity"],
-                  additionalProperties: false,
-                },
+              city: {
+                type: "string",
+                enum: CITIES_WITH_COUNTRIES.map((item) => item.id),
               },
             },
-            required: ["city", "country", "activities"],
+            required: ["city"],
             additionalProperties: false,
           },
           strict: true,
@@ -85,18 +95,33 @@ export async function POST(request: NextRequest) {
         response.output_text,
       ) as CityRecommendation;
 
-      //   if (!parsedResponse.city || !CITIES.includes(parsedResponse.city)) {
-      //     throw new Error("Ville recommandée invalide");
-      //   }
+      const { data, error } = await supabase
+        .from("form_answers")
+        .insert({
+          gender: responses[0].raw_answer,
+          age: responses[1].raw_answer,
+          raw_answers: responses,
+          result: { ...parsedResponse, temperature: randomTemperature },
+          locale: locale,
+        })
+        .select("id");
 
-      // Retourner la ville recommandée avec les informations supplémentaires
+      if (error !== null) {
+        logger.error(error);
+      }
+
+      // Récupérer l'ID de la ligne créée
+      const rowId =
+        data !== null && data.length > 0 ? (data[0].id as number) : null;
+
+      // Retourner la ville recommandée avec les informations supplémentaires et l'ID de la ligne
       return NextResponse.json({
         city: parsedResponse.city,
         country: parsedResponse.country,
-        activities: parsedResponse.activities,
+        rowId: rowId, // Inclure l'ID pour une utilisation ultérieure
       });
     } catch (jsonError) {
-      console.error(
+      logger.error(
         "Erreur de parsing JSON:",
         jsonError,
         "Contenu:",
@@ -105,7 +130,7 @@ export async function POST(request: NextRequest) {
       throw new Error("Format de réponse invalide");
     }
   } catch (error) {
-    console.error("Erreur API OpenAI:", error);
+    logger.error("Erreur API OpenAI:", error);
     return NextResponse.json(
       { error: "Erreur lors de la recommandation de ville" },
       { status: 500 },

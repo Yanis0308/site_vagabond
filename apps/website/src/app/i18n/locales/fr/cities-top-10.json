@@ -1,0 +1,2205 @@
+{
+  "explore": "Explorez {{city}}",
+  "top-6-places": "Top 6 Incontournables",
+  "taste": "À goûter absolument",
+  "to-know": {
+    "title": "À savoir",
+    "language": "🗣️ Langues : ",
+    "weather": "🌤️ Météo : ",
+    "currency": "💶 Monnaie : ",
+    "airport": "🛩️ Aéroport : ",
+    "transport": "🚇 Transports : "
+  },
+  "tips": {
+    "title": "Astuces Express",
+    "payment": "💳 Paiement : ",
+    "time-zone": "🕒 Fuseau horaire : ",
+    "meal-hours": "🍽️ Horaires des repas : ",
+    "water": "🚰 Eau : ",
+    "electric-plugs": "🔌 Prises électriques : "
+  },
+  "emergency-numbers": {
+    "title": "Numéros d'urgence",
+    "police": "🚓 Police : ",
+    "ambulance": "🚑 Urgences : "
+  },
+  "loading": "Chargement...",
+  "error-title": "Nous n'avons pas encore de guide complet pour cette ville",
+  "error-message": "Désolé, nous n'avons pas trouvé d'informations pour cette ville.",
+  "back-home": "Retour à l'accueil",
+  "retake-test": "Refaire le test",
+  "home": "Accueil",
+
+  "lisbon": {
+    "name": "Lisbonne",
+    "image": "https://mediaim.expedia.com/destination/9/2b68ed01acfa78bb3a6d9424e12bbe12.jpg",
+    "title": "Lisbonne, la ville aux couleurs de l'Atlantique",
+    "description": "Laissez-vous charmer par Lisbonne, une ville historique et moderne à la fois, où les ruelles pavées côtoient les quartiers branchés et les miradouros offrent des vues imprenables sur l'océan Atlantique. Découvrez notre guide personnalisé qui vous dévoile les lieux incontournables, nos recommandations culinaires et des infos pratiques pour préparer votre été idéal !",
+    "top-places": [
+      {
+        "name": "Tour de Belém",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/8/82/Torre_Belem_%28Lisboa%29.jpg"
+      },
+      {
+        "name": "Monastère des Hiéronymites (Mosteiro dos Jerónimos)",
+        "image": "https://cdn-imgix.headout.com/media/images/6bd582083c5bad7638a021e994401138-17656-lisbon-entry-ticket-to-jero-nimos-monastery-2.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&fit=crop&ar=16%3A9&crop=faces"
+      },
+      {
+        "name": "Alfama",
+        "image": "https://alleralisbonne.com/wp-content/uploads/2022/08/Alfama-a%CC%80-lisbonne.jpg"
+      },
+      {
+        "name": "Ascenseur de Santa Justa",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/4f/a2/8f/elevador-de-santa-justa.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Praça do Comércio",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/6/61/Portugal_2013_-_Lisbon_-_018_%2810894037096%29.jpg"
+      },
+      {
+        "name": "Miradouro da Senhora do Monte",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/2a/b3/f3/bela-cidade.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Pastel de Nata - Pâtisserie traditionnelle",
+        "image": "https://lapetiterade.com/wp-content/uploads/2023/08/pasteis-de-nata.jpg"
+      },
+      {
+        "name": "Bacalhau - Morue traditionnelle",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/04/86/07/4d/bacalhau-a-gomes-de-sa.jpg"
+      },
+      {
+        "name": "Vinho Verde - Vin jeune portugais",
+        "image": "https://apartments-services.global.ssl.fastly.net/var/images/3/f/3fb05602c8a75378f5db0d808411e72f/933efc5fa38b3d9b7af6af21306e2408.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Portugais mais l'anglais est largement compris dans les zones touristiques",
+      "weather": "Entre 20°C et 28°C, avec des journées ensoleillées et des soirées agréablement fraîches",
+      "currency": "Euro (€)",
+      "airport": "Humberto Delgado",
+      "transport": "Métro / Bus / Tram (2€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout",
+      "time-zone": "UTC+00",
+      "meal-hours": "Déjeuner 12h-15h, Dîner 19h-22h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "112"
+    }
+  },
+  "paris": {
+    "name": "Paris",
+    "image": "https://media-cdn.tripadvisor.com/media/photo-c/1280x250/17/15/6d/d6/paris.jpg",
+    "title": "Paris, la ville lumière et capitale de l'amour",
+    "description": "Découvrez Paris, la capitale française, où l'histoire et la modernité se rencontrent dans une harmonie parfaite. Flânez le long de la Seine, explorez les musées de renommée mondiale et savourez la cuisine française dans les bistrots pittoresques. Notre guide vous propose une sélection des lieux incontournables, des spécialités culinaires à ne pas manquer et des conseils pratiques pour un séjour inoubliable.",
+    "top-places": [
+      {
+        "name": "La Tour Eiffel",
+        "image": "https://www.1jour1actu.com/wp-content/uploads/2021/10/VIDEO_histoire_tour_Eiffel-927x618.jpeg"
+      },
+      {
+        "name": "Le Musée du Louvre",
+        "image": "https://www.triplancar.com/sites/triplancar.com/files/lieu/586/louvre-102840.jpg"
+      },
+      {
+        "name": "La Cathédrale Notre-Dame de Paris",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/a/af/Notre-Dame_de_Paris_2013-07-24.jpg"
+      },
+      {
+        "name": "Les Jardins du Luxembourg",
+        "image": "https://www.acropole-paris-hotel.com/bases/visite_image/grande/40/Visiter-Jardins-Luxembourg-Paris-2.jpg"
+      },
+      {
+        "name": "Champs-Élysées et Arc de Triomphe",
+        "image": "https://www.appartcity.com/uploads/media/image_page_content/0001/30/image_page_content_w1440/29911_appart-hotel-champs-elysees-appart-city-resized.jpg"
+      },
+      {
+        "name": "Montmartre et la Basilique du Sacré-Cœur",
+        "image": "https://offloadmedia.feverup.com/parissecret.com/wp-content/uploads/2024/11/22115320/butte_montmartre-1024x683.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Croissant au beurre",
+        "image": "https://www.maximo.fr/media/image/f0/8e/e2f7a56b2bc8c14147ab1d05a032.jpg"
+      },
+      {
+        "name": "Escargots de Bourgogne",
+        "image": "https://www.cuisine-blog.fr/wp-content/uploads/2019/06/escargots-01-500x375.jpg"
+      },
+      {
+        "name": "Macarons",
+        "image": "https://www.6em-sens.fr/wp-content/uploads/2020/07/34.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Français, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 15°C et 25°C en été, avec des journées ensoleillées et des soirées fraîches",
+      "currency": "Euro (€)",
+      "airport": "Charles de Gaulle et Orly",
+      "transport": "Métro / Bus / RER (1,90€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 19h-22h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/E (230V)"
+    },
+    "emergency-numbers": {
+      "police": "17",
+      "ambulance": "15"
+    }
+  },
+  "madrid": {
+    "name": "Madrid",
+    "image": "https://keystoneacademic-res.cloudinary.com/image/upload/v1696428312/articles/educationscom/article-open-graph-image-17358.jpg",
+    "title": "Madrid, le cœur vibrant de l'Espagne",
+    "description": "Explorez Madrid, la capitale espagnole, où l'art, la culture et la gastronomie se rencontrent dans une ambiance chaleureuse et dynamique. Promenez-vous dans ses rues animées, découvrez ses musées de renommée mondiale et dégustez des tapas dans ses bars traditionnels. Notre guide vous propose une sélection des lieux incontournables, des spécialités culinaires à savourer et des conseils pratiques pour un séjour mémorable.",
+    "top-places": [
+      {
+        "name": "Palais Royal de Madrid",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9b/Palacio_Real_de_Madrid_Julio_2016_%28cropped%29.jpg"
+      },
+      {
+        "name": "Musée du Prado",
+        "image": "https://www.spain.info/export/sites/segtur/.content/images/cabeceras-grandes/madrid/Museo-Prado-2-c-Jose-Barea-Turismo-Madrid.jpg"
+      },
+      {
+        "name": "Parc du Retiro",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/53/53/2c/img-20160729-205021-largejpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Plaza Mayor",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Plaza_Mayor_de_Madrid_06.jpg/640px-Plaza_Mayor_de_Madrid_06.jpg"
+      },
+      {
+        "name": "Gran Vía",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/349000/349135-Gran-Via-Street.jpg"
+      },
+      {
+        "name": "Temple de Debod",
+        "image": "https://estaticos.esmadrid.com/cdn/farfuture/dllhqNJn6jqY-kOLT3fXolHiWkJ2euFbfeXs7hGb5A0/mtime:1682410499/sites/default/files/styles/content_type_full/public/recursosturisticos/infoturistica/templo_de_debod_2023.jpg?itok=gT-EqG2g"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Churros con chocolate",
+        "image": "https://www.sitram.fr/sites/sitram/files/recette-individuelle/2021-01/Chocolate-con-churros.jpg"
+      },
+      {
+        "name": "Tortilla Española",
+        "image": "https://mojo.generalmills.com/api/public/content/9xIHKwJDH0-1wbHPsVCCVQ_gmi_hi_res_jpeg.jpeg?v=2bfc22c6&t=16e3ce250f244648bef28c5949fb99ff"
+      },
+      {
+        "name": "Bocadillo de Calamares",
+        "image": "https://spanishsabores.com/wp-content/uploads/2024/09/Fried-Calamari-Sandwich-Featured-01.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 25°C et 35°C en été, avec des journées ensoleillées et des soirées chaudes",
+      "currency": "Euro (€)",
+      "airport": "Adolfo Suárez Madrid-Barajas",
+      "transport": "Métro / Bus / Train (1,50€ à 2€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 14h-16h, Dîner 21h-23h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "112"
+    }
+  },
+  "tokyo": {
+    "name": "Tokyo",
+    "image": "https://destinationjapon.fr/wp-content/uploads/2019/09/tokyo_shinjuku_blog.jpg",
+    "title": "Tokyo, la métropole futuriste et traditionnelle du Japon",
+    "description": "Découvrez Tokyo, une ville où la modernité et la tradition se côtoient harmonieusement. Des gratte-ciels scintillants aux temples anciens, Tokyo offre une expérience unique à chaque coin de rue. Plongez dans l'effervescence de ses quartiers animés, savourez la cuisine japonaise authentique et explorez les lieux emblématiques qui font de Tokyo une destination incontournable.",
+    "top-places": [
+      {
+        "name": "Shibuya Crossing",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/7c/eb/cb/photo0jpg.jpg?w=800&h=500&s=1"
+      },
+      {
+        "name": "Temple Senso-ji – Asakusa",
+        "image": "https://nightscape.tokyo/en/wp-content/uploads/2023/01/asakusa-sakura-03.jpg"
+      },
+      {
+        "name": "Tokyo Skytree",
+        "image": "https://res.cloudinary.com/jnto/image/upload/w_1600,h_900,c_fill,f_auto,fl_lossy,q_60/v1/media/filer_public/64/4c/644c0154-8a6f-42da-854e-645fd742aa32/dong-jing-sukaitsurikong-cuo-twilight1_zqaqug"
+      },
+      {
+        "name": "Meiji-jingū – Sanctuaire Meiji",
+        "image": "https://photo.comptoir.fr/asset/mot-cle/1553/temple-meiji-jingu-japon-499544-1440x670.jpg"
+      },
+      {
+        "name": "Akihabara",
+        "image": "https://travel.rakuten.com/contents/sites/contents/files/styles/max_1300x1300/public/2023-01/things-to-do-akihabara_3_0.jpeg?itok=QYSYVmM0"
+      },
+      {
+        "name": "Tsukiji Outer Market",
+        "image": "https://cdn.cheapoguides.com/wp-content/uploads/sites/2/2020/05/PXL_20221216_000858265-770x578.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Sushi",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Sushi_platter.jpg/960px-Sushi_platter.jpg"
+      },
+      {
+        "name": "Ramen",
+        "image": "https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/17eefccc0612317aa9f2ce1fbaae56cc/Derivates/3740e0c14b97c50890905a1961b9eb542959cc06.jpg"
+      },
+      {
+        "name": "Mochi",
+        "image": "https://www.ttfoods.fr/wp-content/uploads/2022/05/mochi-ice-cream-033-500x487.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Japonais, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 20°C et 30°C en été, avec des journées chaudes et humides",
+      "currency": "Yen japonais (¥)",
+      "airport": "Narita et Haneda",
+      "transport": "Métro / Train / Bus (environ 200¥ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des endroits, mais prévoir du liquide pour les petits commerces",
+      "time-zone": "UTC+09",
+      "meal-hours": "Déjeuner 11h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (100V)"
+    },
+    "emergency-numbers": {
+      "police": "110",
+      "ambulance": "119"
+    }
+  },
+  "rome": {
+    "name": "Rome",
+    "image": "https://www.walksinsiderome.com/wp-content/uploads/2019/07/View_of_Rome_from_Castel_Sant_Angelo-tSa-825X400.jpg",
+    "title": "Rome, la ville éternelle au cœur de l'histoire",
+    "description": "Plongez dans l'histoire fascinante de Rome, la capitale italienne où chaque rue raconte une histoire millénaire. Des ruines antiques aux fontaines baroques, Rome est un musée à ciel ouvert. Découvrez ses monuments emblématiques, savourez la cuisine italienne authentique et laissez-vous séduire par l'atmosphère unique de la ville éternelle.",
+    "top-places": [
+      {
+        "name": "Colisée",
+        "image": "https://cdn.futura-sciences.com/buildsv6/images/largeoriginal/7/0/5/705121344c_110004_colisee-rome.jpg"
+      },
+      {
+        "name": "Fontaine de Trevi",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Trevi_Fountain%2C_Rome%2C_Italy_2_-_May_2007.jpg/1200px-Trevi_Fountain%2C_Rome%2C_Italy_2_-_May_2007.jpg"
+      },
+      {
+        "name": "Vatican & Basilique Saint-Pierre",
+        "image": "https://www.walksinsiderome.com/wp-content/uploads/2015/10/Rome_an_outdoor_set_for_many_movies_Vatican_-960x636.jpg"
+      },
+      {
+        "name": "Forum Romain & Palatin",
+        "image": "https://images-e-venise.global.ssl.fastly.net/pics/rome-antique/forum-romain/forum-romain-vu-du-palatin-rome-italie.jpg"
+      },
+      {
+        "name": "Panthéon",
+        "image": "https://www.cestee.fr/images/30/14/73014-920w.webp"
+      },
+      {
+        "name": "Piazza Navona",
+        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/27/88/12.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Carbonara",
+        "image": "https://www.panzani.fr/_ipx/f_webp&q_80&s_1800x1202/https://backend.panzani.fr/app/uploads/2023/10/visuel-spaghetti-carbonara-unsmushed.png"
+      },
+      {
+        "name": "Tiramisu",
+        "image": "https://www.galbani.fr/wp-content/uploads/2017/07/Galbani_Veritable_Tiramisu_opt2.jpg"
+      },
+      {
+        "name": "Pizza al taglio",
+        "image": "https://www.partir-a-rome.com/wp-content/uploads/2021/02/Pizza-Florida-Rome-e1614003111643.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Italien, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 25°C et 35°C en été, avec des journées ensoleillées et des soirées agréables",
+      "currency": "Euro (€)",
+      "airport": "Leonardo da Vinci-Fiumicino et Ciampino",
+      "transport": "Métro / Bus / Tram (1,50€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h30-14h30, Dîner 19h30-22h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F/L (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "118"
+    }
+  },
+  "milan": {
+    "name": "Milan",
+    "image": "https://images.theconversation.com/files/276383/original/file-20190524-187185-lqo304.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1000&fit=clip",
+    "title": "Milan, la capitale de la mode et du design",
+    "description": "Découvrez Milan, une ville où l'élégance et l'innovation se rencontrent. Connue pour être la capitale de la mode, Milan est également riche en histoire et en culture. Explorez ses monuments emblématiques, flânez dans ses quartiers branchés et savourez la cuisine milanaise dans ses trattorias traditionnelles. Notre guide vous propose une sélection des lieux incontournables, des spécialités culinaires à déguster et des conseils pratiques pour un séjour inoubliable.",
+    "top-places": [
+      {
+        "name": "Duomo di Milano",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Milan_Cathedral_%28Duomo_di_Milano%29_evening.jpg/1280px-Milan_Cathedral_%28Duomo_di_Milano%29_evening.jpg"
+      },
+      {
+        "name": "Galerie Vittorio Emanuele II",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/f5/ab/76/photo1jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Château des Sforza",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Castello_Sforzesco_da_alto.jpg/1200px-Castello_Sforzesco_da_alto.jpg"
+      },
+      {
+        "name": "La Cène – Église Santa Maria delle Grazie",
+        "image": "https://i0.wp.com/www.serialpix.com/wp-content/uploads/2017/08/la-cene-milan.jpg?resize=1080%2C675&ssl=1"
+      },
+      {
+        "name": "Navigli",
+        "image": "https://visiter-milan.fr/wp-content/uploads/2023/03/VM_Navigli_1-1024x679.jpg"
+      },
+      {
+        "name": "Quadrilatero della Moda",
+        "image": "https://www.in-lombardia.it/sites/default/files/luogo/images/52817/3058/053_milano_shopping_01_low.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Risotto alla Milanese – Trattoria Masuelli",
+        "image": "https://cdn-www.konbini.com/files/2018/11/risotto-1.jpg?auto=webp&width=2048&quality=75"
+      },
+      {
+        "name": "Cotoletta alla Milanese",
+        "image": "https://www.sanpellegrino.com/fr/sites/g/files/xknfdk2146/files/Cotoletta_Milanese_post.jpg"
+      },
+      {
+        "name": "Panettone",
+        "image": "https://www.galbani.fr/wp-content/uploads/2023/01/Image37.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Italien, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 20°C et 30°C en été, avec des journées chaudes et ensoleillées",
+      "currency": "Euro (€)",
+      "airport": "Malpensa, Linate et Orio al Serio",
+      "transport": "Métro / Tram / Bus (1,50€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h30-14h30, Dîner 19h30-22h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F/L (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "118"
+    }
+  },
+  "new-york": {
+    "name": "New York",
+    "image": "https://www.nyc.fr/wp-content/uploads/2015/07/New_York_City-scaled.jpg",
+    "title": "New York, la ville qui ne dort jamais",
+    "description": "Découvrez New York, une métropole vibrante et cosmopolite où chaque quartier offre une expérience unique. De l'emblématique Statue de la Liberté aux lumières éblouissantes de Times Square, New York est une ville de contrastes et d'énergie. Explorez ses parcs, ses musées de renommée mondiale et savourez la cuisine new-yorkaise dans ses nombreux restaurants et food trucks.",
+    "top-places": [
+      {
+        "name": "Statue de la Liberté & Ellis Island",
+        "image": "https://cdn-imgix.headout.com/media/images/2d921332293db961d468ec69b7b9dca1-Liberty%20Island.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&fit=crop&ar=16%3A9&crop=faces"
+      },
+      {
+        "name": "Central Park",
+        "image": "https://cdn.futura-sciences.com/sources/images/Central-Park-New-York.jpg"
+      },
+      {
+        "name": "Empire State Building",
+        "image": "https://cdn-imgix.headout.com/media/images/e783f141025783e733cf2e6f80d745ba-593-new-york-empire-state-building-observatory-tickets-11.jpg?auto=format&q=90&fit=crop&crop=faces"
+      },
+      {
+        "name": "Times Square",
+        "image": "https://bonjournewyork.fr/wp-content/uploads/2020/06/visiter-times-square.jpg"
+      },
+      {
+        "name": "Brooklyn Bridge & DUMBO",
+        "image": "https://www.partir-a-new-york.com/wp-content/uploads/2021/04/washington-street-new-york.jpeg"
+      },
+      {
+        "name": "Musée MET ou MoMA",
+        "image": "https://i0.wp.com/lesvoyagesdemyriametluc.com/wp-content/uploads/2021/01/METROPOLITAN-MUSEUM-OF-ART-NEW-YORK.jpg?ssl=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Bagel",
+        "image": "https://media.hachette.fr/fit-in/1200x627/5/2023-02/recettes-744-x-452-px.png"
+      },
+      {
+        "name": "Cheesecake",
+        "image": "https://liliebakery.fr/wp-content/uploads/2023/06/Recette-cheesecake-framboise-Lilie-Bakery-500x375.jpg"
+      },
+      {
+        "name": "Slice de Pizza",
+        "image": "https://www.radiofrance.fr/s3/cruiser-production-eu3/2025/02/355a76b0-8d54-46b3-b5d2-fe12ee46f942/1200x680_sc_ovdmarche-slicepizza-thomasdarcos-1.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais, mais de nombreuses langues sont parlées dans les quartiers multiculturels",
+      "weather": "Entre 25°C et 30°C en été, avec des journées chaudes et humides",
+      "currency": "Dollar américain ($)",
+      "airport": "John F. Kennedy, LaGuardia et Newark",
+      "transport": "Métro / Bus / Taxi (2,75$ par trajet en métro)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les pourboires",
+      "time-zone": "UTC-05",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (120V)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911"
+    }
+  },
+  "amsterdam": {
+    "name": "Amsterdam",
+    "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/43/2c/43/les-maison-typiques-a.jpg?w=1200&h=1200&s=1",
+    "title": "Amsterdam, la Venise du Nord",
+    "description": "Explorez Amsterdam, une ville où l'histoire et la modernité se rencontrent le long de ses célèbres canaux. Connue pour ses musées de renommée mondiale, ses maisons à pignons et son ambiance décontractée, Amsterdam est une destination incontournable pour les amateurs de culture et de détente. Découvrez ses quartiers pittoresques, savourez les spécialités néerlandaises et profitez d'une croisière sur les canaux pour admirer la ville sous un autre angle.",
+    "top-places": [
+      {
+        "name": "Croisière sur les canaux",
+        "image": "https://canalsofamsterdam.com/wp-content/uploads/2022/07/Canal-cruises-Amsterdam-scaled.jpg"
+      },
+      {
+        "name": "Musée Van Gogh",
+        "image": "https://cdn-imgix.headout.com/media/images/e558d800dee128b071fb41ebc31fdd71-frans-ruiter-jfPGunIH_9M-unsplash.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&fit=crop&ar=16%3A9&crop=faces"
+      },
+      {
+        "name": "Rijksmuseum",
+        "image": "https://www.boutiquesdemusees.fr/files/contents/5100/449918-7dbf3665-xxl/rijksmuseum.jpg"
+      },
+      {
+        "name": "Quartier Jordaan",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/07/23/f2/68/jordaan-amsterdam.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Maison d’Anne Frank",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/f/f4/AnneFrankHuisAmsterdam.jpg"
+      },
+      {
+        "name": "Marché aux fleurs & Bloemenmarkt",
+        "image": "https://www.guillaumeastrucphotography.com/wp-content/uploads/2021/11/amsterdam-pays-bas-fleurs-scaled.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Stroopwafel",
+        "image": "https://mellysstroopwafels.nl/wp-content/uploads/2024/07/Mellys-edited-%C2%A9KLS-10-scaled-e1721310812482-1024x500.jpg"
+      },
+      {
+        "name": "Haring",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/08/9f/09/40/haring-zo.jpg"
+      },
+      {
+        "name": "Poffertjes",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Poffertjes-Melkhuis_%28cropped%29.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Néerlandais, mais l'anglais est largement parlé",
+      "weather": "Entre 15°C et 25°C en été, avec des journées souvent nuageuses",
+      "currency": "Euro (€)",
+      "airport": "Amsterdam Schiphol",
+      "transport": "Tram / Bus / Métro / Vélo (3,20€ pour un ticket d'une heure)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, mais prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "112"
+    }
+  },
+  "sydney": {
+    "name": "Sydney",
+    "image": "https://content.r9cdn.net/rimg/dimg/12/98/b1e36771-city-2258-163f4d7f814.jpg?crop=true&width=1020&height=498",
+    "title": "Sydney, la perle de l'Australie",
+    "description": "Découvrez Sydney, une ville dynamique et cosmopolite où la nature et l'urbanisme se rencontrent harmonieusement. De l'emblématique Opéra de Sydney aux plages de sable doré de Bondi, Sydney offre une multitude d'activités pour tous les goûts. Explorez ses jardins botaniques luxuriants, ses quartiers historiques et savourez la cuisine australienne dans ses nombreux restaurants et cafés.",
+    "top-places": [
+      {
+        "name": "Opéra de Sydney",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/93/a7/be/sydney-opera-house.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Harbour Bridge",
+        "image": "https://www.bridgeclimb.com/getmedia/17e5515e-fb1f-453a-b309-dc48ee0eae16/Hero.jpg"
+      },
+      {
+        "name": "Bondi Beach & Bondi to Coogee Walk",
+        "image": "https://cdn.shortpixel.ai/spai/q_glossy+ret_img+to_webp/travelaustraliatoday.com/wp-content/uploads/2021/10/Sydney-937-feat-sq.jpg"
+      },
+      {
+        "name": "Royal Botanic Garden",
+        "image": "https://assets.atdw-online.com.au/images/fdb160eeadc7d83ce96aa78c6c684b9d.jpeg?rect=178%2C0%2C2833%2C2125&w=2048&h=1536&q=eyJ0eXBlIjoibGlzdGluZyIsImxpc3RpbmdJZCI6IjU2YjI0MGQwZDI3MDE1NGI0NTU0MjgyOSIsImRpc3RyaWJ1dG9ySWQiOiI1NmIxZWI5MzQ0ZmVjYTNkZjJlMzIwYzgiLCJhcGlrZXlJZCI6IjU2YjFlZTU5MGNmMjEzYWQyMGRjNTgxOSJ9"
+      },
+      {
+        "name": "The Rocks",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/02/50/02/sydney-s-first-street.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Taronga Zoo",
+        "image": "https://cdn.getyourguide.com/img/tour/6302e04e54989.jpeg/146.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Meat Pie",
+        "image": "https://storage.googleapis.com/stateless-www-wotif-com/2018/06/2c9a78c1-hero.jpg"
+      },
+      {
+        "name": "Barramundi",
+        "image": "https://astelus.com/wp-content/uploads/2024/04/barramundi-dulce.jpg"
+      },
+      {
+        "name": "Lamington",
+        "image": "https://media.timeout.com/images/105764658/image.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais",
+      "weather": "Entre 18°C et 26°C en été, avec des journées ensoleillées et des soirées agréables",
+      "currency": "Dollar australien (AUD)",
+      "airport": "Aéroport de Sydney (Kingsford Smith)",
+      "transport": "Train / Bus / Ferry (Opal card recommandée pour les transports)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+10",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type I (230V)"
+    },
+    "emergency-numbers": {
+      "police": "000",
+      "ambulance": "000"
+    }
+  },
+  "singapore": {
+    "name": "Singapour",
+    "image": "https://abouttravel.ch/wp-content/uploads/2022/04/Singapore-Skyline-MBS-and-Esplanade-@Singapore-Tourism-Board-scaled-e1678964210575-1392x770.jpg",
+    "title": "Singapour, la ville jardin futuriste",
+    "description": "Découvrez Singapour, une ville-état où la modernité rencontre la nature luxuriante. Connue pour ses gratte-ciels emblématiques et ses jardins spectaculaires, Singapour est une destination incontournable pour les amateurs de culture, de shopping et de gastronomie. Explorez ses quartiers multiculturels, savourez des plats locaux uniques et admirez les vues panoramiques depuis ses nombreux points d'observation.",
+    "top-places": [
+      {
+        "name": "Gardens by the Bay",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Supertree_Grove%2C_Gardens_by_the_Bay%2C_Singapore_-_20120712-02.jpg"
+      },
+      {
+        "name": "Marina Bay Sands SkyPark",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0a/66/e2/d9.jpg"
+      },
+      {
+        "name": "Sentosa Island",
+        "image": "https://images.squarespace-cdn.com/content/v1/5be172e38f513032e447734b/1558366937124-5ZJ9AAZ5Z721YPY0T588/Sentosa-Picture.jpg"
+      },
+      {
+        "name": "Chinatown",
+        "image": "https://static.toiimg.com/thumb/100942336/Chinatown-in-Singapore.jpg?width=1200&height=900"
+      },
+      {
+        "name": "Singapore Zoo",
+        "image": "https://mediaim.expedia.com/localexpert/652374/9e465c13-be8d-4a21-9a99-8542d873f247.jpg"
+      },
+      {
+        "name": "Raffles Hotel",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Raffles_Hotel%2C_frontage.jpg/1200px-Raffles_Hotel%2C_frontage.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Chilli Crab",
+        "image": "https://beinspired.au/wp-content/uploads/2023/10/Singapore-Chilli-Crab.jpeg"
+      },
+      {
+        "name": "Laksa",
+        "image": "https://www.marionskitchen.com/wp-content/uploads/2023/05/Katong-Laksa-03.jpg"
+      },
+      {
+        "name": "Kaya Toast",
+        "image": "https://tarasmulticulturaltable.com/wp-content/uploads/2017/06/Kaya-Toast-Toast-with-Coconut-Jam-and-Butter-6-of-6.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais, Malais, Mandarin et Tamoul",
+      "weather": "Climat équatorial avec des températures entre 25°C et 31°C toute l'année",
+      "currency": "Dollar de Singapour (SGD)",
+      "airport": "Aéroport Changi de Singapour",
+      "transport": "MRT / Bus / Taxi (carte EZ-Link recommandée pour les transports)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+08",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type G (230V)"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "995"
+    }
+  },
+  "barcelona": {
+    "name": "Barcelone",
+    "image": "https://maybanton.com/wp-content/uploads/2023/07/Barcelone-sagrada-familia-vue-drone.jpg",
+    "title": "Barcelone, la ville de Gaudí et des plages ensoleillées",
+    "description": "Découvrez Barcelone, une ville vibrante où l'architecture moderniste de Gaudí se mêle à l'énergie méditerranéenne. Promenez-vous le long de La Rambla, explorez les ruelles du Quartier Gothique et détendez-vous sur les plages de Barceloneta. Savourez la cuisine catalane avec ses tapas et paellas, et laissez-vous séduire par l'atmosphère unique de cette métropole ensoleillée.",
+    "top-places": [
+      {
+        "name": "La Sagrada Família",
+        "image": "https://monbarcelone.com/wp-content/uploads/2022/05/sagrada-familia-12.jpeg"
+      },
+      {
+        "name": "Parc Güell",
+        "image": "https://www.guidesulysse.com/images/destinations/iStock-534846887.jpg"
+      },
+      {
+        "name": "La Rambla",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/df/c5/2b/la-rambla-vista-desde.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Quartier Gothique",
+        "image": "https://www.voyage-en-francais.fr/wordpress/wp-content/uploads/2021/06/visite-guidee-centre-historique-barcelone-en-francais-25-800x500.jpg"
+      },
+      {
+        "name": "Montjuïc",
+        "image": "https://barcelonesite.fr/images/palaunacional.jpg"
+      },
+      {
+        "name": "Plage de Barceloneta",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/39/bd/cd/la-barceloneta.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Paella",
+        "image": "https://visiter-barcelone.com/wp-content/uploads/meilleure-paella-barcelone-1.jpg"
+      },
+      {
+        "name": "Tapas",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res40/108000/108443.jpg"
+      },
+      {
+        "name": "Churros con Chocolate",
+        "image": "https://www.sitram.fr/sites/sitram/files/recette-individuelle/2021-01/Chocolate-con-churros.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Catalan et Espagnol, l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 20°C et 30°C en été, avec des journées ensoleillées et des soirées agréables",
+      "currency": "Euro (€)",
+      "airport": "Aéroport de Barcelone-El Prat",
+      "transport": "Métro / Bus / Tram (2,40€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 13h-15h, Dîner 20h-23h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "112"
+    }
+  },
+  "taipei": {
+    "name": "Taipei",
+    "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/d7/dc/f6/bigphotofortaipei.jpg?w=1100&h=1100&s=1",
+    "title": "Taipei, la ville aux mille saveurs et paysages",
+    "description": "Découvrez Taipei, la capitale dynamique de Taïwan, où la modernité rencontre la tradition. Des gratte-ciels emblématiques comme le Taipei 101 aux marchés nocturnes animés, Taipei offre une expérience unique à chaque visiteur. Explorez ses temples historiques, ses parcs nationaux verdoyants et savourez la cuisine taïwanaise réputée dans le monde entier.",
+    "top-places": [
+      {
+        "name": "Taipei 101",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0b/09/cd/16/101.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Marché nocturne de Shilin",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/bf/7b/54/1909.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Chiang Kai-shek Memorial Hall",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/d/d2/Chiang_Kai-shek_memorial_amk.jpg"
+      },
+      {
+        "name": "Temple Longshan",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/27/49/2c/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Parc national de Yangmingshan",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/09/eb/f9/46.jpg"
+      },
+      {
+        "name": "Taipei Fine Arts Museum",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/28/4e/e6/b4/taipei-fine-arts-museum.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Beef Noodle Soup (牛肉麵)",
+        "image": "https://i0.wp.com/eatingintaipei.com/wp-content/uploads/2024/03/Guo_Ji_Beef_Noodle_beef_noodle_clear_broth.jpg?fit=1024%2C1024&ssl=1"
+      },
+      {
+        "name": "Xiao Long Bao (小籠包)",
+        "image": "https://d3h1lg3ksw6i6b.cloudfront.net/media/image/2020/04/30/0333f53058fb411f8891c7483f66bce1_Din+Tia+Fung+Xiaolongbao+1.jpg"
+      },
+      {
+        "name": "Bubble Tea (珍珠奶茶)",
+        "image": "https://www.anko.com.tw/Templates/pic/epaper-2020-bubble-tea-tapioca-pearl-L.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Mandarin, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 20°C et 30°C en été, avec des journées chaudes et humides",
+      "currency": "Nouveau dollar taïwanais (TWD)",
+      "airport": "Aéroport international de Taïwan Taoyuan",
+      "transport": "MRT / Bus / Taxi (EasyCard recommandée pour les transports)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des endroits, prévoir du liquide pour les petits commerces",
+      "time-zone": "UTC+08",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet, mais souvent filtrée",
+      "electric-plugs": "Type A/B (110V)"
+    },
+    "emergency-numbers": {
+      "police": "110",
+      "ambulance": "119"
+    }
+  },
+  "seoul": {
+    "name": "Séoul",
+    "image": "https://as2.ftcdn.net/v2/jpg/03/10/19/93/1000_F_310199357_3BLG8tbr1y1rmcUXhjCdbuuRbIUF2UVw.jpg",
+    "title": "Séoul, la métropole vibrante de la Corée du Sud",
+    "description": "Découvrez Séoul, une ville où la tradition rencontre la modernité. Des palais royaux aux gratte-ciels futuristes, Séoul offre une expérience unique à chaque visiteur. Explorez ses quartiers animés, savourez la cuisine coréenne authentique et plongez dans la culture dynamique de cette capitale asiatique.",
+    "top-places": [
+      {
+        "name": "Palais Gyeongbokgung",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/68/fd/fa.jpg"
+      },
+      {
+        "name": "Bukchon Hanok Village",
+        "image": "https://content.r9cdn.net/rimg/dimg/79/5c/2a4a56c0-lm-169100-169b609d730.jpg?width=1366&height=768&xhint=1937&yhint=1193&crop=true"
+      },
+      {
+        "name": "N Seoul Tower",
+        "image": "https://escapadecoree.fr/wp-content/uploads/2024/08/n-seoul-tower-namsan-tower.jpg"
+      },
+      {
+        "name": "Myeongdong",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/12/f8/f7/ca/myeongdong-shopping-street.jpg"
+      },
+      {
+        "name": "Insadong",
+        "image": "https://escapadecoree.fr/wp-content/uploads/2024/08/insadong-quartier-seoul.jpg"
+      },
+      {
+        "name": "Marché de Gwangjang",
+        "image": "https://www.projetcoree.fr/wp-content/uploads/2024/07/miniature-marche-gwangjang-seoul.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Bulgogi (불고기)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/74/69/b5/caption.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Bibimbap (비빔밥)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/0b/71/b7/bulgogi-brothers-seoul.jpg?w=600&h=-1&s=1"
+      },
+      {
+        "name": "Tteokbokki (떡볶이)",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/0d/2b/d8/14/caption.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Coréen, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 20°C et 30°C en été, avec des journées chaudes et humides",
+      "currency": "Won sud-coréen (₩)",
+      "airport": "Aéroport international d'Incheon",
+      "transport": "Métro / Bus / Taxi (T-money card recommandée pour les transports)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+09",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (220V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "119"
+    }
+  },
+  "london": {
+    "name": "Londres",
+    "image": "https://cdn.generationvoyage.fr/2019/09/londres-panorama-the-shard.jpg",
+    "title": "Londres, la ville cosmopolite et historique",
+    "description": "Explorez Londres, une ville où l'histoire royale rencontre la modernité vibrante. Des monuments emblématiques comme le Palais de Buckingham et la Tour de Londres aux quartiers animés de Covent Garden, Londres offre une expérience unique à chaque visiteur. Découvrez ses musées de renommée mondiale, savourez la cuisine britannique traditionnelle et profitez de l'atmosphère dynamique de cette métropole internationale.",
+    "top-places": [
+      {
+        "name": "Le Palais de Buckingham",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/7/72/Buckingham_Palace_from_gardens%2C_London%2C_UK_-_Diliff.jpg"
+      },
+      {
+        "name": "La Tour de Londres",
+        "image": "https://media.clondres.com/resize/uploads/sites/5/2018/02/tour-de-londres.jpg?format=auto"
+      },
+      {
+        "name": "Le British Museum",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/ef/2d/8e/photo1jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Le London Eye",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/b9/43/8c/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Covent Garden",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/%E6%9F%AF%E8%8A%AC%E5%9C%92_%2840400019900%29.jpg/1200px-%E6%9F%AF%E8%8A%AC%E5%9C%92_%2840400019900%29.jpg"
+      },
+      {
+        "name": "London Bridge",
+        "image": "https://res.cloudinary.com/dtljonz0f/image/upload/gc-v1/london-pass/blog/london-bridge-non-editorial"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Fish and Chips",
+        "image": "https://www.foodrepublic.com/wp-content/uploads/2012/12/DSC_4779.jpg"
+      },
+      {
+        "name": "Full English Breakfast",
+        "image": "https://iamafoodblog.b-cdn.net/wp-content/uploads/2019/02/full-english-7355w-2.jpg"
+      },
+      {
+        "name": "Afternoon Tea",
+        "image": "https://image-tc.galaxy.tf/wijpeg-c8v76as2m94gpt36m8deskt6i/afternoon-tea-24.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais",
+      "weather": "Entre 15°C et 25°C en été, avec des journées souvent nuageuses",
+      "currency": "Livre sterling (£)",
+      "airport": "Heathrow, Gatwick, Stansted, Luton et London City",
+      "transport": "Métro / Bus / Train (Oyster card recommandée pour les transports)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+00",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type G (230V)"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "999"
+    }
+  },
+  "dubai": {
+    "name": "Dubaï",
+    "image": "https://www.agoda.com/wp-content/uploads/2024/04/Featured-image-Dubai-UAE.jpg",
+    "title": "Dubaï, la ville de l'extravagance et de l'innovation",
+    "description": "Découvrez Dubaï, une métropole futuriste où l'architecture audacieuse rencontre le luxe et l'innovation. Des gratte-ciels emblématiques comme le Burj Khalifa aux îles artificielles de Palm Jumeirah, Dubaï est une destination qui ne cesse d'émerveiller. Explorez ses centres commerciaux gigantesques, ses plages ensoleillées et savourez la cuisine locale dans ses nombreux restaurants.",
+    "top-places": [
+      {
+        "name": "Burj Khalifa",
+        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/12/32/ad/2c.jpg"
+      },
+      {
+        "name": "The Dubai Mall",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/8c/0c/1a/taken-5-years-ago-it.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Palm Jumeirah",
+        "image": "https://www.viessmann.ch/content/dam/public-brands/master/references/palm-islands-dubai/Palm-Islands-Dubai-Haeder-16-9-1920x1080px.jpg/_jcr_content/renditions/original./Palm-Islands-Dubai-Haeder-16-9-1920x1080px.jpg"
+      },
+      {
+        "name": "Le Dubai Marina",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/21/ed/66/97/dubai-marina-walk.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "La mosquée de Jumeirah",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/9f/61/d3/caption.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Le désert de Dubaï",
+        "image": "https://cdn.generationvoyage.fr/2019/12/visiter-desert-dubai.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Shawarma",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/8c/58/5d/lamb-shawarma.jpg"
+      },
+      {
+        "name": "Machboos",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/1e/04/f5/8a/machboos-samak.jpg"
+      },
+      {
+        "name": "Kunafa",
+        "image": "https://media.assettype.com/gulfnews/import/2015/6/25/1_16a0839205b.1540955_504262261_16a0839205b_large.jpg?w=1200&h=675&auto=format%2Ccompress&fit=max&enlarge=true"
+      }
+    ],
+    "to-know": {
+      "language": "Arabe, mais l'anglais est largement parlé",
+      "weather": "Entre 25°C et 40°C en été, avec des journées très chaudes et ensoleillées",
+      "currency": "Dirham des Émirats arabes unis (AED)",
+      "airport": "Aéroport international de Dubaï",
+      "transport": "Métro / Bus / Taxi (Nol card recommandée pour les transports)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+04",
+      "meal-hours": "Déjeuner 12h-15h, Dîner 19h-22h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type G (230V)"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "998"
+    }
+  },
+  "berlin": {
+    "name": "Berlin",
+    "image": "https://www.berlin.de/binaries/asset/image_assets/7927302/ratio_2_1/1708697002/1500x750/",
+    "title": "Berlin, la ville de l'histoire et de la modernité",
+    "description": "Découvrez Berlin, une ville où l'histoire se mêle à l'innovation. De la porte de Brandebourg au mur de Berlin, en passant par l'île aux musées, Berlin offre une richesse culturelle et historique incomparable. Explorez ses monuments emblématiques, ses parcs verdoyants et savourez la cuisine allemande dans ses nombreux restaurants et cafés.",
+    "top-places": [
+      {
+        "name": "La porte de Brandebourg",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/cd/1e/2e/caption.jpg?w=1200&h=1200&s=1&cx=1070&cy=448&chk=v1_b58b92a890cf42edea5b"
+      },
+      {
+        "name": "Le mur de Berlin et East Side Gallery",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/b/b6/East_Side_Gallery_%28Berlin%29_%286331798939%29.jpg"
+      },
+      {
+        "name": "Le Reichstag",
+        "image": "https://www.visitberlin.de/system/files/styles/visitberlin_hero_visitberlin_desktop_2x/private/image/Regierungsviertel_RT_Drachen_c_vB_LBi_DSchwelle_1.jpg.webp?itok=hBjpdTck"
+      },
+      {
+        "name": "L'île aux musées (Museumsinsel)",
+        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/27/89/dc.jpg"
+      },
+      {
+        "name": "Le mémorial de l'Holocauste",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/9b/8a/38/photo8jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Le parc Tiergarten",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/3e/be/2c/caption.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Currywurst",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/1d/52/38/yum.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Sauerbraten",
+        "image": "https://cdn.tasteatlas.com/images/dishes/79dceb1607db46a7af6a42e2f84417a9.jpg?w=600&h=450"
+      },
+      {
+        "name": "Berliner (ou Pfannkuchen)",
+        "image": "https://cdn.book-family.de/travelbook/data/uploads/2023/09/393862967.jpg?impolicy=channel&imwidth=992"
+      }
+    ],
+    "to-know": {
+      "language": "Allemand, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 20°C et 30°C en été, avec des journées ensoleillées et des soirées fraîches",
+      "currency": "Euro (€)",
+      "airport": "Aéroport de Berlin-Brandebourg",
+      "transport": "Métro / Bus / Tram (2,90€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "110",
+      "ambulance": "112"
+    }
+  },
+  "osaka": {
+    "name": "Osaka",
+    "image": "https://images.ctfassets.net/bth3mlrehms2/1lSMhsRFLihJX0ZGLtroyq/140c6820e05d22b837122238bfe3d61a/Dotonbori_strasse__Osaka__Japan.jpg",
+    "title": "Osaka, la cuisine de rue et l'énergie urbaine du Japon",
+    "description": "Découvrez Osaka, une ville dynamique et accueillante, connue pour sa cuisine de rue délicieuse et son ambiance animée. Des monuments historiques comme le château d'Osaka aux quartiers vibrants de Dotonbori, Osaka offre une expérience unique à chaque visiteur. Explorez ses attractions modernes, savourez des spécialités culinaires locales et plongez dans la culture japonaise authentique.",
+    "top-places": [
+      {
+        "name": "Le château d'Osaka",
+        "image": "https://www.createtravel.tv/wp-content/uploads/2024/03/Osaka-Castle.jpg"
+      },
+      {
+        "name": "Dotonbori",
+        "image": "https://cdn.omni-links.com/eurex/2c9ecfa3-cf9f-4701-9d4f-083be757f8eb.jpg"
+      },
+      {
+        "name": "Universal Studios Japan",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/00/32/47/caption.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Sumiyoshi Taisha",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/db/24/25/3.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Umeda Sky Building",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/f/f9/2018_Umeda_Sky_Building.jpg"
+      },
+      {
+        "name": "Osaka Aquarium Kaiyukan",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/dc/f5/d8/caption.jpg?w=900&h=500&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Takoyaki",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/aa/47/6e/photo0jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Okonomiyaki",
+        "image": "https://int.japanesetaste.com/cdn/shop/articles/how-to-make-osaka-style-okonomiyaki-at-home-japanese-savory-pancake-japanese-taste_b2239bd7-ec67-4460-9294-197693e160f4.jpg?v=1741276847&width=5760"
+      },
+      {
+        "name": "Kushikatsu",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/86/68/00/img-20180303-001354-423.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Japonais, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 20°C et 30°C en été, avec des journées chaudes et humides",
+      "currency": "Yen japonais (¥)",
+      "airport": "Aéroport international du Kansai",
+      "transport": "Métro / Train / Bus (environ 200¥ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des endroits, prévoir du liquide pour les petits commerces",
+      "time-zone": "UTC+09",
+      "meal-hours": "Déjeuner 11h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (100V)"
+    },
+    "emergency-numbers": {
+      "police": "110",
+      "ambulance": "119"
+    }
+  },
+  "bangkok": {
+    "name": "Bangkok",
+    "image": "https://content.r9cdn.net/rimg/dimg/21/e1/c054fc24-city-26166-176726042eb.jpg?width=1366&height=768&xhint=2881&yhint=1499&crop=true",
+    "title": "Bangkok, la ville des anges et des temples dorés",
+    "description": "Découvrez Bangkok, une ville vibrante où la tradition rencontre la modernité. Des temples majestueux comme le Grand Palais et Wat Phra Kaew aux marchés animés de Khao San Road, Bangkok offre une expérience unique à chaque visiteur. Explorez ses marchés flottants, savourez la cuisine thaïlandaise authentique et plongez dans l'effervescence de cette métropole asiatique.",
+    "top-places": [
+      {
+        "name": "Le Grand Palais & Wat Phra Kaew",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/5b/32/ae/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Wat Pho",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Outside_wall_Wat_Pho.jpg"
+      },
+      {
+        "name": "Marché flottant de Damnoen Saduak",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/5c/4f/e6/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Khao San Road",
+        "image": "https://cdn.generationvoyage.fr/2020/03/khao-san-road-2.jpg"
+      },
+      {
+        "name": "Chatuchak Weekend Market",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/56/c6/14/dsc-2066-largejpg.jpg?w=900&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Pad Thaï",
+        "image": "https://ychef.files.bbci.co.uk/1280x720/p05z1qww.jpg"
+      },
+      {
+        "name": "Mango Sticky Rice (Khao Niew Mamuang)",
+        "image": "https://fanclubthailand.co.uk/wp-content/uploads/2022/05/mango-sticky-rice_160.jpg"
+      },
+      {
+        "name": "Tom Yum Goong",
+        "image": "https://saka-asiankitchen.com/wp-content/uploads/2023/12/bangkok-tom-yum-noodle-soup-1.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Thaï, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 25°C et 35°C, avec des journées chaudes et humides",
+      "currency": "Baht thaïlandais (฿)",
+      "airport": "Aéroport Suvarnabhumi et Don Mueang",
+      "transport": "Skytrain (BTS) / Métro (MRT) / Bus / Tuk-tuk"
+    },
+    "tips": {
+      "payment": "CB acceptée dans les grands magasins, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+07",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A/B/C (220V)"
+    },
+    "emergency-numbers": {
+      "police": "191",
+      "ambulance": "1669"
+    }
+  },
+  "los-angeles": {
+    "name": "Los Angeles",
+    "image": "https://www.agoda.com/wp-content/uploads/2024/02/Featured-image-Los-Angeles-during-sunset.jpg",
+    "title": "Los Angeles, la cité des anges et du cinéma",
+    "description": "Découvrez Los Angeles, une ville où le glamour d'Hollywood rencontre les plages ensoleillées de la Californie. Des icônes comme le Hollywood Sign et le Walk of Fame aux attractions modernes comme Universal Studios, L.A. offre une expérience inoubliable. Explorez ses quartiers diversifiés, savourez la cuisine locale et profitez de l'ambiance décontractée de la côte ouest.",
+    "top-places": [
+      {
+        "name": "Hollywood Sign & Walk of Fame",
+        "image": "https://www.explore.com/img/gallery/your-guide-to-the-hollywood-walk-of-fame/l-intro-1677259806.jpg"
+      },
+      {
+        "name": "Griffith Observatory",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/e4/81/b3/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Santa Monica Pier",
+        "image": "https://cdn.getyourguide.com/img/location/5c2df033e0ff3.jpeg/99.jpg"
+      },
+      {
+        "name": "Venice Beach",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/aa/00/35/venice-beach.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Downtown L.A. & The Broad",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/36/cb/92/the-broad-photo-by-iwan.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Universal Studios Hollywood",
+        "image": "https://res.cloudinary.com/simpleview/image/upload/v1612197440/clients/anaheimca/uni_studios_hollywood_max_res_default2_3f15e0a6-8283-470c-8870-1f2a89c02952.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Tacos (style L.A.)",
+        "image": "https://www.discoverlosangeles.com/sites/default/files/images/2020-09/119748259_198284458325423_985238542072184616_n.jpg"
+      },
+      {
+        "name": "In-N-Out Burger",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-m/1280/17/35/f3/a7/photo0jpg.jpg"
+      },
+      {
+        "name": "Korean BBQ",
+        "image": "https://media.timeout.com/images/106113916/750/562/image.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais, avec une forte présence de l'espagnol",
+      "weather": "Entre 20°C et 30°C, avec des journées ensoleillées toute l'année",
+      "currency": "Dollar américain ($)",
+      "airport": "Aéroport international de Los Angeles (LAX)",
+      "transport": "Métro / Bus / Voiture (recommandé pour se déplacer facilement)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les pourboires",
+      "time-zone": "UTC-08",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (120V)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911"
+    }
+  },
+  "istanbul": {
+    "name": "Istanbul",
+    "image": "https://cdn.generationvoyage.fr/2021/01/istanbul.jpg",
+    "title": "Istanbul, la ville aux mille et une merveilles",
+    "description": "Découvrez Istanbul, une ville où l'Orient rencontre l'Occident. Des monuments historiques comme Sainte-Sophie et la Mosquée Bleue aux marchés animés du Grand Bazar, Istanbul offre une expérience unique à chaque visiteur. Explorez ses palais majestueux, savourez la cuisine turque authentique et profitez d'une croisière sur le Bosphore pour admirer la ville sous un autre angle.",
+    "top-places": [
+      {
+        "name": "Sainte-Sophie (Hagia Sophia)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/54/be/42/hagia-sophia-museum-by.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Mosquée Bleue (Sultanahmet Camii)",
+        "image": "https://www.voyageavecnous.fr/wp-content/uploads/2023/03/visiter-interieur-de-la-mosquee-bleue-scaled.jpg"
+      },
+      {
+        "name": "Palais de Topkapi",
+        "image": "https://www.guideistanbul.fr/wp-content/uploads/2021/11/palais-topkapi-porte-du-salut.jpg"
+      },
+      {
+        "name": "Grand Bazar (Kapalı Çarşı)",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/1a/42/e6/b2/grand-bazaar-kapali-carsi.jpg"
+      },
+      {
+        "name": "Croisière sur le Bosphore",
+        "image": "https://www.tooistanbul.com/wp-content/uploads/2022/01/tour-bosphore-2.jpg"
+      },
+      {
+        "name": "Tour de Galata",
+        "image": "https://cdn.generationvoyage.fr/2021/01/visiter-tour-galata.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Kebap (Doner ou Adana)",
+        "image": "https://www.travelvui.com/wp-content/uploads/2017/01/Adana-Kebab-istanbul.jpg"
+      },
+      {
+        "name": "Baklava",
+        "image": "https://toutistanbul.com/wp-content/uploads/2023/01/un-baklava-a-istanbul-turquie.jpg"
+      },
+      {
+        "name": "Simit",
+        "image": "https://istanbulfood.com/wp-content/uploads/2013/09/IMG_9137.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Turc, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 20°C et 30°C en été, avec des journées ensoleillées et des soirées agréables",
+      "currency": "Livre turque (₺)",
+      "airport": "Aéroport d'Istanbul et Sabiha Gökçen",
+      "transport": "Métro / Tram / Bus / Ferry (Istanbulkart recommandée pour les transports)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des endroits, prévoir du liquide pour les petits commerces",
+      "time-zone": "UTC+03",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 19h-22h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "155",
+      "ambulance": "112"
+    }
+  },
+  "melbourne": {
+    "name": "Melbourne",
+    "image": "https://www.meltour.com/content/uploads/2024/10/visites-immanquables-melbourne-slider.webp",
+    "title": "Melbourne, la capitale culturelle de l'Australie",
+    "description": "Découvrez Melbourne, une ville dynamique et cosmopolite, réputée pour sa scène artistique florissante et sa cuisine diversifiée. Des icônes architecturales comme Federation Square aux plages ensoleillées de St Kilda, Melbourne offre une expérience unique à chaque visiteur. Explorez ses marchés animés, ses jardins luxuriants et savourez un café Flat White dans l'un de ses nombreux cafés branchés.",
+    "top-places": [
+      {
+        "name": "Federation Square",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Fed_Square%2C_Melbourne%2C_west_view_20230219_1.jpg/1200px-Fed_Square%2C_Melbourne%2C_west_view_20230219_1.jpg"
+      },
+      {
+        "name": "Street Art à Hosier Lane",
+        "image": "https://cdn.cbdnews.com.au/themes/user/site/cbdn/asset/img/sized/101-Column_-_Street_Art-2-03b620ebafafefa4cfaa3039f4747285.jpg"
+      },
+      {
+        "name": "Queen Victoria Market",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/72/6e/20/discover-the-variety.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Jardins botaniques royaux",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/8e/ce/cf/guilfoyle-s-volcano-at.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "St Kilda & sa plage",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/189000/189710-St-Kilda-Beach.jpg"
+      },
+      {
+        "name": "Great Ocean Road",
+        "image": "https://www.visitmelbourne.com/-/media/images/great-ocean-road/things-to-do/nature-and-wildlife/beaches-and-coastlines/lorne-gor/lorne-great-ocean-road_gor_u_1233198_1150x863.jpg?ts=20240503050553"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Meat Pie",
+        "image": "https://media.timeout.com/images/105489113/750/422/image.jpg"
+      },
+      {
+        "name": "Chicken Parmigiana (Parma)",
+        "image": "https://media.timeout.com/images/105725924/image.jpg"
+      },
+      {
+        "name": "Flat White",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/05/82/26/16/melbourne-cafe.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais",
+      "weather": "Entre 10°C et 25°C, avec des variations rapides de température",
+      "currency": "Dollar australien (AUD)",
+      "airport": "Aéroport de Melbourne (Tullamarine)",
+      "transport": "Tram / Train / Bus (Myki card recommandée pour les transports)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+10",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type I (230V)"
+    },
+    "emergency-numbers": {
+      "police": "000",
+      "ambulance": "000"
+    }
+  },
+  "hong-kong": {
+    "name": "Hong Kong",
+    "image": "https://static-cms.routard.com/web-routard/uploads/Hong_Kong_efcea3a2b6.jpg",
+    "title": "Hong Kong, la perle de l'Orient",
+    "description": "Découvrez Hong Kong, une ville où l'Orient rencontre l'Occident, offrant un mélange unique de gratte-ciels modernes et de traditions anciennes. Des vues panoramiques depuis Victoria Peak aux marchés animés de Mong Kok, Hong Kong est une destination vibrante et dynamique. Explorez ses temples historiques, profitez d'une croisière sur le Star Ferry et savourez la cuisine cantonaise authentique.",
+    "top-places": [
+      {
+        "name": "Victoria Peak (The Peak)",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/7/7d/High_West_and_Victoria_Peak_from_Victoria_Gap_%28crop1%29.jpg"
+      },
+      {
+        "name": "Star Ferry",
+        "image": "https://mywowo.net/media/images/cache/hong_kong_star_ferry_01_presentazione_jpg_1200_630_cover_85.jpg"
+      },
+      {
+        "name": "Big Buddha (Tian Tan Buddha)",
+        "image": "https://fly-over-the-world-media.s3.amazonaws.com/uploads/highlights/61acdb4e50f06-62f0ec3552b48_1280_720.jpg"
+      },
+      {
+        "name": "Temple de Man Mo",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/bd/b7/d5/caption.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Mong Kok & ses marchés",
+        "image": "https://lepetitjournal.com/_next/image?url=https%3A%2F%2Fbackoffice.lepetitjournal.com%2Fsites%2Fdefault%2Ffiles%2Finline-images%2FBernard%2520Spragg_flickr.jpg&w=3840&q=75"
+      },
+      {
+        "name": "Symphony of Lights",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/07/f3/ba/1a/photo0jpg.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Dim Sum",
+        "image": "https://www.discoverhongkong.com/content/dam/dhk/intl/explore/dining/hong-kong-s-most-innovative-dim-sum-restaurants/dimdimsum4_3.jpg"
+      },
+      {
+        "name": "Wonton Noodles",
+        "image": "https://cdn.tatlerasia.com/tatlerasia/i/2023/06/27115237-gettyimages-1125459448_cover_1600x1067.jpg"
+      },
+      {
+        "name": "Pineapple Bun (Bo Lo Bao)",
+        "image": "https://tarasmulticulturaltable.com/wp-content/uploads/2017/01/Bolo-Bao-Hong-Kong-Pineapple-Buns-8-of-8.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Cantonais et Anglais",
+      "weather": "Entre 20°C et 30°C, avec des étés chauds et humides",
+      "currency": "Dollar de Hong Kong (HKD)",
+      "airport": "Aéroport international de Hong Kong",
+      "transport": "MTR / Bus / Tram / Ferry (Octopus card recommandée pour les transports)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+08",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type G (220V)"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "999"
+    }
+  },
+  "munich": {
+    "name": "Munich",
+    "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/501000/501501-munich.jpg",
+    "title": "Munich, la capitale bavaroise de la culture et de la bière",
+    "description": "Découvrez Munich, une ville où l'histoire bavaroise rencontre la modernité. Des places animées comme Marienplatz aux vastes espaces verts de l'Englischer Garten, Munich offre une expérience unique à chaque visiteur. Explorez ses châteaux majestueux, ses musées de renommée mondiale et savourez la cuisine bavaroise traditionnelle dans ses brasseries emblématiques.",
+    "top-places": [
+      {
+        "name": "Marienplatz & Nouvel Hôtel de Ville",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/7/73/Rathaus_and_Marienplatz_from_Peterskirche_-_August_2006.jpg"
+      },
+      {
+        "name": "Château de Nymphenburg",
+        "image": "https://www.muenchen.travel/var/ger_muc/storage/images/_aliases/stage_large/3/4/7/5/265743-1-ger-DE/film-schloss-03-foto-redline-enterprises-sm-3000.jpg"
+      },
+      {
+        "name": "Englischer Garten",
+        "image": "https://25hours-hotels.com/wp-content/uploads/sites/39/2024/10/25hours_theroyalbavarian_neighbourhood_englischergarten.jpg"
+      },
+      {
+        "name": "Musée BMW & BMW Welt",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4a/07/ce/bmw-welt.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Résidence de Munich",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/ae/8f/19/the-great-hall.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Viktualienmarkt",
+        "image": "https://www.travelguide.fr/media/muenchen-viktualienmarkt.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Weißwurst",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/0/08/Weisswurst_Brezn_Senf.jpg"
+      },
+      {
+        "name": "Schweinshaxe",
+        "image": "https://cdn.tasteatlas.com//images/dishes/ebf8e4badee44a368889800d17db953c.jpg?width=800&height=513"
+      },
+      {
+        "name": "Apfelstrudel",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/0c/26/13/21/apple-strudel-at-gorreshof.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Allemand, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 15°C et 25°C en été, avec des journées ensoleillées et des soirées fraîches",
+      "currency": "Euro (€)",
+      "airport": "Aéroport de Munich (Franz Josef Strauß)",
+      "transport": "Métro / Tram / Bus (2,90€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "110",
+      "ambulance": "112"
+    }
+  },
+  "las-vegas": {
+    "name": "Las Vegas",
+    "image": "https://media-cdn.tripadvisor.com/media/attractions-content--1x-1/12/85/9e/df.jpg?f=webp&w=300&h=200",
+    "title": "Las Vegas, la ville du divertissement et de l'extravagance",
+    "description": "Découvrez Las Vegas, une ville où le glamour et le divertissement se rencontrent au cœur du désert du Nevada. Des lumières scintillantes du Strip aux spectacles époustouflants, Las Vegas offre une expérience inoubliable à chaque visiteur. Explorez ses casinos emblématiques, profitez de ses buffets à volonté et partez à l'aventure avec une excursion au Grand Canyon ou à la Vallée de la Mort.",
+    "top-places": [
+      {
+        "name": "Le Strip",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/01/00/2b/the-strip.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Fontaines du Bellagio",
+        "image": "https://aws-tiqets-cdn.imgix.net/images/content/bc4e91de18934475a7204acd97e40e5c.jpg?auto=format%2Ccompress&fit=crop&ixlib=python-3.2.1&q=70"
+      },
+      {
+        "name": "Fremont Street (Downtown Vegas)",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/547000/547616-las-vegas-nevada.jpg"
+      },
+      {
+        "name": "High Roller",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/ae/2a/f9/high-roller.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Excursion au Grand Canyon ou à la Vallée de la Mort",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0e/b7/96/7e.jpg"
+      },
+      {
+        "name": "Spectacles de Vegas",
+        "image": "https://www.jeparsauxusa.com/wp-content/uploads/2018/05/love-cirque-soleil.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Buffet à volonté (The Buffet at Wynn, Bacchanal au Caesars, etc.)",
+        "image": "https://cdn.wynnresorts.com/q_auto,f_auto/Wynn%20Las%20Vegas/Dining/Casual%20Dining/The%20Buffet/group-of-friends-eating-dinner-wynn-las-vegas-828x466?h=466&iar=0&w=828"
+      },
+      {
+        "name": "Shrimp Cocktail",
+        "image": "https://www.tastingtable.com/img/gallery/how-nevada-popularized-the-shrimp-cocktail/l-intro-1730758758.jpg"
+      },
+      {
+        "name": "Steakhouse Experience",
+        "image": "https://cdn.vox-cdn.com/thumbor/DJoPOfI3EmGkhUYFDhf-RZ6UDbA=/0x0:8192x5464/1200x900/filters:focal(3441x2077:4751x3387)/cdn.vox-cdn.com/uploads/chorus_image/image/60448943/Filet_Mignon_8_oz_SH.49.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais",
+      "weather": "Entre 20°C et 40°C, avec des journées chaudes et ensoleillées",
+      "currency": "Dollar américain ($)",
+      "airport": "Aéroport international Harry Reid (anciennement McCarran)",
+      "transport": "Taxi / Bus / Monorail (Uber et Lyft disponibles)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les pourboires",
+      "time-zone": "UTC-08",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A/B (120V)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911"
+    }
+  },
+  "florence": {
+    "name": "Florence",
+    "image": "https://static1.evcdn.net/images/reduction/1593118_w-3840_h-2160_q-70_m-crop.jpg",
+    "title": "Florence, la capitale de la Renaissance",
+    "description": "Découvrez Florence, une ville emblématique de l'art et de l'histoire, où chaque coin de rue raconte une histoire. Des chefs-d'œuvre architecturaux comme le Duomo et le Campanile de Giotto aux trésors artistiques de la Galerie des Offices, Florence est un véritable musée à ciel ouvert. Flânez le long du Ponte Vecchio, explorez les jardins de Boboli et savourez la cuisine toscane dans ses trattorias traditionnelles.",
+    "top-places": [
+      {
+        "name": "Duomo & Campanile de Giotto",
+        "image": "https://bonjourflorence.fr/wp-content/uploads/2024/10/campanile-de-giotto-florence.jpg"
+      },
+      {
+        "name": "Galerie des Offices (Uffizi)",
+        "image": "https://www.voyageway.com/wp-content/uploads/2018/07/reservation-musee-des-offices-florence.jpg"
+      },
+      {
+        "name": "Ponte Vecchio",
+        "image": "https://storage.googleapis.com/mytour-prod/blog/1665067271397_history-and-resources-of-the-ponte-vecchio-jpeg.jpeg"
+      },
+      {
+        "name": "Palais Pitti & Jardin de Boboli",
+        "image": "https://bonjourflorence.fr/wp-content/uploads/2021/10/jardin-de-boboli-vue-globale.jpg"
+      },
+      {
+        "name": "Galerie de l’Académie",
+        "image": "https://www.lasourisglobe-trotteuse.fr/wp-content/uploads/2018/12/david-galerie-academie-florence.jpg"
+      },
+      {
+        "name": "Piazzale Michelangelo",
+        "image": "https://florencesite.fr/images/piazzale-michelangelo-florence.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Bistecca alla Fiorentina",
+        "image": "https://static.destinationflorence.com/immagini/a2/3f/e4/78/blog_scheda_20221118111721.jpeg"
+      },
+      {
+        "name": "Lampredotto",
+        "image": "https://www.ilquadrifoglio-paris.fr/wp-content/uploads/2022/09/Lampredotto-a-Florence-5-endroits-pour-bien-manger-scaled.jpg"
+      },
+      {
+        "name": "Gelato artisanal",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/29/f3/ff/caption.jpg?w=600&h=600&s=1"
+      }
+    ],
+    "to-know": {
+      "language": "Italien, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 15°C et 30°C, avec des étés chauds et des hivers doux",
+      "currency": "Euro (€)",
+      "airport": "Aéroport de Florence (Peretola)",
+      "transport": "Tram / Bus / À pied (la ville est facilement accessible à pied)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 19h-22h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "118"
+    }
+  },
+  "prague": {
+    "name": "Prague",
+    "image": "https://www.thetrainline.com/content/vul/hero-images/city/prague/1x.jpg",
+    "title": "Prague, la ville aux mille tours et aux légendes",
+    "description": "Découvrez Prague, la capitale magique de la République tchèque, célèbre pour son architecture médiévale et ses charmantes ruelles pavées. Du majestueux Château de Prague à l'emblématique Pont Charles, chaque coin de la ville raconte une histoire. Explorez la Place de la Vieille Ville avec son horloge astronomique, flânez dans le quartier juif et savourez la cuisine locale dans ses nombreux restaurants.",
+    "top-places": [
+      {
+        "name": "Château de Prague",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/21/d9/21/history-buffs-may-want.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Pont Charles (Karlův Most)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/0e/67/3a/charles-bridge-karluv.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Place de la Vieille Ville & Horloge Astronomique",
+        "image": "https://media.routard.com/image/27/2/photo.1567272.jpeg"
+      },
+      {
+        "name": "Quartier juif (Josefov)",
+        "image": "https://cdn.generationvoyage.fr/2018/06/visiter-quartier-juif-prague-cimeti%C3%A8re.jpg"
+      },
+      {
+        "name": "Collines de Petrin & Tour de Petrin",
+        "image": "https://prague-secrete.fr/wp-content/uploads/2017/02/26565782495_37c515fa16_k-1024x684.jpg"
+      },
+      {
+        "name": "Musée national de Prague",
+        "image": "https://cdn-imgix.headout.com/media/images/192bc52b4302aa49c252cdf9dbbd8bd7-10317-prague-prague-national-museum-skip-the-line-admission-ticket-08.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&fit=crop&ar=16%3A9&crop=faces"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Svíčková",
+        "image": "https://cdn.tasteatlas.com/images/dishes/816ef03512524348a002bdbcb449f7ef.jpg?m=facebook"
+      },
+      {
+        "name": "Trdelník",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/68/f5/b7/photo0jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Pilsner",
+        "image": "https://forgetsomeday.com/wp-content/uploads/Beer-Prague-1.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Tchèque, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 20°C et 30°C en été, avec des journées agréables et des soirées fraîches",
+      "currency": "Couronne tchèque (CZK)",
+      "airport": "Aéroport Václav Havel de Prague",
+      "transport": "Tram / Métro / Bus (ticket de transport valable 90 minutes à environ 32 CZK)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des endroits, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/E (230V)"
+    },
+    "emergency-numbers": {
+      "police": "158",
+      "ambulance": "155"
+    }
+  },
+  "dublin": {
+    "name": "Dublin",
+    "image": "https://img.lonelyplanet.fr/s3fs-public/styles/wide/public/import/destination/slider/descktop/500px_100904953.jpg.webp?itok=AsvMv5vb",
+    "title": "Dublin, la capitale vibrante de l'Irlande",
+    "description": "Découvrez Dublin, une ville riche en histoire et en culture, où la tradition irlandaise se mêle à une atmosphère moderne et dynamique. Des institutions emblématiques comme Trinity College et la cathédrale Saint-Patrick aux pubs animés de Temple Bar, Dublin offre une expérience unique à chaque visiteur. Explorez ses châteaux, savourez la cuisine locale et profitez d'une pinte de Guinness dans l'un de ses célèbres pubs.",
+    "top-places": [
+      {
+        "name": "Trinity College & Livre de Kells",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/10/7e/c9/ba.jpg"
+      },
+      {
+        "name": "Temple Bar",
+        "image": "https://www.irlanda.net/fr/wp-content/uploads/sites/14/temple-bar-ete-hd.jpg"
+      },
+      {
+        "name": "St. Patrick's Cathedral",
+        "image": "https://www.voyageirlande.com/cdn/ie-public/st_patricks_cathedral5.jpg"
+      },
+      {
+        "name": "Guinness Storehouse",
+        "image": "https://images.ireland.com/media/Images/guinness-storehouse/e06a5b85ee414999866ccd00307c787f.jpg"
+      },
+      {
+        "name": "Dublin Castle",
+        "image": "https://d3iso9mq9tb10q.cloudfront.net/magefan_blog/d/u/dublin-castle_article-listing.jpg"
+      },
+      {
+        "name": "Phoenix Park",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/ef/0a/f4/caption.jpg?w=1200&h=1200&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Irish Stew",
+        "image": "https://www.simplyrecipes.com/thmb/yF-8mMRMxkdUmvfx8NXBb57wqSM=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/__opt__aboutcom__coeus__resources__content_migration__simply_recipes__uploads__2015__03__irish-beef-stew-horiz-a2-1800-24f1087421414a77a25518c0897d7e23.jpg"
+      },
+      {
+        "name": "Boxty",
+        "image": "https://theculinarytravelguide.com/wp-content/uploads/2018/05/Irish-Boxty.jpg"
+      },
+      {
+        "name": "Guinness",
+        "image": "https://yummy-planet.com/wp-content/uploads/2016/04/20131006-7441-Pints_of_Guinness-_Guinness_Store_House-_Dublin-Karl_Delandsheere.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Irlandais et Anglais",
+      "weather": "Entre 5°C et 20°C, avec des journées souvent nuageuses et pluvieuses",
+      "currency": "Euro (€)",
+      "airport": "Aéroport de Dublin",
+      "transport": "Bus / Tram (Luas) / Taxi (le transport public est bien développé)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+00",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type G (230V)"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "999"
+    }
+  },
+  "kyoto": {
+    "name": "Kyoto",
+    "image": "https://content.r9cdn.net/rimg/dimg/83/d4/85f68013-city-20339-16489ec9b8b.jpg?width=1200&height=630&xhint=1444&yhint=1011&crop=true",
+    "title": "Kyoto, la ville des temples et de la tradition",
+    "description": "Découvrez Kyoto, l'ancienne capitale du Japon, célèbre pour ses temples historiques, ses jardins zen et sa culture traditionnelle. Des sites emblématiques comme Kinkaku-ji (Pavillon d'Or) et Fushimi Inari Taisha aux ruelles pittoresques de Gion, Kyoto offre une expérience inoubliable. Explorez ses forêts de bambous, savourez la cuisine kaiseki et laissez-vous envoûter par l'atmosphère sereine de cette ville unique.",
+    "top-places": [
+      {
+        "name": "Kinkaku-ji (Pavillon d'Or)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/43/75/21/photo0jpg.jpg?w=900&h=500&s=1&cx=1174&cy=615&chk=v1_a1e899f38a9e60afd918"
+      },
+      {
+        "name": "Fushimi Inari Taisha",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/18/28/2e/if-you-make-a-wish-when.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Kiyomizu-dera",
+        "image": "https://www.kawaiicafe.fr/wp-content/uploads/2023/04/Kiyomizu-Dera.jpg"
+      },
+      {
+        "name": "Arashiyama et la forêt de bambous",
+        "image": "https://cdn.getyourguide.com/img/tour/7d376b2260fa4e2b7281c242e0d72c5f97703136809de640257dcd33394020cb.png/98.jpg"
+      },
+      {
+        "name": "Gion",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/7e/b2/6d/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Nijo Castle",
+        "image": "https://res-3.cloudinary.com/jnto/image/upload/w_2064,h_1300,c_fill,f_auto,fl_lossy,q_auto/v1648006526/kyoto/M_00212_001"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Kaiseki",
+        "image": "https://fortwoplz.com/wp-content/uploads/2023/05/kyoto_kaiseki_restaurants-640x426.jpeg"
+      },
+      {
+        "name": "Yudofu",
+        "image": "https://www.tenposstar.com/blog/wp-content/uploads/2024/04/%E6%B9%AF%E8%B1%86%E8%85%90.jpg"
+      },
+      {
+        "name": "Matcha",
+        "image": "https://image.cookly.me/tr:h-544,w-824,pr-true,rt-auto/images/matcha-kyoto-green-tea-tour.png"
+      }
+    ],
+    "to-know": {
+      "language": "Japonais, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 10°C et 30°C, avec des étés chauds et des hivers frais",
+      "currency": "Yen japonais (¥)",
+      "airport": "Aéroport international d'Osaka (Kansai)",
+      "transport": "Métro / Train / Bus (environ 200¥ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des endroits, prévoir du liquide pour les petits commerces",
+      "time-zone": "UTC+09",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (100V)"
+    },
+    "emergency-numbers": {
+      "police": "110",
+      "ambulance": "119"
+    }
+  },
+  "vienna": {
+    "name": "Vienne",
+    "image": "https://static2-viaggi.corriereobjects.it/wp-content/uploads/2015/06/vienna-iStock-1196925572-min.jpg?v=1690823555",
+    "title": "Vienne, la ville de la musique et de l'histoire",
+    "description": "Découvrez Vienne, la capitale autrichienne, célèbre pour son riche patrimoine culturel et son ambiance romantique. Des palais majestueux comme le Palais de Schönbrunn à la magnifique Cathédrale Saint-Étienne, Vienne est un véritable joyau européen. Explorez ses musées de renommée mondiale, assistez à un opéra et savourez la délicieuse cuisine viennoise dans ses cafés historiques.",
+    "top-places": [
+      {
+        "name": "Palais de Schönbrunn",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/2d/28/e4/wwwschoenbrunnat.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Cathédrale Saint-Étienne (Stephansdom)",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Wien_-_Stephansdom_%281%29.JPG/1200px-Wien_-_Stephansdom_%281%29.JPG"
+      },
+      {
+        "name": "Musée d'Histoire de l'Art (Kunsthistorisches Museum)",
+        "image": "https://www.wien.info/resource/image/291782/3x2/894/596/123916a75fea9bf39cf14062a4ea4584/272CD8F598C73D9ECA6C457546DFEE46/50690-kunsthistorisches-museum-wien-.webp"
+      },
+      {
+        "name": "Opéra d'État de Vienne (Wiener Staatsoper)",
+        "image": "https://www.viennapass.de/fileadmin/_processed_/0/9/csm__c__Wiener_Staatsoper___Michael_Poehn_91794fe919.png"
+      },
+      {
+        "name": "Palais Hofburg",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/74/dc/9c/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Prater & Grande roue (Riesenrad)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/87/08/58/photo0jpg.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Wiener Schnitzel",
+        "image": "https://images.immediate.co.uk/production/volatile/sites/2/2021/10/WienerSchnitzel_015-d281ef4.jpg?quality=90&crop=13px,4395px,5656px,2433px&resize=556,505"
+      },
+      {
+        "name": "Sachertorte",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Sachertorte_DSC03027.JPG/1200px-Sachertorte_DSC03027.JPG"
+      },
+      {
+        "name": "Apfelstrudel",
+        "image": "https://www.lilvienna.com/wp-content/uploads/Original-Viennese-Applestrudel2.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Allemand, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 5°C et 25°C, avec des étés chauds et des hivers froids",
+      "currency": "Euro (€)",
+      "airport": "Aéroport international de Vienne (Schwechat)",
+      "transport": "Métro / Tram / Bus (ticket de transport valable 90 minutes à environ 2,40 €)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "144"
+    }
+  },
+  "venice": {
+    "name": "Venise",
+    "image": "https://www.votretourdumonde.com/wp-content/uploads/2017/04/que-visiter-a-venise-1.jpg",
+    "title": "Venise, la ville des canaux et des gondoles",
+    "description": "Découvrez Venise, une ville unique construite sur l'eau, célèbre pour ses canaux romantiques, ses ponts historiques et son architecture époustouflante. De la majestueuse Place Saint-Marc à la beauté du Palais des Doges, chaque coin de Venise est un véritable chef-d'œuvre. Profitez d'une balade en gondole, explorez l'île de Murano et savourez la délicieuse cuisine vénitienne.",
+    "top-places": [
+      {
+        "name": "Place Saint-Marc (Piazza San Marco)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/3b/33/2b/20201018-122621-largejpg.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Basilique Saint-Marc",
+        "image": "https://www.rendez-vous-fantasia.com/wp-content/uploads/2021/09/thumb__1920_0_0_0_auto.jpg"
+      },
+      {
+        "name": "Palais des Doges (Palazzo Ducale)",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/00/%28Venice%29_Doge%27s_Palace_and_campanile_of_St._Mark%27s_Basilica_facing_the_sea.jpg/1200px-%28Venice%29_Doge%27s_Palace_and_campanile_of_St._Mark%27s_Basilica_facing_the_sea.jpg"
+      },
+      {
+        "name": "Pont du Rialto",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/Rialto_Bridge_1_%287224051360%29.jpg/1200px-Rialto_Bridge_1_%287224051360%29.jpg"
+      },
+      {
+        "name": "Île de Murano",
+        "image": "https://cdnsecureimage.hotelkeys.it/20214614557.jpg"
+      },
+      {
+        "name": "Tour en gondole",
+        "image": "https://www.venise.style/wp-content/uploads/gondole-venise-53.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Risotto al Nero di Seppia",
+        "image": "https://navaway.fr/wp-content/uploads/2024/10/meilleures-specialites-venise.jpg"
+      },
+      {
+        "name": "Cicchetti",
+        "image": "https://partir.ouest-france.fr/magazine/wp-content/uploads/2025/01/iStock-843747838.jpg"
+      },
+      {
+        "name": "Frittura Mista",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-m/1280/19/61/b7/f8/frittura-mista.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Italien, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 10°C et 30°C, avec des étés chauds et des hivers frais",
+      "currency": "Euro (€)",
+      "airport": "Aéroport de Venise (Marco Polo)",
+      "transport": "Vaporetto (bateau-bus) / À pied (la ville est facilement accessible à pied)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 19h-22h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "118"
+    }
+  },
+  "kuala-lumpur": {
+    "name": "Kuala Lumpur",
+    "image": "https://content.r9cdn.net/rimg/dimg/1e/f2/0916f4b2-city-4723-1628829b6c4.jpg?width=1366&height=768&xhint=1334&yhint=1020&crop=true",
+    "title": "Kuala Lumpur, la capitale dynamique de la Malaisie",
+    "description": "Découvrez Kuala Lumpur, une ville moderne et cosmopolite, célèbre pour ses gratte-ciels emblématiques et sa culture diversifiée. Des tours jumelles Petronas aux grottes de Batu, Kuala Lumpur offre une expérience unique mêlant tradition et modernité. Explorez ses musées, ses parcs luxuriants et savourez la délicieuse cuisine malaisienne dans ses nombreux restaurants et marchés.",
+    "top-places": [
+      {
+        "name": "Petronas Twin Towers",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/76/d5/e8/die-petronas-towers-sind.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Batu Caves",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/8/8f/Batu_Caves_stairs_2022-05.jpg"
+      },
+      {
+        "name": "Merdeka Square (Dataran Merdeka)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/22/88/9b/caption.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Kuala Lumpur Tower (Menara KL)",
+        "image": "https://cdn-imgix.headout.com/media/images/9e254a5603f891679a9e69305f8c096b-card%20image.jpg"
+      },
+      {
+        "name": "Islamic Arts Museum",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/ae/45/c2/photo1jpg.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Jardin botanique de Perdana",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/472000/472997-Kuala-Lumpur.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Nasi Lemak",
+        "image": "https://media.timeout.com/images/103636261/image.jpg"
+      },
+      {
+        "name": "Satay",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/49/d5/28/photo2jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Char Kway Teow",
+        "image": "https://d3h1lg3ksw6i6b.cloudfront.net/media/image/2024/09/18/1520822f877145bfae8d9b16f8f5d1cf_04_Singapore_Char_Koay_Teow.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Malais, mais l'anglais est largement parlé",
+      "weather": "Entre 25°C et 35°C, avec un climat tropical humide",
+      "currency": "Ringgit malaisien (MYR)",
+      "airport": "Aéroport international de Kuala Lumpur (KUL)",
+      "transport": "Monorail / Bus / Taxi (Grab est populaire pour les trajets)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des endroits, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+08",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type G (240V)"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "999"
+    }
+  },
+  "athens": {
+    "name": "Athènes",
+    "image": "https://hiddendoorwaystravel.com/wp-content/uploads/2024/09/jim-niakaris-L1_JWFc_s3M-unsplash.jpg",
+    "title": "Athènes, la ville des dieux et de l'histoire",
+    "description": "Découvrez Athènes, la capitale de la Grèce et le berceau de la civilisation occidentale. Des monuments emblématiques comme l'Acropole et le Parthénon aux charmantes ruelles de Plaka, Athènes est une ville où l'histoire et la culture se rencontrent. Explorez ses musées fascinants, savourez la délicieuse cuisine grecque et imprégnez-vous de l'atmosphère vibrante de cette métropole historique.",
+    "top-places": [
+      {
+        "name": "Acropole d'Athènes",
+        "image": "https://cdn-imgix.headout.com/microbrands-banner-image/image/b698f96a3bf7e35418940973f33c4708-The%20Acropolis%20of%20Athens.jpeg"
+      },
+      {
+        "name": "Musée de l'Acropole",
+        "image": "https://cdn.prod.website-files.com/639b1424f2e7e13621177414/64bfa03e7519806dd6195ee8_About%20the%20Acropolis%20Museum%20by%20TourScanner.jpg"
+      },
+      {
+        "name": "Plaka",
+        "image": "https://images.squarespace-cdn.com/content/v1/5a07137264b05f2730b14c6b/1524227591178-V50BN7EH8P4KXOP6CC8O/Gerani.jpg"
+      },
+      {
+        "name": "Agora antique",
+        "image": "https://vivreathenes.com/wp-content/uploads/2022/05/greece-g0235b8be9-1280.jpg"
+      },
+      {
+        "name": "Mont Lycabette",
+        "image": "https://image.arrivalguides.com/x/10/63d3cbc7c744e2bd67905931f3f940ab.jpg"
+      },
+      {
+        "name": "Temple de Zeus Olympien",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/a9/e5/4a/img-20161118-wa0028-largejpg.jpg?w=1200&h=1200&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Souvlaki",
+        "image": "https://www.thisisathens.org/sites/default/files/styles/social_share/public/2019-03/MCH-SouvlakiAthens-Gyros.jpg?itok=5c7hlsvO"
+      },
+      {
+        "name": "Moussaka",
+        "image": "https://assets.afcdn.com/recipe/20160928/38354_w1024h768c1cx2808cy1872.webp"
+      },
+      {
+        "name": "Baklava",
+        "image": "https://sunnyathens.com/wp-content/uploads/2023/12/baklavas-central.webp"
+      }
+    ],
+    "to-know": {
+      "language": "Grec, mais l'anglais est souvent compris dans les zones touristiques",
+      "weather": "Entre 10°C et 35°C, avec des étés chauds et des hivers doux",
+      "currency": "Euro (€)",
+      "airport": "Aéroport international d'Athènes (Elefthérios Venizélos)",
+      "transport": "Métro / Bus / Tram (ticket de transport valable 90 minutes à environ 1,40 €)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des endroits, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC+02",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 19h-22h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "100",
+      "ambulance": "166"
+    }
+  },
+  "toronto": {
+    "name": "Toronto",
+    "image": "https://www.canada-en-liberte.com/uploads/sites/72/2020/10/vue-maritime-building-ville-toronto-canada.jpeg",
+    "title": "Toronto, la métropole canadienne dynamique",
+    "description": "Découvrez Toronto, la plus grande ville du Canada, connue pour sa diversité culturelle, ses gratte-ciels emblématiques et son ambiance vibrante. De la célèbre CN Tower aux îles de Toronto, cette ville offre une multitude d'activités et de sites à explorer. Profitez de ses marchés animés, de ses quartiers historiques et savourez la délicieuse cuisine locale dans ses nombreux restaurants.",
+    "top-places": [
+      {
+        "name": "CN Tower",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/42/89/9e/photo0jpg.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Royal Ontario Museum (ROM)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/28/d1/cc/b1/canada-s-most-visited.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Toronto Islands",
+        "image": "https://canoo.ca/wp-content/uploads/2023/09/jeffrey-eisen-yVjKoM4lgDs-unsplash-scaled.jpg"
+      },
+      {
+        "name": "Distillery District",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/8/86/Distillery_District%2C_Toronto%2C_Canada%2C_2006.jpg"
+      },
+      {
+        "name": "High Park",
+        "image": "https://hoodq.com/rails/active_storage/blobs/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBZ3dPIiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--c7e587c76ed9a001dc7d16d0fd7d2a8a94088a4c/toronto-on-high-park-north.png"
+      },
+      {
+        "name": "St. Lawrence Market",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/55/de/c5/outside-shot-of-st-lawrence.jpg?w=900&h=500&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Peameal Bacon Sandwich",
+        "image": "https://www.sandwichtribunal.com/wp-content/uploads/2021/11/IMG_7599.jpg"
+      },
+      {
+        "name": "Butter Tart",
+        "image": "https://static01.nyt.com/images/2018/05/30/dining/30burnertarts/30burnertarts-superJumbo.jpg"
+      },
+      {
+        "name": "Poutine",
+        "image": "https://us-west-2-citypass.graphassets.com/A6YOvx29LROyWc1GZIN3mz/XCjlYdbkTXOp920XXntf"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais et Français",
+      "weather": "Entre -5°C et 30°C, avec des hivers froids et des étés chauds",
+      "currency": "Dollar canadien (CAD)",
+      "airport": "Aéroport international Pearson de Toronto",
+      "transport": "Métro / Tram / Bus (TTC)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits achats",
+      "time-zone": "UTC-05",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (120V)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911"
+    }
+  },
+  "miami": {
+    "name": "Miami",
+    "image": "https://www.partir-en-voyage.com/wp-content/uploads/2024/06/visiter-miami-floride.jpg",
+    "title": "Miami, la ville ensoleillée et vibrante",
+    "description": "Découvrez Miami, une ville dynamique connue pour ses plages ensoleillées, sa culture diversifiée et son ambiance festive. Des quartiers emblématiques comme South Beach et Little Havana aux œuvres d'art colorées des Wynwood Walls, Miami offre une expérience unique. Profitez de ses musées, de ses jardins luxuriants et savourez la délicieuse cuisine locale dans ses nombreux restaurants et marchés.",
+    "top-places": [
+      {
+        "name": "South Beach",
+        "image": "https://res.cloudinary.com/hello-tickets/image/upload/c_limit,f_auto,q_auto,w_1300/v1658148277/n1accck96dtjwyu8oino.jpg"
+      },
+      {
+        "name": "Art Deco Historic District",
+        "image": "https://assets.simpleviewinc.com/simpleview/image/upload/c_fit,w_1440,h_900/crm/miamifl/shutterstock_558218896_Ocean_Drive_1440x900_31AA8E61-5056-A36A-0BFABB4B2940C20A-31aa8c6b5056a36_31aa96e2-5056-a36a-0b2c59fe9b62758e.jpg"
+      },
+      {
+        "name": "Wynwood Walls",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/cd/05/41/20190602-125404-largejpg.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Little Havana",
+        "image": "https://media.timeout.com/images/106202493/image.jpg"
+      },
+      {
+        "name": "Vizcaya Museum and Gardens",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/57/74/27/photo0jpg.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Bayside Marketplace",
+        "image": "https://assets.simpleviewinc.com/simpleview/image/upload/c_limit,w_1000/crm/miamifl/Bayside-Marketplace-09_D2598B58-6151-4C16-A444B28D55FBD3B4_f3611d1b-b395-4cfe-b2cec383a97573d3.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Cuban Sandwich",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/01/4c/ba/cuban-sandwich.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Stone Crab",
+        "image": "https://www.hungrypost.com/wp-content/uploads/2021/10/AC-Stone-Crab-Tower-Select-1-scaled.jpg"
+      },
+      {
+        "name": "Key Lime Pie",
+        "image": "https://media2.miaminewtimes.com/mia/imager/u/original/9258079/icebox.webp"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais, mais l'espagnol est également largement parlé",
+      "weather": "Entre 20°C et 35°C, avec des journées chaudes et ensoleillées",
+      "currency": "Dollar américain ($)",
+      "airport": "Aéroport international de Miami (MIA)",
+      "transport": "Métro / Bus / Taxi (Uber et Lyft disponibles)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les pourboires",
+      "time-zone": "UTC-05",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (120V)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911"
+    }
+  }
+}

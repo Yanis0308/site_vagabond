@@ -1,0 +1,150 @@
+{
+  "title": "Vagabond",
+  "description": "Réponds à quelques questions et trouve la ville idéale pour tes vacances !",
+  "quiz": {
+    "main_title": "✈️ Quelle destination te correspond pour cet été ? 🏝️",
+    "start_button": "COMMENCER L'AVENTURE 🚀",
+    "question_progress": "Question {{current}} sur {{total}}",
+    "loading": "Nous analysons tes réponses... L'IA recherche la destination parfaite pour toi 🧠",
+    "result_title": "🎉 Ton pays idéal est :",
+    "country_prefix": "🗺️ Pays : ",
+    "email_form_title": "📧 Pour découvrir la ville idéale dans ce pays et recevoir ta fiche pratique complète",
+    "email_placeholder": "Ton adresse email",
+    "email_submit": "RECEVOIR MON GUIDE GRATUIT",
+    "email_submitting": "ENVOI EN COURS...",
+    "email_thanks": "📝 Merci ! Nous t'avons envoyé un email avec les détails de la ville idéale",
+    "perfect_match": "Nous avons trouvé la ville parfaite pour toi dans ce pays ! ✨",
+    "city_reveal": "Cette ville en {{country}} correspond parfaitement à ton profil de voyageur !",
+    "email_guide": "Tu recevras plus de détails sur cette destination dans ton email.",
+    "email_sent": "📨 Nous t'avons envoyé un guide complet avec tous les détails sur les lieux à visiter et nos conseils d'initiés !",
+    "confirmation_title": "Découvre ta destination idéale dans ta boîte mail !",
+    "confirmation_intro": "Nous t'avons envoyé un email contenant :",
+    "confirmation_city": "La ville qui correspond le mieux à ton profil",
+    "confirmation_activities": "Un guide des activités incontournables",
+    "confirmation_tips": "Des conseils pour préparer ton séjour",
+    "check_spam": "N'oublie pas de vérifier tes spams si tu ne vois pas notre email !",
+    "activities_title": "🏆 Top 10 des activités à {{city}}",
+    "retry_button": "Réessayer",
+    "error_generic": "Une erreur est survenue. Veuillez réessayer.",
+    "error_api": "Nous n'avons pas pu déterminer ta destination idéale. Essaie à nouveau plus tard.",
+    "error_email": "Erreur lors de l'enregistrement de l'email. Veuillez réessayer.",
+    "intro_text": "En seulement <strong>{{questionCount}} questions</strong>, notre IA va analyser ton profil voyageur et te recommander la destination parfaite pour tes prochaines vacances.",
+    "features": {
+      "quick": {
+        "title": "Rapide",
+        "description": "2 minutes pour découvrir ta destination idéale"
+      },
+      "custom": {
+        "title": "Personnalisé",
+        "description": "Une recommandation basée sur tes préférences uniques"
+      },
+      "magic": {
+        "title": "Magique",
+        "description": "Laisse-toi surprendre par la pertinence de notre IA"
+      }
+    }
+  },
+  "age": {
+    "question": "🎂 Quel est ton âge ?",
+    "options": {
+      "-18": "👶 Moins de 18 ans",
+      "18-24": "🧑 18-24 ans",
+      "25-34": "👨 25-34 ans",
+      "35-44": "👨‍🦱 35-44 ans",
+      "45+": "👴 45+"
+    }
+  },
+  "gender": {
+    "question": "👤 Quel est ton genre ?",
+    "options": {
+      "male": "👨 Homme",
+      "female": "👩 Femme",
+      "other": "🌈 Autre"
+    }
+  },
+  "travel_mode": {
+    "question": "🧳 Comment voyages-tu habituellement ?",
+    "options": {
+      "solo": "🙋 En solo",
+      "couple": "💑 En couple",
+      "friends": "👯 Entre amis",
+      "family": "👨‍👩‍👧‍👦 En famille"
+    }
+  },
+  "travel_style": {
+    "question": "🧭 Quel est ton style de voyage ?",
+    "options": {
+      "backpacker": "🎒 Backpacker / Petit budget",
+      "classic_traveler": "🏨 Voyageur classique (hôtels, restos, visites)",
+      "local_traveler": "🏡 Voyageur local (je reste près de chez moi)",
+      "digital_nomad": "💻 Digital nomad / Travailleur en voyage"
+    }
+  },
+  "travel_preferences": {
+    "question": "❤️ Tes préférences de voyage",
+    "options": {
+      "adventure": "🧗 Aventure et exploration",
+      "relaxation": "🏖️ Détente et farniente",
+      "culture": "🏛️ Culture et découvertes",
+      "nightlife": "🍸 Fêtes et vie nocturne"
+    }
+  },
+  "travel_climate": {
+    "question": "☀️ Quel climat préfères-tu ?",
+    "options": {
+      "hot": "🔥 Chaud et ensoleillé",
+      "temperate": "🌤️ Tempéré et agréable",
+      "cold": "❄️ Plutôt frais"
+    }
+  },
+  "travel_destination_type": {
+    "question": "🏞️ Plutôt mer, montagne ou ville ?",
+    "options": {
+      "sea": "🏝️ Plages paradisiaques",
+      "mountain": "⛰️ Paysages montagneux",
+      "city": "🏙️ Villes vibrantes et animées"
+    }
+  },
+  "travel_food": {
+    "question": "🍽️ Quel rôle joue la gastronomie dans ton voyage ?",
+    "options": {
+      "important": "🍷 Important, j'adore tester les spécialités locales",
+      "medium": "🍴 J'aime, mais ce n'est pas mon critère principal",
+      "not_important": "🥪 Peu important, je peux me contenter de ce que je trouve"
+    }
+  },
+  "travel_duration": {
+    "question": "⏱️ Combien de temps comptes-tu partir ?",
+    "options": {
+      "weekend": "🏃 Un week-end",
+      "week": "📅 Une semaine",
+      "more_than_10_days": "🗓️ Plus de 10 jours"
+    }
+  },
+  "travel_budget": {
+    "question": "💰 Quel est ton budget approximatif pour ce voyage ?",
+    "options": {
+      "small": "💸 Petit budget (-500€)",
+      "medium": "💵 Budget moyen (500-1500€)",
+      "large": "💎 Confort (1500€+)"
+    }
+  },
+  "travel_change_of_scene": {
+    "question": "🌄 Quel niveau de dépaysement recherches-tu ?",
+    "options": {
+      "total": "🚀 Total, je veux un choc culturel !",
+      "mix": "🔄 Un mix entre repères familiers et découvertes",
+      "european": "🇪🇺 Plutôt dans un cadre européen ou occidental"
+    }
+  },
+  "travel_music": {
+    "question": "🎵 Si ton voyage était une musique, ce serait…",
+    "options": {
+      "electro": "🎧 Un son électro qui envoie (techno, house, festivals)",
+      "indie": "🎸 Un bon morceau indie chill (acoustique, folk, road trip)",
+      "pop": "🎤 Un hit pop feel-good (été, soleil, vibes positives)",
+      "lofi": "🎻 Une ambiance lo-fi ou classique (détente, introspection, slow travel)",
+      "rap": "🎙️ Un son rap/trap qui motive (rythmé, urbain, énergique)"
+    }
+  }
+}
