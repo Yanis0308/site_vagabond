@@ -14,15 +14,12 @@ import {
 } from "@react-email/components";
 import React, { type ReactNode } from "react";
 
+import { getBaseUrl } from "@/utils/getBaseUrl";
+
 interface HoneyOneEmailProps {
   translate?: (key: string) => string;
   citySlug: string;
 }
-
-const baseUrl =
-  process.env.VERCEL_URL !== undefined
-    ? `https://${process.env.VERCEL_URL}`
-    : "http://localhost:3002";
 
 /**
  * Composant email pour Vagabond
@@ -35,6 +32,7 @@ export const HoneyOneEmail = ({
   citySlug,
 }: HoneyOneEmailProps): ReactNode => {
   const t = translate ?? ((key: string): string => key);
+  const url = `${getBaseUrl()}/quizz/recommend-city/${citySlug}`;
 
   return (
     <Tailwind
@@ -83,7 +81,7 @@ export const HoneyOneEmail = ({
             <Section className="my-8 text-center">
               <Button
                 className="block rounded-md bg-primary px-2 py-3 text-center text-base font-bold text-white no-underline hover:bg-primary-600"
-                href={`${baseUrl}/quizz/recommend-city/${citySlug}`}
+                href={url}
               >
                 <span className="mr-2 text-[30px]">👉</span>
                 <span className="text-[20px]">{t("seeDestination")}</span>
