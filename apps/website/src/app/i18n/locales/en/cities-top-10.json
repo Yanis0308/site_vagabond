@@ -1006,47 +1006,47 @@
   "berlin": {
     "name": "Berlin",
     "country": "Germany 🇩🇪",
-    "image": "https://media.timeout.com/images/105240236/image.jpg",
+    "image": "https://www.berlin.de/binaries/asset/image_assets/7927302/ratio_2_1/1708697002/1500x750/",
     "title": "Berlin, where history meets creativity",
     "description": "Discover Berlin, a city that perfectly blends its rich history with a vibrant contemporary culture. From the iconic Brandenburg Gate to the trendy neighborhoods of Kreuzberg, explore our comprehensive guide featuring must-see landmarks, local cuisine, and essential tips for your perfect Berlin experience!",
     "top-places": [
       {
         "name": "Brandenburg Gate",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Brandenburger_Tor_abends.jpg"
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/cd/1e/2e/caption.jpg?w=1200&h=1200&s=1&cx=1070&cy=448&chk=v1_b58b92a890cf42edea5b"
       },
       {
         "name": "Berlin Wall Memorial",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Berlin_Wall_Memorial.jpg"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/b/b6/East_Side_Gallery_%28Berlin%29_%286331798939%29.jpg"
       },
       {
         "name": "Reichstag Building",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Reichstag_building_Berlin_view_from_west_before_sunset.jpg"
+        "image": "https://www.visitberlin.de/system/files/styles/visitberlin_hero_visitberlin_desktop_2x/private/image/Regierungsviertel_RT_Drachen_c_vB_LBi_DSchwelle_1.jpg.webp?itok=hBjpdTck"
       },
       {
         "name": "Museum Island",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Museumsinsel_Berlin.jpg"
+        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/27/89/dc.jpg"
       },
       {
-        "name": "East Side Gallery",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3d/East_Side_Gallery_Berlin.jpg"
+        "name": "Holocaust Memorial",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/9b/8a/38/photo8jpg.jpg?w=900&h=500&s=1"
       },
       {
-        "name": "Kreuzberg",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Kreuzberg_Berlin.jpg"
+        "name": "Tiergarten Park",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/3e/be/2c/caption.jpg?w=1200&h=-1&s=1"
       }
     ],
     "dishes": [
       {
         "name": "Currywurst - Berlin's signature street food",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Currywurst.jpg"
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/1d/52/38/yum.jpg?w=900&h=500&s=1"
       },
       {
-        "name": "Döner Kebab - Popular Turkish-German fusion",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Doener_kebab.jpg"
+        "name": "Sauerbraten",
+        "image": "https://cdn.tasteatlas.com/images/dishes/79dceb1607db46a7af6a42e2f84417a9.jpg?w=600&h=450"
       },
       {
         "name": "Berliner Pfannkuchen - German doughnut",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Berliner_Pfannkuchen.jpg"
+        "image": "https://cdn.book-family.de/travelbook/data/uploads/2023/09/393862967.jpg?impolicy=channel&imwidth=992"
       }
     ],
     "to-know": {
