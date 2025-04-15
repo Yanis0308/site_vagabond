@@ -49,7 +49,7 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
       setLoading(false);
     } else {
       // Si la ville n'est pas dans nos données complètes, on affiche un message d'erreur
-      setError(t("error-title"));
+      setError(t("error-title", { ns: "cities-top-10" }));
       setLoading(false);
     }
   }, [city, t]);
@@ -67,12 +67,12 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
       <div className="flex min-h-screen items-center justify-center">
         <div className="rounded-lg bg-red-50 p-8 text-center">
           <h2 className="mb-4 text-2xl font-bold text-red-600">{error}</h2>
-          <p className="mb-4">{t("error-message")}</p>
+          <p className="mb-4">{t("error-message", { ns: "cities-top-10" })}</p>
           <a
             href={`/${lng}`}
             className="inline-block rounded-lg bg-primary px-6 py-3 text-white hover:bg-primary-600"
           >
-            {t("back-home")}
+            {t("back-home", { ns: "cities-top-10" })}
           </a>
         </div>
       </div>

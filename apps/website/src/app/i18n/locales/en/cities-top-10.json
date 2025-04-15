@@ -1588,6 +1588,71 @@
       "ambulance": "911"
     }
   },
+  "florence": {
+    "name": "Florence",
+    "country": "Italy 🇮🇹",
+    "image": "https://static1.evcdn.net/images/reduction/1593118_w-3840_h-2160_q-70_m-crop.jpg",
+    "title": "Florence, the cradle of the Renaissance",
+    "description": "Discover Florence, a city steeped in art and history, where every corner tells a story. From architectural masterpieces like the Duomo and Giotto’s Campanile to the artistic treasures of the Uffizi Gallery, Florence is truly an open-air museum. Stroll along the Ponte Vecchio, wander through the Boboli Gardens, and savor Tuscan cuisine in traditional trattorias.",
+    "top-places": [
+      {
+        "name": "Duomo & Giotto’s Campanile",
+        "image": "https://bonjourflorence.fr/wp-content/uploads/2024/10/campanile-de-giotto-florence.jpg"
+      },
+      {
+        "name": "Uffizi Gallery",
+        "image": "https://www.voyageway.com/wp-content/uploads/2018/07/reservation-musee-des-offices-florence.jpg"
+      },
+      {
+        "name": "Ponte Vecchio",
+        "image": "https://storage.googleapis.com/mytour-prod/blog/1665067271397_history-and-resources-of-the-ponte-vecchio-jpeg.jpeg"
+      },
+      {
+        "name": "Pitti Palace & Boboli Gardens",
+        "image": "https://bonjourflorence.fr/wp-content/uploads/2021/10/jardin-de-boboli-vue-globale.jpg"
+      },
+      {
+        "name": "Galleria dell’Accademia",
+        "image": "https://www.lasourisglobe-trotteuse.fr/wp-content/uploads/2018/12/david-galerie-academie-florence.jpg"
+      },
+      {
+        "name": "Piazzale Michelangelo",
+        "image": "https://florencesite.fr/images/piazzale-michelangelo-florence.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Bistecca alla Fiorentina",
+        "image": "https://static.destinationflorence.com/immagini/a2/3f/e4/78/blog_scheda_20221118111721.jpeg"
+      },
+      {
+        "name": "Lampredotto",
+        "image": "https://www.ilquadrifoglio-paris.fr/wp-content/uploads/2022/09/Lampredotto-a-Florence-5-endroits-pour-bien-manger-scaled.jpg"
+      },
+      {
+        "name": "Artisanal Gelato",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/29/f3/ff/caption.jpg?w=600&h=600&s=1"
+      }
+    ],
+    "to-know": {
+      "language": "Italian, though English is commonly understood in tourist areas",
+      "weather": "Between 15°C and 30°C, with hot summers and mild winters",
+      "currency": "Euro (€)",
+      "airport": "Florence Airport (Peretola)",
+      "transport": "Tram / Bus / On foot (the city is very walkable)"
+    },
+    "tips": {
+      "payment": "Cards accepted everywhere, carry cash for small purchases",
+      "time-zone": "UTC+01",
+      "meal-hours": "Lunch 12pm–2pm, Dinner 7pm–10pm",
+      "water": "Tap water is safe to drink",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "118"
+    }
+  },
   "prague": {
     "name": "Prague",
     "country": "Czech Republic 🇨🇿",
