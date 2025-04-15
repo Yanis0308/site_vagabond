@@ -32,7 +32,7 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
 
   const { t } = useTranslationClient(lng, ["questions"]);
 
-  // États pour gérer le questionnaire
+  // États pour gérer le quizz
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [recommendedCity, setRecommendedCity] = useState<string | null>(null);
