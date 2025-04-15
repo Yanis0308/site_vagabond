@@ -7,13 +7,11 @@ import React from "react";
 
 import { useTranslationClient } from "@/app/i18n/client";
 
-import { CITIES_WITH_COUNTRIES } from "./data/cities";
 import { questions, type QuestionType } from "./data/questions";
 
 // Type pour la réponse de l'API
 interface CityRecommendation {
   city: string;
-  country: string;
   rowId: number; // ID de la ligne dans Supabase
 }
 
@@ -158,12 +156,11 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
         rowId: number;
       };
 
+      logger.info("city:", data.city);
+
       setRecommendedCity(data.city);
       setCityData({
         city: data.city,
-        country:
-          CITIES_WITH_COUNTRIES.find((city) => city.id === data.city)
-            ?.country ?? "Non spécifié",
         rowId: data.rowId,
       });
       setFormRowId(data.rowId); // Stocker l'ID de la ligne
@@ -353,9 +350,10 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
               {t("quiz.result_title", { ns: "questions" })}
             </h1>
             <div className="mb-8">
-              {cityData?.country !== undefined && (
-                <h2 className="text-4xl font-bold text-primary">
-                  {cityData.country} 🗺️
+              {cityData?.city !== undefined && (
+                <h2 className="text-7xl font-bold text-primary">
+                  <span className="blur-md">Lurenberg</span>
+                  <span className="blur-sm"> 🗺️</span>
                 </h2>
               )}
               <p className="mt-4">
@@ -384,7 +382,7 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
                       })}
                       required
                       disabled={isEmailSubmitting}
-                      className="rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      className="rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 sm:w-1/2"
                     />
                     <button
                       type="submit"

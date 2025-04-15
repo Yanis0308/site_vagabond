@@ -17,7 +17,6 @@ interface QuizResponse {
 // Type pour la réponse de l'API
 interface CityRecommendation {
   city: string;
-  country: string;
 }
 
 // Créer un client OpenAI
@@ -119,7 +118,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // Retourner la ville recommandée avec les informations supplémentaires et l'ID de la ligne
       return NextResponse.json({
         city: parsedResponse.city,
-        country: parsedResponse.country,
         rowId: rowId, // Inclure l'ID pour une utilisation ultérieure
       });
     } catch (jsonError) {
