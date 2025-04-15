@@ -96,47 +96,47 @@
   "paris": {
     "name": "Paris",
     "country": "France 🇫🇷",
-    "image": "https://media.timeout.com/images/105240236/image.jpg",
+    "image": "https://media-cdn.tripadvisor.com/media/photo-c/1280x250/17/15/6d/d6/paris.jpg",
     "title": "Paris, the city of light and romance",
     "description": "Immerse yourself in the magic of Paris, where history meets modernity, and every street corner tells a story. From the iconic Eiffel Tower to charming Montmartre, discover our curated guide featuring must-see attractions, culinary delights, and essential tips for your perfect Parisian adventure!",
     "top-places": [
       {
         "name": "Eiffel Tower",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/8/85/Tour_Eiffel_Wikimedia_Commons_%28cropped%29.jpg"
+        "image": "https://www.1jour1actu.com/wp-content/uploads/2021/10/VIDEO_histoire_tour_Eiffel-927x618.jpeg"
       },
       {
         "name": "Louvre Museum",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/6/66/Louvre_Museum_Wikimedia_Commons.jpg"
+        "image": "https://www.triplancar.com/sites/triplancar.com/files/lieu/586/louvre-102840.jpg"
       },
       {
         "name": "Notre-Dame Cathedral",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/1/15/Notre-Dame_de_Paris_2013-07-24.jpg"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/a/af/Notre-Dame_de_Paris_2013-07-24.jpg"
       },
       {
-        "name": "Montmartre",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/0/0b/Montmartre_moulin_de_la_galette.jpg"
+        "name": "Luxembourg Gardens",
+        "image": "https://www.acropole-paris-hotel.com/bases/visite_image/grande/40/Visiter-Jardins-Luxembourg-Paris-2.jpg"
       },
       {
-        "name": "Champs-Élysées",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Champs-Elysees_Paris.jpg"
+        "name": "Champs-Élysées and Arc de Triomphe",
+        "image": "https://www.appartcity.com/uploads/media/image_page_content/0001/30/image_page_content_w1440/29911_appart-hotel-champs-elysees-appart-city-resized.jpg"
       },
       {
-        "name": "Sacre-Cœur Basilica",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Sacre_Coeur_Paris.jpg"
+        "name": "Montmartre and the Sacré-Cœur Basilica",
+        "image": "https://offloadmedia.feverup.com/parissecret.com/wp-content/uploads/2024/11/22115320/butte_montmartre-1024x683.jpg"
       }
     ],
     "dishes": [
       {
-        "name": "Croissant - Buttery pastry",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Croissant%2C_cross_section.jpg"
+        "name": "Butter Croissant",
+        "image": "https://www.maximo.fr/media/image/f0/8e/e2f7a56b2bc8c14147ab1d05a032.jpg"
       },
       {
-        "name": "Baguette - Traditional French bread",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/0/0f/Baguette_and_loaves.jpg"
+        "name": "Bourgogne Snails",
+        "image": "https://www.cuisine-blog.fr/wp-content/uploads/2019/06/escargots-01-500x375.jpg"
       },
       {
-        "name": "Macarons - Colorful French cookies",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Macaron_%28Pierre_Herme%29.jpg"
+        "name": "Macarons",
+        "image": "https://www.6em-sens.fr/wp-content/uploads/2020/07/34.jpg"
       }
     ],
     "to-know": {
@@ -291,55 +291,55 @@
   "rome": {
     "name": "Rome",
     "country": "Italy 🇮🇹",
-    "image": "https://media.timeout.com/images/105240236/image.jpg",
+    "image": "https://www.walksinsiderome.com/wp-content/uploads/2019/07/View_of_Rome_from_Castel_Sant_Angelo-tSa-825X400.jpg",
     "title": "Rome, the eternal city",
     "description": "Step into the heart of ancient history and modern Italian culture in Rome. From the majestic Colosseum to the Vatican City, discover our comprehensive guide featuring iconic landmarks, authentic cuisine, and essential tips for your unforgettable Roman holiday!",
     "top-places": [
       {
-        "name": "Colosseum",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/53/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg"
-      },
-      {
-        "name": "Vatican City",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5a/St_Peter%27s_Square%2C_Vatican_City_-_April_2007.jpg"
+        "name": "Coliseum",
+        "image": "https://cdn.futura-sciences.com/buildsv6/images/largeoriginal/7/0/5/705121344c_110004_colisee-rome.jpg"
       },
       {
         "name": "Trevi Fountain",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Fontana_di_Trevi_%28Rome%29.jpg"
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Trevi_Fountain%2C_Rome%2C_Italy_2_-_May_2007.jpg/1200px-Trevi_Fountain%2C_Rome%2C_Italy_2_-_May_2007.jpg"
       },
       {
-        "name": "Pantheon",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/0/06/Pantheon_%28Rome%29.jpg"
+        "name": "Vatican & Basilique Saint-Pierre",
+        "image": "https://www.walksinsiderome.com/wp-content/uploads/2015/10/Rome_an_outdoor_set_for_many_movies_Vatican_-960x636.jpg"
       },
       {
         "name": "Roman Forum",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Roman_Forum_%28Rome%29.jpg"
+        "image": "https://images-e-venise.global.ssl.fastly.net/pics/rome-antique/forum-romain/forum-romain-vu-du-palatin-rome-italie.jpg"
       },
       {
-        "name": "Spanish Steps",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Spanish_Steps_%28Rome%29.jpg"
+        "name": "Panteon",
+        "image": "https://www.cestee.fr/images/30/14/73014-920w.webp"
+      },
+      {
+        "name": "Piazza Navona",
+        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/27/88/12.jpg"
       }
     ],
     "dishes": [
       {
-        "name": "Pasta Carbonara - Classic Roman pasta dish",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Spaghetti_carbonara.jpg"
+        "name": "Carbonara",
+        "image": "https://www.panzani.fr/_ipx/f_webp&q_80&s_1800x1202/https://backend.panzani.fr/app/uploads/2023/10/visuel-spaghetti-carbonara-unsmushed.png"
       },
       {
-        "name": "Pizza Romana - Thin crust Roman pizza",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Pizza_Romana.jpg"
+        "name": "Tiramisu",
+        "image": "https://www.galbani.fr/wp-content/uploads/2017/07/Galbani_Veritable_Tiramisu_opt2.jpg"
       },
       {
-        "name": "Gelato - Italian ice cream",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/2/2e/Gelato_%28Rome%29.jpg"
+        "name": "Pizza al taglio",
+        "image": "https://www.partir-a-rome.com/wp-content/uploads/2021/02/Pizza-Florida-Rome-e1614003111643.jpg"
       }
     ],
     "to-know": {
-      "language": "Italian but English is widely spoken in tourist areas",
-      "weather": "Between 15°C and 30°C, with hot summers and mild winters",
+      "language": "Italian, but English is often understood in tourist areas",
+      "weather": "Between 25°C and 35°C in summer, with sunny days and pleasant evenings",
       "currency": "Euro (€)",
-      "airport": "Florence Airport (Peretola)",
-      "transport": "Tram / Bus / On foot (the city is easily walkable)"
+      "airport": "Leonardo da Vinci-Fiumicino and Ciampino",
+      "transport": "Metro / Bus / Tram (1.50€ per trip)"
     },
     "tips": {
       "payment": "Credit cards widely accepted, cash for small purchases",
@@ -486,54 +486,54 @@
   "amsterdam": {
     "name": "Amsterdam",
     "country": "Netherlands 🇳🇱",
-    "image": "https://media.timeout.com/images/105240236/image.jpg",
+    "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/43/2c/43/les-maison-typiques-a.jpg?w=1200&h=1200&s=1",
     "title": "Amsterdam, the city of canals and culture",
     "description": "Experience the unique charm of Amsterdam, where historic canals meet modern culture. From world-class museums to cozy cafés, discover our comprehensive guide featuring must-see attractions, local delicacies, and essential tips for your perfect Dutch adventure!",
     "top-places": [
       {
-        "name": "Rijksmuseum",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/1/1b/Rijksmuseum_Amsterdam.jpg"
+        "name": "Canal Cruise",
+        "image": "https://canalsofamsterdam.com/wp-content/uploads/2022/07/Canal-cruises-Amsterdam-scaled.jpg"
       },
       {
         "name": "Van Gogh Museum",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Van_Gogh_Museum_Amsterdam.jpg"
+        "image": "https://cdn-imgix.headout.com/media/images/e558d800dee128b071fb41ebc31fdd71-frans-ruiter-jfPGunIH_9M-unsplash.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&fit=crop&ar=16%3A9&crop=faces"
       },
       {
-        "name": "Anne Frank House",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Anne_Frank_House_Amsterdam.jpg"
-      },
-      {
-        "name": "Canal Ring",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3d/Amsterdam_Canal_Ring.jpg"
-      },
-      {
-        "name": "Vondelpark",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Vondelpark_Amsterdam.jpg"
+        "name": "Rijksmuseum",
+        "image": "https://www.boutiquesdemusees.fr/files/contents/5100/449918-7dbf3665-xxl/rijksmuseum.jpg"
       },
       {
         "name": "Jordaan District",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Jordaan_Amsterdam.jpg"
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/07/23/f2/68/jordaan-amsterdam.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Anne Frank House",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/f/f4/AnneFrankHuisAmsterdam.jpg"
+      },
+      {
+        "name": "Flower Market & Bloemenmarkt",
+        "image": "https://www.guillaumeastrucphotography.com/wp-content/uploads/2021/11/amsterdam-pays-bas-fleurs-scaled.jpg"
       }
     ],
     "dishes": [
       {
-        "name": "Stroopwafel - Dutch caramel waffle",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Stroopwafels.jpg"
+        "name": "Stroopwafel",
+        "image": "https://mellysstroopwafels.nl/wp-content/uploads/2024/07/Mellys-edited-%C2%A9KLS-10-scaled-e1721310812482-1024x500.jpg"
       },
       {
-        "name": "Bitterballen - Dutch meatballs",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/6/6b/Bitterballen.jpg"
+        "name": "Haring",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/08/9f/09/40/haring-zo.jpg"
       },
       {
-        "name": "Poffertjes - Mini Dutch pancakes",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Poffertjes.jpg"
+        "name": "Poffertjes",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/6/6f/Poffertjes-Melkhuis_%28cropped%29.jpg"
       }
     ],
     "to-know": {
       "language": "Dutch but English is widely spoken",
-      "weather": "Between 5°C and 20°C, with mild summers and cool winters",
+      "weather": "Between 15°C and 25°C in summer, with cloudy days",
       "currency": "Euro (€)",
-      "airport": "Schiphol",
+      "airport": "Amsterdam Schiphol",
       "transport": "Tram / Metro / Bus / Bike (3.20€ per trip)"
     },
     "tips": {
@@ -681,54 +681,54 @@
   "barcelona": {
     "name": "Barcelona",
     "country": "Spain 🇪🇸",
-    "image": "https://media.timeout.com/images/105240236/image.jpg",
+    "image": "https://maybanton.com/wp-content/uploads/2023/07/Barcelone-sagrada-familia-vue-drone.jpg",
     "title": "Barcelona, where Gaudí meets the Mediterranean",
     "description": "Experience the vibrant energy of Barcelona, a city where modernist architecture meets Mediterranean charm. From Gaudí's masterpieces to the bustling La Rambla, discover our comprehensive guide featuring iconic landmarks, delicious tapas, and essential tips for your perfect Catalan adventure!",
     "top-places": [
       {
         "name": "Sagrada Família",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3b/Sagrada_Familia_08.jpg"
+        "image": "https://monbarcelone.com/wp-content/uploads/2022/05/sagrada-familia-12.jpeg"
       },
       {
         "name": "Park Güell",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Park_Guell_entrance.jpg"
+        "image": "https://www.guidesulysse.com/images/destinations/iStock-534846887.jpg"
       },
       {
         "name": "La Rambla",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5a/La_Rambla_Barcelona.jpg"
-      },
-      {
-        "name": "Casa Batlló",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Casa_Batll%C3%B3_%28Barcelona%29.jpg"
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/df/c5/2b/la-rambla-vista-desde.jpg?w=1200&h=-1&s=1"
       },
       {
         "name": "Gothic Quarter",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Gothic_Quarter_Barcelona.jpg"
+        "image": "https://www.voyage-en-francais.fr/wordpress/wp-content/uploads/2021/06/visite-guidee-centre-historique-barcelone-en-francais-25-800x500.jpg"
+      },
+      {
+        "name": "Montjuïc",
+        "image": "https://barcelonesite.fr/images/palaunacional.jpg"
       },
       {
         "name": "Barceloneta Beach",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Barceloneta_Beach.jpg"
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/39/bd/cd/la-barceloneta.jpg?w=1200&h=-1&s=1"
       }
     ],
     "dishes": [
       {
-        "name": "Paella - Traditional rice dish",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Paella_valenciana.jpg"
+        "name": "Paella",
+        "image": "https://visiter-barcelone.com/wp-content/uploads/meilleure-paella-barcelone-1.jpg"
       },
       {
-        "name": "Tapas - Small Spanish dishes",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/33/Tapas_in_Barcelona.jpg"
+        "name": "Tapas",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res40/108000/108443.jpg"
       },
       {
-        "name": "Crema Catalana - Catalan dessert",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/4/4c/Crema_Catalana.jpg"
+        "name": "Churros con Chocolate",
+        "image": "https://www.sitram.fr/sites/sitram/files/recette-individuelle/2021-01/Chocolate-con-churros.jpg"
       }
     ],
     "to-know": {
       "language": "Catalan and Spanish, but English is widely spoken in tourist areas",
-      "weather": "Between 15°C and 30°C, with mild winters and hot summers",
+      "weather": "Between 20°C and 30°C in summer, with sunny days and pleasant evenings",
       "currency": "Euro (€)",
-      "airport": "El Prat",
+      "airport": "Barcelona El Prat",
       "transport": "Metro / Bus / Tram (2.40€ per trip)"
     },
     "tips": {
@@ -1051,10 +1051,10 @@
     ],
     "to-know": {
       "language": "German, but English is often understood in tourist areas",
-      "weather": "Between 15°C and 25°C in summer, with sunny days and cool evenings",
+      "weather": "Between 20°C and 30°C in summer, with sunny days and pleasant evenings",
       "currency": "Euro (€)",
-      "airport": "Munich Airport (Franz Josef Strauß)",
-      "transport": "Metro / Tram / Bus (2.90€ per trip)"
+      "airport": "Berlin Brandenburg",
+      "transport": "Metro / Bus / Tram (2.90€ per trip)"
     },
     "tips": {
       "payment": "Credit cards widely accepted, cash preferred in some places",
@@ -1159,6 +1159,10 @@
       {
         "name": "Chatuchak Weekend Market",
         "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/56/c6/14/dsc-2066-largejpg.jpg?w=900&h=-1&s=1"
+      },
+      {
+        "name": "Wat Arun",
+        "image": "https://www.agoda.com/wp-content/uploads/2024/03/Featured-image-Wat-Arun-Bangkok-Thailand.jpg"
       }
     ],
     "dishes": [
@@ -1241,11 +1245,11 @@
       }
     ],
     "to-know": {
-      "language": "English, but Spanish is also widely spoken",
-      "weather": "Between 20°C and 35°C, with hot and sunny days",
-      "currency": "US Dollar ($)",
-      "airport": "Miami International Airport (MIA)",
-      "transport": "Metro / Bus / Taxi (Uber and Lyft available)"
+      "language": "English, with a strong presence of Spanish",
+      "weather": "Between 20°C and 30°C, with sunny days all year round",
+      "currency": "United States Dollar ($)",
+      "airport": "Los Angeles International Airport (LAX)",
+      "transport": "Metro / Bus / Car (recommended for easy travel)"
     },
     "tips": {
       "payment": "Credit cards accepted everywhere, carry cash for tips",
@@ -1336,38 +1340,38 @@
         "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Fed_Square%2C_Melbourne%2C_west_view_20230219_1.jpg/1200px-Fed_Square%2C_Melbourne%2C_west_view_20230219_1.jpg"
       },
       {
-        "name": "Street Art in Hosier Lane",
-        "image": "https://media.cntraveler.com/photos/574ee126bab055be63fde1f4/16:9/w_2560,c_limit/hosier-lane-graffiti-melbourne-cr-alamy.jpg"
+        "name": "Street Art at Hosier Lane",
+        "image": "https://cdn.cbdnews.com.au/themes/user/site/cbdn/asset/img/sized/101-Column_-_Street_Art-2-03b620ebafafefa4cfaa3039f4747285.jpg"
       },
       {
         "name": "Queen Victoria Market",
-        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/44/f7/01/queen-victoria-market.jpg?w=1200&h=-1&s=1"
-      },
-      {
-        "name": "St Kilda Beach",
-        "image": "https://a.cdn-hotels.com/gdcs/production172/d459/3af9461d-3428-4381-acae-341b9hp939911.jpg"
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/72/6e/20/discover-the-variety.jpg?w=1200&h=1200&s=1"
       },
       {
         "name": "Royal Botanic Gardens",
-        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/79/ca/f6/20161027-131655-largejpg.jpg?w=900&h=500&s=1"
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/8e/ce/cf/guilfoyle-s-volcano-at.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "St Kilda & beach",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/189000/189710-St-Kilda-Beach.jpg"
       },
       {
         "name": "Great Ocean Road",
-        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/27/77/40.jpg"
+        "image": "https://www.visitmelbourne.com/-/media/images/great-ocean-road/things-to-do/nature-and-wildlife/beaches-and-coastlines/lorne-gor/lorne-great-ocean-road_gor_u_1233198_1150x863.jpg?ts=20240503050553"
       }
     ],
     "dishes": [
       {
-        "name": "Flat White Coffee",
-        "image": "https://media.istockphoto.com/id/505168330/photo/cup-of-coffee-latte-or-cappuccino-art-with-spiral-pattern.jpg?s=612x612&w=0&k=20&c=v_bKmyD-Qxdq8cCqMB-VFEm-3ykoQrftYXP1oBdOfx4="
+        "name": "Meat Pie",
+        "image": "https://media.timeout.com/images/105489113/750/422/image.jpg"
       },
       {
-        "name": "Aussie Meat Pie",
-        "image": "https://bakingamoment.com/wp-content/uploads/2022/01/IMG_0131-australian-meat-pie.jpg"
+        "name": "Chicken Parmigiana (Parma)",
+        "image": "https://media.timeout.com/images/105725924/image.jpg"
       },
       {
-        "name": "Lamington",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Lamingtons.jpg"
+        "name": "Flat White",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/05/82/26/16/melbourne-cafe.jpg"
       }
     ],
     "to-know": {
@@ -1387,6 +1391,266 @@
     "emergency-numbers": {
       "police": "000",
       "ambulance": "000"
+    }
+  },
+  "hong-kong": {
+    "name": "Hong Kong",
+    "country": "Hong Kong 🇭🇰",
+    "image": "https://static-cms.routard.com/web-routard/uploads/Hong_Kong_efcea3a2b6.jpg",
+    "title": "Hong Kong, the Pearl of the Orient",
+    "description": "Discover Hong Kong, where East meets West in a unique blend of modern skyscrapers and ancient traditions. From the panoramic views at Victoria Peak to the bustling markets of Mong Kok, Hong Kong is a vibrant and dynamic destination. Explore its historic temples, hop on a Star Ferry cruise, and enjoy authentic Cantonese cuisine.",
+    "top-places": [
+      {
+        "name": "Victoria Peak (The Peak)",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/7/7d/High_West_and_Victoria_Peak_from_Victoria_Gap_%28crop1%29.jpg"
+      },
+      {
+        "name": "Star Ferry",
+        "image": "https://mywowo.net/media/images/cache/hong_kong_star_ferry_01_presentazione_jpg_1200_630_cover_85.jpg"
+      },
+      {
+        "name": "Big Buddha (Tian Tan Buddha)",
+        "image": "https://fly-over-the-world-media.s3.amazonaws.com/uploads/highlights/61acdb4e50f06-62f0ec3552b48_1280_720.jpg"
+      },
+      {
+        "name": "Man Mo Temple",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/bd/b7/d5/caption.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Mong Kok & Markets",
+        "image": "https://lepetitjournal.com/_next/image?url=https%3A%2F%2Fbackoffice.lepetitjournal.com%2Fsites%2Fdefault%2Ffiles%2Finline-images%2FBernard%2520Spragg_flickr.jpg&w=3840&q=75"
+      },
+      {
+        "name": "Symphony of Lights",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/07/f3/ba/1a/photo0jpg.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Dim Sum",
+        "image": "https://www.discoverhongkong.com/content/dam/dhk/intl/explore/dining/hong-kong-s-most-innovative-dim-sum-restaurants/dimdimsum4_3.jpg"
+      },
+      {
+        "name": "Wonton Noodles",
+        "image": "https://cdn.tatlerasia.com/tatlerasia/i/2023/06/27115237-gettyimages-1125459448_cover_1600x1067.jpg"
+      },
+      {
+        "name": "Pineapple Bun (Bo Lo Bao)",
+        "image": "https://tarasmulticulturaltable.com/wp-content/uploads/2017/01/Bolo-Bao-Hong-Kong-Pineapple-Buns-8-of-8.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Cantonese and English",
+      "weather": "Between 20°C and 30°C, with hot and humid summers",
+      "currency": "Hong Kong Dollar (HKD)",
+      "airport": "Hong Kong International Airport",
+      "transport": "MTR / Bus / Tram / Ferry (Octopus card recommended for transport)"
+    },
+    "tips": {
+      "payment": "Cards accepted everywhere, but carry cash for small purchases",
+      "time-zone": "UTC+08",
+      "meal-hours": "Lunch 12pm–2pm, Dinner 6pm–9pm",
+      "water": "Bottled water recommended",
+      "electric-plugs": "Type G (220V)"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "999"
+    }
+  },
+  "munich": {
+    "name": "Munich",
+    "country": "Germany 🇩🇪",
+    "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/501000/501501-munich.jpg",
+    "title": "Munich, Bavaria's capital of culture and beer",
+    "description": "Discover Munich, a city where Bavarian heritage meets modern living. From lively squares like Marienplatz to the wide green spaces of the Englischer Garten, Munich offers a unique experience for every visitor. Explore its majestic castles, world-renowned museums, and enjoy traditional Bavarian cuisine in its iconic beer halls.",
+    "top-places": [
+      {
+        "name": "Marienplatz & New Town Hall",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/7/73/Rathaus_and_Marienplatz_from_Peterskirche_-_August_2006.jpg"
+      },
+      {
+        "name": "Nymphenburg Palace",
+        "image": "https://www.muenchen.travel/var/ger_muc/storage/images/_aliases/stage_large/3/4/7/5/265743-1-ger-DE/film-schloss-03-foto-redline-enterprises-sm-3000.jpg"
+      },
+      {
+        "name": "Englischer Garten",
+        "image": "https://25hours-hotels.com/wp-content/uploads/sites/39/2024/10/25hours_theroyalbavarian_neighbourhood_englischergarten.jpg"
+      },
+      {
+        "name": "BMW Museum & BMW Welt",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4a/07/ce/bmw-welt.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Munich Residenz",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/ae/8f/19/the-great-hall.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Viktualienmarkt",
+        "image": "https://www.travelguide.fr/media/muenchen-viktualienmarkt.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Weißwurst",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/0/08/Weisswurst_Brezn_Senf.jpg"
+      },
+      {
+        "name": "Schweinshaxe (Pork Knuckle)",
+        "image": "https://cdn.tasteatlas.com//images/dishes/ebf8e4badee44a368889800d17db953c.jpg?width=800&height=513"
+      },
+      {
+        "name": "Apfelstrudel",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/0c/26/13/21/apple-strudel-at-gorreshof.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "German, though English is commonly understood in tourist areas",
+      "weather": "Between 15°C and 25°C in summer, with sunny days and cool evenings",
+      "currency": "Euro (€)",
+      "airport": "Munich Airport (Franz Josef Strauß)",
+      "transport": "Subway / Tram / Bus (€2.90 per ride)"
+    },
+    "tips": {
+      "payment": "Cards accepted everywhere, but carry cash for small purchases",
+      "time-zone": "UTC+01",
+      "meal-hours": "Lunch 12pm–2pm, Dinner 6pm–9pm",
+      "water": "Tap water is safe to drink",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "110",
+      "ambulance": "112"
+    }
+  },
+  "las-vegas": {
+    "name": "Las Vegas",
+    "country": "United States 🇺🇸",
+    "image": "https://media-cdn.tripadvisor.com/media/attractions-content--1x-1/12/85/9e/df.jpg?f=webp&w=300&h=200",
+    "title": "Las Vegas, the city of entertainment and extravagance",
+    "description": "Discover Las Vegas, where glamour and entertainment meet in the heart of the Nevada desert. From the dazzling lights of the Strip to breathtaking shows, Las Vegas offers an unforgettable experience for every visitor. Explore iconic casinos, feast at all-you-can-eat buffets, and set off on an adventure to the Grand Canyon or Death Valley.",
+    "top-places": [
+      {
+        "name": "The Strip",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/01/00/2b/the-strip.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Bellagio Fountains",
+        "image": "https://aws-tiqets-cdn.imgix.net/images/content/bc4e91de18934475a7204acd97e40e5c.jpg?auto=format%2Ccompress&fit=crop&ixlib=python-3.2.1&q=70"
+      },
+      {
+        "name": "Fremont Street (Downtown Vegas)",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/547000/547616-las-vegas-nevada.jpg"
+      },
+      {
+        "name": "High Roller",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/ae/2a/f9/high-roller.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Grand Canyon or Death Valley Excursion",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0e/b7/96/7e.jpg"
+      },
+      {
+        "name": "Vegas Shows",
+        "image": "https://www.jeparsauxusa.com/wp-content/uploads/2018/05/love-cirque-soleil.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "All-You-Can-Eat Buffet (The Buffet at Wynn, Bacchanal at Caesars, etc.)",
+        "image": "https://cdn.wynnresorts.com/q_auto,f_auto/Wynn%20Las%20Vegas/Dining/Casual%20Dining/The%20Buffet/group-of-friends-eating-dinner-wynn-las-vegas-828x466?h=466&iar=0&w=828"
+      },
+      {
+        "name": "Shrimp Cocktail",
+        "image": "https://www.tastingtable.com/img/gallery/how-nevada-popularized-the-shrimp-cocktail/l-intro-1730758758.jpg"
+      },
+      {
+        "name": "Steakhouse Experience",
+        "image": "https://cdn.vox-cdn.com/thumbor/DJoPOfI3EmGkhUYFDhf-RZ6UDbA=/0x0:8192x5464/1200x900/filters:focal(3441x2077:4751x3387)/cdn.vox-cdn.com/uploads/chorus_image/image/60448943/Filet_Mignon_8_oz_SH.49.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "English",
+      "weather": "Between 20°C and 40°C, with hot, sunny days",
+      "currency": "US Dollar ($)",
+      "airport": "Harry Reid International Airport (formerly McCarran)",
+      "transport": "Taxi / Bus / Monorail (Uber and Lyft available)"
+    },
+    "tips": {
+      "payment": "Cards accepted everywhere, carry cash for tips",
+      "time-zone": "UTC-08",
+      "meal-hours": "Lunch 12pm–2pm, Dinner 6pm–9pm",
+      "water": "Bottled water recommended",
+      "electric-plugs": "Type A/B (120V)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911"
+    }
+  },
+  "prague": {
+    "name": "Prague",
+    "country": "Czech Republic 🇨🇿",
+    "image": "https://www.thetrainline.com/content/vul/hero-images/city/prague/1x.jpg",
+    "title": "Prague, the city of a thousand spires and legends",
+    "description": "Discover Prague, the magical capital of the Czech Republic, known for its medieval architecture and charming cobbled streets. From the majestic Prague Castle to the iconic Charles Bridge, every corner of the city tells a story. Explore Old Town Square with its Astronomical Clock, wander through the Jewish Quarter, and enjoy traditional Czech cuisine in one of its many restaurants.",
+    "top-places": [
+      {
+        "name": "Prague Castle",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/21/d9/21/history-buffs-may-want.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Charles Bridge (Karlův Most)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/0e/67/3a/charles-bridge-karluv.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Old Town Square & Astronomical Clock",
+        "image": "https://media.routard.com/image/27/2/photo.1567272.jpeg"
+      },
+      {
+        "name": "Jewish Quarter (Josefov)",
+        "image": "https://cdn.generationvoyage.fr/2018/06/visiter-quartier-juif-prague-cimeti%C3%A8re.jpg"
+      },
+      {
+        "name": "Petřín Hill & Petřín Tower",
+        "image": "https://prague-secrete.fr/wp-content/uploads/2017/02/26565782495_37c515fa16_k-1024x684.jpg"
+      },
+      {
+        "name": "National Museum of Prague",
+        "image": "https://cdn-imgix.headout.com/media/images/192bc52b4302aa49c252cdf9dbbd8bd7-10317-prague-prague-national-museum-skip-the-line-admission-ticket-08.jpg?auto=format&w=1222.3999999999999&h=687.6&q=90&fit=crop&ar=16%3A9&crop=faces"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Svíčková (marinated beef with cream sauce)",
+        "image": "https://cdn.tasteatlas.com/images/dishes/816ef03512524348a002bdbcb449f7ef.jpg?m=facebook"
+      },
+      {
+        "name": "Trdelník (chimney cake)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/68/f5/b7/photo0jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Pilsner Beer",
+        "image": "https://forgetsomeday.com/wp-content/uploads/Beer-Prague-1.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Czech, but English is commonly understood in tourist areas",
+      "weather": "Between 20°C and 30°C in summer, with pleasant days and cool evenings",
+      "currency": "Czech Koruna (CZK)",
+      "airport": "Václav Havel Airport Prague",
+      "transport": "Tram / Metro / Bus (valid 90-minute ticket for approx. 32 CZK)"
+    },
+    "tips": {
+      "payment": "Cards accepted in most places, carry cash for small purchases",
+      "time-zone": "UTC+01",
+      "meal-hours": "Lunch 12pm–2pm, Dinner 6pm–9pm",
+      "water": "Tap water is safe to drink",
+      "electric-plugs": "Type C/E (230V)"
+    },
+    "emergency-numbers": {
+      "police": "158",
+      "ambulance": "155"
     }
   },
   "dublin": {
@@ -1522,65 +1786,65 @@
   "vienna": {
     "name": "Vienna",
     "country": "Austria 🇦🇹",
-    "image": "https://media.timeout.com/images/105240236/image.jpg",
-    "title": "Vienna, the imperial city of music",
-    "description": "Experience the elegance of Vienna, where imperial history meets musical heritage. From the magnificent Schönbrunn Palace to the vibrant coffee house culture, discover our comprehensive guide featuring must-see attractions, Viennese delicacies, and essential tips for your perfect Austrian adventure!",
+    "image": "https://static2-viaggi.corriereobjects.it/wp-content/uploads/2015/06/vienna-iStock-1196925572-min.jpg?v=1690823555",
+    "title": "Vienna, the city of music and history",
+    "description": "Discover Vienna, the Austrian capital renowned for its rich cultural heritage and romantic atmosphere. From majestic palaces like Schönbrunn to the stunning St. Stephen’s Cathedral, Vienna is a true European gem. Explore world-famous museums, attend an opera performance, and savor delicious Viennese cuisine in its historic cafés.",
     "top-places": [
       {
         "name": "Schönbrunn Palace",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Schonbrunn_Palace_Vienna.jpg"
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1c/2d/28/e4/wwwschoenbrunnat.jpg?w=1200&h=-1&s=1"
       },
       {
-        "name": "St. Stephen's Cathedral",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3c/St_Stephens_Cathedral_Vienna.jpg"
+        "name": "St. Stephen’s Cathedral (Stephansdom)",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Wien_-_Stephansdom_%281%29.JPG/1200px-Wien_-_Stephansdom_%281%29.JPG"
       },
       {
-        "name": "Belvedere Palace",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Belvedere_Palace_Vienna.jpg"
+        "name": "Museum of Art History (Kunsthistorisches Museum)",
+        "image": "https://www.wien.info/resource/image/291782/3x2/894/596/123916a75fea9bf39cf14062a4ea4584/272CD8F598C73D9ECA6C457546DFEE46/50690-kunsthistorisches-museum-wien-.webp"
+      },
+      {
+        "name": "Vienna State Opera (Wiener Staatsoper)",
+        "image": "https://www.viennapass.de/fileadmin/_processed_/0/9/csm__c__Wiener_Staatsoper___Michael_Poehn_91794fe919.png"
       },
       {
         "name": "Hofburg Palace",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5d/Hofburg_Palace_Vienna.jpg"
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/74/dc/9c/caption.jpg?w=1200&h=-1&s=1"
       },
       {
-        "name": "Prater Park",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Prater_Park_Vienna.jpg"
-      },
-      {
-        "name": "Vienna State Opera",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Vienna_State_Opera.jpg"
+        "name": "Prater & Giant Ferris Wheel (Riesenrad)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/87/08/58/photo0jpg.jpg?w=1200&h=-1&s=1"
       }
     ],
     "dishes": [
       {
-        "name": "Wiener Schnitzel - Traditional Viennese cutlet",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/2/22/Wiener_Schnitzel.jpg"
+        "name": "Wiener Schnitzel",
+        "image": "https://images.immediate.co.uk/production/volatile/sites/2/2021/10/WienerSchnitzel_015-d281ef4.jpg?quality=90&crop=13px,4395px,5656px,2433px&resize=556,505"
       },
       {
-        "name": "Sachertorte - Famous Viennese chocolate cake",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/8/8d/Sachertorte.jpg"
+        "name": "Sachertorte",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Sachertorte_DSC03027.JPG/1200px-Sachertorte_DSC03027.JPG"
       },
       {
-        "name": "Apfelstrudel - Traditional apple strudel",
-        "image": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Apfelstrudel.jpg"
+        "name": "Apfelstrudel",
+        "image": "https://www.lilvienna.com/wp-content/uploads/Original-Viennese-Applestrudel2.jpg"
       }
     ],
     "to-know": {
-      "language": "German but English is widely spoken",
-      "weather": "Between -5°C and 25°C, with cold winters and warm summers",
+      "language": "German, though English is commonly understood in tourist areas",
+      "weather": "Between 5°C and 25°C, with warm summers and cold winters",
       "currency": "Euro (€)",
-      "airport": "Vienna International",
-      "transport": "U-Bahn / Tram / Bus (2.40€ per trip)"
+      "airport": "Vienna International Airport (Schwechat)",
+      "transport": "Subway / Tram / Bus (90-minute ticket for approx. €2.40)"
     },
     "tips": {
-      "payment": "Credit cards widely accepted, cash for small purchases",
+      "payment": "Cards accepted everywhere, carry cash for small purchases",
       "time-zone": "UTC+01",
-      "meal-hours": "Lunch 12pm-2pm, Dinner 6pm-9pm",
-      "water": "Drinkable from tap",
-      "electric-plugs": "Type F (230V)"
+      "meal-hours": "Lunch 12pm–2pm, Dinner 6pm–9pm",
+      "water": "Tap water is safe to drink",
+      "electric-plugs": "Type C/F (230V)"
     },
     "emergency-numbers": {
-      "police": "133",
+      "police": "112",
       "ambulance": "144"
     }
   },
