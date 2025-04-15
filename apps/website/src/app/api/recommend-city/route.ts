@@ -3,9 +3,6 @@ import { logger } from "@vagabond/shared-utils";
 import { type NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
-import { CITIES_WITH_COUNTRIES } from "@/app/[lng]/quizz/recommend-city/data/cities";
-
-import { getRecommendCityPrompt } from "./prompt";
 // Type pour les réponses
 interface QuizResponse {
   question: string;
@@ -29,6 +26,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY ?? "",
 );
 
+// ID de l'assistant OpenAI configuré pour la recommandation de ville
+const ASSISTANT_ID = process.env.OPENAI_CITY_RECOMMENDATION_ASSISTANT_ID ?? "";
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Récupérer les données de la requête
@@ -46,55 +46,63 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const randomTemperature = Math.random();
 
-    // Préparer la liste des villes pour le prompt
-    const citiesList = CITIES_WITH_COUNTRIES.map(
-      (item) => `${item.city} (${item.country})`,
-    ).join(", ");
+    // Formatage des questions et réponses pour l'assistant
+    const userContent = responses
+      .map(
+        (item: QuizResponse) =>
+          `Question: "${item.question}" Réponse: "${item.answer}"`,
+      )
+      .join("\n");
 
-    // Faire l'appel à l'API OpenAI
-    const response = await openai.responses.create({
-      model: "gpt-4o",
-      // model: "gpt-4o-mini",
-      input: [
-        {
-          role: "system",
-          content: getRecommendCityPrompt(citiesList),
-        },
-        {
-          role: "user",
-          content: responses
-            .map(
-              (item: QuizResponse) =>
-                `Question: "${item.question}" Réponse: "${item.answer}"`,
-            )
-            .join("\n"),
-        },
-      ],
-      temperature: randomTemperature,
-      text: {
-        format: {
-          type: "json_schema",
-          name: "quizz_result",
-          schema: {
-            type: "object",
-            properties: {
-              city: {
-                type: "string",
-                enum: CITIES_WITH_COUNTRIES.map((item) => item.id),
-              },
-            },
-            required: ["city"],
-            additionalProperties: false,
-          },
-          strict: true,
-        },
-      },
+    // Créer un thread
+    const thread = await openai.beta.threads.create();
+
+    // Ajouter un message au thread
+    await openai.beta.threads.messages.create(thread.id, {
+      role: "user",
+      content: userContent,
     });
 
+    // Exécuter l'assistant sur le thread
+    const run = await openai.beta.threads.runs.create(thread.id, {
+      assistant_id: ASSISTANT_ID,
+      temperature: randomTemperature,
+    });
+
+    // Attendre que l'exécution soit terminée
+    let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+
+    while (runStatus.status !== "completed") {
+      if (["failed", "cancelled", "expired"].includes(runStatus.status)) {
+        throw new Error(
+          `Exécution de l'assistant échouée: ${runStatus.status}`,
+        );
+      }
+
+      // Attendre 1 seconde avant de vérifier à nouveau
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+    }
+
+    // Récupérer les messages du thread pour obtenir la réponse
+    const messages = await openai.beta.threads.messages.list(thread.id);
+
+    // Le dernier message de l'assistant contient la réponse
+    const assistantMessage = messages.data.find(
+      (msg) => msg.role === "assistant" && msg.run_id === run.id,
+    );
+
+    if (assistantMessage?.content[0] === undefined) {
+      throw new Error("Pas de réponse de l'assistant");
+    }
+
+    // Parser la réponse de l'assistant (supposée être au format JSON valide)
     try {
-      const parsedResponse = JSON.parse(
-        response.output_text,
-      ) as CityRecommendation;
+      const messageContent = assistantMessage.content[0];
+      const content =
+        messageContent.type === "text" ? messageContent.text.value : "";
+
+      const parsedResponse = JSON.parse(content) as CityRecommendation;
 
       const { data, error } = await supabase
         .from("form_answers")
@@ -121,11 +129,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         rowId: rowId, // Inclure l'ID pour une utilisation ultérieure
       });
     } catch (jsonError) {
+      const contentForLogging = JSON.stringify(assistantMessage.content[0]);
+
       logger.error(
         "Erreur de parsing JSON:",
         jsonError,
         "Contenu:",
-        response.output_text,
+        contentForLogging,
       );
       throw new Error("Format de réponse invalide");
     }
