@@ -39,7 +39,7 @@ export default function HomePage({ params }: HomePageProps): ReactNode {
           <p className="mb-12 text-xl text-gray-600">{t("home.subtitle")}</p>
 
           <Link
-            href={`/${lng}/quizz/recommend-city`}
+            href={`/${lng}/quiz/recommend-city`}
             className="mb-16 inline-block rounded-full bg-primary px-10 py-4 text-xl font-bold text-white transition-all hover:scale-105 hover:bg-primary-600"
           >
             {t("home.cta")}

@@ -32,7 +32,7 @@ export const HoneyOneEmail = ({
   citySlug,
 }: HoneyOneEmailProps): ReactNode => {
   const t = translate ?? ((key: string): string => key);
-  const url = `${getBaseUrl()}/quizz/recommend-city/${citySlug}`;
+  const url = `${getBaseUrl()}/quiz/recommend-city/${citySlug}`;
 
   return (
     <Tailwind

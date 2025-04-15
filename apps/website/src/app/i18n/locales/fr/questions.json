@@ -3,7 +3,7 @@
   "description": "Réponds à quelques questions et trouve la ville idéale pour tes vacances !",
   "quiz": {
     "main_title": "✈️ Quelle destination te correspond pour cet été ? 🏝️",
-    "start_button": "COMMENCER LE QUIZZ 🚀",
+    "start_button": "COMMENCER LE QUIZ 🚀",
     "question_progress": "Question {{current}} sur {{total}}",
     "loading": "Nous analysons tes réponses... L'IA recherche la destination parfaite pour toi 🧠",
     "result_title": "🎉 Ta ville idéale est :",

@@ -264,7 +264,7 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
         {/* Pied de page */}
         <div className="bg-gray-100 p-6 text-center">
           <a
-            href={`/${lng}/quizz/recommend-city`}
+            href={`/${lng}/quiz/recommend-city`}
             className="mx-2 text-primary hover:underline"
           >
             {t("retake-test", { ns: "cities-top-10" })}

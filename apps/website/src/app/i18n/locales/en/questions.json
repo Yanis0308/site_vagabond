@@ -3,7 +3,7 @@
   "description": "Answer a few questions and find the perfect city for your vacation!",
   "quiz": {
     "main_title": "✈️ What's your perfect summer destination? 🏝️",
-    "start_button": "START THE QUIZZ 🚀",
+    "start_button": "START THE QUIZ 🚀",
     "question_progress": "Question {{current}} of {{total}}",
     "loading": "Analyzing your answers... AI is searching for your perfect destination 🧠",
     "result_title": "🎉 Your ideal city is:",
