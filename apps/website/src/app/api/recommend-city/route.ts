@@ -107,11 +107,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       const { data, error } = await supabase
         .from("form_answers")
         .insert({
-          gender: responses[0].raw_answer,
-          age: responses[1].raw_answer,
-          raw_answers: responses,
-          result: { ...parsedResponse, temperature: randomTemperature },
           locale: locale,
+          raw_answers: responses.reduce<Record<string, string>>((acc, curr) => {
+            acc[curr.raw_question] = curr.raw_answer;
+            return acc;
+          }, {}),
+          result: { ...parsedResponse, temperature: randomTemperature },
         })
         .select("id");
 
