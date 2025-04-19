@@ -45,9 +45,9 @@
     "question": "🎂 How old are you?",
     "options": {
       "-18": "👶 Under 18",
-      "18-24": "🧑 18-24 years",
-      "25-34": "👨 25-34 years",
-      "35-44": "👨‍🦱 35-44 years",
+      "18-24": "🧑 18–24 years old",
+      "25-34": "👨 25–34 years old",
+      "35-44": "👨‍🦱 35–44 years old",
       "45+": "👴 45+"
     }
   },
@@ -64,84 +64,91 @@
     "options": {
       "solo": "🙋 Solo",
       "couple": "💑 As a couple",
-      "friends": "👯 With friends",
+      "friends": "👫 With friends",
       "family": "👨‍👩‍👧‍👦 With family"
     }
   },
-  "travel_style": {
-    "question": "🧭 What's your travel style?",
+  "continent": {
+    "question": "🌍 Which part of the world do you dream of exploring this summer?",
     "options": {
-      "backpacker": "🎒 Backpacker / Low budget",
-      "classic_traveler": "🏨 Classic traveler (hotels, restaurants, sightseeing)",
-      "local_traveler": "🏡 Local traveler (I stay close to home)",
-      "digital_nomad": "💻 Digital nomad / Working while traveling"
+      "europe": "🇪🇺 Europe",
+      "north_america": "🦅 North America",
+      "south_america": "🦙 Central & South America",
+      "africa": "🌄 Africa & Middle East",
+      "asia": "🐉 Asia & Oceania",
+      "all": "🗺️ Anywhere, surprise me!"
     }
   },
-  "travel_preferences": {
-    "question": "❤️ Your travel preferences",
+  "action_level": {
+    "question": "🏃‍♀️ When it comes to action, you're more like...",
     "options": {
-      "adventure": "🧗 Adventure and exploration",
-      "relaxation": "🏖️ Relaxation and leisure",
-      "culture": "🏛️ Culture and discoveries",
-      "nightlife": "🍸 Parties and nightlife"
+      "max": "💪 Full-on active: hiking, biking, kayaking, climbing... I love to move!",
+      "high": "🌊 Quite active: water sports, fun or unusual activities",
+      "medium": "🚶‍♀️ Chill: walks, viewpoints, small villages",
+      "low": "😌 Total chill: deckchair, book, nap, no plans!"
     }
   },
-  "travel_climate": {
-    "question": "☀️ What climate do you prefer?",
+  "nightlife_level": {
+    "question": "✨ What's your ideal vacation nightlife vibe?",
     "options": {
-      "hot": "🔥 Hot and sunny",
-      "temperate": "🌤️ Temperate and pleasant",
-      "cold": "❄️ Rather cool"
+      "max": "🎉 I need to party every night",
+      "high": "🍹 I like going out and having fun some nights",
+      "medium": "😎 A few chill things here and there, at my own pace",
+      "low": "🛌🏻 No pressure, I just want to relax"
     }
   },
-  "travel_destination_type": {
-    "question": "🏞️ Sea, mountains, or city?",
+  "activity_type": {
+    "question": "👀 What interests you the most?",
     "options": {
-      "sea": "🏝️ Paradise beaches",
-      "mountain": "⛰️ Mountain landscapes",
-      "city": "🏙️ Vibrant and lively cities"
+      "landscape": "🏞️ Jaw-dropping landscapes: mountains, cliffs, lakes",
+      "art": "🎨 Art & culture: museums, exhibits, street art, creative neighborhoods",
+      "history": "🏛️ History: castles, ancient ruins, iconic landmarks",
+      "local": "🕌 Local life: traditions, markets, religion, daily life"
     }
   },
-  "travel_food": {
-    "question": "🍽️ How important is gastronomy in your travels?",
+  "weather": {
+    "question": "🌞 What's your ideal climate?",
     "options": {
-      "important": "🍷 Important, I love trying local specialties",
-      "medium": "🍴 I like it, but it's not my main criterion",
-      "not_important": "🥪 Not important, I'm fine with whatever I find"
+      "very_hot": "☀️ Hot and sunny (25–35°C+)",
+      "hot": "🌤️ Warm and mild (20–25°C)",
+      "temperate": "🍃 Pleasant and temperate (15–20°C)",
+      "cold": "❄️ On the cooler side (5–15°C)"
     }
   },
-  "travel_duration": {
+  "environment": {
+    "question": "💭 What kind of environment do you prefer?",
+    "options": {
+      "beach": "🌴 Paradise beaches",
+      "city": "🏙️ Vibrant cities",
+      "mountain": "⛰️ Mountains and wide open spaces",
+      "countryside": "🌳 Countryside and lush nature",
+      "desert": "🐪 Dry and desert landscapes"
+    }
+  },
+  "food_importance": {
+    "question": "🍽️ How important is food in your trip?",
+    "options": {
+      "high": "🍣 Essential, I love trying local specialties",
+      "medium": "🥗 Important, but not my main focus",
+      "low": "🥪 Not very important, I’ll eat whatever’s around"
+    }
+  },
+  "budget": {
+    "question": "🤑 What's your budget?",
+    "options": {
+      "low": "🪙 Minimal budget (-€300)",
+      "medium": "💸 Smart budget (€300–800)",
+      "high": "💰 Comfort budget (€800–1500)",
+      "very_high": "💎 Premium budget (€1500+)"
+    }
+  },
+  "duration": {
     "question": "⏱️ How long are you planning to travel?",
     "options": {
-      "weekend": "🏃 A weekend",
-      "week": "📅 A week",
-      "more_than_10_days": "🗓️ More than 10 days"
-    }
-  },
-  "travel_budget": {
-    "question": "💰 What's your approximate budget for this trip?",
-    "options": {
-      "small": "💸 Small budget (-500€)",
-      "medium": "💵 Medium budget (500-1500€)",
-      "large": "💎 Comfort (1500€+)"
-    }
-  },
-  "travel_change_of_scene": {
-    "question": "🌄 What level of change of scenery are you looking for?",
-    "options": {
-      "total": "🚀 Total, I want a cultural shock!",
-      "mix": "🔄 A mix between familiar landmarks and discoveries",
-      "european": "🇪🇺 Rather in a European or Western setting"
-    }
-  },
-  "travel_music": {
-    "question": "🎵 If your trip was a song, it would be...",
-    "options": {
-      "electro": "🎧 An electro banger (techno, house, festivals)",
-      "indie": "🎸 A good chill indie track (acoustic, folk, road trip)",
-      "pop": "🎤 A feel-good pop hit (summer, sun, positive vibes)",
-      "lofi": "🎻 A lo-fi or classical vibe (relaxation, introspection, slow travel)",
-      "rap": "🎙️ A motivating rap/trap sound (rhythmic, urban, energetic)"
+      "weekend": "⏳ A weekend",
+      "week": "🕓 One week",
+      "two_weeks": "🗓️ Two weeks",
+      "month": "🌎 1 month or more"
     }
   }
 }

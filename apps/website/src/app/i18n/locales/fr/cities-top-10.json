@@ -2237,5 +2237,1736 @@
       "police": "911",
       "ambulance": "911"
     }
+  },
+  "san-francisco": {
+    "name": "San Francisco",
+    "country": "États-Unis 🇺🇸",
+    "image": "https://www.guidesulysse.com/images/destinations/iStock-1288289526.jpg",
+    "title": "San Francisco, la ville aux collines et à l’âme bohème",
+    "description": "Cap sur San Francisco, la perle de la côte ouest américaine ! Entre ses emblématiques tramways, ses quartiers hauts en couleur et ses vues spectaculaires sur le Pacifique, la ville séduit les voyageurs en quête d’originalité. Suivez notre guide pour découvrir les lieux incontournables, les spécialités gourmandes locales et nos conseils pratiques pour explorer cette ville mythique en toute sérénité.",
+    "top-places": [
+      {
+        "name": "Golden Gate Bridge",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/GG-ftpoint-bridge-2.jpg/1200px-GG-ftpoint-bridge-2.jpg"
+      },
+      {
+        "name": "Alcatraz Island",
+        "image": "https://www.nps.gov/common/uploads/cropped_image/primary/FC3C56D9-B8FF-4342-665611747CE9C93E.jpg?width=1600&quality=90&mode=crop"
+      },
+      {
+        "name": "Fisherman’s Wharf & Pier 39",
+        "image": "https://cxgveiouca.cloudimg.io/familyhotelfinder.com/wp-content/uploads/San-Francisco-Fishermans-Wharf4-SH.jpg?w=960&h=540&func=cover"
+      },
+      {
+        "name": "Painted Ladies & Alamo Square",
+        "image": "https://media.cfarwest.com/resize/uploads/sites/8/2021/06/Painted-Ladies-San-Francisco.jpg?format=auto"
+      },
+      {
+        "name": "Chinatown",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/c1/dc/5e/chinatown.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Lombard Street",
+        "image": "https://www.sftravel.com/sites/default/files/styles/hero/public/2022-10/lombard-street-aerial.jpg.webp?itok=BqBM3IRW"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Clam Chowder in a Sourdough Bread Bowl",
+        "image": "https://cdn.vox-cdn.com/thumbor/ewvdJbSkZ38OK_3Tki0oYLI1hSY=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/19928817/52880675_10156961965209194_5944288072567881728_o.jpg"
+      },
+      {
+        "name": "Mission Burrito",
+        "image": "https://www.seriouseats.com/thmb/7LUkXGhkz212LqnfZAkHSZYEyIs=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/20191002-san-francisco-burritos-TaqueriaGuadalejara-lori-eanes-9762fdae2ecd47e6927d51805760b1b1.jpg"
+      },
+      {
+        "name": "Dungeness Crab",
+        "image": "https://cdn.vox-cdn.com/thumbor/zi49eOxZU9C0ySebbVHPpZKAgls=/1400x1050/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/25229225/IMG_5604.jpeg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais, mais le français est parfois compris dans les zones touristiques",
+      "weather": "Entre 15°C et 22°C en été, avec des brouillards matinaux fréquents et des après-midis ensoleillés",
+      "currency": "Dollar américain ($)",
+      "airport": "San Francisco International Airport (SFO)",
+      "transport": "Tramways historiques / Métro BART / Bus (MUNI Pass recommandé)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, prévoir du liquide pour les petits commerçants",
+      "time-zone": "UTC−08",
+      "meal-hours": "Déjeuner 11h30-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (120V)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911"
+    }
+  },
+  "copenhagen": {
+    "name": "Copenhague",
+    "country": "Danemark 🇩🇰",
+    "image": "https://cdn.generationvoyage.fr/2019/02/copenhagen_1550592955-e1550592969534.jpg",
+    "title": "Copenhague, la perle scandinave au charme unique",
+    "description": "Découvrez Copenhague, une capitale où la modernité scandinave s'harmonise parfaitement avec l'histoire. Entre canaux pittoresques, design avant-gardiste et atmosphère hygge, laissez-vous séduire par cette ville à taille humaine. Notre guide vous propose les sites incontournables, les spécialités culinaires et toutes les informations pratiques pour profiter pleinement de votre séjour dans la capitale danoise.",
+    "top-places": [
+      {
+        "name": "Nyhavn",
+        "image": "https://mediaim.expedia.com/destination/1/794e3041c58ae24f61a94e8e2d04f3e1.jpg"
+      },
+      {
+        "name": "Les Jardins de Tivoli",
+        "image": "https://www.visitdenmark.fr/sites/visitdenmark.com/files/2020-12/6c1c3fe0f046faaa2dd163cfbf2efefd1626678863fe2d703627182ccfb59c7f.jpg"
+      },
+      {
+        "name": "Palais d'Amalienborg",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/0/00/Amalienborg_Palace_6.jpg"
+      },
+      {
+        "name": "La Petite Sirène",
+        "image": "https://i0.wp.com/www.passion-copenhague.fr/wp-content/uploads/2024/07/PXL_20230811_093233425.PORTRAIT.jpg?resize=1205%2C1600&ssl=1"
+      },
+      {
+        "name": "Le quartier de Christiania",
+        "image": "https://www.vanupied.com/wp-content/uploads/copenhague-quartier-Christiania_hippie-News-Oresund.jpg"
+      },
+      {
+        "name": "Rundetårn (Tour ronde)",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/f/f6/Copenhagen_-_Rundet%C3%A5rn_-_2013.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Smørrebrød - Sandwich ouvert traditionnel",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/0a/31/c9/caption.jpg?w=900&h=-1&s=1"
+      },
+      {
+        "name": "Frikadeller - Boulettes de viande danoises",
+        "image": "https://foodieadvice.com/storage/foods/360/large.jpg?time=1551535821"
+      },
+      {
+        "name": "Kanelsnegl - Roulé à la cannelle",
+        "image": "https://quandestcequonmange.ch/wp-content/uploads/2022/05/Sankt-Peders-Bageri-snurrer-1024x1024.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Danois mais l'anglais est parlé couramment par presque tous les habitants",
+      "weather": "Entre 15°C et 22°C en été, souvent venteux avec possibilité d'averses",
+      "currency": "Couronne danoise (DKK)",
+      "airport": "Copenhague-Kastrup",
+      "transport": "Métro / Bus / Train (24-36 DKK par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, paiement sans contact très répandu",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 11h30-13h30, Dîner 18h-21h",
+      "water": "Potable au robinet, excellente qualité",
+      "electric-plugs": "Type C/K (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "112"
+    }
+  },
+  "zurich": {
+    "name": "Zurich",
+    "country": "Suisse 🇨🇭",
+    "image": "https://img.static-kl.com/images/media/506F5E1C-28C1-4555-A238CB9D4AD6039E",
+    "title": "Zurich, l'élégance suisse entre lac et montagnes",
+    "description": "Découvrez Zurich, joyau de la Suisse où précision helvétique et qualité de vie exceptionnelle se rencontrent. Entre son lac cristallin, ses rues historiques et sa scène culturelle dynamique, cette ville cosmopolite vous séduira par son équilibre parfait entre nature et urbanisme. Notre guide vous dévoile les lieux incontournables, les délices culinaires et tous les conseils pratiques pour profiter pleinement de votre séjour.",
+    "top-places": [
+      {
+        "name": "Vieille ville (Altstadt)",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/349000/349775-Old-Town-Zurich.jpg"
+      },
+      {
+        "name": "Lac de Zurich",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/22/d6/14/photo1jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Bahnhofstrasse",
+        "image": "https://www.swisslife-am.com/content/internet/slamglobal/fr/home/hub/2023/q3/bahnhofstrasse/_jcr_content/moodimagearticle/image.1693407651428.transform/16_9_3840w/bahnhofstrasse-zuerich.jpg"
+      },
+      {
+        "name": "Grossmünster",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/59/Z%C3%BCrich_-_Grossm%C3%BCnster_IMG_0237.jpg/1200px-Z%C3%BCrich_-_Grossm%C3%BCnster_IMG_0237.jpg"
+      },
+      {
+        "name": "Uetliberg",
+        "image": "https://www.zuerich.com/sites/default/files/styles/1920_1152_focal_scale_crop/public/web_zuerich_uetliberg_1280x960_9573.jpg?h=2021-04-26T18:00:02+02:00"
+      },
+      {
+        "name": "Kunsthaus Zurich",
+        "image": "https://www.minotti.com/media/immagini/35518_z_MINOTTI_KUNSTHAUS_MUSEUM_ZURICH_03.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Zürcher Geschnetzeltes - Émincé de veau zurichois",
+        "image": "https://www.gaumenfreundin.de/wp-content/uploads/2024/02/Zuercher-Geschnetzeltes-Rezept.jpg"
+      },
+      {
+        "name": "Rösti - Galette de pommes de terre suisse",
+        "image": "https://wordpress.potagercity.fr/wp-content/uploads/2019/02/recette_crosti_suisse.jpg"
+      },
+      {
+        "name": "Luxemburgerli - Macarons miniatures de Sprüngli",
+        "image": "https://www.zuerich.com/sites/default/files/web_zurich_tt_food_luxemburgerli_3200x1800.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Allemand (suisse-allemand), français et anglais couramment parlés",
+      "weather": "Entre 18°C et 25°C en été, climat tempéré avec possibilité d'averses",
+      "currency": "Franc suisse (CHF)",
+      "airport": "Aéroport de Zurich (ZRH)",
+      "transport": "Tram / Bus / Train (3-5 CHF par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée presque partout, prévoir des espèces pour les petits commerces",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h30-21h30",
+      "water": "Potable au robinet, excellente qualité",
+      "electric-plugs": "Type J (230V)"
+    },
+    "emergency-numbers": {
+      "police": "117",
+      "ambulance": "144"
+    }
+  },
+  "pattaya": {
+    "name": "Pattaya",
+    "country": "Thaïlande 🇹🇭",
+    "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fb/5c/pattaya.jpg?w=1400&h=1400&s=1",
+    "title": "Pattaya, joyau tropical entre fête et traditions",
+    "description": "Explorez Pattaya, cette fascinante station balnéaire thaïlandaise où l'effervescence nocturne côtoie la spiritualité et la beauté naturelle. Entre plages de sable fin, temples majestueux et animations urbaines, découvrez une destination aux multiples facettes. Notre guide vous dévoile les sites emblématiques, les délices culinaires et toutes les informations essentielles pour profiter pleinement de cette perle du golfe de Thaïlande.",
+    "top-places": [
+      {
+        "name": "Sanctuaire de la Vérité",
+        "image": "https://www.agoda.com/wp-content/uploads/2024/07/Featured-image-the-Sanctuary-of-Truth-in-Pattaya-Thailand.jpg"
+      },
+      {
+        "name": "Walking Street",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0e/43/44/db/photo0jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Big Buddha Hill (Wat Phra Yai)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/28/cf/35/87/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Coral Island (Koh Larn)",
+        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/10/7a/f5/2d.jpg"
+      },
+      {
+        "name": "Jomtien Beach",
+        "image": "https://thaiunika.com/wp-content/uploads/2022/10/la-plage-de-jomtien-a-pattaya2-720x450.png"
+      },
+      {
+        "name": "Nong Nooch Tropical Garden",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Nong_Noogh_Garden%281%29.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Som Tum - Salade de papaye verte épicée",
+        "image": "https://theo-courant.com/images/2018/11/papaya-salad.jpg"
+      },
+      {
+        "name": "Seafood BBQ - Fruits de mer grillés",
+        "image": "https://d2e5ushqwiltxm.cloudfront.net/wp-content/uploads/sites/29/2018/03/11161819/BCR-Seafood_2_landscape_RGB_low-res-e1599815970592.jpg"
+      },
+      {
+        "name": "Mango Sticky Rice - Riz gluant à la mangue",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/d1/5e/24/caption.jpg?w=900&h=500&s=1"
+      }
+    ],
+    "to-know": {
+      "language": "Thaï, anglais parlé dans les zones touristiques",
+      "weather": "Entre 27°C et 35°C toute l'année, climat tropical avec saison des pluies (mai-octobre)",
+      "currency": "Baht thaïlandais (THB)",
+      "airport": "Aéroport U-Tapao (UTP) ou Bangkok Suvarnabhumi (BKK)",
+      "transport": "Songthaew / Moto-taxi / Baht Bus (10-50 THB par trajet)"
+    },
+    "tips": {
+      "payment": "Espèces préférables, CB acceptée dans les grands établissements",
+      "time-zone": "UTC+07",
+      "meal-hours": "Les restaurants servent toute la journée, nombreux street food 24/7",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A/B/C/O (220V)"
+    },
+    "emergency-numbers": {
+      "police": "191",
+      "ambulance": "1669",
+      "tourist-police": "1155"
+    }
+  },
+  "stockholm": {
+    "name": "Stockholm",
+    "country": "Suède 🇸🇪",
+    "image": "https://ulysse.com/news/wp-content/uploads/2024/05/La-ville-de-Stockholm-en-Suede-.jpg",
+    "title": "Stockholm, l'élégante capitale nordique sur l'eau",
+    "description": "Découvrez Stockholm, ville royale bâtie sur 14 îles, où modernité scandinave et histoire médiévale se rencontrent dans un cadre naturel exceptionnel. Entre ses ruelles pavées, ses musées innovants et son archipel pittoresque, la capitale suédoise offre une expérience urbaine unique alliant design, culture et proximité avec la nature. Notre guide vous dévoile les lieux emblématiques, les délices culinaires et les conseils pratiques pour profiter pleinement de votre séjour dans cette perle de la Baltique.",
+    "top-places": [
+      {
+        "name": "Gamla Stan",
+        "image": "https://www.city-guide-stockholm.com/_bibli/pages_images/32/1-gamla-stan-lesley-williamson-1-35.jpg"
+      },
+      {
+        "name": "Palais Royal (Kungliga Slottet)",
+        "image": "https://www.city-guide-stockholm.com/_bibli/annonces/437/hd/gamla-stan-palais-royal.jpg"
+      },
+      {
+        "name": "Musée Vasa",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/2e/17/99/smtm.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Skansen",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/a0/a0/bb/skansen-open-air-museum.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Archipel de Stockholm",
+        "image": "https://www.city-guide-stockholm.com/_bibli/pages_images/46/adobestock-458400629-archipel.jpg"
+      },
+      {
+        "name": "SoFo (Södermalm)",
+        "image": "https://www.city-guide-stockholm.com/_bibli/articlesPage_rte/19/rte_images/2-sofo-quartier-vintage-lesley-williamson-1-1-.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Köttbullar - Boulettes de viande suédoises",
+        "image": "https://www.visitstockholm.se/media/images/3af6d43d30f1400d86903438679dc8e1.width-1280.jpg"
+      },
+      {
+        "name": "Gravlax - Saumon mariné aux herbes",
+        "image": "https://foodieadvice.com/storage/foods/209/large.jpg?time=1547664204"
+      },
+      {
+        "name": "Kanelbulle - Brioche à la cannelle",
+        "image": "https://www.yourlivingcity.com/stockholm/wp-content/uploads/2017/04/K-1.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Suédois mais l'anglais est parlé couramment par presque tous les habitants",
+      "weather": "Entre 15°C et 23°C en été, climat tempéré nordique avec nuits claires",
+      "currency": "Couronne suédoise (SEK)",
+      "airport": "Stockholm-Arlanda (ARN)",
+      "transport": "Métro / Bus / Tram / Ferry (38 SEK par trajet)"
+    },
+    "tips": {
+      "payment": "Paiements électroniques privilégiés, société quasiment sans cash",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 11h30-13h30, Dîner 17h30-20h",
+      "water": "Potable au robinet, excellente qualité",
+      "electric-plugs": "Type F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "112"
+    }
+  },
+  "mexico-city": {
+    "name": "Mexico",
+    "country": "Mexique 🇲🇽",
+    "image": "https://www.datocms-assets.com/32623/1740433865-basilica_mexico_city-2.png?fm=png&w=1200",
+    "title": "Mexico City, mégapole culturelle aux mille contrastes",
+    "description": "Plongez dans l'effervescence de Mexico, capitale fascinante où se mêlent histoire précolombienne, architecture coloniale et dynamisme contemporain. Entre ses quartiers historiques, ses musées renommés et sa gastronomie classée au patrimoine mondial, cette métropole vibrante vous offre une immersion captivante dans la culture mexicaine. Découvrez notre guide des incontournables, des délices culinaires et des conseils pratiques pour naviguer dans cette mégapole aux multiples facettes.",
+    "top-places": [
+      {
+        "name": "Zócalo (Plaza de la Constitución)",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/3/3d/MX_MM_PANOR%C3%81MICAS_DESFILE_Z%C3%93CALO.jpg"
+      },
+      {
+        "name": "Templo Mayor",
+        "image": "https://lp-cms-production.imgix.net/2023-07/shutterstock1026999100.jpg"
+      },
+      {
+        "name": "Chapultepec et son château",
+        "image": "https://cdn.generationvoyage.fr/2025/03/Chateau-de-Chapultepec-Mexique.jpeg"
+      },
+      {
+        "name": "Musée Frida Kahlo (Casa Azul)",
+        "image": "https://bonjourmexicocity.com/wp-content/uploads/2024/04/museo-frida-kahlo-1-1024x675.jpeg"
+      },
+      {
+        "name": "Quartier de Coyoacán",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/168000/168119-Coyoacan.jpg"
+      },
+      {
+        "name": "Xochimilco",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/cc/cd/89/photo1jpg.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Tacos al Pastor - Tacos à la viande marinée",
+        "image": "https://i0.wp.com/myhungrytraveler.com/wp-content/uploads/2023/01/Tacos-el-pastor.jpg?fit=2942%2C1975&ssl=1"
+      },
+      {
+        "name": "Chiles en Nogada - Piments farcis sauce aux noix",
+        "image": "https://i0.wp.com/laprensafrancesa.com.mx/wp-content/uploads/2021/07/chile-en-nogada.jpg?fit=1200%2C800&ssl=1"
+      },
+      {
+        "name": "Tamales - Papillotes de maïs farcies",
+        "image": "https://foodhoodtours.com/wp-content/uploads/2023/02/2-768x768.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol, peu d'anglais en dehors des zones touristiques",
+      "weather": "Entre 18°C et 26°C, climat tempéré d'altitude avec saison des pluies (mai-octobre)",
+      "currency": "Peso mexicain (MXN)",
+      "airport": "Aéroport international Benito Juárez (MEX)",
+      "transport": "Métro / Bus / Metrobús (5-7 MXN par trajet)"
+    },
+    "tips": {
+      "payment": "Espèces recommandées pour les petits commerces, CB acceptée dans les établissements touristiques",
+      "time-zone": "UTC-06",
+      "meal-hours": "Déjeuner 14h-16h, Dîner 20h-22h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A/B (127V)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911",
+      "tourist-assistance": "078"
+    }
+  },
+  "sao-paulo": {
+    "name": "São Paulo",
+    "country": "Brésil 🇧🇷",
+    "image": "https://img.lonelyplanet.fr/s3fs-public/styles/wide/public/import/destination/slider/descktop/shutterstock_153080222.jpg.webp?itok=cbnoNpx-",
+    "title": "São Paulo, l'effervescente mégalopole brésilienne",
+    "description": "Découvrez São Paulo, la plus grande ville d'Amérique Latine, où gratte-ciels vertigineux et quartiers historiques cohabitent dans une énergie incomparable. Centre économique et culturel du Brésil, cette métropole cosmopolite vous séduira par sa diversité architecturale, sa scène gastronomique exceptionnelle et sa vie nocturne légendaire. Notre guide vous dévoile les lieux emblématiques, les saveurs incontournables et les conseils pratiques pour naviguer dans cette jungle urbaine fascinante.",
+    "top-places": [
+      {
+        "name": "Avenida Paulista",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/99/d8/e2/paulista.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Parque Ibirapuera",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/22/70/87/ovo-de-pascoa-ibirapuera.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Mercadão (Marché Municipal)",
+        "image": "https://cdn.blablacar.com/wp-content/uploads/br/2024/04/05094816/mercado-municipal-sp-5.webp"
+      },
+      {
+        "name": "Museu de Arte de São Paulo (MASP)",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c8/MASP_S%C3%A3o_Paulo_%28cropped%29.jpg/1200px-MASP_S%C3%A3o_Paulo_%28cropped%29.jpg"
+      },
+      {
+        "name": "Quartier de Liberdade",
+        "image": "https://www.portobay.com/remote.axd/pbaybucket.s3.amazonaws.com/media/2850109/comdireitos_shutterstock_sp_bairroliberdade_1_baixa.jpg?mode=crop&width=1920&height=823"
+      },
+      {
+        "name": "Vila Madalena",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/b8/4a/aa/caption.jpg?w=900&h=500&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Feijoada - Ragoût de haricots noirs et viandes",
+        "image": "https://viagemeturismo.abril.com.br/wp-content/uploads/2023/10/Feijoada_Tordesilhas_Lucas-Terribili-30.jpg_1.jpg?quality=70&strip=info&w=1024"
+      },
+      {
+        "name": "Pão de Queijo - Petits pains au fromage",
+        "image": "https://vejasp.abril.com.br/wp-content/uploads/2021/08/Formaggio-Mineiro-credito-Filipe-Pereira-3.jpg?crop=1&resize=1212,909"
+      },
+      {
+        "name": "Brigadeiro - Confiserie au chocolat",
+        "image": "https://www.cnnbrasil.com.br/viagemegastronomia/wp-content/uploads/sites/5/2021/05/onde-pedir-brigadeiro-sao-paulo.gif"
+      }
+    ],
+    "to-know": {
+      "language": "Portugais, peu d'anglais en dehors des zones touristiques et d'affaires",
+      "weather": "Entre 16°C et 28°C, climat subtropical avec été pluvieux (décembre-mars)",
+      "currency": "Real brésilien (BRL)",
+      "airport": "Aéroport international de Guarulhos (GRU) et Aéroport de Congonhas (CGH)",
+      "transport": "Métro / Bus / Taxi (4-5 BRL par trajet en métro)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des établissements, espèces pour les petits commerces",
+      "time-zone": "UTC-03",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 19h-22h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type N (127-220V)"
+    },
+    "emergency-numbers": {
+      "police": "190",
+      "ambulance": "192",
+      "pompiers": "193"
+    }
+  },
+  "phuket": {
+    "name": "Phuket",
+    "country": "Thaïlande 🇹🇭",
+    "image": "https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/4b/5d/c8/caption.jpg",
+    "title": "Phuket, le joyau tropical de la mer d'Andaman",
+    "description": "Découvrez Phuket, la plus grande île de Thaïlande, où se mêlent plages de sable blanc, eaux cristallines et culture locale vibrante. Entre ses temples majestueux, ses paysages à couper le souffle et sa gastronomie réputée, ce paradis tropical offre un équilibre parfait entre détente balnéaire et aventures exotiques. Notre guide vous dévoile les sites incontournables, les délices culinaires et tous les conseils pratiques pour profiter pleinement de votre séjour dans ce coin idyllique de la Thaïlande.",
+    "top-places": [
+      {
+        "name": "Old Phuket Town",
+        "image": "https://phuketsailtours.com/wp-content/uploads/2023/07/Phuket-Old-Town-Road-Explore-phuket-town-phuket-sail-tours.webp"
+      },
+      {
+        "name": "Big Buddha",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/a4/d0/06/photo0jpg.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Plage de Kata Noi",
+        "image": "https://content.r9cdn.net/rimg/dimg/83/a1/aa1677e3-lm-21246-1665e5b232c.jpg?width=1366&height=768&xhint=1343&yhint=1494&crop=true"
+      },
+      {
+        "name": "Wat Chalong",
+        "image": "https://thaiunika.com/wp-content/uploads/2021/09/Wat-Chalong-Phuket.jpg"
+      },
+      {
+        "name": "Promthep Cape",
+        "image": "https://www.patongtower-hotel.com/medias/article/big/6/8fd8f23d-c900-442f-a7bd-79fa4df431cb.jpeg"
+      },
+      {
+        "name": "Excursion aux îles Phi Phi",
+        "image": "https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_3000,h_2000/w_80,x_15,y_15,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/rfjy0tlenwpoawdqtjw7/Excursiondunejourn%C3%A9e%C3%A0PhiPhi,MayaAreaKhaietBambooIslandaud%C3%A9partdePhuket-Klook%C3%89tats-Unis.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Pad Thai aux crevettes - Nouilles sautées thaïlandaises",
+        "image": "https://chefrecettes.s3.eu-west-3.amazonaws.com/recettes/6061b0a9e4d5f5f5840fb34f5f16d9604d9333f9e78e2.jpg"
+      },
+      {
+        "name": "Tom Yum Goong - Soupe épicée aux crevettes",
+        "image": "https://i0.wp.com/www.brasswok.com/wp-content/uploads/2015/12/Thai-Food-Tom-Yam-Kung-e1457481635537.jpg?resize=640%2C400&ssl=1"
+      },
+      {
+        "name": "Mango Sticky Rice - Riz gluant à la mangue",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/d1/5e/24/caption.jpg?w=900&h=500&s=1"
+      }
+    ],
+    "to-know": {
+      "language": "Thaï, anglais parlé dans les zones touristiques",
+      "weather": "Entre 25°C et 32°C toute l'année, climat tropical avec saison des pluies (mai-octobre)",
+      "currency": "Baht thaïlandais (THB)",
+      "airport": "Aéroport international de Phuket (HKT)",
+      "transport": "Tuk-tuk / Moto-taxi / Songthaew (100-400 THB selon distance)"
+    },
+    "tips": {
+      "payment": "Espèces préférables, CB acceptée dans les établissements touristiques",
+      "time-zone": "UTC+07",
+      "meal-hours": "Les restaurants servent toute la journée, street food abondant",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A/B/C/O (220V)"
+    },
+    "emergency-numbers": {
+      "police": "191",
+      "ambulance": "1669",
+      "tourist-police": "1155"
+    }
+  },
+  "budapest": {
+    "name": "Budapest",
+    "country": "Hongrie 🇭🇺",
+    "image": "https://cdn.shortpixel.ai/spai/q_lossy+w_977+to_auto+ret_img/www.budapestcard.org/fr/wp-content/uploads/sites/4/home-banner-1724050278.jpg",
+    "title": "Budapest, la perle du Danube aux mille facettes",
+    "description": "Plongez dans l'univers envoûtant de Budapest, ville au charme incomparable où le Danube sépare majestueusement les collines de Buda des plaines de Pest. Entre son architecture néogothique, ses bains thermaux centenaires et son ambiance bohème, la capitale hongroise vous offre un voyage à travers le temps et les cultures. Notre guide vous dévoile les sites incontournables, les spécialités gastronomiques et tous les conseils pratiques pour explorer cette métropole au patrimoine exceptionnel.",
+    "top-places": [
+      {
+        "name": "Parlement hongrois",
+        "image": "https://www.voyageavecnous.fr/wp-content/uploads/2021/03/billets-parlement-budapest.jpg"
+      },
+      {
+        "name": "Bains Széchenyi",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/56/1d/c8/vista-dall-alto-del-bagno.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Château de Buda",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Budav%C3%A1ri_Palota%2C_ABCDEF_%C3%A9p%C3%BClet.jpg"
+      },
+      {
+        "name": "Bastion des Pêcheurs",
+        "image": "https://www.vanupied.com/wp-content/uploads/budapest-buda-eglise-emma-fabbri-1024x683.jpg"
+      },
+      {
+        "name": "Pont des Chaînes",
+        "image": "https://guide-hongrie.fr/wp-content/uploads/2021/03/Pont-aux-Cha%C3%AEnes.jpg"
+      },
+      {
+        "name": "Ruin Bars (notamment Szimpla Kert)",
+        "image": "https://media.timeout.com/images/106021449/image.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Goulash (Gulyás) - Soupe traditionnelle de bœuf",
+        "image": "https://www.wandererscompass.com/wp-content/uploads/2022/12/AdobeStock_508750812-1024x576.jpeg.webp"
+      },
+      {
+        "name": "Lángos - Pâte frite garnie",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2a/12/da/3c/sheep-cottage-cheese.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Dobos Torte - Gâteau caramélisé en couches",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/14/13/52/fb/dobos-torte.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Hongrois, anglais parlé dans les zones touristiques",
+      "weather": "Entre 18°C et 28°C en été, climat continental avec 4 saisons distinctes",
+      "currency": "Forint hongrois (HUF)",
+      "airport": "Aéroport international Ferenc Liszt (BUD)",
+      "transport": "Métro / Tram / Bus (350-450 HUF par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans la plupart des établissements, prévoir des espèces pour les petits commerces",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 12h-15h, Dîner 18h-22h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)"
+    },
+    "emergency-numbers": {
+      "police": "107",
+      "ambulance": "104",
+      "numéro-unique": "112"
+    }
+  },
+  "honolulu": {
+    "name": "Honolulu",
+    "country": "États-Unis 🇺🇸",
+    "image": "https://www.gohawaii.com/sites/default/files/styles/image_gallery_bg_xl/public/hero-unit-images/Oahu-Honolulu-Aerial-Hero-2_1.jpg.webp?itok=VnmBzTQH",
+    "title": "Honolulu, paradis tropical entre océan et volcans",
+    "description": "Découvrez Honolulu, capitale d'Hawaï où l'atmosphère détendue des îles du Pacifique rencontre le dynamisme américain. Entre ses plages iconiques, ses montagnes volcaniques et sa riche diversité culturelle, cette métropole tropicale vous séduira par son ambiance unique mêlant influences polynésiennes, asiatiques et occidentales. Notre guide vous dévoile les sites emblématiques, les saveurs locales et tous les conseils pratiques pour profiter pleinement de votre séjour dans ce coin de paradis.",
+    "top-places": [
+      {
+        "name": "Waikiki Beach",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/499000/499218-waikiki.jpg"
+      },
+      {
+        "name": "Diamond Head Crater",
+        "image": "https://www.voyageetatsunis.com/cdn/us-public/diamond_head_crater.jpg"
+      },
+      {
+        "name": "Pearl Harbor & USS Arizona Memorial",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/34/00/1f.jpg"
+      },
+      {
+        "name": "Hanauma Bay",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/85/e0/34/hanauma-bay-nature-preserve.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Iolani Palace",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/44000/44844-Iolani-Palace.jpg"
+      },
+      {
+        "name": "Manoa Falls",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/64/aa/19/manoa-falls.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Poke Bowl - Salade de poisson cru hawaïenne",
+        "image": "https://pokelele.com/wp-content/uploads/sites/7/2020/11/POKE-HONOLULU_1080x1080.png"
+      },
+      {
+        "name": "Loco Moco - Plat traditionnel avec riz, steak haché et œuf",
+        "image": "https://popmenucloud.com/cdn-cgi/image/width%3D1200%2Cheight%3D1200%2Cfit%3Dscale-down%2Cformat%3Dauto%2Cquality%3D60/tdzuaxrj/c4646670-ea75-4539-bda1-c67fe2c5eac8.png"
+      },
+      {
+        "name": "Malasadas - Beignets sucrés portugais-hawaïens",
+        "image": "https://migrationology.com/wp-content/uploads/2012/03/leonards-malasadas-honolulu.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais, hawaïen (officiel mais peu parlé couramment)",
+      "weather": "Entre 24°C et 31°C toute l'année, climat tropical avec saison plus humide (novembre-mars)",
+      "currency": "Dollar américain (USD)",
+      "airport": "Aéroport international d'Honolulu (HNL)",
+      "transport": "TheBus / Waikiki Trolley / Taxi (2.75-3.50 USD par trajet en bus)"
+    },
+    "tips": {
+      "payment": "CB acceptée partout, pourboires attendus (15-20%)",
+      "time-zone": "UTC-10 (Hawaii Standard Time)",
+      "meal-hours": "Déjeuner 11h30-14h, Dîner 17h30-21h30",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (120V)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911",
+      "pompiers": "911"
+    }
+  },
+  "beijing": {
+    "name": "Pékin",
+    "country": "Chine 🇨🇳",
+    "image": "https://www.unido.org/sites/default/files/2024-03/ITPO%20Beijing.jpg",
+    "title": "Pékin, capitale millénaire entre tradition et modernité",
+    "description": "Explorez Pékin, carrefour fascinant où l'histoire impériale et la Chine contemporaine se rencontrent dans une symphonie urbaine unique. Entre ses palais ancestraux, ses hutongs authentiques et ses gratte-ciels futuristes, la capitale chinoise vous invite à un voyage extraordinaire à travers les époques. Notre guide vous présente les sites emblématiques, les délices culinaires et toutes les informations essentielles pour découvrir cette métropole captivante où traditions millénaires et ambitions modernes coexistent harmonieusement.",
+    "top-places": [
+      {
+        "name": "Cité Interdite",
+        "image": "https://partir.ouest-france.fr/magazine/wp-content/uploads/2023/01/lkyyldl3wxe.jpg"
+      },
+      {
+        "name": "Grande Muraille de Chine (Mutianyu ou Badaling)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/e4/10/e4/it-was-an-amazing-experience.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Temple du Ciel",
+        "image": "https://ch.espacemandarin.com/lien_rechercher/publ_images/productimage/chine_pekin_temple_du_ciel_8222775715_334925fc4f_o.jpg"
+      },
+      {
+        "name": "Place Tian'anmen",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/554000/554245-tiananmen-square.jpg"
+      },
+      {
+        "name": "Palais d'Été",
+        "image": "https://www.voyage-chine.com/cdn/cn-public/summer_palace_pagoda_and_lake.jpg"
+      },
+      {
+        "name": "Hutongs de Pékin",
+        "image": "https://www.cielchine.com/wp-content/uploads/2021/09/quartier-des-siheyuan-de-Pekin-800x523.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Canard laqué de Pékin - Plat emblématique impérial",
+        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/0b/34/82/9f.jpg"
+      },
+      {
+        "name": "Jiaozi - Raviolis chinois traditionnels",
+        "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEim4dX3XS_NANvLKxuuqDOMfQ2KVc6y2UuQw2QHWtmXncowJpmcFdQxoNfmOoyQTDr9Tt3y2g1s0QTXHXZ9Wx9Q_UWriADvrfnvVAzD74gbJ0oIO3ZusPCbXa6aFRXpm2lBchrFtrv20PQR/s1600/IMG_4016.jpg"
+      },
+      {
+        "name": "Nouilles Zhajiangmian - Nouilles à la sauce de haricots fermentés",
+        "image": "https://marcwiner.com/wp-content/uploads/2023/05/nouilles-zhajiangmian-sur-fond-de-bois-scaled.webp"
+      }
+    ],
+    "to-know": {
+      "language": "Mandarin, peu d'anglais en dehors des zones touristiques",
+      "weather": "Entre 25°C et 35°C en été, -5°C et 5°C en hiver, climat continental très marqué",
+      "currency": "Yuan Renminbi (CNY)",
+      "airport": "Aéroport international de Pékin-Capitale (PEK) et Aéroport international de Pékin-Daxing (PKX)",
+      "transport": "Métro / Bus / Taxi (2-8 CNY par trajet en métro)"
+    },
+    "tips": {
+      "payment": "Cash et paiement mobile (WeChat Pay, Alipay) privilégiés, cartes internationales limitées",
+      "time-zone": "UTC+08",
+      "meal-hours": "Déjeuner 11h30-13h30, Dîner 18h-20h30",
+      "water": "Eau en bouteille obligatoire",
+      "electric-plugs": "Type A/C/I (220V)",
+      "internet": "VPN recommandé pour accéder aux sites occidentaux"
+    },
+    "emergency-numbers": {
+      "police": "110",
+      "ambulance": "120",
+      "pompiers": "119"
+    }
+  },
+  "seville": {
+    "name": "Séville",
+    "country": "Espagne 🇪🇸",
+    "image": "https://www.spain.info/export/sites/segtur/.content/imagenes/cabeceras-grandes/andalucia/vista-sevilla-s1035089014.jpg",
+    "title": "Séville, joyau andalou aux parfums d'oranger",
+    "description": "Laissez-vous envoûter par Séville, capitale andalouse où l'héritage mauresque rencontre la passion espagnole dans un décor de rêve. Entre ses palais somptueux, ses places ombragées et ses ruelles parfumées aux fleurs d'orangers, cette ville ensoleillée vous séduira par son élégance artistique et sa joie de vivre contagieuse. Notre guide vous révèle les trésors incontournables, les délices gastronomiques et tous les conseils pratiques pour savourer pleinement cette perle du sud de l'Espagne.",
+    "top-places": [
+      {
+        "name": "Alcázar de Séville",
+        "image": "https://images.prismic.io/mystique/285e9926-35f3-418d-9b18-560e1341ea1d_9a96d852-2b95-41bb-92f9-aa854e3c28bb-9547-seville-super-combo--cathedral---alcazar-of-seville-02.jpg?auto=compress,format&rect=0,0,1600,1000&w=1600&h=1000"
+      },
+      {
+        "name": "Cathédrale de Séville & Giralda",
+        "image": "https://res.cloudinary.com/hello-tickets/image/upload/c_limit,f_auto,q_auto,w_1300/v1614788019/oh9pshspvtvi1yqjbmws.jpg"
+      },
+      {
+        "name": "Plaza de España",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/b/b6/Plaza_de_Espa%C3%B1a_%28Sevilla%29_-_01.jpg"
+      },
+      {
+        "name": "Quartier de Santa Cruz",
+        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/10/08/92/7d.jpg"
+      },
+      {
+        "name": "Metropol Parasol (Las Setas)",
+        "image": "https://smilingandtraveling.com/wp-content/uploads/2024/06/pexels-photo-11538209.jpeg"
+      },
+      {
+        "name": "Spectacle de flamenco",
+        "image": "https://citytriip.com/wp-content/uploads/2023/12/CT_Seville_spectacle_flamenco.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Salmorejo - Soupe froide à base de tomates",
+        "image": "https://spanishsabores.com/wp-content/uploads/2023/07/Salmorejo-6748-Featured.jpg"
+      },
+      {
+        "name": "Tortilla Española - Omelette de pommes de terre",
+        "image": "https://www.purerecette.com/wp-content/uploads/2025/02/tortilla-espagnole-2.jpg"
+      },
+      {
+        "name": "Churros con chocolate - Beignets à tremper dans le chocolat chaud",
+        "image": "https://s2.abcstatics.com/abc/sevilla/media/gurme/2023/10/18/s/ElComercio-kUXB--1248x698@abc.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol, anglais parlé dans les zones touristiques",
+      "weather": "Entre 20°C et 40°C en été (très chaud), 10°C et 20°C en hiver, climat méditerranéen sec",
+      "currency": "Euro (€)",
+      "airport": "Aéroport de Séville-San Pablo (SVQ)",
+      "transport": "Bus / Tramway / Métro (1.40€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée largement, prévoir des espèces pour les petits commerces",
+      "time-zone": "UTC+01 (UTC+02 en été)",
+      "meal-hours": "Déjeuner 14h-16h, Dîner 21h-23h (horaires tardifs)",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)",
+      "siesta": "De nombreux commerces ferment entre 14h et 17h"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "112",
+      "pompiers": "112"
+    }
+  },
+  "doha": {
+    "name": "Doha",
+    "country": "Qatar 🇶🇦",
+    "image": "https://www.qatarairways.com/content/dam/images/renditions/horizontal-2/destinations/qatar/doha/h2-doha-city.jpg",
+    "title": "Doha, perle futuriste entre désert et golfe Persique",
+    "description": "Découvrez Doha, capitale en pleine métamorphose où traditions ancestrales et architecture avant-gardiste créent un contraste saisissant. Entre ses souks authentiques, ses musées de classe mondiale et ses gratte-ciels spectaculaires, cette métropole du Golfe vous offre un voyage unique à travers le temps et les cultures. Notre guide vous dévoile les attractions phares, les saveurs locales et tous les conseils pratiques pour explorer ce joyau du Moyen-Orient où luxe et hospitalité bédouine se rencontrent harmonieusement.",
+    "top-places": [
+      {
+        "name": "Souq Waqif",
+        "image": "https://visitqatar.com/content/dam/visitqatar/img/gcc-images/Souq2.jpg/_jcr_content/renditions/medium-1280px.jpeg"
+      },
+      {
+        "name": "Museum of Islamic Art",
+        "image": "https://icom.org.qa/sites/default/files/blog/mia_01.jpg"
+      },
+      {
+        "name": "Corniche de Doha",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/554000/554932-doha-and-vicinity.jpg"
+      },
+      {
+        "name": "Katara Cultural Village",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/555000/555061-katara-cultural-village.jpg"
+      },
+      {
+        "name": "The Pearl-Qatar",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/57/d0/44/caption.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Desert Safari & Inland Sea (Khor Al Adaid)",
+        "image": "https://visitqatar.com/content/dam/visitqatar/img/images-for-attractions/beaches/Khor-Al-Adaid.jpg/_jcr_content/renditions/medium-1280px.jpeg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Machboos - Riz aux épices avec viande ou fruits de mer",
+        "image": "https://images.food52.com/Eds3nLMz8wrgDVmdxJ10DM7urYs=/1200x1200/c5d17c16-6787-4001-a9e5-6047ffc457c1--Chef_Noor_Al_Mazroei_Qatari_Majboos_Image_1.jpg"
+      },
+      {
+        "name": "Samboosa - Chaussons frits farcis",
+        "image": "https://images.deliveryhero.io/image/talabat/MenuItems/mmw_638503163830254238"
+      },
+      {
+        "name": "Karak Chai - Thé au lait épicé",
+        "image": "https://www.timeoutdoha.com/cloud/timeoutdoha/2022/04/20/karak.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Arabe, anglais largement parlé",
+      "weather": "Entre 25°C et 45°C en été (très chaud), 15°C et 25°C en hiver, climat désertique",
+      "currency": "Riyal qatari (QAR)",
+      "airport": "Aéroport international Hamad (DOH)",
+      "transport": "Métro / Bus / Taxi / Uber (2-10 QAR par trajet en métro)"
+    },
+    "tips": {
+      "payment": "CB acceptée largement, prévoir des espèces pour les souks",
+      "time-zone": "UTC+03",
+      "meal-hours": "Déjeuner 12h-15h, Dîner 19h-23h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type G (240V)",
+      "dress-code": "Tenue respectueuse recommandée, couvrir épaules et genoux"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "999",
+      "pompiers": "999"
+    }
+  },
+  "abu-dhabi": {
+    "name": "Abu Dhabi",
+    "country": "Émirats arabes unis 🇦🇪",
+    "image": "https://www.jipsee.fr/wp-content/uploads/2023/12/abu-dhabi-1024x576.jpg",
+    "title": "Abu Dhabi, l'oasis de luxe entre tradition et futurisme",
+    "description": "Explorez Abu Dhabi, capitale des Émirats arabes unis, où splendeur architecturale et héritage bédouin s'entremêlent dans un écrin désertique bordé par les eaux turquoise du Golfe Persique. Entre ses mosquées majestueuses, ses musées avant-gardistes et ses complexes hôteliers somptueux, cette métropole du futur vous invite à une expérience où le raffinement côtoie la tradition avec élégance. Notre guide vous dévoile les sites emblématiques, les spécialités culinaires et tous les conseils pratiques pour découvrir cette perle du Moyen-Orient.",
+    "top-places": [
+      {
+        "name": "Grande Mosquée Sheikh Zayed",
+        "image": "https://www.comeindubai.com/wp-content/uploads/2021/06/mosquee-sheikh-zayed-abu-dhabi.jpg"
+      },
+      {
+        "name": "Louvre Abu Dhabi",
+        "image": "https://voyagedubai.fr/wp-content/uploads/2019/03/ticket-louvre-abu-dhabi-1200x631.jpg"
+      },
+      {
+        "name": "Qasr Al Watan",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/c3/da/97/qasr-al-watan.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Corniche d'Abu Dhabi",
+        "image": "https://i0.wp.com/escapadesdemalou.com/wp-content/uploads/2019/01/DSCN4028.jpg?resize=1024%2C576&ssl=1"
+      },
+      {
+        "name": "Emirates Palace",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Emirates_Palace.jpg/1200px-Emirates_Palace.jpg"
+      },
+      {
+        "name": "Excursion dans le désert",
+        "image": "https://images.musement.com/cover/0003/06/fotolia-183371593-subscription-xxl-jpg_header-205176.jpeg?w=1200&h=630&q=95&fit=crop"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Harees - Bouillie de blé et viande",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/12/a2/81/8b/harees.jpg"
+      },
+      {
+        "name": "Luqaimat - Beignets sucrés au sirop de dattes",
+        "image": "https://images.deliveryhero.io/image/talabat/Menuitems/LUQAIMAT_NORMAL01638612219616575989.jpg"
+      },
+      {
+        "name": "Majboos - Riz épicé avec viande et légumes",
+        "image": "https://stalkdubai.com/wp-content/uploads/2024/01/maxresdefault-3.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Arabe, anglais largement parlé",
+      "weather": "Entre 25°C et 45°C en été (très chaud), 15°C et 30°C en hiver, climat désertique",
+      "currency": "Dirham des Émirats arabes unis (AED)",
+      "airport": "Aéroport international d'Abu Dhabi (AUH)",
+      "transport": "Bus / Taxi / Voiture de location (2 AED par trajet en bus)"
+    },
+    "tips": {
+      "payment": "CB acceptée presque partout, prévoir des espèces pour les petits commerces",
+      "time-zone": "UTC+04",
+      "meal-hours": "Déjeuner 12h-15h, Dîner 19h-23h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type G (230V)",
+      "dress-code": "Tenue respectueuse recommandée, couvrir épaules et genoux dans les lieux religieux"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "998",
+      "pompiers": "997"
+    }
+  },
+  "antalya": {
+    "name": "Antalya",
+    "country": "Turquie 🇹🇷",
+    "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/97/4c/d1/20151030-095049-largejpg.jpg?w=1400&h=1400&s=1",
+    "title": "Antalya, joyau de la Riviera turque entre mer et montagne",
+    "description": "Découvrez Antalya, perle de la côte méditerranéenne turque, où l'histoire millénaire se mêle harmonieusement aux plaisirs balnéaires dans un cadre naturel époustouflant. Entre son centre historique pittoresque, ses plages de sable fin et ses vestiges antiques, cette destination vous séduira par sa diversité et son authenticité. Notre guide vous présente les sites incontournables, les délices culinaires et tous les conseils pratiques pour profiter pleinement de cette région où les montagnes du Taurus plongent majestueusement dans les eaux turquoise de la Méditerranée.",
+    "top-places": [
+      {
+        "name": "Vieille ville de Kaleiçi",
+        "image": "https://www.voyagesturquie.com/wp-content/uploads/2023/10/antalya.jpg"
+      },
+      {
+        "name": "Port d'Antalya",
+        "image": "https://www.aviscroisieres.com/wp-content/uploads/2015/01/antalya.jpg"
+      },
+      {
+        "name": "Chutes de Düden",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/76000/76096-Duden-Falls.jpg"
+      },
+      {
+        "name": "Plage de Konyaaltı",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/76000/76120-Konyaalti-Beach-Park.jpg"
+      },
+      {
+        "name": "Musée archéologique d'Antalya",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/19/f0/ee/43/20191027-141321-largejpg.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Aspendos",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1e/02/8a/2b/antalya.jpg?w=900&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Piyaz d'Antalya - Salade de haricots blancs et tahini",
+        "image": "https://preview.redd.it/vso4ey09n0pb1.jpg?auto=webp&s=468470be656b69d358c89db6918b58079f0b4c83"
+      },
+      {
+        "name": "Kebap d'agneau (Şiş Kebap) - Brochettes de viande grillée",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/d4/b0/90/photo1jpg.jpg"
+      },
+      {
+        "name": "Dondurma turc - Crème glacée élastique traditionnelle",
+        "image": "https://yedikardesler.com/wp-content/uploads/2023/05/Kesme-K.Maras-Dondurma.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Turc, anglais parlé dans les zones touristiques",
+      "weather": "Entre 20°C et 35°C en été, 10°C et 15°C en hiver, climat méditerranéen",
+      "currency": "Livre turque (TRY)",
+      "airport": "Aéroport international d'Antalya (AYT)",
+      "transport": "Tramway / Bus / Dolmuş (minibus partagés) (5-15 TRY par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans les établissements touristiques, espèces utiles pour les petits commerces",
+      "time-zone": "UTC+03",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 19h-22h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type C/F (220V)",
+      "bargaining": "Négociation attendue dans les bazars et marchés"
+    },
+    "emergency-numbers": {
+      "police": "155",
+      "ambulance": "112",
+      "touristes": "178"
+    }
+  },
+  "edinburgh": {
+    "name": "Édimbourg",
+    "country": "Royaume-Uni 🇬🇧",
+    "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/ff/32/2a/edinburgh-castle.jpg?w=1200&h=1200&s=1",
+    "title": "Édimbourg, capitale écossaise entre histoire et légendes",
+    "description": "Plongez dans l'atmosphère envoûtante d'Édimbourg, ville où l'histoire médiévale et la culture écossaise s'entremêlent dans un cadre naturel spectaculaire. Entre ses ruelles pavées, ses châteaux majestueux et ses collines verdoyantes, cette cité vous transportera dans un univers où traditions celtiques et modernité coexistent harmonieusement. Notre guide vous dévoile les sites emblématiques, les spécialités culinaires et tous les conseils pratiques pour explorer cette métropole fascinante où chaque pierre raconte une histoire.",
+    "top-places": [
+      {
+        "name": "Château d'Édimbourg",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/ff/32/2a/edinburgh-castle.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Royal Mile",
+        "image": "https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/274683322.jpg?k=086d9f757b1ad304b55dae269498348297b0e38c71a621657594b60b51d00d07&o="
+      },
+      {
+        "name": "Holyrood Palace",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/00/df/a4/palace-of-holyroodhouse.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Arthur's Seat",
+        "image": "https://www.bienvenueenecosse.com/wp-content/uploads/2023/01/xccv7vjkef8.jpg"
+      },
+      {
+        "name": "National Museum of Scotland",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/a8/a6/8f/with-its-soaring-pillars.jpg?w=900&h=-1&s=1"
+      },
+      {
+        "name": "Calton Hill",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/0f/44/c2/view-from-calton-hill.jpg?w=1200&h=1200&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Haggis - Panse de brebis farcie traditionnelle",
+        "image": "https://www.3w-hotel.com/upload/plat-cossais-1.jpg"
+      },
+      {
+        "name": "Scotch Pie - Tourte de viande écossaise",
+        "image": "https://www.edinburghbutchers.co.uk/edinburgh/big_pic/img/product/bakery-pies/scotch-pie-qms23.jpg"
+      },
+      {
+        "name": "Shortbread - Sablés écossais au beurre",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/d/d4/Shortbread_fingers.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais, gaélique écossais (minoritaire)",
+      "weather": "Entre 15°C et 19°C en été, 1°C et 7°C en hiver, souvent venteux et pluvieux",
+      "currency": "Livre Sterling (GBP)",
+      "airport": "Aéroport d'Édimbourg (EDI)",
+      "transport": "Bus / Tram / Taxi (1.80-4 GBP par trajet en bus)"
+    },
+    "tips": {
+      "payment": "CB acceptée presque partout",
+      "time-zone": "UTC+00 (UTC+01 en été)",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type G (230V)",
+      "festivals": "Festival d'Édimbourg en août, prévoyez longtemps à l'avance"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "999",
+      "pompiers": "999"
+    }
+  },
+  "cancun": {
+    "name": "Cancún",
+    "country": "Mexique 🇲🇽",
+    "image": "https://www.agoda.com/wp-content/uploads/2024/03/Featured-image-Cancun-beach-with-resorts-Mexico.jpg",
+    "title": "Cancún, paradis caribéen entre plages de rêve et trésors mayas",
+    "description": "Découvrez Cancún, joyau de la Riviera Maya où se rencontrent des plages de sable blanc baignées d'eaux turquoise et l'héritage fascinant de la civilisation maya. Entre ses complexes hôteliers luxueux, ses sites archéologiques millénaires et ses merveilles naturelles, cette destination vous offre un équilibre parfait entre détente balnéaire et aventures culturelles. Notre guide vous dévoile les lieux emblématiques, les saveurs locales et tous les conseils pratiques pour profiter pleinement de ce coin de paradis mexicain.",
+    "top-places": [
+      {
+        "name": "Plages de Cancún",
+        "image": "https://www.guidesulysse.com/images/destinations/iStock-520408263.jpg"
+      },
+      {
+        "name": "Chichen Itza",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/e5/0a/8c.jpg"
+      },
+      {
+        "name": "Isla Mujeres",
+        "image": "https://images.odigoo.com/df4f9331-8c0a-43c6-aef6-7eaf225fea60/images/media/buceo/webp/isla-mujeres-elfc.webp"
+      },
+      {
+        "name": "Cenotes de la Riviera Maya",
+        "image": "https://pelicanoproperties.mx/wp-content/uploads/2018/03/cenote-riviera-Maya-Playa-del-carmen-tulum.jpg"
+      },
+      {
+        "name": "Parc Xcaret",
+        "image": "https://excursions-rivieramaya.com/wp-content/uploads/2022/06/Xcaret-parc.jpg"
+      },
+      {
+        "name": "Avenue Kukulcán",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/6a/2a/e4/impactantes-hoteles-en.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Tacos al Pastor - Tacos à la viande marinée",
+        "image": "https://cancunfoodtours.com/wp-content/uploads/2022/07/tacos-al-pastor.jpg"
+      },
+      {
+        "name": "Ceviche - Poisson cru mariné au citron",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/d5/cd/d8/ceviche-mixto.jpg"
+      },
+      {
+        "name": "Mole Poblano - Sauce au chocolat et piments",
+        "image": "https://cdn.generationvoyage.fr/2020/12/shutterstock_14279553501.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol, anglais parlé dans les zones touristiques",
+      "weather": "Entre 25°C et 33°C toute l'année, climat tropical avec saison des pluies (mai-octobre)",
+      "currency": "Peso mexicain (MXN)",
+      "airport": "Aéroport international de Cancún (CUN)",
+      "transport": "Bus / Taxi / Location de voiture (12-25 MXN par trajet en bus)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans les zones touristiques, espèces pour les petits commerces",
+      "time-zone": "UTC-05",
+      "meal-hours": "Déjeuner 13h-16h, Dîner 19h-23h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A/B (127V)",
+      "sargasse": "Renseignez-vous sur la présence d'algues sargasses selon la saison"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911",
+      "tourist-assistance": "078"
+    }
+  },
+  "porto": {
+    "name": "Porto",
+    "country": "Portugal 🇵🇹",
+    "image": "https://www.city-guide-porto.com/_bibli/pages_images/31/centre-historique-de-porto-ribeira.jpg",
+    "title": "Porto, cité baroque au charme intemporel sur le Douro",
+    "description": "Laissez-vous séduire par Porto, seconde ville du Portugal où l'âme authentique lusitanienne se révèle à chaque coin de rue. Entre ses façades colorées en azulejos, ses ruelles escarpées et son fleuve majestueux, cette ville classée au patrimoine mondial vous invite à un voyage fascinant entre tradition et modernité. Notre guide vous dévoile les trésors architecturaux, les délices gastronomiques et tous les conseils pratiques pour explorer cette perle du nord portugais, berceau du célèbre vin qui porte son nom.",
+    "top-places": [
+      {
+        "name": "Pont Dom Luís I",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/81000/81331-Porto-And-Vicinity.jpg"
+      },
+      {
+        "name": "Ribeira",
+        "image": "https://visiter-porto.fr/wp-content/uploads/2024/01/Quartier-Ribeira-Porto-1.jpg"
+      },
+      {
+        "name": "Caves de Porto",
+        "image": "https://cdn.generationvoyage.fr/2023/11/Caves-a-vin-Porto.jpeg"
+      },
+      {
+        "name": "Église de São Francisco",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/13/24/30/80/igreja-de-sao-francisco.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Palácio da Bolsa",
+        "image": "https://www.vanupied.com/wp-content/uploads/porto-monument-palais-bourse-marcello-saponaro.jpg"
+      },
+      {
+        "name": "Jardins du Palais de Cristal",
+        "image": "https://afrenchyincali.com/wp-content/uploads/2023/05/labyrinthe-view-1500x1125.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Francesinha - Sandwich garni gratinée à la bière",
+        "image": "https://bonjourporto.fr/wp-content/uploads/2019/07/francesinha.jpg"
+      },
+      {
+        "name": "Bacalhau à Gomes de Sá - Morue à la mode de Porto",
+        "image": "https://viva-porto.pt/wp-content/uploads/2023/12/bacalhau-a-gomes-de-sa-pingo-doce.jpg"
+      },
+      {
+        "name": "Pastéis de Nata - Tartelettes à la crème pâtissière",
+        "image": "https://i0.wp.com/porto.week-end-voyage-lisbonne.com/wp-content/uploads/sites/6/2018/01/Pasteis-de-Nata-Nata-Lisboa-Porto.jpg?resize=810%2C540"
+      }
+    ],
+    "to-know": {
+      "language": "Portugais mais l'anglais est compris dans les zones touristiques",
+      "weather": "Entre 15°C et 25°C en été, 5°C et 15°C en hiver, climat océanique avec influence méditerranéenne",
+      "currency": "Euro (€)",
+      "airport": "Aéroport Francisco Sá Carneiro (OPO)",
+      "transport": "Métro / Bus / Tram / Funiculaire (1.30-3.50€ par trajet)"
+    },
+    "tips": {
+      "payment": "CB acceptée largement, prévoir des espèces pour les petits commerces",
+      "time-zone": "UTC+00 (UTC+01 en été)",
+      "meal-hours": "Déjeuner 12h30-15h, Dîner 19h30-22h30",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type C/F (230V)",
+      "terrain": "Ville très vallonnée, prévoir de bonnes chaussures de marche"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "112",
+      "pompiers": "112"
+    }
+  },
+  "buenos-aires": {
+    "name": "Buenos Aires",
+    "country": "Argentine 🇦🇷",
+    "image": "https://img.static-kl.com/images/media/EDD567B6-661E-481F-97ACD929AB125ABA",
+    "title": "Buenos Aires, capitale passionnée où tango et culture s'entrelacent",
+    "description": "Plongez dans l'effervescence de Buenos Aires, métropole élégante où l'âme latine s'exprime à chaque coin de rue. Entre ses quartiers emblématiques aux architectures européennes, ses places historiques et sa scène culturelle dynamique, la capitale argentine vous séduira par son atmosphère unique mêlant tradition et modernité. Notre guide vous révèle les lieux incontournables, les spécialités gastronomiques et tous les conseils pratiques pour explorer cette ville fascinante où la passion du tango rythme la vie quotidienne.",
+    "top-places": [
+      {
+        "name": "La Boca & Caminito",
+        "image": "https://b1534bf2.delivery.rocketcdn.me/wp-content/uploads/2022/06/La-Boca-Buenos-Aires-things-to-do-history.jpg"
+      },
+      {
+        "name": "Recoleta & son cimetière",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/0f/ec/e4/75.jpg"
+      },
+      {
+        "name": "Plaza de Mayo & Casa Rosada",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/3/31/Plaza_de_Mayo_a_prezidentsk%C3%BD_pal%C3%A1c_Casa_Rosada_-_Buenos_Aires_-_panoramio_%281%29.jpg"
+      },
+      {
+        "name": "San Telmo",
+        "image": "https://www.voyage-argentine.com/wp-content/uploads/san-telmo.jpeg"
+      },
+      {
+        "name": "Palermo",
+        "image": "https://www.voyage-argentine.com/wp-content/uploads/adobestock-171089371.jpeg"
+      },
+      {
+        "name": "Teatro Colón",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0a/78/95/38.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Asado - Grillades de viandes traditionnelles",
+        "image": "https://media.tacdn.com/media/attractions-splice-spp-674x446/0a/32/47/0f.jpg"
+      },
+      {
+        "name": "Empanadas - Chaussons farcis à la viande ou au fromage",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/ac/ec/b0/empanadas-argentinas.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Dulce de Leche - Confiture de lait caramélisée",
+        "image": "https://www.tierra-latina.com/wp-content/uploads/2020/10/voyage-argentine-recette-dulce-de-leche-ruiz-luque-paz-getty-images.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol, peu d'anglais en dehors des zones touristiques",
+      "weather": "Entre 28°C et 35°C en été (décembre-mars), 8°C et 16°C en hiver (juin-septembre)",
+      "currency": "Peso argentin (ARS)",
+      "airport": "Aéroport international d'Ezeiza (EZE) et Aéroport Jorge Newbery (AEP)",
+      "transport": "Métro (Subte) / Bus (Colectivo) / Taxi (100-300 ARS par trajet en métro)"
+    },
+    "tips": {
+      "payment": "Espèces préférables, système bancaire parfois problématique pour les étrangers",
+      "time-zone": "UTC-03",
+      "meal-hours": "Déjeuner 13h-15h, Dîner très tardif 21h-24h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type C/I (220V)",
+      "tango": "De nombreux spectacles et milongas (bals) ouverts aux débutants"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "107",
+      "pompiers": "100"
+    }
+  },
+  "rio-de-janeiro": {
+    "name": "Rio de Janeiro",
+    "country": "Brésil 🇧🇷",
+    "image": "https://www.costacroisieres.be/content/dam/costa/inventory-assets/ports/RIO/c035_rio_de_janeiro.jpg",
+    "title": "Rio de Janeiro, la cité merveilleuse entre montagnes et océan",
+    "description": "Succombez au charme de Rio de Janeiro, métropole fascinante où nature exubérante et culture vibrante se rencontrent dans un décor à couper le souffle. Entre ses plages mythiques, ses montagnes verdoyantes et son ambiance festive, la 'Cidade Maravilhosa' vous envoûtera par sa beauté spectaculaire et sa joie de vivre légendaire. Notre guide vous dévoile les sites emblématiques, les saveurs locales et tous les conseils pratiques pour explorer cette ville unique où la forêt tropicale embrasse l'océan au rythme de la samba.",
+    "top-places": [
+      {
+        "name": "Christ Rédempteur (Cristo Redentor)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/ab/a0/bd/o-santuario-cristo-redentor.jpg?w=900&h=-1&s=1"
+      },
+      {
+        "name": "Pain de Sucre (Pão de Açúcar)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/d7/5c/0d/vista-do-morro-da-urca.jpg?w=1200&h=900&s=1"
+      },
+      {
+        "name": "Plages de Copacabana & Ipanema",
+        "image": "https://www.rio20.info/wp-content/uploads/2021/05/plage-de-Copacabana-1024x682.jpg"
+      },
+      {
+        "name": "Escalier Selarón",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/23/e8/81/escadaria-selaron.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Santa Teresa",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/191000/191427-Santa-Teresa.jpg"
+      },
+      {
+        "name": "Jardin Botanique de Rio",
+        "image": "https://www.voyagebresil.com/cdn/br-public/noma_royal_palm_trees_botanic_gardens_rio_de_janeiro_brazil.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Feijoada - Ragoût de haricots noirs et viandes",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/09/ab/a8/d5/bistro-da-lapa.jpg"
+      },
+      {
+        "name": "Pão de Queijo - Petits pains au fromage",
+        "image": "https://foodieadvice.com/storage/foods/229/large.jpg?time=1551376392"
+      },
+      {
+        "name": "Açaí - Sorbet de baies d'açaí",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/14/1c/bb/69/casa-do-acai.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Portugais, peu d'anglais en dehors des zones touristiques",
+      "weather": "Entre 25°C et 35°C en été (décembre-mars), 18°C et 27°C en hiver (juin-septembre), climat tropical",
+      "currency": "Real brésilien (BRL)",
+      "airport": "Aéroport international de Rio de Janeiro-Galeão (GIG)",
+      "transport": "Métro / Bus / Taxi / VLT (tramway) (4-5 BRL par trajet en métro)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans les zones touristiques, espèces pour les petits commerces",
+      "time-zone": "UTC-03",
+      "meal-hours": "Déjeuner 12h-15h, Dîner 19h-22h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type N (127-220V)",
+      "safety": "Restez vigilant et évitez les quartiers sensibles, notamment la nuit"
+    },
+    "emergency-numbers": {
+      "police": "190",
+      "ambulance": "192",
+      "pompiers": "193",
+      "police-touristique": "2332-2924"
+    }
+  },
+  "hanoi": {
+    "name": "Hanoï",
+    "country": "Vietnam 🇻🇳",
+    "image": "https://images.ctfassets.net/rc3dlxapnu6k/5CVNt8Waq9efT3UmBVYT6i/8c6dba696fb7b1ce0553ed41d2cf96c2/Hanoi-bateaux-lanternes-Vietnam.jpg?w=1400&q=60&fm=webp",
+    "title": "Hanoï, capitale millénaire aux charmes d'Asie authentique",
+    "description": "Découvrez Hanoï, cœur historique et culturel du Vietnam, où traditions séculaires et dynamisme contemporain se mêlent harmonieusement. Entre ses lacs paisibles, ses ruelles animées et ses temples vénérables, cette capitale vous invite à un voyage fascinant à travers l'âme vietnamienne. Notre guide vous dévoile les sites emblématiques, les délices culinaires et tous les conseils pratiques pour explorer cette métropole envoûtante où l'héritage colonial français rencontre les influences chinoises et l'identité asiatique.",
+    "top-places": [
+      {
+        "name": "Lac Hoan Kiem",
+        "image": "https://vietnamevasion.com/wp-content/uploads/2022/03/35.jpg"
+      },
+      {
+        "name": "Le Vieux Quartier (Old Quarter)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/09/32/1d/c4/old-quarter.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Temple de la Littérature",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Temple_of_Literature_-_main_gate.jpg/1200px-Temple_of_Literature_-_main_gate.jpg"
+      },
+      {
+        "name": "Musée d'Histoire du Vietnam",
+        "image": "https://authentikvietnam.com/media/ckeditor/musee%20national%20histoire%20vietnam%20architecture%20francaise.jpg"
+      },
+      {
+        "name": "Pagode au Pilier Unique",
+        "image": "https://authentikvietnam.com/media/ckeditor/pagode%20pilier%20unique%20architecture%20lotus.jpg"
+      },
+      {
+        "name": "Mausolée de Hô Chi Minh",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/32/93/64/mausoleum.jpg?w=1200&h=1200&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Pho - Soupe de nouilles au bœuf ou poulet",
+        "image": "https://axwwgrkdco.cloudimg.io/v7/__gmpics3__/0c4ee1586b8d410fa8c3f47123dde03b.jpeg?width=1000"
+      },
+      {
+        "name": "Bánh Mì - Sandwich vietnamien",
+        "image": "https://vietnamevasion.com/wp-content/uploads/2024/08/banh-mi-hanoi.jpg"
+      },
+      {
+        "name": "Chả Cá Lã Vọng - Poisson grillé aux herbes",
+        "image": "https://www.huongnghiepaau.com/wp-content/uploads/2018/01/cach-lam-cha-ca-la-vong.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Vietnamien, anglais parlé dans les zones touristiques",
+      "weather": "Entre 15°C et 20°C en hiver, 30°C et 35°C en été, subtropical humide avec 4 saisons distinctes",
+      "currency": "Dong vietnamien (VND)",
+      "airport": "Aéroport international de Noi Bai (HAN)",
+      "transport": "Bus / Taxi / Moto-taxi / Grabbike (10 000-20 000 VND par trajet en bus)"
+    },
+    "tips": {
+      "payment": "Espèces privilégiées, CB acceptée dans les établissements touristiques",
+      "time-zone": "UTC+07",
+      "meal-hours": "Déjeuner 11h30-13h30, Dîner 18h-20h30",
+      "water": "Eau en bouteille obligatoire",
+      "electric-plugs": "Type A/C/F (220V)",
+      "traffic": "Circulation chaotique, traverser les routes progressivement et à un rythme constant"
+    },
+    "emergency-numbers": {
+      "police": "113",
+      "ambulance": "115",
+      "pompiers": "114"
+    }
+  },
+  "lima": {
+    "name": "Lima",
+    "country": "Pérou 🇵🇪",
+    "image": "https://images.ctfassets.net/bth3mlrehms2/qRBEid3ykrOBhGxMUOr9P/a41bb1156686d91bef49212c8a85888d/Lima__Lima__Peru.jpg",
+    "title": "Lima, capitale gastronomique entre Pacifique et désert",
+    "description": "Explorez Lima, métropole fascinante où se mêlent héritage colonial, modernité cosmopolite et trésors précolombiens dans un décor entre océan et désert. À travers ses quartiers contrastés, ses sites archéologiques millénaires et sa gastronomie mondialement reconnue, la capitale péruvienne vous invite à découvrir la richesse culturelle de ce pays andin. Notre guide vous présente les lieux emblématiques, les délices culinaires et tous les conseils pratiques pour apprécier cette ville aux multiples visages, berceau de la cuisine péruvienne contemporaine.",
+    "top-places": [
+      {
+        "name": "Barranco",
+        "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/90000/90220-Barranco.jpg"
+      },
+      {
+        "name": "Miraflores & le Malecón",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/4a/c1/a7/caption.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Centre historique de Lima",
+        "image": "https://www.voyage-perou.com/wp-content/uploads/pexels-cristian-loayza-16198315-1280x800.jpg"
+      },
+      {
+        "name": "Huaca Pucllana",
+        "image": "https://www.voyage-perou.com/wp-content/uploads/adobestock-170333461-1280x800.jpeg"
+      },
+      {
+        "name": "Parc de la Réserve & Circuit magique de l'eau",
+        "image": "https://www.voyageperou.com/cdn/pe-public/parc_reserva_circuit_magique_eau_4.jpg"
+      },
+      {
+        "name": "Musée Larco",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/4f/c6/a5/fachada-del-museo-larco.jpg?w=900&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Ceviche - Poisson cru mariné au citron",
+        "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgdngX-_DB4_BnDlQBMkQzxSuo1AXuhHt4c7OWA0rtX366JfCQPzDGekYezCUvLk7q_mjUDouc3oj4Z5_aSCSBXm3KLXBXCIr2Ms_pY1NrGiJlg_O2LIcoGKmv5_e6zZuaMJ7VwAc5OldwR/s660/ceviche-fa%C3%A7on-cr%C3%A9ole-lima-perou.jpg"
+      },
+      {
+        "name": "Lomo Saltado - Sauté de bœuf aux légumes",
+        "image": "https://cdn-blog.joinnus.com/blog/wp-content/uploads/2019/03/28183558/lomo-el-grifo.jpg"
+      },
+      {
+        "name": "Pisco Sour - Cocktail national au pisco",
+        "image": "https://www.tourisme-chili.com/wp-content/uploads/agence-voyage-chili-11-1280x800.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol, quechua (langues officielles), anglais limité aux zones touristiques",
+      "weather": "Entre 15°C et 27°C, climat désertique côtier avec hiver brumeux (mai-octobre) et été ensoleillé (novembre-avril)",
+      "currency": "Sol péruvien (PEN)",
+      "airport": "Aéroport international Jorge Chávez (LIM)",
+      "transport": "Bus / Taxi / Metropolitano (système BRT) (2-5 PEN par trajet en bus)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans les zones touristiques, espèces pour les marchés et petits commerces",
+      "time-zone": "UTC-05",
+      "meal-hours": "Déjeuner 13h-15h, Dîner 20h-22h30",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A/B/C (220V)",
+      "altitude": "Peu de risque de mal d'altitude à Lima (contrairement à Cusco)"
+    },
+    "emergency-numbers": {
+      "police": "105",
+      "ambulance": "117",
+      "pompiers": "116",
+      "touristes": "0800-22221"
+    }
+  },
+  "marrakech": {
+    "name": "Marrakech",
+    "country": "Maroc 🇲🇦",
+    "image": "https://res.cloudinary.com/lastminute-contenthub/image/upload/c_limit,h_999999,w_1920/f_auto/q_auto:eco/v1/DAM/Photos/Destinations/Africa/Morocco/shutterstock_1135474214.jpg",
+    "title": "Marrakech, la cité ocre aux mille et une saveurs",
+    "description": "Laissez-vous envoûter par Marrakech, ville impériale où les couleurs, les parfums et les sons vous transportent dans un univers enivrant. Entre ses souks labyrinthiques, ses palais somptueux et ses jardins luxuriants, la Perle du Sud marocain vous offre une expérience sensorielle unique où traditions ancestrales et raffinement se rencontrent. Notre guide vous dévoile les trésors de cette cité millénaire, ses spécialités culinaires et toutes les informations pratiques pour découvrir cette destination fascinante aux portes du désert.",
+    "top-places": [
+      {
+        "name": "Jemaa el-Fna",
+        "image": "https://www.lesjardinsdelamedina.com/blog/wp-content/uploads/2020/07/jama-el-fnaa.jpg"
+      },
+      {
+        "name": "Les Jardins Majorelle",
+        "image": "https://villatajmarrakech.com/wp-content/uploads/2022/04/le-jardin-majorelle-marrakech.jpg"
+      },
+      {
+        "name": "Palais Bahia",
+        "image": "https://www.alksar.com/wp-content/uploads/2018/04/marrakech-palais-de-la-bahia-cour-d-honneur.jpg"
+      },
+      {
+        "name": "La Médina de Marrakech",
+        "image": "https://www.vanupied.com/wp-content/uploads/marrakech-medina-panorama-toits-max-libertine.jpg"
+      },
+      {
+        "name": "Koutoubia",
+        "image": "https://www.vanupied.com/wp-content/uploads/1024px-Koutoubia_Minaret_Top_2011.jpg"
+      },
+      {
+        "name": "Saadian Tombs",
+        "image": "https://cdn.getyourguide.com/img/tour/d529815fedae655db09dde183c2f07d54d8ad774f53e1929daf64f2bb26362b4.jpg/146.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Tajine - Ragoût traditionnel cuit dans un plat en terre cuite",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/8c/7d/f8/taj-in-darna.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Couscous - Semoule de blé garnie de légumes et viandes",
+        "image": "https://www.voyage-marrakech.com/wp-content/uploads/2024/03/Photo-Couscous-Maroc.webp"
+      },
+      {
+        "name": "Pastilla - Tourte feuilletée sucrée-salée au poulet ou pigeon",
+        "image": "https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0e/62/0a/68.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Arabe, berbère, français largement parlé",
+      "weather": "Entre 20°C et 40°C en été, 5°C et 20°C en hiver, climat semi-aride",
+      "currency": "Dirham marocain (MAD)",
+      "airport": "Aéroport international de Marrakech-Menara (RAK)",
+      "transport": "Petit taxi / Bus / Calèche (7-20 MAD par trajet en petit taxi)"
+    },
+    "tips": {
+      "payment": "Espèces privilégiées, CB acceptée dans les établissements touristiques",
+      "time-zone": "UTC+01",
+      "meal-hours": "Déjeuner 13h-15h, Dîner 20h-22h30",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type C/E (220V)",
+      "bargaining": "Négociation incontournable dans les souks (commencer à 30-40% du prix annoncé)"
+    },
+    "emergency-numbers": {
+      "police": "190",
+      "ambulance": "150",
+      "pompiers": "150"
+    }
+  },
+  "punta-cana": {
+    "name": "Punta Cana",
+    "country": "République dominicaine 🇩🇴",
+    "image": "https://ulysse.com/news/wp-content/uploads/2024/05/Punta-Cana-ville-en-Republique-dominicaine.jpg",
+    "title": "Punta Cana, paradis tropical aux plages de sable blanc",
+    "description": "Découvrez Punta Cana, destination balnéaire par excellence où les eaux turquoise des Caraïbes caressent des plages immaculées bordées de cocotiers. Entre ses complexes hôteliers luxueux, ses réserves naturelles préservées et ses activités nautiques variées, ce joyau dominicain vous promet des vacances idylliques sous le soleil tropical. Notre guide vous révèle les plus beaux sites, les saveurs locales et toutes les informations pratiques pour profiter pleinement de ce coin de paradis où détente et aventure vous attendent.",
+    "top-places": [
+      {
+        "name": "Plages de Punta Cana",
+        "image": "https://lapetiterade.com/wp-content/uploads/2024/10/plage-punta-cana.jpg"
+      },
+      {
+        "name": "Isla Saona",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/a1/43/07/photo1jpg.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Parc écologique d'Ojos Indígenas",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/8e/7d/2a/take-a-rejuvenating-swim.jpg?w=1200&h=900&s=1"
+      },
+      {
+        "name": "Coco Bongo",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/7c/b9/9c/photographed-alain-strassberg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Golf à Punta Cana",
+        "image": "https://cdn.canablue.com/wp-content/uploads/2018/11/15015335/Corales_Golf_Club_2.jpg"
+      },
+      {
+        "name": "Hoyo Azul",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/04/bf/cc/02/breathtaking.jpg?w=1200&h=1200&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Mangu - Purée de bananes plantains",
+        "image": "https://www.lopesancostabavaro.com/wp-content/uploads/2021/03/Variante-del-plato-de-Mangu-tipico-de-Punta-Cana.jpg"
+      },
+      {
+        "name": "Mojarra frita - Poisson frit entier",
+        "image": "https://astelus.com/wp-content/uploads/2024/04/la-elaboracion-de-la-mojarra-frita.jpg"
+      },
+      {
+        "name": "Pina Colada - Cocktail à base de rhum, ananas et coco",
+        "image": "https://bpprivilegeclub.com/blog/wp-content/uploads/2020/05/May-Flavor-The-Classic-Pin%CC%83a-Colada-1024x685.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol, anglais parlé dans les zones touristiques",
+      "weather": "Entre 25°C et 32°C toute l'année, climat tropical avec saison des pluies (mai-novembre)",
+      "currency": "Peso dominicain (DOP)",
+      "airport": "Aéroport international de Punta Cana (PUJ)",
+      "transport": "Taxi / Bus / Excursions organisées (300-800 DOP par trajet en taxi)"
+    },
+    "tips": {
+      "payment": "Dollar américain et carte bancaire acceptés dans les zones touristiques",
+      "time-zone": "UTC-04",
+      "meal-hours": "Déjeuner 12h-15h, Dîner 18h-22h, formules tout-inclus dans la plupart des hôtels",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A/B (110V)",
+      "all-inclusive": "La majorité des séjours sont en formule tout-inclus dans les resorts"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911",
+      "pompiers": "911"
+    }
+  },
+  "santiago": {
+    "name": "Santiago de los Caballeros",
+    "country": "République dominicaine 🇩🇴",
+    "image": "https://cdn.generationvoyage.fr/2021/01/guide-santiago.jpg",
+    "title": "Santiago, joyau culturel au cœur de la vallée du Cibao",
+    "description": "Découvrez Santiago de los Caballeros, deuxième ville de la République dominicaine, où l'authenticité caribéenne se révèle loin des plages touristiques. Entre ses monuments historiques, ses centres culturels et son ambiance animée, cette métropole vous offre une immersion dans la vie dominicaine authentique. Notre guide vous présente les sites emblématiques, les délices gastronomiques et tous les conseils pratiques pour explorer cette ville dynamique nichée au cœur de la fertile vallée du Cibao, berceau de la culture et des traditions du pays.",
+    "top-places": [
+      {
+        "name": "Monumento a los Héroes de la Restauración",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/8d/53/38/monumento-a-los-heroes.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Centro León",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/d9/27/cf/photo2jpg.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Parque Central",
+        "image": "https://visitsantiago.do/wp-content/uploads/2023/12/ParqueCentraldeSantiago-1200x675.jpg"
+      },
+      {
+        "name": "La Casa de Arte",
+        "image": "https://i0.wp.com/ojala.do/wp-content/uploads/2023/07/Exposicion-de-Arte-Iberoamericano-en-la-Quinta-Dominica-1-1.webp?fit=1080%2C591&ssl=1"
+      },
+      {
+        "name": "Catedral de Santiago Apóstol",
+        "image": "https://visitsantiago.do/wp-content/uploads/2023/12/catedral-Santiago-de-los-Caballeros-1.jpg"
+      },
+      {
+        "name": "Cerro de Jacagua",
+        "image": "https://s1.wklcdn.com/image_215/6464282/50234119/33381568.700x525.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Sancocho - Ragoût traditionnel dominicain",
+        "image": "https://lepetitjournal.com/sites/default/files/2023-03/Sancocho.jpg"
+      },
+      {
+        "name": "Mofongo - Purée de bananes plantains avec viande",
+        "image": "https://ca-times.brightspotcdn.com/dims4/default/b9e7357/2147483647/strip/true/crop/600x338+0+30/resize/1200x675!/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fcb%2F46%2F8df7781dc8832ab18071f0dbe191%2Fla-fo-shrimpdish-l2xu5hnc"
+      },
+      {
+        "name": "Habichuelas con Dulce - Dessert de haricots sucrés",
+        "image": "https://tuguiadominicana.com/wp-content/uploads/2023/03/habichuela-con-dulce-1-@sagrariomatos-edited.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol, peu d'anglais en dehors des zones touristiques",
+      "weather": "Entre 22°C et 32°C toute l'année, climat tropical avec saison des pluies (mai-novembre)",
+      "currency": "Peso dominicain (DOP)",
+      "airport": "Aéroport international du Cibao (STI)",
+      "transport": "Taxi / Carros públicos (taxis collectifs) / Moto-taxi (50-300 DOP par trajet)"
+    },
+    "tips": {
+      "payment": "Espèces préférables, CB acceptée dans les grands établissements",
+      "time-zone": "UTC-04",
+      "meal-hours": "Déjeuner 12h-14h30, Dîner 18h-21h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A/B (110V)",
+      "safety": "Évitez les quartiers périphériques la nuit, privilégiez les taxis recommandés par votre hôtel"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911",
+      "pompiers": "911"
+    }
+  },
+  "cairo": {
+    "name": "Le Caire",
+    "country": "Égypte 🇪🇬",
+    "image": "https://www.voyageegypte.fr/cdn/eg-public/citadelle_caire_vue_terasse.jpg",
+    "title": "Le Caire, mégapole millénaire sur les rives du Nil",
+    "description": "Plongez dans l'effervescence du Caire, carrefour fascinant où l'Égypte ancienne rencontre le monde arabe moderne dans un chaos organisé captivant. Entre ses trésors pharaoniques, ses mosquées majestueuses et ses quartiers populaires animés, la plus grande ville d'Afrique vous entraîne dans un voyage à travers les millénaires. Notre guide vous dévoile les sites incontournables, les saveurs authentiques et toutes les informations essentielles pour explorer cette métropole palpitante où le passé glorieux de l'Égypte côtoie le présent avec intensité.",
+    "top-places": [
+      {
+        "name": "Les Pyramides de Gizeh",
+        "image": "https://cdn-imgix.headout.com/media/images/c151a30f4d1285a4fa1aca9f6bc0f053-History%20of%20Khafre%E2%80%99s%20Pyramid.jpg?auto=format&w=1069.6000000000001&h=687.6&q=90&fit=crop&ar=14%3A9&crop=faces"
+      },
+      {
+        "name": "Musée Égyptien du Caire",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/57/e0/90/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Le Caire islamique",
+        "image": "https://images.memphistours.com/large/95510852_83018681_islamic%20azhar.jpg"
+      },
+      {
+        "name": "Le bazar Khan El Khalili",
+        "image": "https://www.voyageegypte.fr/cdn/eg-public/khan_el_khalili.jpg"
+      },
+      {
+        "name": "La Citadelle de Saladin",
+        "image": "https://i.f1g.fr/media/cms/orig/2024/02/21/681cbfd00c9098ab0485ed74e393b015497b3c9d1e3c0175ae038345ba834f53.jpg"
+      },
+      {
+        "name": "Le Nil et les croisières",
+        "image": "https://www.marsaalamtours.com/fr/data1/images/Circuit-complet-en-egypte-10-jours-Le-Caire-et-croisiere-sur-le-Nil/1.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Koshari - Plat national de pâtes, riz et lentilles",
+        "image": "https://bostonglobe-prod.cdn.arcpublishing.com/resizer/v2/LMLPMKC7YYI6RLVZ6K3EU3MEY4.jpg?auth=9ea7ffec111dc4519e5bbe2b5dac81c072d44020e9842f4cdac884fbc406a521&width=1440"
+      },
+      {
+        "name": "Foul Medames - Purée de fèves traditionnelle",
+        "image": "https://sceneeats.com/Content/Admin/Uploads/Articles/ArticlesMainPhoto/11301/08e0453d-e897-462d-bb9b-1fc7163c2947.png"
+      },
+      {
+        "name": "Mahshi - Légumes farcis au riz épicé",
+        "image": "https://www.egiptoexclusivo.com/wp-content/uploads/2023/01/mahshi-plato.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Arabe, anglais parlé dans les zones touristiques",
+      "weather": "Entre 20°C et 35°C en été, 10°C et 20°C en hiver, climat désertique avec peu de précipitations",
+      "currency": "Livre égyptienne (EGP)",
+      "airport": "Aéroport international du Caire (CAI)",
+      "transport": "Métro / Bus / Taxi / Uber (3-10 EGP par trajet en métro)"
+    },
+    "tips": {
+      "payment": "Espèces recommandées, CB acceptée dans les grands établissements",
+      "time-zone": "UTC+02",
+      "meal-hours": "Déjeuner 13h-16h, Dîner 20h-23h",
+      "water": "Eau en bouteille obligatoire",
+      "electric-plugs": "Type C/F (220V)",
+      "bargaining": "Négociation attendue dans les marchés et pour les taxis (divisez le prix initial par 2 ou 3)"
+    },
+    "emergency-numbers": {
+      "police": "122",
+      "ambulance": "123",
+      "pompiers": "180",
+      "police-touristique": "126"
+    }
   }
 }

@@ -20,23 +20,46 @@ export const questions: QuestionType[] = [
     options: ["solo", "couple", "friends", "family"],
   },
   {
-    id: "travel_style",
+    id: "continent",
     options: [
-      "backpacker",
-      "classic_traveler",
-      "local_traveler",
-      "digital_nomad",
+      "europe",
+      "north_america",
+      "south_america",
+      "africa",
+      "asia",
+      "all",
     ],
   },
   {
-    id: "travel_preferences",
-    options: ["adventure", "relaxation", "culture", "nightlife"],
+    id: "action_level",
+    options: ["max", "high", "medium", "low"],
   },
-  { id: "travel_climate", options: ["hot", "temperate", "cold"] },
-  { id: "travel_destination_type", options: ["sea", "mountain", "city"] },
-  { id: "travel_food", options: ["important", "medium", "not_important"] },
-  { id: "travel_duration", options: ["weekend", "week", "more_than_10_days"] },
-  { id: "travel_budget", options: ["small", "medium", "large"] },
-  { id: "travel_change_of_scene", options: ["total", "mix", "european"] },
-  { id: "travel_music", options: ["electro", "indie", "pop", "lofi", "rap"] },
+  {
+    id: "nightlife_level",
+    options: ["max", "high", "medium", "low"],
+  },
+  {
+    id: "activity_type",
+    options: ["landscape", "art", "history", "local"],
+  },
+  {
+    id: "weather",
+    options: ["very_hot", "hot", "temperate", "cold"],
+  },
+  {
+    id: "environment",
+    options: ["beach", "city", "mountain", "countryside", "desert"],
+  },
+  {
+    id: "food_importance",
+    options: ["high", "medium", "low"],
+  },
+  {
+    id: "budget",
+    options: ["low", "medium", "high", "very_high"],
+  },
+  {
+    id: "duration",
+    options: ["weekend", "week", "two_weeks", "month"],
+  },
 ];

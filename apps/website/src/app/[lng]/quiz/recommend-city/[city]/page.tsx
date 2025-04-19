@@ -5,7 +5,7 @@ import React from "react";
 
 import { useTranslationClient } from "@/app/i18n/client";
 
-import { CITIES_WITH_COUNTRIES } from "../data/cities";
+import { SUPPORTED_CITIES } from "../data/cities";
 
 interface CityPageProps {
   params: Promise<{
@@ -13,8 +13,6 @@ interface CityPageProps {
     city: string;
   }>;
 }
-
-const supportedCities = CITIES_WITH_COUNTRIES.map((city) => city.id);
 
 const TitleAndInfo = ({
   title,
@@ -45,7 +43,7 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
 
   useEffect(() => {
     // On vérifie si nous avons des données complètes pour cette ville
-    if (supportedCities.includes(city)) {
+    if (SUPPORTED_CITIES.includes(city)) {
       setLoading(false);
     } else {
       // Si la ville n'est pas dans nos données complètes, on affiche un message d'erreur
