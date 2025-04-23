@@ -4,6 +4,7 @@ import { logger } from "@vagabond/shared-utils";
 import Image from "next/image";
 import { type ReactElement, useEffect, useState } from "react";
 import React from "react";
+import useLocalStorageState from "use-local-storage-state";
 
 import { useTranslationClient } from "@/app/i18n/client";
 
@@ -36,6 +37,9 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
   const [currentStep, setCurrentStep] = useState<number>(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [recommendedCity, setRecommendedCity] = useState<string | null>(null);
+  const [recommendedCities, setRecommendedCities] = useLocalStorageState<
+    string[]
+  >("recommendedCities", { defaultValue: [] });
   const [cityData, setCityData] = useState<CityRecommendation | null>(null);
   const [formRowId, setFormRowId] = useState<string | number | null>(null); // Nouvel état pour stocker l'ID de la ligne
   const [email, setEmail] = useState<string>("");
@@ -135,7 +139,7 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
       // Préparation des données pour l'API avec les réponses actualisées
       const userResponses = getFormattedAnswersForAPI(currentAnswers);
 
-      // Appel à l'API OpenAI
+      // Appel à l'API OpenAI avec les villes précédemment recommandées
       const response = await fetch("/api/recommend-city", {
         method: "POST",
         headers: {
@@ -144,6 +148,7 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
         body: JSON.stringify({
           responses: userResponses,
           locale: lng,
+          previousCities: recommendedCities, // Envoyer le tableau des villes précédentes
         }),
       });
 
@@ -156,7 +161,21 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
         rowId: number;
       };
 
-      logger.info("city:", data.city);
+      logger.info(
+        "city:",
+        data.city,
+        "previously recommended:",
+        recommendedCities,
+      );
+
+      // Ajouter la nouvelle ville au tableau des villes recommandées seulement si elle n'y est pas déjà
+      if (!recommendedCities.includes(data.city)) {
+        setRecommendedCities([...recommendedCities, data.city]);
+      }
+
+      if (recommendedCities.length > 2) {
+        setRecommendedCities(recommendedCities.slice(1));
+      }
 
       setRecommendedCity(data.city);
       setCityData({
@@ -254,7 +273,7 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
 
               <div className="my-8 grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div className="rounded-lg bg-primary-50 p-4">
-                  <div className="mb-2 text-3xl">⏱️</div>
+                  <div className="mb-2 text-3xl">{"⏱️"}</div>
                   <h3 className="font-semibold">
                     {t("quiz.features.quick.title", { ns: "questions" })}
                   </h3>
@@ -352,8 +371,12 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
             <div className="mb-8">
               {cityData?.city !== undefined && (
                 <h2 className="text-7xl font-bold text-primary">
-                  <span className="blur-md">Lurenberg</span>
-                  <span className="blur-sm"> 🗺️</span>
+                  <span className="blur-md">
+                    {t("quiz.lurenberg", { ns: "questions" })}
+                  </span>
+                  <span className="pl-8 blur-sm">
+                    {t("quiz.city-emoji", { ns: "questions" })}
+                  </span>
                 </h2>
               )}
               <p className="mt-4">
@@ -408,7 +431,7 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
                 <div className="mt-6 rounded-lg bg-primary-50 p-6">
                   <div className="mb-4 flex justify-center">
                     <div className="flex size-16 items-center justify-center rounded-full bg-green-500 text-2xl text-white">
-                      ✓
+                      {t("quiz.checkmark", { ns: "questions" })}
                     </div>
                   </div>
                   <h4 className="mb-4 text-xl font-semibold text-primary">

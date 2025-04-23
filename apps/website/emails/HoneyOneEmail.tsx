@@ -17,7 +17,7 @@ import React, { type ReactNode } from "react";
 import { getBaseUrl } from "@/utils/getBaseUrl";
 
 interface HoneyOneEmailProps {
-  translate?: (key: string) => string;
+  translate?: (key: string, options?: Record<string, string>) => string;
   citySlug: string;
 }
 
@@ -33,6 +33,7 @@ export const HoneyOneEmail = ({
 }: HoneyOneEmailProps): ReactNode => {
   const t = translate ?? ((key: string): string => key);
   const url = `${getBaseUrl()}/quiz/recommend-city/${citySlug}`;
+  const copyrightText = `${t("copyright")} ${new Date().getFullYear()} ${t("vagabond")}`;
 
   return (
     <Tailwind
@@ -147,7 +148,7 @@ export const HoneyOneEmail = ({
             <Hr className="my-8 border-gray-200" />
 
             <Text className="text-center text-xs text-gray-500">
-              © {new Date().getFullYear()} Vagabond
+              {copyrightText}
             </Text>
           </Container>
         </Body>

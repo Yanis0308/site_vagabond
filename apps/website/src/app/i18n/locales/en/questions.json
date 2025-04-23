@@ -39,7 +39,10 @@
         "title": "Magical",
         "description": "Let yourself be surprised by our AI's relevance"
       }
-    }
+    },
+    "lurenberg": "Lurenberg",
+    "city-emoji": "🗺️",
+    "checkmark": "✓"
   },
   "age": {
     "question": "🎂 How old are you?",

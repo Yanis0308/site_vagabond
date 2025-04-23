@@ -3,5 +3,10 @@
     "title": "Discover your next destination",
     "subtitle": "Let yourself be guided to your ideal adventure",
     "cta": "Start the quiz"
+  },
+  "social": {
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "linkedin": "LinkedIn"
   }
 }

@@ -1,6 +1,7 @@
 {
   "top-6-places": "Top 6 Incontournables",
   "taste": "À goûter absolument",
+  "taste-emoji": "🍽️",
   "to-know": {
     "title": "À savoir",
     "language": "🗣️ Langues : ",
@@ -30,7 +31,8 @@
   "home": "Accueil",
   "lisbon": {
     "name": "Lisbonne",
-    "country": "Portugal 🇵🇹",
+    "country": "Portugal",
+    "country-code": "PT",
     "image": "https://mediaim.expedia.com/destination/9/2b68ed01acfa78bb3a6d9424e12bbe12.jpg",
     "title": "Lisbonne, la ville aux couleurs de l'Atlantique",
     "description": "Laissez-vous charmer par Lisbonne, une ville historique et moderne à la fois, où les ruelles pavées côtoient les quartiers branchés et les miradouros offrent des vues imprenables sur l'océan Atlantique. Découvrez notre guide personnalisé qui vous dévoile les lieux incontournables, nos recommandations culinaires et des infos pratiques pour préparer votre été idéal !",
@@ -95,7 +97,8 @@
   },
   "paris": {
     "name": "Paris",
-    "country": "France 🇫🇷",
+    "country": "France",
+    "country-code": "FR",
     "image": "https://media-cdn.tripadvisor.com/media/photo-c/1280x250/17/15/6d/d6/paris.jpg",
     "title": "Paris, la ville lumière et capitale de l'amour",
     "description": "Découvrez Paris, la capitale française, où l'histoire et la modernité se rencontrent dans une harmonie parfaite. Flânez le long de la Seine, explorez les musées de renommée mondiale et savourez la cuisine française dans les bistrots pittoresques. Notre guide vous propose une sélection des lieux incontournables, des spécialités culinaires à ne pas manquer et des conseils pratiques pour un séjour inoubliable.",
@@ -160,7 +163,8 @@
   },
   "madrid": {
     "name": "Madrid",
-    "country": "Espagne 🇪🇸",
+    "country": "Espagne",
+    "country-code": "ES",
     "image": "https://keystoneacademic-res.cloudinary.com/image/upload/v1696428312/articles/educationscom/article-open-graph-image-17358.jpg",
     "title": "Madrid, le cœur vibrant de l'Espagne",
     "description": "Explorez Madrid, la capitale espagnole, où l'art, la culture et la gastronomie se rencontrent dans une ambiance chaleureuse et dynamique. Promenez-vous dans ses rues animées, découvrez ses musées de renommée mondiale et dégustez des tapas dans ses bars traditionnels. Notre guide vous propose une sélection des lieux incontournables, des spécialités culinaires à savourer et des conseils pratiques pour un séjour mémorable.",
@@ -225,7 +229,8 @@
   },
   "tokyo": {
     "name": "Tokyo",
-    "country": "Japon 🇯🇵",
+    "country": "Japon",
+    "country-code": "JP",
     "image": "https://destinationjapon.fr/wp-content/uploads/2019/09/tokyo_shinjuku_blog.jpg",
     "title": "Tokyo, la métropole futuriste et traditionnelle du Japon",
     "description": "Découvrez Tokyo, une ville où la modernité et la tradition se côtoient harmonieusement. Des gratte-ciels scintillants aux temples anciens, Tokyo offre une expérience unique à chaque coin de rue. Plongez dans l'effervescence de ses quartiers animés, savourez la cuisine japonaise authentique et explorez les lieux emblématiques qui font de Tokyo une destination incontournable.",
@@ -290,7 +295,8 @@
   },
   "rome": {
     "name": "Rome",
-    "country": "Italie 🇮🇹",
+    "country": "Italie",
+    "country-code": "IT",
     "image": "https://www.walksinsiderome.com/wp-content/uploads/2019/07/View_of_Rome_from_Castel_Sant_Angelo-tSa-825X400.jpg",
     "title": "Rome, la ville éternelle au cœur de l'histoire",
     "description": "Plongez dans l'histoire fascinante de Rome, la capitale italienne où chaque rue raconte une histoire millénaire. Des ruines antiques aux fontaines baroques, Rome est un musée à ciel ouvert. Découvrez ses monuments emblématiques, savourez la cuisine italienne authentique et laissez-vous séduire par l'atmosphère unique de la ville éternelle.",
@@ -355,7 +361,8 @@
   },
   "milan": {
     "name": "Milan",
-    "country": "Italie 🇮🇹",
+    "country": "Italie",
+    "country-code": "IT",
     "image": "https://images.theconversation.com/files/276383/original/file-20190524-187185-lqo304.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1000&fit=clip",
     "title": "Milan, la capitale de la mode et du design",
     "description": "Découvrez Milan, une ville où l'élégance et l'innovation se rencontrent. Connue pour être la capitale de la mode, Milan est également riche en histoire et en culture. Explorez ses monuments emblématiques, flânez dans ses quartiers branchés et savourez la cuisine milanaise dans ses trattorias traditionnelles. Notre guide vous propose une sélection des lieux incontournables, des spécialités culinaires à déguster et des conseils pratiques pour un séjour inoubliable.",
@@ -420,7 +427,8 @@
   },
   "new-york": {
     "name": "New York",
-    "country": "États-Unis 🇺🇸",
+    "country": "États-Unis",
+    "country-code": "US",
     "image": "https://www.nyc.fr/wp-content/uploads/2015/07/New_York_City-scaled.jpg",
     "title": "New York, la ville qui ne dort jamais",
     "description": "Découvrez New York, une métropole vibrante et cosmopolite où chaque quartier offre une expérience unique. De l'emblématique Statue de la Liberté aux lumières éblouissantes de Times Square, New York est une ville de contrastes et d'énergie. Explorez ses parcs, ses musées de renommée mondiale et savourez la cuisine new-yorkaise dans ses nombreux restaurants et food trucks.",
@@ -485,7 +493,8 @@
   },
   "amsterdam": {
     "name": "Amsterdam",
-    "country": "Pays-Bas 🇧🇪",
+    "country": "Pays-Bas",
+    "country-code": "BE",
     "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/43/2c/43/les-maison-typiques-a.jpg?w=1200&h=1200&s=1",
     "title": "Amsterdam, la Venise du Nord",
     "description": "Explorez Amsterdam, une ville où l'histoire et la modernité se rencontrent le long de ses célèbres canaux. Connue pour ses musées de renommée mondiale, ses maisons à pignons et son ambiance décontractée, Amsterdam est une destination incontournable pour les amateurs de culture et de détente. Découvrez ses quartiers pittoresques, savourez les spécialités néerlandaises et profitez d'une croisière sur les canaux pour admirer la ville sous un autre angle.",
@@ -550,7 +559,8 @@
   },
   "sydney": {
     "name": "Sydney",
-    "country": "Australie 🇦🇺",
+    "country": "Australie",
+    "country-code": "AU",
     "image": "https://content.r9cdn.net/rimg/dimg/12/98/b1e36771-city-2258-163f4d7f814.jpg?crop=true&width=1020&height=498",
     "title": "Sydney, la perle de l'Australie",
     "description": "Découvrez Sydney, une ville dynamique et cosmopolite où la nature et l'urbanisme se rencontrent harmonieusement. De l'emblématique Opéra de Sydney aux plages de sable doré de Bondi, Sydney offre une multitude d'activités pour tous les goûts. Explorez ses jardins botaniques luxuriants, ses quartiers historiques et savourez la cuisine australienne dans ses nombreux restaurants et cafés.",
@@ -615,7 +625,8 @@
   },
   "singapore": {
     "name": "Singapour",
-    "country": "Singapour 🇸🇬",
+    "country": "Singapour",
+    "country-code": "SG",
     "image": "https://abouttravel.ch/wp-content/uploads/2022/04/Singapore-Skyline-MBS-and-Esplanade-@Singapore-Tourism-Board-scaled-e1678964210575-1392x770.jpg",
     "title": "Singapour, la ville jardin futuriste",
     "description": "Découvrez Singapour, une ville-état où la modernité rencontre la nature luxuriante. Connue pour ses gratte-ciels emblématiques et ses jardins spectaculaires, Singapour est une destination incontournable pour les amateurs de culture, de shopping et de gastronomie. Explorez ses quartiers multiculturels, savourez des plats locaux uniques et admirez les vues panoramiques depuis ses nombreux points d'observation.",
@@ -680,7 +691,8 @@
   },
   "barcelona": {
     "name": "Barcelone",
-    "country": "Espagne 🇪🇸",
+    "country": "Espagne",
+    "country-code": "ES",
     "image": "https://maybanton.com/wp-content/uploads/2023/07/Barcelone-sagrada-familia-vue-drone.jpg",
     "title": "Barcelone, la ville de Gaudí et des plages ensoleillées",
     "description": "Découvrez Barcelone, une ville vibrante où l'architecture moderniste de Gaudí se mêle à l'énergie méditerranéenne. Promenez-vous le long de La Rambla, explorez les ruelles du Quartier Gothique et détendez-vous sur les plages de Barceloneta. Savourez la cuisine catalane avec ses tapas et paellas, et laissez-vous séduire par l'atmosphère unique de cette métropole ensoleillée.",
@@ -745,7 +757,8 @@
   },
   "taipei": {
     "name": "Taipei",
-    "country": "Taïwan 🇹🇼",
+    "country": "Taïwan",
+    "country-code": "TW",
     "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/06/d7/dc/f6/bigphotofortaipei.jpg?w=1100&h=1100&s=1",
     "title": "Taipei, la ville aux mille saveurs et paysages",
     "description": "Découvrez Taipei, la capitale dynamique de Taïwan, où la modernité rencontre la tradition. Des gratte-ciels emblématiques comme le Taipei 101 aux marchés nocturnes animés, Taipei offre une expérience unique à chaque visiteur. Explorez ses temples historiques, ses parcs nationaux verdoyants et savourez la cuisine taïwanaise réputée dans le monde entier.",
@@ -810,7 +823,8 @@
   },
   "seoul": {
     "name": "Séoul",
-    "country": "Corée du Sud 🇰🇷",
+    "country": "Corée du Sud",
+    "country-code": "KR",
     "image": "https://as2.ftcdn.net/v2/jpg/03/10/19/93/1000_F_310199357_3BLG8tbr1y1rmcUXhjCdbuuRbIUF2UVw.jpg",
     "title": "Séoul, la métropole vibrante de la Corée du Sud",
     "description": "Découvrez Séoul, une ville où la tradition rencontre la modernité. Des palais royaux aux gratte-ciels futuristes, Séoul offre une expérience unique à chaque visiteur. Explorez ses quartiers animés, savourez la cuisine coréenne authentique et plongez dans la culture dynamique de cette capitale asiatique.",
@@ -875,7 +889,8 @@
   },
   "london": {
     "name": "Londres",
-    "country": "Royaume-Uni 🇬🇧",
+    "country": "Royaume-Uni",
+    "country-code": "GB",
     "image": "https://cdn.generationvoyage.fr/2019/09/londres-panorama-the-shard.jpg",
     "title": "Londres, la ville cosmopolite et historique",
     "description": "Explorez Londres, une ville où l'histoire royale rencontre la modernité vibrante. Des monuments emblématiques comme le Palais de Buckingham et la Tour de Londres aux quartiers animés de Covent Garden, Londres offre une expérience unique à chaque visiteur. Découvrez ses musées de renommée mondiale, savourez la cuisine britannique traditionnelle et profitez de l'atmosphère dynamique de cette métropole internationale.",
@@ -940,7 +955,8 @@
   },
   "dubai": {
     "name": "Dubaï",
-    "country": "Émirats arabes unis 🇦🇪",
+    "country": "Émirats arabes unis",
+    "country-code": "AE",
     "image": "https://www.agoda.com/wp-content/uploads/2024/04/Featured-image-Dubai-UAE.jpg",
     "title": "Dubaï, la ville de l'extravagance et de l'innovation",
     "description": "Découvrez Dubaï, une métropole futuriste où l'architecture audacieuse rencontre le luxe et l'innovation. Des gratte-ciels emblématiques comme le Burj Khalifa aux îles artificielles de Palm Jumeirah, Dubaï est une destination qui ne cesse d'émerveiller. Explorez ses centres commerciaux gigantesques, ses plages ensoleillées et savourez la cuisine locale dans ses nombreux restaurants.",
@@ -1005,7 +1021,8 @@
   },
   "berlin": {
     "name": "Berlin",
-    "country": "Allemagne 🇩🇪",
+    "country": "Allemagne",
+    "country-code": "DE",
     "image": "https://www.berlin.de/binaries/asset/image_assets/7927302/ratio_2_1/1708697002/1500x750/",
     "title": "Berlin, la ville de l'histoire et de la modernité",
     "description": "Découvrez Berlin, une ville où l'histoire se mêle à l'innovation. De la porte de Brandebourg au mur de Berlin, en passant par l'île aux musées, Berlin offre une richesse culturelle et historique incomparable. Explorez ses monuments emblématiques, ses parcs verdoyants et savourez la cuisine allemande dans ses nombreux restaurants et cafés.",
@@ -1070,7 +1087,8 @@
   },
   "osaka": {
     "name": "Osaka",
-    "country": "Japon 🇯🇵",
+    "country": "Japon",
+    "country-code": "JP",
     "image": "https://images.ctfassets.net/bth3mlrehms2/1lSMhsRFLihJX0ZGLtroyq/140c6820e05d22b837122238bfe3d61a/Dotonbori_strasse__Osaka__Japan.jpg",
     "title": "Osaka, la cuisine de rue et l'énergie urbaine du Japon",
     "description": "Découvrez Osaka, une ville dynamique et accueillante, connue pour sa cuisine de rue délicieuse et son ambiance animée. Des monuments historiques comme le château d'Osaka aux quartiers vibrants de Dotonbori, Osaka offre une expérience unique à chaque visiteur. Explorez ses attractions modernes, savourez des spécialités culinaires locales et plongez dans la culture japonaise authentique.",
@@ -1135,7 +1153,8 @@
   },
   "bangkok": {
     "name": "Bangkok",
-    "country": "Thaïlande 🇹🇭",
+    "country": "Thaïlande",
+    "country-code": "TH",
     "image": "https://content.r9cdn.net/rimg/dimg/21/e1/c054fc24-city-26166-176726042eb.jpg?width=1366&height=768&xhint=2881&yhint=1499&crop=true",
     "title": "Bangkok, la ville des anges et des temples dorés",
     "description": "Découvrez Bangkok, une ville vibrante où la tradition rencontre la modernité. Des temples majestueux comme le Grand Palais et Wat Phra Kaew aux marchés animés de Khao San Road, Bangkok offre une expérience unique à chaque visiteur. Explorez ses marchés flottants, savourez la cuisine thaïlandaise authentique et plongez dans l'effervescence de cette métropole asiatique.",
@@ -1200,7 +1219,8 @@
   },
   "los-angeles": {
     "name": "Los Angeles",
-    "country": "États-Unis 🇺🇸",
+    "country": "États-Unis",
+    "country-code": "US",
     "image": "https://www.agoda.com/wp-content/uploads/2024/02/Featured-image-Los-Angeles-during-sunset.jpg",
     "title": "Los Angeles, la cité des anges et du cinéma",
     "description": "Découvrez Los Angeles, une ville où le glamour d'Hollywood rencontre les plages ensoleillées de la Californie. Des icônes comme le Hollywood Sign et le Walk of Fame aux attractions modernes comme Universal Studios, L.A. offre une expérience inoubliable. Explorez ses quartiers diversifiés, savourez la cuisine locale et profitez de l'ambiance décontractée de la côte ouest.",
@@ -1265,7 +1285,8 @@
   },
   "istanbul": {
     "name": "Istanbul",
-    "country": "Turquie 🇹🇷",
+    "country": "Turquie",
+    "country-code": "TR",
     "image": "https://cdn.generationvoyage.fr/2021/01/istanbul.jpg",
     "title": "Istanbul, la ville aux mille et une merveilles",
     "description": "Découvrez Istanbul, une ville où l'Orient rencontre l'Occident. Des monuments historiques comme Sainte-Sophie et la Mosquée Bleue aux marchés animés du Grand Bazar, Istanbul offre une expérience unique à chaque visiteur. Explorez ses palais majestueux, savourez la cuisine turque authentique et profitez d'une croisière sur le Bosphore pour admirer la ville sous un autre angle.",
@@ -1330,7 +1351,8 @@
   },
   "melbourne": {
     "name": "Melbourne",
-    "country": "Australie 🇦🇺",
+    "country": "Australie",
+    "country-code": "AU",
     "image": "https://www.meltour.com/content/uploads/2024/10/visites-immanquables-melbourne-slider.webp",
     "title": "Melbourne, la capitale culturelle de l'Australie",
     "description": "Découvrez Melbourne, une ville dynamique et cosmopolite, réputée pour sa scène artistique florissante et sa cuisine diversifiée. Des icônes architecturales comme Federation Square aux plages ensoleillées de St Kilda, Melbourne offre une expérience unique à chaque visiteur. Explorez ses marchés animés, ses jardins luxuriants et savourez un café Flat White dans l'un de ses nombreux cafés branchés.",
@@ -1395,7 +1417,8 @@
   },
   "hong-kong": {
     "name": "Hong Kong",
-    "country": "Hong Kong 🇭🇰",
+    "country": "Hong Kong",
+    "country-code": "HK",
     "image": "https://static-cms.routard.com/web-routard/uploads/Hong_Kong_efcea3a2b6.jpg",
     "title": "Hong Kong, la perle de l'Orient",
     "description": "Découvrez Hong Kong, une ville où l'Orient rencontre l'Occident, offrant un mélange unique de gratte-ciels modernes et de traditions anciennes. Des vues panoramiques depuis Victoria Peak aux marchés animés de Mong Kok, Hong Kong est une destination vibrante et dynamique. Explorez ses temples historiques, profitez d'une croisière sur le Star Ferry et savourez la cuisine cantonaise authentique.",
@@ -1460,7 +1483,8 @@
   },
   "munich": {
     "name": "Munich",
-    "country": "Allemagne 🇩🇪",
+    "country": "Allemagne",
+    "country-code": "DE",
     "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/501000/501501-munich.jpg",
     "title": "Munich, la capitale bavaroise de la culture et de la bière",
     "description": "Découvrez Munich, une ville où l'histoire bavaroise rencontre la modernité. Des places animées comme Marienplatz aux vastes espaces verts de l'Englischer Garten, Munich offre une expérience unique à chaque visiteur. Explorez ses châteaux majestueux, ses musées de renommée mondiale et savourez la cuisine bavaroise traditionnelle dans ses brasseries emblématiques.",
@@ -1525,7 +1549,8 @@
   },
   "las-vegas": {
     "name": "Las Vegas",
-    "country": "États-Unis 🇺🇸",
+    "country": "États-Unis",
+    "country-code": "US",
     "image": "https://media-cdn.tripadvisor.com/media/attractions-content--1x-1/12/85/9e/df.jpg?f=webp&w=300&h=200",
     "title": "Las Vegas, la ville du divertissement et de l'extravagance",
     "description": "Découvrez Las Vegas, une ville où le glamour et le divertissement se rencontrent au cœur du désert du Nevada. Des lumières scintillantes du Strip aux spectacles époustouflants, Las Vegas offre une expérience inoubliable à chaque visiteur. Explorez ses casinos emblématiques, profitez de ses buffets à volonté et partez à l'aventure avec une excursion au Grand Canyon ou à la Vallée de la Mort.",
@@ -1590,7 +1615,8 @@
   },
   "florence": {
     "name": "Florence",
-    "country": "Italie 🇮🇹",
+    "country": "Italie",
+    "country-code": "IT",
     "image": "https://static1.evcdn.net/images/reduction/1593118_w-3840_h-2160_q-70_m-crop.jpg",
     "title": "Florence, la capitale de la Renaissance",
     "description": "Découvrez Florence, une ville emblématique de l'art et de l'histoire, où chaque coin de rue raconte une histoire. Des chefs-d'œuvre architecturaux comme le Duomo et le Campanile de Giotto aux trésors artistiques de la Galerie des Offices, Florence est un véritable musée à ciel ouvert. Flânez le long du Ponte Vecchio, explorez les jardins de Boboli et savourez la cuisine toscane dans ses trattorias traditionnelles.",
@@ -1655,7 +1681,8 @@
   },
   "prague": {
     "name": "Prague",
-    "country": "République tchèque 🇨🇿",
+    "country": "République tchèque",
+    "country-code": "CZ",
     "image": "https://www.thetrainline.com/content/vul/hero-images/city/prague/1x.jpg",
     "title": "Prague, la ville aux mille tours et aux légendes",
     "description": "Découvrez Prague, la capitale magique de la République tchèque, célèbre pour son architecture médiévale et ses charmantes ruelles pavées. Du majestueux Château de Prague à l'emblématique Pont Charles, chaque coin de la ville raconte une histoire. Explorez la Place de la Vieille Ville avec son horloge astronomique, flânez dans le quartier juif et savourez la cuisine locale dans ses nombreux restaurants.",
@@ -1720,7 +1747,8 @@
   },
   "dublin": {
     "name": "Dublin",
-    "country": "Irlande 🇮🇪",
+    "country": "Irlande",
+    "country-code": "IE",
     "image": "https://img.lonelyplanet.fr/s3fs-public/styles/wide/public/import/destination/slider/descktop/500px_100904953.jpg.webp?itok=AsvMv5vb",
     "title": "Dublin, la capitale vibrante de l'Irlande",
     "description": "Découvrez Dublin, une ville riche en histoire et en culture, où la tradition irlandaise se mêle à une atmosphère moderne et dynamique. Des institutions emblématiques comme Trinity College et la cathédrale Saint-Patrick aux pubs animés de Temple Bar, Dublin offre une expérience unique à chaque visiteur. Explorez ses châteaux, savourez la cuisine locale et profitez d'une pinte de Guinness dans l'un de ses célèbres pubs.",
@@ -1785,7 +1813,8 @@
   },
   "kyoto": {
     "name": "Kyoto",
-    "country": "Japon 🇯🇵",
+    "country": "Japon",
+    "country-code": "JP",
     "image": "https://content.r9cdn.net/rimg/dimg/83/d4/85f68013-city-20339-16489ec9b8b.jpg?width=1200&height=630&xhint=1444&yhint=1011&crop=true",
     "title": "Kyoto, la ville des temples et de la tradition",
     "description": "Découvrez Kyoto, l'ancienne capitale du Japon, célèbre pour ses temples historiques, ses jardins zen et sa culture traditionnelle. Des sites emblématiques comme Kinkaku-ji (Pavillon d'Or) et Fushimi Inari Taisha aux ruelles pittoresques de Gion, Kyoto offre une expérience inoubliable. Explorez ses forêts de bambous, savourez la cuisine kaiseki et laissez-vous envoûter par l'atmosphère sereine de cette ville unique.",
@@ -1850,7 +1879,8 @@
   },
   "vienna": {
     "name": "Vienne",
-    "country": "Autriche 🇦🇹",
+    "country": "Autriche",
+    "country-code": "AT",
     "image": "https://static2-viaggi.corriereobjects.it/wp-content/uploads/2015/06/vienna-iStock-1196925572-min.jpg?v=1690823555",
     "title": "Vienne, la ville de la musique et de l'histoire",
     "description": "Découvrez Vienne, la capitale autrichienne, célèbre pour son riche patrimoine culturel et son ambiance romantique. Des palais majestueux comme le Palais de Schönbrunn à la magnifique Cathédrale Saint-Étienne, Vienne est un véritable joyau européen. Explorez ses musées de renommée mondiale, assistez à un opéra et savourez la délicieuse cuisine viennoise dans ses cafés historiques.",
@@ -1915,7 +1945,8 @@
   },
   "venice": {
     "name": "Venise",
-    "country": "Italie 🇮🇹",
+    "country": "Italie",
+    "country-code": "IT",
     "image": "https://www.votretourdumonde.com/wp-content/uploads/2017/04/que-visiter-a-venise-1.jpg",
     "title": "Venise, la ville des canaux et des gondoles",
     "description": "Découvrez Venise, une ville unique construite sur l'eau, célèbre pour ses canaux romantiques, ses ponts historiques et son architecture époustouflante. De la majestueuse Place Saint-Marc à la beauté du Palais des Doges, chaque coin de Venise est un véritable chef-d'œuvre. Profitez d'une balade en gondole, explorez l'île de Murano et savourez la délicieuse cuisine vénitienne.",
@@ -1980,7 +2011,8 @@
   },
   "kuala-lumpur": {
     "name": "Kuala Lumpur",
-    "country": "Malaisie 🇲🇾",
+    "country": "Malaisie",
+    "country-code": "MY",
     "image": "https://content.r9cdn.net/rimg/dimg/1e/f2/0916f4b2-city-4723-1628829b6c4.jpg?width=1366&height=768&xhint=1334&yhint=1020&crop=true",
     "title": "Kuala Lumpur, la capitale dynamique de la Malaisie",
     "description": "Découvrez Kuala Lumpur, une ville moderne et cosmopolite, célèbre pour ses gratte-ciels emblématiques et sa culture diversifiée. Des tours jumelles Petronas aux grottes de Batu, Kuala Lumpur offre une expérience unique mêlant tradition et modernité. Explorez ses musées, ses parcs luxuriants et savourez la délicieuse cuisine malaisienne dans ses nombreux restaurants et marchés.",
@@ -2045,7 +2077,8 @@
   },
   "athens": {
     "name": "Athènes",
-    "country": "Grèce 🇬🇷",
+    "country": "Grèce",
+    "country-code": "GR",
     "image": "https://hiddendoorwaystravel.com/wp-content/uploads/2024/09/jim-niakaris-L1_JWFc_s3M-unsplash.jpg",
     "title": "Athènes, la ville des dieux et de l'histoire",
     "description": "Découvrez Athènes, la capitale de la Grèce et le berceau de la civilisation occidentale. Des monuments emblématiques comme l'Acropole et le Parthénon aux charmantes ruelles de Plaka, Athènes est une ville où l'histoire et la culture se rencontrent. Explorez ses musées fascinants, savourez la délicieuse cuisine grecque et imprégnez-vous de l'atmosphère vibrante de cette métropole historique.",
@@ -2110,7 +2143,8 @@
   },
   "toronto": {
     "name": "Toronto",
-    "country": "Canada 🇨🇦",
+    "country": "Canada",
+    "country-code": "CA",
     "image": "https://www.canada-en-liberte.com/uploads/sites/72/2020/10/vue-maritime-building-ville-toronto-canada.jpeg",
     "title": "Toronto, la métropole canadienne dynamique",
     "description": "Découvrez Toronto, la plus grande ville du Canada, connue pour sa diversité culturelle, ses gratte-ciels emblématiques et son ambiance vibrante. De la célèbre CN Tower aux îles de Toronto, cette ville offre une multitude d'activités et de sites à explorer. Profitez de ses marchés animés, de ses quartiers historiques et savourez la délicieuse cuisine locale dans ses nombreux restaurants.",
@@ -2175,7 +2209,8 @@
   },
   "miami": {
     "name": "Miami",
-    "country": "États-Unis 🇺🇸",
+    "country": "États-Unis",
+    "country-code": "US",
     "image": "https://www.partir-en-voyage.com/wp-content/uploads/2024/06/visiter-miami-floride.jpg",
     "title": "Miami, la ville ensoleillée et vibrante",
     "description": "Découvrez Miami, une ville dynamique connue pour ses plages ensoleillées, sa culture diversifiée et son ambiance festive. Des quartiers emblématiques comme South Beach et Little Havana aux œuvres d'art colorées des Wynwood Walls, Miami offre une expérience unique. Profitez de ses musées, de ses jardins luxuriants et savourez la délicieuse cuisine locale dans ses nombreux restaurants et marchés.",
@@ -2240,7 +2275,8 @@
   },
   "san-francisco": {
     "name": "San Francisco",
-    "country": "États-Unis 🇺🇸",
+    "country": "États-Unis",
+    "country-code": "US",
     "image": "https://www.guidesulysse.com/images/destinations/iStock-1288289526.jpg",
     "title": "San Francisco, la ville aux collines et à l’âme bohème",
     "description": "Cap sur San Francisco, la perle de la côte ouest américaine ! Entre ses emblématiques tramways, ses quartiers hauts en couleur et ses vues spectaculaires sur le Pacifique, la ville séduit les voyageurs en quête d’originalité. Suivez notre guide pour découvrir les lieux incontournables, les spécialités gourmandes locales et nos conseils pratiques pour explorer cette ville mythique en toute sérénité.",
@@ -2305,7 +2341,8 @@
   },
   "copenhagen": {
     "name": "Copenhague",
-    "country": "Danemark 🇩🇰",
+    "country": "Danemark",
+    "country-code": "DK",
     "image": "https://cdn.generationvoyage.fr/2019/02/copenhagen_1550592955-e1550592969534.jpg",
     "title": "Copenhague, la perle scandinave au charme unique",
     "description": "Découvrez Copenhague, une capitale où la modernité scandinave s'harmonise parfaitement avec l'histoire. Entre canaux pittoresques, design avant-gardiste et atmosphère hygge, laissez-vous séduire par cette ville à taille humaine. Notre guide vous propose les sites incontournables, les spécialités culinaires et toutes les informations pratiques pour profiter pleinement de votre séjour dans la capitale danoise.",
@@ -2342,7 +2379,7 @@
       },
       {
         "name": "Frikadeller - Boulettes de viande danoises",
-        "image": "https://foodieadvice.com/storage/foods/360/large.jpg?time=1551535821"
+        "image": "https://s3.amazonaws.com/grazecart/redhouseranchllc/images/1668201287_636ebb47c28eb.jpg"
       },
       {
         "name": "Kanelsnegl - Roulé à la cannelle",
@@ -2370,7 +2407,8 @@
   },
   "zurich": {
     "name": "Zurich",
-    "country": "Suisse 🇨🇭",
+    "country": "Suisse",
+    "country-code": "CH",
     "image": "https://img.static-kl.com/images/media/506F5E1C-28C1-4555-A238CB9D4AD6039E",
     "title": "Zurich, l'élégance suisse entre lac et montagnes",
     "description": "Découvrez Zurich, joyau de la Suisse où précision helvétique et qualité de vie exceptionnelle se rencontrent. Entre son lac cristallin, ses rues historiques et sa scène culturelle dynamique, cette ville cosmopolite vous séduira par son équilibre parfait entre nature et urbanisme. Notre guide vous dévoile les lieux incontournables, les délices culinaires et tous les conseils pratiques pour profiter pleinement de votre séjour.",
@@ -2435,7 +2473,8 @@
   },
   "pattaya": {
     "name": "Pattaya",
-    "country": "Thaïlande 🇹🇭",
+    "country": "Thaïlande",
+    "country-code": "TH",
     "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/33/fb/5c/pattaya.jpg?w=1400&h=1400&s=1",
     "title": "Pattaya, joyau tropical entre fête et traditions",
     "description": "Explorez Pattaya, cette fascinante station balnéaire thaïlandaise où l'effervescence nocturne côtoie la spiritualité et la beauté naturelle. Entre plages de sable fin, temples majestueux et animations urbaines, découvrez une destination aux multiples facettes. Notre guide vous dévoile les sites emblématiques, les délices culinaires et toutes les informations essentielles pour profiter pleinement de cette perle du golfe de Thaïlande.",
@@ -2501,7 +2540,8 @@
   },
   "stockholm": {
     "name": "Stockholm",
-    "country": "Suède 🇸🇪",
+    "country": "Suède",
+    "country-code": "SE",
     "image": "https://ulysse.com/news/wp-content/uploads/2024/05/La-ville-de-Stockholm-en-Suede-.jpg",
     "title": "Stockholm, l'élégante capitale nordique sur l'eau",
     "description": "Découvrez Stockholm, ville royale bâtie sur 14 îles, où modernité scandinave et histoire médiévale se rencontrent dans un cadre naturel exceptionnel. Entre ses ruelles pavées, ses musées innovants et son archipel pittoresque, la capitale suédoise offre une expérience urbaine unique alliant design, culture et proximité avec la nature. Notre guide vous dévoile les lieux emblématiques, les délices culinaires et les conseils pratiques pour profiter pleinement de votre séjour dans cette perle de la Baltique.",
@@ -2538,7 +2578,7 @@
       },
       {
         "name": "Gravlax - Saumon mariné aux herbes",
-        "image": "https://foodieadvice.com/storage/foods/209/large.jpg?time=1547664204"
+        "image": "https://i0.wp.com/cuisinovores.com/wp-content/uploads/2024/10/photo_saumon_gravlax_cuisinovores.webp?fit=500,500&ssl=1"
       },
       {
         "name": "Kanelbulle - Brioche à la cannelle",
@@ -2566,7 +2606,8 @@
   },
   "mexico-city": {
     "name": "Mexico",
-    "country": "Mexique 🇲🇽",
+    "country": "Mexique",
+    "country-code": "MX",
     "image": "https://www.datocms-assets.com/32623/1740433865-basilica_mexico_city-2.png?fm=png&w=1200",
     "title": "Mexico City, mégapole culturelle aux mille contrastes",
     "description": "Plongez dans l'effervescence de Mexico, capitale fascinante où se mêlent histoire précolombienne, architecture coloniale et dynamisme contemporain. Entre ses quartiers historiques, ses musées renommés et sa gastronomie classée au patrimoine mondial, cette métropole vibrante vous offre une immersion captivante dans la culture mexicaine. Découvrez notre guide des incontournables, des délices culinaires et des conseils pratiques pour naviguer dans cette mégapole aux multiples facettes.",
@@ -2632,7 +2673,8 @@
   },
   "sao-paulo": {
     "name": "São Paulo",
-    "country": "Brésil 🇧🇷",
+    "country": "Brésil",
+    "country-code": "BR",
     "image": "https://img.lonelyplanet.fr/s3fs-public/styles/wide/public/import/destination/slider/descktop/shutterstock_153080222.jpg.webp?itok=cbnoNpx-",
     "title": "São Paulo, l'effervescente mégalopole brésilienne",
     "description": "Découvrez São Paulo, la plus grande ville d'Amérique Latine, où gratte-ciels vertigineux et quartiers historiques cohabitent dans une énergie incomparable. Centre économique et culturel du Brésil, cette métropole cosmopolite vous séduira par sa diversité architecturale, sa scène gastronomique exceptionnelle et sa vie nocturne légendaire. Notre guide vous dévoile les lieux emblématiques, les saveurs incontournables et les conseils pratiques pour naviguer dans cette jungle urbaine fascinante.",
@@ -2698,7 +2740,8 @@
   },
   "phuket": {
     "name": "Phuket",
-    "country": "Thaïlande 🇹🇭",
+    "country": "Thaïlande",
+    "country-code": "TH",
     "image": "https://media-cdn.tripadvisor.com/media/photo-m/1280/1b/4b/5d/c8/caption.jpg",
     "title": "Phuket, le joyau tropical de la mer d'Andaman",
     "description": "Découvrez Phuket, la plus grande île de Thaïlande, où se mêlent plages de sable blanc, eaux cristallines et culture locale vibrante. Entre ses temples majestueux, ses paysages à couper le souffle et sa gastronomie réputée, ce paradis tropical offre un équilibre parfait entre détente balnéaire et aventures exotiques. Notre guide vous dévoile les sites incontournables, les délices culinaires et tous les conseils pratiques pour profiter pleinement de votre séjour dans ce coin idyllique de la Thaïlande.",
@@ -2764,7 +2807,8 @@
   },
   "budapest": {
     "name": "Budapest",
-    "country": "Hongrie 🇭🇺",
+    "country": "Hongrie",
+    "country-code": "HU",
     "image": "https://cdn.shortpixel.ai/spai/q_lossy+w_977+to_auto+ret_img/www.budapestcard.org/fr/wp-content/uploads/sites/4/home-banner-1724050278.jpg",
     "title": "Budapest, la perle du Danube aux mille facettes",
     "description": "Plongez dans l'univers envoûtant de Budapest, ville au charme incomparable où le Danube sépare majestueusement les collines de Buda des plaines de Pest. Entre son architecture néogothique, ses bains thermaux centenaires et son ambiance bohème, la capitale hongroise vous offre un voyage à travers le temps et les cultures. Notre guide vous dévoile les sites incontournables, les spécialités gastronomiques et tous les conseils pratiques pour explorer cette métropole au patrimoine exceptionnel.",
@@ -2830,7 +2874,8 @@
   },
   "honolulu": {
     "name": "Honolulu",
-    "country": "États-Unis 🇺🇸",
+    "country": "États-Unis",
+    "country-code": "US",
     "image": "https://www.gohawaii.com/sites/default/files/styles/image_gallery_bg_xl/public/hero-unit-images/Oahu-Honolulu-Aerial-Hero-2_1.jpg.webp?itok=VnmBzTQH",
     "title": "Honolulu, paradis tropical entre océan et volcans",
     "description": "Découvrez Honolulu, capitale d'Hawaï où l'atmosphère détendue des îles du Pacifique rencontre le dynamisme américain. Entre ses plages iconiques, ses montagnes volcaniques et sa riche diversité culturelle, cette métropole tropicale vous séduira par son ambiance unique mêlant influences polynésiennes, asiatiques et occidentales. Notre guide vous dévoile les sites emblématiques, les saveurs locales et tous les conseils pratiques pour profiter pleinement de votre séjour dans ce coin de paradis.",
@@ -2896,7 +2941,8 @@
   },
   "beijing": {
     "name": "Pékin",
-    "country": "Chine 🇨🇳",
+    "country": "Chine",
+    "country-code": "CN",
     "image": "https://www.unido.org/sites/default/files/2024-03/ITPO%20Beijing.jpg",
     "title": "Pékin, capitale millénaire entre tradition et modernité",
     "description": "Explorez Pékin, carrefour fascinant où l'histoire impériale et la Chine contemporaine se rencontrent dans une symphonie urbaine unique. Entre ses palais ancestraux, ses hutongs authentiques et ses gratte-ciels futuristes, la capitale chinoise vous invite à un voyage extraordinaire à travers les époques. Notre guide vous présente les sites emblématiques, les délices culinaires et toutes les informations essentielles pour découvrir cette métropole captivante où traditions millénaires et ambitions modernes coexistent harmonieusement.",
@@ -2963,7 +3009,8 @@
   },
   "seville": {
     "name": "Séville",
-    "country": "Espagne 🇪🇸",
+    "country": "Espagne",
+    "country-code": "ES",
     "image": "https://www.spain.info/export/sites/segtur/.content/imagenes/cabeceras-grandes/andalucia/vista-sevilla-s1035089014.jpg",
     "title": "Séville, joyau andalou aux parfums d'oranger",
     "description": "Laissez-vous envoûter par Séville, capitale andalouse où l'héritage mauresque rencontre la passion espagnole dans un décor de rêve. Entre ses palais somptueux, ses places ombragées et ses ruelles parfumées aux fleurs d'orangers, cette ville ensoleillée vous séduira par son élégance artistique et sa joie de vivre contagieuse. Notre guide vous révèle les trésors incontournables, les délices gastronomiques et tous les conseils pratiques pour savourer pleinement cette perle du sud de l'Espagne.",
@@ -3030,7 +3077,8 @@
   },
   "doha": {
     "name": "Doha",
-    "country": "Qatar 🇶🇦",
+    "country": "Qatar",
+    "country-code": "QA",
     "image": "https://www.qatarairways.com/content/dam/images/renditions/horizontal-2/destinations/qatar/doha/h2-doha-city.jpg",
     "title": "Doha, perle futuriste entre désert et golfe Persique",
     "description": "Découvrez Doha, capitale en pleine métamorphose où traditions ancestrales et architecture avant-gardiste créent un contraste saisissant. Entre ses souks authentiques, ses musées de classe mondiale et ses gratte-ciels spectaculaires, cette métropole du Golfe vous offre un voyage unique à travers le temps et les cultures. Notre guide vous dévoile les attractions phares, les saveurs locales et tous les conseils pratiques pour explorer ce joyau du Moyen-Orient où luxe et hospitalité bédouine se rencontrent harmonieusement.",
@@ -3097,7 +3145,8 @@
   },
   "abu-dhabi": {
     "name": "Abu Dhabi",
-    "country": "Émirats arabes unis 🇦🇪",
+    "country": "Émirats arabes unis",
+    "country-code": "AE",
     "image": "https://www.jipsee.fr/wp-content/uploads/2023/12/abu-dhabi-1024x576.jpg",
     "title": "Abu Dhabi, l'oasis de luxe entre tradition et futurisme",
     "description": "Explorez Abu Dhabi, capitale des Émirats arabes unis, où splendeur architecturale et héritage bédouin s'entremêlent dans un écrin désertique bordé par les eaux turquoise du Golfe Persique. Entre ses mosquées majestueuses, ses musées avant-gardistes et ses complexes hôteliers somptueux, cette métropole du futur vous invite à une expérience où le raffinement côtoie la tradition avec élégance. Notre guide vous dévoile les sites emblématiques, les spécialités culinaires et tous les conseils pratiques pour découvrir cette perle du Moyen-Orient.",
@@ -3164,7 +3213,8 @@
   },
   "antalya": {
     "name": "Antalya",
-    "country": "Turquie 🇹🇷",
+    "country": "Turquie",
+    "country-code": "TR",
     "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/97/4c/d1/20151030-095049-largejpg.jpg?w=1400&h=1400&s=1",
     "title": "Antalya, joyau de la Riviera turque entre mer et montagne",
     "description": "Découvrez Antalya, perle de la côte méditerranéenne turque, où l'histoire millénaire se mêle harmonieusement aux plaisirs balnéaires dans un cadre naturel époustouflant. Entre son centre historique pittoresque, ses plages de sable fin et ses vestiges antiques, cette destination vous séduira par sa diversité et son authenticité. Notre guide vous présente les sites incontournables, les délices culinaires et tous les conseils pratiques pour profiter pleinement de cette région où les montagnes du Taurus plongent majestueusement dans les eaux turquoise de la Méditerranée.",
@@ -3231,7 +3281,8 @@
   },
   "edinburgh": {
     "name": "Édimbourg",
-    "country": "Royaume-Uni 🇬🇧",
+    "country": "Royaume-Uni",
+    "country-code": "GB",
     "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/ff/32/2a/edinburgh-castle.jpg?w=1200&h=1200&s=1",
     "title": "Édimbourg, capitale écossaise entre histoire et légendes",
     "description": "Plongez dans l'atmosphère envoûtante d'Édimbourg, ville où l'histoire médiévale et la culture écossaise s'entremêlent dans un cadre naturel spectaculaire. Entre ses ruelles pavées, ses châteaux majestueux et ses collines verdoyantes, cette cité vous transportera dans un univers où traditions celtiques et modernité coexistent harmonieusement. Notre guide vous dévoile les sites emblématiques, les spécialités culinaires et tous les conseils pratiques pour explorer cette métropole fascinante où chaque pierre raconte une histoire.",
@@ -3298,7 +3349,8 @@
   },
   "cancun": {
     "name": "Cancún",
-    "country": "Mexique 🇲🇽",
+    "country": "Mexique",
+    "country-code": "MX",
     "image": "https://www.agoda.com/wp-content/uploads/2024/03/Featured-image-Cancun-beach-with-resorts-Mexico.jpg",
     "title": "Cancún, paradis caribéen entre plages de rêve et trésors mayas",
     "description": "Découvrez Cancún, joyau de la Riviera Maya où se rencontrent des plages de sable blanc baignées d'eaux turquoise et l'héritage fascinant de la civilisation maya. Entre ses complexes hôteliers luxueux, ses sites archéologiques millénaires et ses merveilles naturelles, cette destination vous offre un équilibre parfait entre détente balnéaire et aventures culturelles. Notre guide vous dévoile les lieux emblématiques, les saveurs locales et tous les conseils pratiques pour profiter pleinement de ce coin de paradis mexicain.",
@@ -3365,7 +3417,8 @@
   },
   "porto": {
     "name": "Porto",
-    "country": "Portugal 🇵🇹",
+    "country": "Portugal",
+    "country-code": "PT",
     "image": "https://www.city-guide-porto.com/_bibli/pages_images/31/centre-historique-de-porto-ribeira.jpg",
     "title": "Porto, cité baroque au charme intemporel sur le Douro",
     "description": "Laissez-vous séduire par Porto, seconde ville du Portugal où l'âme authentique lusitanienne se révèle à chaque coin de rue. Entre ses façades colorées en azulejos, ses ruelles escarpées et son fleuve majestueux, cette ville classée au patrimoine mondial vous invite à un voyage fascinant entre tradition et modernité. Notre guide vous dévoile les trésors architecturaux, les délices gastronomiques et tous les conseils pratiques pour explorer cette perle du nord portugais, berceau du célèbre vin qui porte son nom.",
@@ -3432,7 +3485,8 @@
   },
   "buenos-aires": {
     "name": "Buenos Aires",
-    "country": "Argentine 🇦🇷",
+    "country": "Argentine",
+    "country-code": "AR",
     "image": "https://img.static-kl.com/images/media/EDD567B6-661E-481F-97ACD929AB125ABA",
     "title": "Buenos Aires, capitale passionnée où tango et culture s'entrelacent",
     "description": "Plongez dans l'effervescence de Buenos Aires, métropole élégante où l'âme latine s'exprime à chaque coin de rue. Entre ses quartiers emblématiques aux architectures européennes, ses places historiques et sa scène culturelle dynamique, la capitale argentine vous séduira par son atmosphère unique mêlant tradition et modernité. Notre guide vous révèle les lieux incontournables, les spécialités gastronomiques et tous les conseils pratiques pour explorer cette ville fascinante où la passion du tango rythme la vie quotidienne.",
@@ -3499,7 +3553,8 @@
   },
   "rio-de-janeiro": {
     "name": "Rio de Janeiro",
-    "country": "Brésil 🇧🇷",
+    "country": "Brésil",
+    "country-code": "BR",
     "image": "https://www.costacroisieres.be/content/dam/costa/inventory-assets/ports/RIO/c035_rio_de_janeiro.jpg",
     "title": "Rio de Janeiro, la cité merveilleuse entre montagnes et océan",
     "description": "Succombez au charme de Rio de Janeiro, métropole fascinante où nature exubérante et culture vibrante se rencontrent dans un décor à couper le souffle. Entre ses plages mythiques, ses montagnes verdoyantes et son ambiance festive, la 'Cidade Maravilhosa' vous envoûtera par sa beauté spectaculaire et sa joie de vivre légendaire. Notre guide vous dévoile les sites emblématiques, les saveurs locales et tous les conseils pratiques pour explorer cette ville unique où la forêt tropicale embrasse l'océan au rythme de la samba.",
@@ -3536,7 +3591,7 @@
       },
       {
         "name": "Pão de Queijo - Petits pains au fromage",
-        "image": "https://foodieadvice.com/storage/foods/229/large.jpg?time=1551376392"
+        "image": "https://tasteofmissions.com/wp-content/uploads/2021/07/DWELL-Brazilian-Cheese-Bread-Pao-de-Quiejo.jpeg"
       },
       {
         "name": "Açaí - Sorbet de baies d'açaí",
@@ -3567,7 +3622,8 @@
   },
   "hanoi": {
     "name": "Hanoï",
-    "country": "Vietnam 🇻🇳",
+    "country": "Vietnam",
+    "country-code": "VN",
     "image": "https://images.ctfassets.net/rc3dlxapnu6k/5CVNt8Waq9efT3UmBVYT6i/8c6dba696fb7b1ce0553ed41d2cf96c2/Hanoi-bateaux-lanternes-Vietnam.jpg?w=1400&q=60&fm=webp",
     "title": "Hanoï, capitale millénaire aux charmes d'Asie authentique",
     "description": "Découvrez Hanoï, cœur historique et culturel du Vietnam, où traditions séculaires et dynamisme contemporain se mêlent harmonieusement. Entre ses lacs paisibles, ses ruelles animées et ses temples vénérables, cette capitale vous invite à un voyage fascinant à travers l'âme vietnamienne. Notre guide vous dévoile les sites emblématiques, les délices culinaires et tous les conseils pratiques pour explorer cette métropole envoûtante où l'héritage colonial français rencontre les influences chinoises et l'identité asiatique.",
@@ -3634,7 +3690,8 @@
   },
   "lima": {
     "name": "Lima",
-    "country": "Pérou 🇵🇪",
+    "country": "Pérou",
+    "country-code": "PE",
     "image": "https://images.ctfassets.net/bth3mlrehms2/qRBEid3ykrOBhGxMUOr9P/a41bb1156686d91bef49212c8a85888d/Lima__Lima__Peru.jpg",
     "title": "Lima, capitale gastronomique entre Pacifique et désert",
     "description": "Explorez Lima, métropole fascinante où se mêlent héritage colonial, modernité cosmopolite et trésors précolombiens dans un décor entre océan et désert. À travers ses quartiers contrastés, ses sites archéologiques millénaires et sa gastronomie mondialement reconnue, la capitale péruvienne vous invite à découvrir la richesse culturelle de ce pays andin. Notre guide vous présente les lieux emblématiques, les délices culinaires et tous les conseils pratiques pour apprécier cette ville aux multiples visages, berceau de la cuisine péruvienne contemporaine.",
@@ -3702,7 +3759,8 @@
   },
   "marrakech": {
     "name": "Marrakech",
-    "country": "Maroc 🇲🇦",
+    "country": "Maroc",
+    "country-code": "MA",
     "image": "https://res.cloudinary.com/lastminute-contenthub/image/upload/c_limit,h_999999,w_1920/f_auto/q_auto:eco/v1/DAM/Photos/Destinations/Africa/Morocco/shutterstock_1135474214.jpg",
     "title": "Marrakech, la cité ocre aux mille et une saveurs",
     "description": "Laissez-vous envoûter par Marrakech, ville impériale où les couleurs, les parfums et les sons vous transportent dans un univers enivrant. Entre ses souks labyrinthiques, ses palais somptueux et ses jardins luxuriants, la Perle du Sud marocain vous offre une expérience sensorielle unique où traditions ancestrales et raffinement se rencontrent. Notre guide vous dévoile les trésors de cette cité millénaire, ses spécialités culinaires et toutes les informations pratiques pour découvrir cette destination fascinante aux portes du désert.",
@@ -3769,7 +3827,8 @@
   },
   "punta-cana": {
     "name": "Punta Cana",
-    "country": "République dominicaine 🇩🇴",
+    "country": "République dominicaine",
+    "country-code": "DO",
     "image": "https://ulysse.com/news/wp-content/uploads/2024/05/Punta-Cana-ville-en-Republique-dominicaine.jpg",
     "title": "Punta Cana, paradis tropical aux plages de sable blanc",
     "description": "Découvrez Punta Cana, destination balnéaire par excellence où les eaux turquoise des Caraïbes caressent des plages immaculées bordées de cocotiers. Entre ses complexes hôteliers luxueux, ses réserves naturelles préservées et ses activités nautiques variées, ce joyau dominicain vous promet des vacances idylliques sous le soleil tropical. Notre guide vous révèle les plus beaux sites, les saveurs locales et toutes les informations pratiques pour profiter pleinement de ce coin de paradis où détente et aventure vous attendent.",
@@ -3836,7 +3895,8 @@
   },
   "santiago": {
     "name": "Santiago de los Caballeros",
-    "country": "République dominicaine 🇩🇴",
+    "country": "République dominicaine",
+    "country-code": "DO",
     "image": "https://cdn.generationvoyage.fr/2021/01/guide-santiago.jpg",
     "title": "Santiago, joyau culturel au cœur de la vallée du Cibao",
     "description": "Découvrez Santiago de los Caballeros, deuxième ville de la République dominicaine, où l'authenticité caribéenne se révèle loin des plages touristiques. Entre ses monuments historiques, ses centres culturels et son ambiance animée, cette métropole vous offre une immersion dans la vie dominicaine authentique. Notre guide vous présente les sites emblématiques, les délices gastronomiques et tous les conseils pratiques pour explorer cette ville dynamique nichée au cœur de la fertile vallée du Cibao, berceau de la culture et des traditions du pays.",
@@ -3903,7 +3963,8 @@
   },
   "cairo": {
     "name": "Le Caire",
-    "country": "Égypte 🇪🇬",
+    "country": "Égypte",
+    "country-code": "EG",
     "image": "https://www.voyageegypte.fr/cdn/eg-public/citadelle_caire_vue_terasse.jpg",
     "title": "Le Caire, mégapole millénaire sur les rives du Nil",
     "description": "Plongez dans l'effervescence du Caire, carrefour fascinant où l'Égypte ancienne rencontre le monde arabe moderne dans un chaos organisé captivant. Entre ses trésors pharaoniques, ses mosquées majestueuses et ses quartiers populaires animés, la plus grande ville d'Afrique vous entraîne dans un voyage à travers les millénaires. Notre guide vous dévoile les sites incontournables, les saveurs authentiques et toutes les informations essentielles pour explorer cette métropole palpitante où le passé glorieux de l'Égypte côtoie le présent avec intensité.",

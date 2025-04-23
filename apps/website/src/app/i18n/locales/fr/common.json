@@ -3,5 +3,10 @@
     "title": "Découvrez votre prochaine destination",
     "subtitle": "Laissez-vous guider vers votre aventure idéale",
     "cta": "Commencer le quiz"
+  },
+  "social": {
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "linkedin": "LinkedIn"
   }
 }

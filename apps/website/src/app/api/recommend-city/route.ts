@@ -32,9 +32,14 @@ const ASSISTANT_ID = process.env.OPENAI_CITY_RECOMMENDATION_ASSISTANT_ID ?? "";
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Récupérer les données de la requête
-    const { responses, locale } = (await request.json()) as {
+    const {
+      responses,
+      locale,
+      previousCities = [],
+    } = (await request.json()) as {
       responses: QuizResponse[];
       locale: string;
+      previousCities?: string[];
     };
 
     if (!Array.isArray(responses)) {
@@ -44,15 +49,18 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    const randomTemperature = Math.random();
-
     // Formatage des questions et réponses pour l'assistant
-    const userContent = responses
+    let userContent = responses
       .map(
         (item: QuizResponse) =>
           `Question: "${item.question}" Réponse: "${item.answer}"`,
       )
       .join("\n");
+
+    // Ajouter les villes à exclure si nécessaire
+    if (previousCities.length > 0) {
+      userContent += `\n\nForbidden Cities: ${previousCities.join(", ")}.`;
+    }
 
     // Créer un thread
     const thread = await openai.beta.threads.create();
@@ -66,7 +74,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // Exécuter l'assistant sur le thread
     const run = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: ASSISTANT_ID,
-      temperature: randomTemperature,
     });
 
     // Attendre que l'exécution soit terminée
@@ -112,7 +119,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             acc[curr.raw_question] = curr.raw_answer;
             return acc;
           }, {}),
-          result: { ...parsedResponse, temperature: randomTemperature },
+          result: {
+            ...parsedResponse,
+            previouslyRecommended: previousCities,
+          },
         })
         .select("id");
 

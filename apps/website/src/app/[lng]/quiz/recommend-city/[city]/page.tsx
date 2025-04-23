@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect, useState } from "react";
 import React from "react";
+import ReactCountryFlag from "react-country-flag";
 
 import { useTranslationClient } from "@/app/i18n/client";
 
@@ -106,7 +107,8 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
           <div className="absolute bottom-0 left-0 p-8 text-white">
             <h1 className="mb-2 text-5xl font-bold">
-              {tWithCity("name")}, {tWithCity("country")}
+              {tWithCity("name")}, {tWithCity("country")}{" "}
+              <ReactCountryFlag countryCode={tWithCity("country-code")} />
             </h1>
             <h2 className="text-2xl italic">{tWithCity("title")}</h2>
           </div>
@@ -172,7 +174,9 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
                   </div>
                   <div className="p-4">
                     <div className="flex items-start">
-                      <span className="mr-2 text-yellow-500">🍽️</span>
+                      <span className="mr-2 text-yellow-500">
+                        {t("taste-emoji", { ns: "cities-top-10" })}
+                      </span>
                       <span className="font-medium">{item.name}</span>
                     </div>
                   </div>

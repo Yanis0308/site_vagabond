@@ -39,7 +39,10 @@
         "title": "Magique",
         "description": "Laisse-toi surprendre par la pertinence de notre IA"
       }
-    }
+    },
+    "lurenberg": "Lurenberg",
+    "city-emoji": "🗺️",
+    "checkmark": "✓"
   },
   "age": {
     "question": "🎂 Quel âge as-tu ?",

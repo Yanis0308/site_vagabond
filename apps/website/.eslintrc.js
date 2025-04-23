@@ -5,6 +5,7 @@ module.exports = {
     "next",
     "next/core-web-vitals",
     "next/typescript",
+    "plugin:i18next/recommended",
   ],
   parserOptions: {
     project: "./tsconfig.json",
