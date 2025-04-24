@@ -4,11 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useState } from "react";
-import ReactCountryFlag from "react-country-flag";
 
 import { useTranslationClient } from "@/app/i18n/client";
 import { languages } from "@/app/i18n/settings";
 
+import { FlagIconCustom } from "./FlagIconCustom";
 interface NavbarProps {
   lng: string;
 }
@@ -90,11 +90,10 @@ export default function Navbar({ lng }: NavbarProps): React.JSX.Element {
                 onClick={toggleLangDropdown}
                 className="flex items-center text-gray-700 transition-colors hover:text-primary"
               >
-                <ReactCountryFlag
-                  countryCode={countryFlags[lng]}
-                  svg
+                <FlagIconCustom
                   className="mr-2"
-                  style={{ width: "1.2em", height: "1.2em" }}
+                  code={countryFlags[lng]}
+                  size={32}
                 />
                 {languageNames[lng]}
                 <svg
@@ -118,16 +117,15 @@ export default function Navbar({ lng }: NavbarProps): React.JSX.Element {
                     <Link
                       key={langCode}
                       href={getPathInLanguage(langCode)}
-                      className={`block px-4 py-2 hover:bg-primary-50 hover:text-primary ${langCode === lng ? "bg-gray-100 font-medium" : "text-gray-700"}`}
+                      className={`flex items-center px-4 py-2 hover:bg-primary-50 hover:text-primary ${langCode === lng ? "bg-gray-100 font-medium" : "text-gray-700"}`}
                       onClick={() => {
                         setIsLangDropdownOpen(false);
                       }}
                     >
-                      <ReactCountryFlag
-                        countryCode={countryFlags[langCode]}
-                        svg
+                      <FlagIconCustom
                         className="mr-2"
-                        style={{ width: "1.2em", height: "1.2em" }}
+                        code={countryFlags[langCode]}
+                        size={32}
                       />
                       {languageNames[langCode]}
                     </Link>
@@ -146,10 +144,10 @@ export default function Navbar({ lng }: NavbarProps): React.JSX.Element {
                 className="flex items-center justify-center rounded-md border border-gray-200 p-2 text-gray-700 hover:bg-gray-100 hover:text-primary focus:outline-none"
                 aria-label="Change language"
               >
-                <ReactCountryFlag
-                  countryCode={countryFlags[lng]}
-                  svg
-                  style={{ width: "1.2em", height: "1.2em" }}
+                <FlagIconCustom
+                  className="mr-2"
+                  code={countryFlags[lng]}
+                  size={32}
                 />
                 <span className="ml-1 text-sm font-medium">
                   {lng.toUpperCase()}
@@ -167,11 +165,10 @@ export default function Navbar({ lng }: NavbarProps): React.JSX.Element {
                         setIsLangDropdownOpen(false);
                       }}
                     >
-                      <ReactCountryFlag
-                        countryCode={countryFlags[langCode]}
-                        svg
+                      <FlagIconCustom
                         className="mr-2"
-                        style={{ width: "1.2em", height: "1.2em" }}
+                        code={countryFlags[langCode]}
+                        size={32}
                       />
                       <span>{langCode.toUpperCase()}</span>
                     </Link>

@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import React from "react";
-import ReactCountryFlag from "react-country-flag";
 
 import { useTranslationClient } from "@/app/i18n/client";
+import { FlagIconCustom } from "@/components/FlagIconCustom";
 
 import { SUPPORTED_CITIES } from "../quiz/recommend-city/data/cities";
 
@@ -79,12 +79,13 @@ export default function CitiesPage({
               href={`/${lng}/city-guides/${city}`}
               className="block rounded-lg border border-gray-200 p-4 transition-all hover:border-primary-300 hover:bg-primary-50 hover:shadow-md"
             >
-              <div className="text-center">
-                <ReactCountryFlag
-                  className="mb-2 text-2xl"
-                  countryCode={t(`${city}.country-code`, {
+              <div className="flex flex-col items-center justify-center">
+                <FlagIconCustom
+                  className="mb-2"
+                  code={t(`${city}.country-code`, {
                     ns: "cities-top-10",
                   })}
+                  size={32}
                 />
                 <h3 className="font-medium">
                   {t(`${city}.name`, { ns: "cities-top-10" })}
