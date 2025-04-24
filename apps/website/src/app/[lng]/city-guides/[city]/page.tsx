@@ -6,7 +6,7 @@ import ReactCountryFlag from "react-country-flag";
 
 import { useTranslationClient } from "@/app/i18n/client";
 
-import { SUPPORTED_CITIES } from "../data/cities";
+import { SUPPORTED_CITIES } from "../../quiz/recommend-city/data/cities";
 
 interface CityPageProps {
   params: Promise<{

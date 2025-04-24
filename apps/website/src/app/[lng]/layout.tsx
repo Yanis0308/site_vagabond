@@ -6,6 +6,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import React, { type ReactNode } from "react";
 
+import Navbar from "@/components/Navbar";
+
 import { languages } from "../i18n/settings";
 
 const geistSans = Geist({
@@ -48,7 +50,8 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <Navbar lng={lng} />
+        <div className="pt-16">{children}</div>
         <Analytics />
       </body>
     </html>

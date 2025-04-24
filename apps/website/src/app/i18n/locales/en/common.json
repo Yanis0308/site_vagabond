@@ -8,5 +8,16 @@
     "instagram": "Instagram",
     "tiktok": "TikTok",
     "linkedin": "LinkedIn"
+  },
+  "navbar": {
+    "quiz": "Quiz",
+    "cities": "City Guides",
+    "brand": "Vagabond",
+    "language": "Language"
+  },
+  "cities": {
+    "title": "Discover our destinations",
+    "search_placeholder": "Search for a city...",
+    "no_results": "No cities match your search."
   }
 }

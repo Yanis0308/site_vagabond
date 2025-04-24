@@ -314,9 +314,6 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
           currentStep < questions.length ? (
           // Affichage des questions (seulement si le quiz n'est pas terminé et pas en train de soumettre)
           <div>
-            <h1 className="mb-8 text-center text-3xl font-bold">
-              {t("quiz.main_title", { ns: "questions" })}
-            </h1>
             <div className="mb-6">
               <div className="h-2 rounded-full bg-gray-200">
                 <div
