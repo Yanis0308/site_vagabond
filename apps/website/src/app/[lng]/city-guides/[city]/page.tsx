@@ -1,9 +1,11 @@
 "use client";
+import { useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import React from "react";
 
 import { useTranslationClient } from "@/app/i18n/client";
 import { FlagIconCustom } from "@/components/FlagIconCustom";
+import { SharePopup } from "@/components/SharePopup";
 
 import { SUPPORTED_CITIES } from "../../quiz/recommend-city/data/cities";
 
@@ -36,10 +38,27 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const searchParams = useSearchParams();
+  const fromQuiz = searchParams.get("from") === "quiz";
 
   const { t } = useTranslationClient(lng, ["cities-top-10"]);
   const tWithCity = (str: string): string =>
     t(`${city}.${str}`, { ns: "cities-top-10" });
+
+  useEffect(() => {
+    // Configuration du popup si l'utilisateur vient du quiz
+    if (fromQuiz) {
+      const timer = setTimeout(() => {
+        setShowPopup(true);
+      }, 5000);
+
+      return (): void => {
+        clearTimeout(timer);
+      };
+    }
+  }, [fromQuiz]);
 
   useEffect(() => {
     // On vérifie si nous avons des données complètes pour cette ville
@@ -51,6 +70,10 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
       setLoading(false);
     }
   }, [city, t]);
+
+  const handleClosePopup = (): void => {
+    setShowPopup(false);
+  };
 
   if (loading) {
     return (
@@ -95,6 +118,8 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
 
   return (
     <div className="min-h-screen bg-primary-50 md:py-12">
+      {showPopup && <SharePopup onClose={handleClosePopup} lng={lng} />}
+
       <div className="mx-auto max-w-4xl overflow-hidden bg-white shadow-lg md:rounded-xl">
         {/* En-tête avec image de couverture */}
         <div

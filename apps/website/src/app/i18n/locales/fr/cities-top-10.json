@@ -29,6 +29,15 @@
   "back-home": "Retour à l'accueil",
   "retake-test": "Refaire le test",
   "home": "Accueil",
+  "share-popup": {
+    "title": "🗣️ Partagez le quiz !",
+    "description_share": "Proposez à vos amis de faire le quiz et comparez vos résultats afin de savoir quelle ville choisir pour votre prochain voyage !",
+    "description_retake": "Vous pouvez également refaire le quiz pour obtenir un autre résultat !",
+    "share-button-mobile": "Partager le quiz",
+    "share-button-desktop": "Copier le lien",
+    "copied": "Lien copié !",
+    "retake-test": "🔄 Refaire le quiz"
+  },
   "lisbon": {
     "name": "Lisbonne",
     "country": "Portugal",

@@ -25,9 +25,9 @@ export function middleware(req: NextRequest): NextResponse {
     !languages.some((loc) => req.nextUrl.pathname.startsWith(`/${loc}`)) &&
     !req.nextUrl.pathname.startsWith("/_next")
   ) {
-    return NextResponse.redirect(
-      new URL(`/${lng}${req.nextUrl.pathname}`, req.url),
-    );
+    const url = new URL(`/${lng}${req.nextUrl.pathname}`, req.url);
+    url.search = req.nextUrl.search;
+    return NextResponse.redirect(url);
   }
 
   if (req.headers.has("referer")) {
