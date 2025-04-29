@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import React, { type ReactNode } from "react";
 
+import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 
 import { languages } from "../i18n/settings";
@@ -48,10 +49,11 @@ export default function RootLayout({
       </head>
       <body
         suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-gradient-to-b from-primary-100 to-primary-50 antialiased`}
       >
         <Navbar lng={lng} />
-        <div className="pt-16">{children}</div>
+        <div className="min-h-screen pt-16">{children}</div>
+        <Footer lng={lng} />
         <Analytics />
       </body>
     </html>

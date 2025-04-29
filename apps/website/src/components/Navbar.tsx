@@ -84,6 +84,14 @@ export default function Navbar({ lng }: NavbarProps): React.JSX.Element {
               {t("navbar.cities")}
             </Link>
 
+            <Link
+              href={`https://linktr.ee/vagabond_app`}
+              className="text-gray-700 transition-colors hover:text-primary"
+              target="_blank"
+            >
+              {t("navbar.socialNetworks")}
+            </Link>
+
             {/* Sélecteur de langue (desktop) */}
             <div className="relative">
               <button
@@ -232,6 +240,14 @@ export default function Navbar({ lng }: NavbarProps): React.JSX.Element {
               }}
             >
               {t("navbar.cities", { defaultValue: "Villes" })}
+            </Link>
+
+            <Link
+              href={`https://linktr.ee/vagabond_app`}
+              className="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100 hover:text-primary"
+              target="_blank"
+            >
+              {t("navbar.socialNetworks")}
             </Link>
           </div>
         </div>

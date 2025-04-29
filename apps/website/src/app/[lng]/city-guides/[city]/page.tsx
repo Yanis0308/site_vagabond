@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import React from "react";
@@ -89,12 +90,12 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
         <div className="rounded-lg bg-red-50 p-8 text-center">
           <h2 className="mb-4 text-2xl font-bold text-red-600">{error}</h2>
           <p className="mb-4">{t("error-message", { ns: "cities-top-10" })}</p>
-          <a
+          <Link
             href={`/${lng}`}
             className="inline-block rounded-lg bg-primary px-6 py-3 text-white hover:bg-primary-600"
           >
             {t("back-home", { ns: "cities-top-10" })}
-          </a>
+          </Link>
         </div>
       </div>
     );
@@ -293,16 +294,16 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
 
         {/* Pied de page */}
         <div className="bg-gray-100 p-6 text-center">
-          <a
+          <Link
             href={`/${lng}/quiz/recommend-city`}
             className="mx-2 text-primary hover:underline"
           >
             {t("retake-test", { ns: "cities-top-10" })}
-          </a>
+          </Link>
           <span className="mx-2 text-gray-300">|</span>
-          <a href={`/${lng}`} className="mx-2 text-primary hover:underline">
+          <Link href={`/${lng}`} className="mx-2 text-primary hover:underline">
             {t("home", { ns: "cities-top-10" })}
-          </a>
+          </Link>
         </div>
       </div>
     </div>

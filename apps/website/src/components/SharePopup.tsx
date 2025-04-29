@@ -1,4 +1,5 @@
 import { logger } from "@vagabond/shared-utils";
+import Link from "next/link";
 import { type ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -143,12 +144,12 @@ export const SharePopup = ({ onClose, lng }: SharePopupProps): ReactNode => {
               </div>
             )}
           </div>
-          <a
+          <Link
             href={SHARE_URL}
             className="w-full rounded-lg bg-gray-200 px-4 py-2 text-center hover:bg-gray-300"
           >
             {t("share-popup.retake-test", { ns: "cities-top-10" })}
-          </a>
+          </Link>
         </div>
       </div>
     </div>,

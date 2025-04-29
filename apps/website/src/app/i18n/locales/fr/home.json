@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "title": "Vagabond",
+    "subtitle": "L'app qui transforme tes voyages en aventures"
+  },
+  "whatIsVagabond": {
+    "title": "C'est quoi Vagabond ?",
+    "description1": "Vagabond, c'est la carte à gratter du monde réel.",
+    "description2": "Une app qui transforme ton quotidien, tes voyages et tes week-ends en véritables défis à compléter.",
+    "description3": "Que tu sois en France ou à l'autre bout du monde, découvre tout ce qu'il y a à faire et à voir autour de toi : lieux incontournables, spots cachés, spécialités locales, expériences insolites... Et coche-les au fur et à mesure de tes aventures.",
+    "goal": "Le but ? Compléter ta propre carte du monde à gratter, explorer à ton rythme et ne rien manquer."
+  },
+  "appForTravelers": {
+    "title": "Une app pensée pour les voyageurs",
+    "feature1": "Des défis à relever, des fun facts à découvrir, des infos utiles pour chaque lieu",
+    "feature2": "Une communauté de voyageurs pour partager tes coups de cœur et en découvrir d'autres",
+    "feature3": "Un vrai sentiment d'accomplissement à chaque lieu validé",
+    "feature4": "Une app fun, ludique et motivante, qui te donne envie de partir à l'aventure... même près de chez toi",
+    "footer": "Vagabond, c'est l'app des backpackers, des explorateurs urbains, des gourmands de découvertes et des amoureux de liberté."
+  },
+  "comingSoon": {
+    "eventTitle": "Lancement de l'app dans :",
+    "daysLabel": "jours",
+    "hoursLabel": "heures",
+    "minutesLabel": "minutes",
+    "secondsLabel": "secondes",
+    "emailPrompt": "Donne-nous ton email pour tester Vagabond en avant première pour ton voyage !",
+    "comingSoonLabel": "COMING SOON",
+    "buttonText": "Je m'inscris",
+    "successMessage": "Ton mail a été enregistré avec succès !",
+    "errorMessage": "Une erreur est survenue lors de l'enregistrement de ton mail. Veuillez réessayer.",
+    "placeHolderText": "Ton mail"
+  },
+  "social": {
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "linkedin": "LinkedIn"
+  }
+}

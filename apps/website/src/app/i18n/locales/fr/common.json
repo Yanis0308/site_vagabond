@@ -13,11 +13,15 @@
     "quiz": "Quiz",
     "cities": "Guides des villes",
     "brand": "Vagabond",
-    "language": "Langue"
+    "language": "Langue",
+    "socialNetworks": "Réseaux sociaux"
   },
   "cities": {
     "title": "Découvrez nos destinations",
     "search_placeholder": "Rechercher une ville...",
     "no_results": "Aucune ville ne correspond à votre recherche."
+  },
+  "footer": {
+    "rights": "Tous droits réservés."
   }
 }

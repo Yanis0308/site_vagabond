@@ -203,7 +203,7 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
 
     try {
       // Envoyer l'email et l'ID de ligne à Supabase via une API
-      const response = await fetch("/api/save-email", {
+      const response = await fetch("/api/send-quiz-email", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

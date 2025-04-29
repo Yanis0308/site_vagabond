@@ -1,0 +1,36 @@
+{
+  "hero": {
+    "title": "Vagabond",
+    "subtitle": "The app that turns your travels into adventures"
+  },
+  "whatIsVagabond": {
+    "title": "What is Vagabond?",
+    "description1": "Vagabond is the real-world scratch map.",
+    "description2": "An app that transforms your daily life, travels, and weekends into challenges to complete.",
+    "description3": "Whether you're in France or on the other side of the world, discover everything there is to do and see around you: must-see places, hidden spots, local specialties, unusual experiences... And check them off as you go on your adventures.",
+    "goal": "The goal? Complete your own scratch map of the world, explore at your own pace, and miss nothing."
+  },
+  "appForTravelers": {
+    "title": "An app designed for travelers",
+    "feature1": "Challenges to complete, fun facts to discover, useful information for each location",
+    "feature2": "A community of travelers to share your favorites and discover new ones",
+    "feature3": "A real sense of accomplishment with each location checked off",
+    "feature4": "A fun, engaging, and motivating app that makes you want to go on an adventure... even near home",
+    "footer": "Vagabond is the app for backpackers, urban explorers, discovery enthusiasts, and freedom lovers."
+  },
+  "comingSoon": {
+    "eventTitle": "App launch in:",
+    "daysLabel": "days",
+    "hoursLabel": "hours",
+    "minutesLabel": "minutes",
+    "secondsLabel": "seconds",
+    "emailPrompt": "Give us your email to test Vagabond in advance for your trip!",
+    "comingSoonLabel": "COMING SOON",
+    "buttonText": "Sign up"
+  },
+  "social": {
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "linkedin": "LinkedIn"
+  }
+}
