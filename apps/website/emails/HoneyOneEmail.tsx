@@ -79,15 +79,15 @@ export const HoneyOneEmail = ({
             <Text className="mb-5 text-base leading-6 text-gray-700">
               {t("thanks")}
             </Text>
-            <Section className="my-8 text-center">
+            <Section className="my-8 flex items-center justify-center">
+              <span className="mr-2 text-[40px]">👉</span>
               <Button
-                className="block rounded-md bg-primary px-2 py-3 text-center text-base font-bold text-white no-underline hover:bg-primary-600"
+                className="rounded-full bg-primary p-6 text-center text-base font-bold text-white no-underline hover:bg-primary-600"
                 href={url}
               >
-                <span className="mr-2 text-[30px]">👉</span>
                 <span className="text-[20px]">{t("seeDestination")}</span>
-                <span className="ml-2 text-[30px]">👈</span>
               </Button>
+              <span className="ml-2 text-[40px]">👈</span>
             </Section>
             <Text className="mb-6 text-center text-sm italic text-gray-500">
               {t("promise")}

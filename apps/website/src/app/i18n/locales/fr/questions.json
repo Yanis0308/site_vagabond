@@ -15,10 +15,10 @@
     "perfect_match": "Nous avons trouvé la ville parfaite pour toi ! ✨",
     "email_sent": "📨 Nous t'avons envoyé un guide complet avec tous les détails sur les lieux à visiter et nos conseils d'initiés !",
     "confirmation_title": "Découvre ta destination idéale dans ta boîte mail !",
-    "confirmation_intro": "Nous t'avons envoyé un email contenant :",
-    "confirmation_city": "La ville qui correspond le mieux à ton profil",
-    "confirmation_activities": "Un guide des activités incontournables",
-    "confirmation_tips": "Des conseils pour préparer ton séjour",
+    "confirmation_intro": "Nous t'avons envoyé un guide pratique contenant :",
+    "confirmation_city": "➡️ La ville qui correspond le mieux à ton profil",
+    "confirmation_activities": "➡️ Un guide des activités incontournables",
+    "confirmation_tips": "➡️ Des conseils pour préparer ton séjour",
     "check_spam": "N'oublie pas de vérifier tes spams si tu ne vois pas notre email !",
     "activities_title": "🏆 Top 10 des activités à {{city}}",
     "retry_button": "Réessayer",
@@ -40,9 +40,8 @@
         "description": "Laisse-toi surprendre par la pertinence de notre IA"
       }
     },
-    "lurenberg": "Lurenberg",
-    "city-emoji": "🗺️",
-    "checkmark": "✓"
+    "lurenberg": "Sreberg",
+    "city-emoji": "🗺️"
   },
   "age": {
     "question": "🎂 Quel âge as-tu ?",

@@ -262,7 +262,7 @@ function QuizContent({ lng }: { lng: string }): ReactElement {
       <div className="mx-auto min-h-screen max-w-3xl bg-white p-8 shadow-lg md:min-h-0 md:rounded-xl">
         {!introSkipped ? (
           // Page d'introduction
-          <div className="pb-8 text-center">
+          <div className="text-center">
             <div className="mb-8">
               <Image
                 src={
@@ -278,7 +278,7 @@ function QuizContent({ lng }: { lng: string }): ReactElement {
               </h2>
             </div>
 
-            <div className="mb-10">
+            <div className="">
               <p
                 className="mb-6 text-xl"
                 dangerouslySetInnerHTML={{
@@ -385,11 +385,11 @@ function QuizContent({ lng }: { lng: string }): ReactElement {
             </h1>
             <div className="mb-8">
               {cityData?.city !== undefined && (
-                <h2 className="text-7xl font-bold text-primary">
+                <h2 className="flex flex-col items-center justify-center gap-6 break-all text-7xl font-bold text-primary md:flex-row">
                   <span className="blur-md">
                     {t("quiz.lurenberg", { ns: "questions" })}
                   </span>
-                  <span className="pl-8 blur-sm">
+                  <span className="blur-sm">
                     {t("quiz.city-emoji", { ns: "questions" })}
                   </span>
                 </h2>
@@ -444,18 +444,14 @@ function QuizContent({ lng }: { lng: string }): ReactElement {
                   {t("quiz.email_thanks", { ns: "questions" })}
                 </h3>
                 <div className="mt-6 rounded-lg bg-primary-50 p-6">
-                  <div className="mb-4 flex justify-center">
-                    <div className="flex size-16 items-center justify-center rounded-full bg-green-500 text-2xl text-white">
-                      {t("quiz.checkmark", { ns: "questions" })}
-                    </div>
-                  </div>
+                  <div className="mb-4 flex justify-center text-6xl">✅</div>
                   <h4 className="mb-4 text-xl font-semibold text-primary">
                     {t("quiz.confirmation_title", { ns: "questions" })}
                   </h4>
-                  <p className="mb-2">
+                  <p className="mb-2 text-left">
                     {t("quiz.confirmation_intro", { ns: "questions" })}
                   </p>
-                  <ul className="mb-4 list-disc pl-8 text-left">
+                  <ul className="mb-4 pl-8 text-left">
                     <li>{t("quiz.confirmation_city", { ns: "questions" })}</li>
                     <li>
                       {t("quiz.confirmation_activities", { ns: "questions" })}
@@ -466,10 +462,6 @@ function QuizContent({ lng }: { lng: string }): ReactElement {
                     {t("quiz.check_spam", { ns: "questions" })}
                   </p>
                 </div>
-
-                <p className="mb-4 mt-8">
-                  {t("quiz.email_sent", { ns: "questions" })}
-                </p>
               </div>
             )}
           </div>
