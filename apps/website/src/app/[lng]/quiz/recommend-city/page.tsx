@@ -2,8 +2,9 @@
 
 import { logger } from "@vagabond/shared-utils";
 import Image from "next/image";
-import { type ReactElement, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
+import { type ReactElement, Suspense, useEffect, useState } from "react";
 import useLocalStorageState from "use-local-storage-state";
 
 import { useTranslationClient } from "@/app/i18n/client";
@@ -26,10 +27,10 @@ interface HoneyOneProps {
   params: Promise<{ lng: string }>;
 }
 
-export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
-  // Résoudre la Promise params
-  const resolvedParams = React.use(params);
-  const { lng } = resolvedParams;
+function QuizContent({ lng }: { lng: string }): ReactElement {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const { t } = useTranslationClient(lng, ["questions"]);
 
@@ -50,7 +51,9 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
   // Nouvel état pour suivre si le quiz est terminé
   const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
   // Nouvel état pour suivre si l'intro a été passée
-  const [introSkipped, setIntroSkipped] = useState<boolean>(false);
+  const [introSkipped, setIntroSkipped] = useState<boolean>(
+    searchParams.get("skipIntro") !== null,
+  );
 
   // Utiliser les options non mélangées pour l'initialisation pour éviter les erreurs d'hydratation
   const [shuffledOptions, setShuffledOptions] = useState<
@@ -80,6 +83,21 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
       setShuffledOptions(getOptions(questions[currentStep]));
     }
   }, [currentStep, isMounted]);
+
+  // Effet pour vérifier les paramètres d'URL et accéder directement au quiz si nécessaire
+  useEffect(() => {
+    const skipIntro = searchParams.get("skipIntro");
+    if (skipIntro !== null) {
+      // Créer un nouvel objet URLSearchParams
+      const newParams = new URLSearchParams(searchParams.toString());
+      // Supprimer le paramètre skipIntro
+      newParams.delete("skipIntro");
+
+      // Construire la nouvelle URL et rediriger
+      const queryString = newParams.toString();
+      router.replace(`${pathname}?${queryString}`);
+    }
+  }, [searchParams, router, pathname, isMounted]);
 
   // Fonction pour commencer le quiz
   const startQuiz = (): void => {
@@ -271,6 +289,13 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
                 }}
               />
 
+              <button
+                onClick={startQuiz}
+                className="rounded-full bg-primary px-8 py-4 text-xl font-bold text-white transition-all hover:scale-105 hover:bg-primary-600"
+              >
+                {t("quiz.start_button", { ns: "questions" })}
+              </button>
+
               <div className="my-8 grid grid-cols-1 gap-4 md:grid-cols-3">
                 <div className="rounded-lg bg-primary-50 p-4">
                   <div className="mb-2 text-3xl">{"⏱️"}</div>
@@ -301,13 +326,6 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
                 </div>
               </div>
             </div>
-
-            <button
-              onClick={startQuiz}
-              className="rounded-full bg-primary px-10 py-4 text-xl font-bold text-white transition-all hover:scale-105 hover:bg-primary-600"
-            >
-              {t("quiz.start_button", { ns: "questions" })}
-            </button>
           </div>
         ) : !quizCompleted &&
           !isSubmitting &&
@@ -478,5 +496,17 @@ export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
         )}
       </div>
     </div>
+  );
+}
+
+export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
+  // Résoudre la Promise params
+  const resolvedParams = React.use(params);
+  const { lng } = resolvedParams;
+
+  return (
+    <Suspense fallback={<div>Chargement...</div>}>
+      <QuizContent lng={lng} />
+    </Suspense>
   );
 }
