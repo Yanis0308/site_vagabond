@@ -10,7 +10,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 
 import { languages } from "../i18n/settings";
-
+import { getMetadata } from "../metadata";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -21,9 +21,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Vagabond",
+export const generateMetadata = async ({
+  params,
+}: {
+  params: Promise<{ lng: string }>;
+}): Promise<Metadata> => {
+  const { lng } = await params;
+  return await getMetadata({ lng });
 };
+
 export function generateStaticParams(): Array<{ lng: string }> {
   return languages.map((lng) => ({ lng }));
 }
@@ -37,7 +43,6 @@ export default function RootLayout({
   children,
   params,
 }: RootLayoutProps): ReactNode {
-  // On utilise directement params.lng au lieu de React.use() qui peut causer des problèmes d'hydratation
   const resolvedParams = React.use(params);
   const { lng } = resolvedParams;
 

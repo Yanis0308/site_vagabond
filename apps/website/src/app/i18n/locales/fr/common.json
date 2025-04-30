@@ -1,7 +1,14 @@
 {
+  "metadata": {
+    "title": "Vagabond - Découvre ta prochaine destination",
+    "openGraph": {
+      "title": "Vagabond - Découvre ta prochaine destination",
+      "description": "Fais notre quiz pour découvrir ta prochaine destination et laisse-toi guider vers ton aventure idéale."
+    }
+  },
   "home": {
-    "title": "Découvrez votre prochaine destination",
-    "subtitle": "Laissez-vous guider vers votre aventure idéale",
+    "title": "Découvre ta prochaine destination",
+    "subtitle": "Laisse-toi guider vers ton aventure idéale",
     "cta": "Commencer le quiz"
   },
   "social": {

@@ -1,4 +1,11 @@
 {
+  "metadata": {
+    "title": "Vagabond - Discover your next destination",
+    "openGraph": {
+      "title": "Vagabond - Discover your next destination",
+      "description": "Take our quiz to discover your next destination and let yourself be guided to your ideal adventure."
+    }
+  },
   "home": {
     "title": "Discover your next destination",
     "subtitle": "Let yourself be guided to your ideal adventure",

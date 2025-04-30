@@ -26,7 +26,10 @@
     "secondsLabel": "seconds",
     "emailPrompt": "Give us your email to test Vagabond in advance for your trip!",
     "comingSoonLabel": "COMING SOON",
-    "buttonText": "Sign up"
+    "buttonText": "Sign up",
+    "successMessage": "Your email has been successfully registered!",
+    "errorMessage": "An error occurred while registering your email. Please try again.",
+    "placeHolderText": "Your email"
   },
   "social": {
     "instagram": "Instagram",

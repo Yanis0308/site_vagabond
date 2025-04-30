@@ -1,7 +1,7 @@
 import { type InitOptions } from "i18next";
 
-export const fallbackLng = "en";
-export const languages = [fallbackLng, "fr"];
+export const fallbackLng = "fr";
+export const languages = [fallbackLng, "en"];
 export const defaultNS = "common";
 export const cookieName = "i18next";
 
