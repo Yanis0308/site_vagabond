@@ -503,7 +503,7 @@
   "amsterdam": {
     "name": "Amsterdam",
     "country": "Pays-Bas",
-    "country-code": "BE",
+    "country-code": "NL",
     "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/43/2c/43/les-maison-typiques-a.jpg?w=1200&h=1200&s=1",
     "title": "Amsterdam, la Venise du Nord",
     "description": "Explorez Amsterdam, une ville où l'histoire et la modernité se rencontrent le long de ses célèbres canaux. Connue pour ses musées de renommée mondiale, ses maisons à pignons et son ambiance décontractée, Amsterdam est une destination incontournable pour les amateurs de culture et de détente. Découvrez ses quartiers pittoresques, savourez les spécialités néerlandaises et profitez d'une croisière sur les canaux pour admirer la ville sous un autre angle.",
@@ -3290,8 +3290,8 @@
   },
   "edinburgh": {
     "name": "Édimbourg",
-    "country": "Royaume-Uni",
-    "country-code": "GB",
+    "country": "Écosse",
+    "country-code": "GB-SCT",
     "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/ff/32/2a/edinburgh-castle.jpg?w=1200&h=1200&s=1",
     "title": "Édimbourg, capitale écossaise entre histoire et légendes",
     "description": "Plongez dans l'atmosphère envoûtante d'Édimbourg, ville où l'histoire médiévale et la culture écossaise s'entremêlent dans un cadre naturel spectaculaire. Entre ses ruelles pavées, ses châteaux majestueux et ses collines verdoyantes, cette cité vous transportera dans un univers où traditions celtiques et modernité coexistent harmonieusement. Notre guide vous dévoile les sites emblématiques, les spécialités culinaires et tous les conseils pratiques pour explorer cette métropole fascinante où chaque pierre raconte une histoire.",

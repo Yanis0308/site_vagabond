@@ -3290,8 +3290,8 @@
   },
   "edinburgh": {
     "name": "Edinburgh",
-    "country": "United Kingdom",
-    "country-code": "GB",
+    "country": "Scotland",
+    "country-code": "GB-SCT",
     "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/14/ff/32/2a/edinburgh-castle.jpg?w=1200&h=1200&s=1",
     "title": "Edinburgh, Scottish capital between history and legends",
     "description": "Immerse yourself in the captivating atmosphere of Edinburgh, a city where medieval history and Scottish culture intertwine in a spectacular natural setting. Between its cobbled streets, majestic castles and verdant hills, this city will transport you to a universe where Celtic traditions and modernity coexist harmoniously. Our guide reveals the iconic sites, culinary specialties and all the practical advice to explore this fascinating metropolis where every stone tells a story.",
