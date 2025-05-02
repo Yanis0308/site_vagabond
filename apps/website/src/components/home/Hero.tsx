@@ -27,14 +27,14 @@ export default function Hero({ lng, t }: HeroProps): ReactNode {
       <p className="mb-12 text-xl text-gray-600">{t("home.subtitle")}</p>
 
       <div className="mb-16 flex items-center justify-center">
-        <div className="text-6xl">👉</div>
+        <div className="text-5xl">👉</div>
         <Link
           href={`/${lng}/quiz/recommend-city?skipIntro`}
-          className="mx-5 inline-block rounded-full bg-primary px-10 py-4 text-xl font-bold text-white transition-all hover:scale-105 hover:bg-primary-600"
+          className="mx-4 inline-block rounded-full bg-primary px-10 py-4 text-xl font-bold text-white transition-all hover:scale-105 hover:bg-primary-600"
         >
           {t("home.cta")}
         </Link>
-        <div className="text-6xl">👈</div>
+        <div className="text-5xl">👈</div>
       </div>
     </div>
   );

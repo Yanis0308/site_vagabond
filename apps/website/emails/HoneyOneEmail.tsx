@@ -79,7 +79,7 @@ export const HoneyOneEmail = ({
             <Text className="mb-5 text-base leading-6 text-gray-700">
               {t("thanks")}
             </Text>
-            <Section className="my-8 flex items-center justify-center">
+            <Section className="my-8 text-center">
               <span className="mr-2 text-[40px]">👉</span>
               <Button
                 className="rounded-full bg-primary p-6 text-center text-base font-bold text-white no-underline hover:bg-primary-600"

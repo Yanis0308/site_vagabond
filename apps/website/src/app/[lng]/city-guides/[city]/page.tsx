@@ -118,28 +118,24 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
   });
 
   return (
-    <div className="min-h-screen bg-primary-50 md:py-12">
+    <div className="min-h-screen bg-primary-50 md:py-4">
       {showPopup && <SharePopup onClose={handleClosePopup} lng={lng} />}
 
       <div className="mx-auto max-w-4xl overflow-hidden bg-white shadow-lg md:rounded-xl">
         {/* En-tête avec image de couverture */}
         <div
-          className="relative h-64 bg-cover bg-center"
+          className="relative min-h-64 bg-cover bg-center"
           style={{
             backgroundImage: `url(${tWithCity("image")})`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
-          <div className="absolute bottom-0 left-0 p-8 text-white">
-            <h1 className="mb-2 text-5xl font-bold">
+          <div className="absolute bottom-0 left-0 z-10 p-6 text-white">
+            <h1 className="mb-2 text-3xl font-bold md:text-5xl">
               {tWithCity("name")}, {tWithCity("country")}{" "}
-              <FlagIconCustom
-                className="ml-4"
-                code={tWithCity("country-code")}
-                size={48}
-              />
+              <FlagIconCustom code={tWithCity("country-code")} size={48} />
             </h1>
-            <h2 className="text-2xl italic">{tWithCity("title")}</h2>
+            <h2 className="text-xl italic md:text-2xl">{tWithCity("title")}</h2>
           </div>
         </div>
 
