@@ -29,6 +29,7 @@
     "no_results": "Aucune ville ne correspond à votre recherche."
   },
   "footer": {
-    "rights": "Tous droits réservés."
+    "rights": "Tous droits réservés.",
+    "email": "contact@vagabond.gg"
   }
 }

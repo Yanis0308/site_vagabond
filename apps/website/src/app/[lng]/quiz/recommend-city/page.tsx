@@ -46,7 +46,6 @@ function QuizContent({ lng }: { lng: string }): ReactElement {
   const [email, setEmail] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isEmailSubmitting, setIsEmailSubmitting] = useState<boolean>(false); // Nouvel état pour gérer la soumission d'email
-  const [showDetails, setShowDetails] = useState<boolean>(false);
   const [apiError, setApiError] = useState<string | null>(null);
   // Nouvel état pour suivre si le quiz est terminé
   const [quizCompleted, setQuizCompleted] = useState<boolean>(false);
@@ -238,8 +237,7 @@ function QuizContent({ lng }: { lng: string }): ReactElement {
         throw new Error(t("quiz.error_email", { ns: "questions" }));
       }
 
-      // Afficher le message de confirmation
-      setShowDetails(true);
+      router.push(`/${lng}/city-guides/${cityData?.city}?from=quiz`);
     } catch (error) {
       logger.error("Erreur lors de la soumission de l'email", error);
       alert(t("quiz.error_generic", { ns: "questions" }));
@@ -399,71 +397,44 @@ function QuizContent({ lng }: { lng: string }): ReactElement {
               </p>
             </div>
 
-            {!showDetails ? (
-              <div>
-                <h3 className="mb-4 text-xl font-semibold">
-                  {t("quiz.email_form_title", { ns: "questions" })}
-                </h3>
-                <form
-                  onSubmit={(e) => void handleEmailSubmit(e)}
-                  className="mt-6"
-                >
-                  <div className="flex flex-col justify-center gap-4 sm:flex-row">
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => {
-                        setEmail(e.target.value);
-                      }}
-                      placeholder={t("quiz.email_placeholder", {
-                        ns: "questions",
-                      })}
-                      required
-                      disabled={isEmailSubmitting}
-                      className="rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 sm:w-1/2"
-                    />
-                    <button
-                      type="submit"
-                      disabled={isEmailSubmitting}
-                      className={`bg-primary ${
-                        isEmailSubmitting
-                          ? "cursor-not-allowed opacity-70"
-                          : "hover:bg-primary-600"
-                      } rounded-lg px-6 py-3 font-medium text-white transition-colors`}
-                    >
-                      {isEmailSubmitting
-                        ? t("quiz.email_submitting", { ns: "questions" })
-                        : t("quiz.email_submit", { ns: "questions" })}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            ) : (
-              <div>
-                <h3 className="mb-4 text-xl font-semibold text-green-600">
-                  {t("quiz.email_thanks", { ns: "questions" })}
-                </h3>
-                <div className="mt-6 rounded-lg bg-primary-50 p-6">
-                  <div className="mb-4 flex justify-center text-6xl">✅</div>
-                  <h4 className="mb-4 text-xl font-semibold text-primary">
-                    {t("quiz.confirmation_title", { ns: "questions" })}
-                  </h4>
-                  <p className="mb-2 text-left">
-                    {t("quiz.confirmation_intro", { ns: "questions" })}
-                  </p>
-                  <ul className="mb-4 pl-8 text-left">
-                    <li>{t("quiz.confirmation_city", { ns: "questions" })}</li>
-                    <li>
-                      {t("quiz.confirmation_activities", { ns: "questions" })}
-                    </li>
-                    <li>{t("quiz.confirmation_tips", { ns: "questions" })}</li>
-                  </ul>
-                  <p className="mt-4 text-sm text-gray-600">
-                    {t("quiz.check_spam", { ns: "questions" })}
-                  </p>
+            <div>
+              <h3 className="mb-4 text-xl font-semibold">
+                {t("quiz.email_form_title", { ns: "questions" })}
+              </h3>
+              <form
+                onSubmit={(e) => void handleEmailSubmit(e)}
+                className="mt-6"
+              >
+                <div className="flex flex-col justify-center gap-4 sm:flex-row">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                    placeholder={t("quiz.email_placeholder", {
+                      ns: "questions",
+                    })}
+                    required
+                    disabled={isEmailSubmitting}
+                    className="rounded-lg border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 sm:w-1/2"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isEmailSubmitting}
+                    className={`bg-primary ${
+                      isEmailSubmitting
+                        ? "cursor-not-allowed opacity-70"
+                        : "hover:bg-primary-600"
+                    } rounded-lg px-6 py-3 font-medium text-white transition-colors`}
+                  >
+                    {isEmailSubmitting
+                      ? t("quiz.email_submitting", { ns: "questions" })
+                      : t("quiz.email_submit", { ns: "questions" })}
+                  </button>
                 </div>
-              </div>
-            )}
+              </form>
+            </div>
           </div>
         ) : (
           // Écran de chargement pendant l'analyse des réponses

@@ -6,6 +6,7 @@ import React from "react";
 
 import { useTranslationClient } from "@/app/i18n/client";
 import { FlagIconCustom } from "@/components/FlagIconCustom";
+import { ShareContent } from "@/components/ShareContent";
 import { SharePopup } from "@/components/SharePopup";
 
 import { SUPPORTED_CITIES } from "../../quiz/recommend-city/data/cities";
@@ -142,10 +143,14 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
         {/* Corps */}
         <div className="p-8">
           {/* Description */}
-          <div className="mb-10">
+          <div className="mb-5">
             <p className="leading-relaxed text-gray-500">
               {tWithCity("description")}
             </p>
+          </div>
+
+          <div className="mb-10 flex justify-center">
+            <ShareContent lng={lng} />
           </div>
 
           {/* Incontournables */}

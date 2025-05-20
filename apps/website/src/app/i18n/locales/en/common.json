@@ -29,6 +29,7 @@
     "no_results": "No cities match your search."
   },
   "footer": {
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "email": "contact@vagabond.gg"
   }
 }

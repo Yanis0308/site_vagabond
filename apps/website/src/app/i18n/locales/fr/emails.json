@@ -1,8 +1,10 @@
 {
   "title": "Découvre ta destination idéale !",
   "preview": "",
-  "description": "👋 Salut",
-  "thanks": "Merci d'avoir répondu à notre quiz ! 🌍 ✈️ On a analysé tes réponses et trouvé la destination parfaite pour ton prochain voyage… 🎯",
+  "description": "👋 Salut,",
+  "thanks": "Merci d'avoir répondu à notre quiz !",
+  "thanks_second_part": "On a analysé tes réponses et trouvé la destination parfaite pour ton prochain voyage… 🎯",
+  "thanks_third_part": "Tu peux découvrir ta destination idéale en cliquant sur le bouton ci-dessous. ⤵️",
   "seeDestination": "Voir ma ville",
   "promise": "(Promis, c'est une pépite 😏)",
   "whatIsVagabond": "Vagabond, c'est quoi ?",

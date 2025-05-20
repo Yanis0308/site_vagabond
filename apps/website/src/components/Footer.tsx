@@ -69,8 +69,8 @@ export default function Footer({ lng }: FooterProps): ReactNode {
         </div>
         <div className="mt-6 text-center text-sm text-gray-500">
           <p>
-            © {new Date().getFullYear()} {"Vagabond. "}
-            {t("footer.rights")}
+            © {new Date().getFullYear()} {"Vagabond - "}
+            {t("footer.email")}
           </p>
         </div>
       </div>

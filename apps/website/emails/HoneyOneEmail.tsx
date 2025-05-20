@@ -69,15 +69,21 @@ export const HoneyOneEmail = ({
                   "https://res.cloudinary.com/dkkyl2gjb/image/upload/v1743522684/vagabond-invert-color_bmrqw2.png"
                 }
                 height="120"
-                alt="Vagabond"
+                alt="Vagabond logo"
                 className="mx-auto"
               />
             </Section>
             <Text className="mb-5 text-base leading-6 text-gray-700">
               {t("description")}
             </Text>
-            <Text className="mb-5 text-base leading-6 text-gray-700">
+            <Text className="mb-2 text-base leading-6 text-gray-700">
               {t("thanks")}
+            </Text>
+            <Text className="mb-5 text-base leading-6 text-gray-700">
+              {t("thanks_second_part")}
+            </Text>
+            <Text className="mb-5 text-base leading-6 text-gray-700">
+              {t("thanks_third_part")}
             </Text>
             <Section className="my-8 text-center">
               <span className="mr-2 text-[40px]">👉</span>

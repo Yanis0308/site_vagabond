@@ -1,8 +1,10 @@
 {
   "title": "Discover your ideal destination!",
   "preview": "Discover your ideal destination!",
-  "description": "👋 Hello",
-  "thanks": "Thank you for answering our quiz! 🌍 ✈️ We analyzed your answers and found the perfect destination for your next trip… 🎯",
+  "description": "👋 Hello,",
+  "thanks": "Thank you for answering our quiz!",
+  "thanks_second_part": "We analyzed your answers and found the perfect destination for your next trip… 🎯",
+  "thanks_third_part": "You can now discover your ideal destination by clicking on the button below. ⤵️",
   "seeDestination": "See my city",
   "promise": "(Promise, it's a gem 😏)",
   "whatIsVagabond": "What is Vagabond?",
