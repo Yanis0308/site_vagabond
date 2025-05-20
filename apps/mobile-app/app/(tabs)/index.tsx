@@ -20,6 +20,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 import colors from "tailwindcss/colors";
 
 import { useImageLoader } from "@/components/maps/imgLoader";
@@ -51,6 +52,8 @@ export interface OnPressEvent {
 }
 
 export default React.memo(function MapsTab(): ReactElement {
+  const { t } = useTranslation("common");
+
   const [bounds, setBounds] = useState<
     [[number, number], [number, number]] | null
   >(null);
@@ -364,15 +367,14 @@ export default React.memo(function MapsTab(): ReactElement {
             borderRadius: 5,
           }}
         >
-          <Text>Zoom: {zoom}</Text>
-          <Text>POIs: {placesData?.length ?? 0}</Text>
-          <Text>Img queue: {queueLength}</Text>
-          <Text>Img loading: {pendingRequests}</Text>
+          <Text>{t("zoom", { zoom })}</Text>
+          <Text>{t("pois", { pois: placesData?.length ?? 0 })}</Text>
+          <Text>{t("img_queue", { queueLength })}</Text>
+          <Text>{t("img_loading", { pendingRequests })}</Text>
           <Text>
-            Clustering:{" "}
-            {zoom !== null && zoom < CLUSTER_MAX_ZOOM + 1
-              ? "Activé"
-              : "Désactivé"}
+            {t("clustering", {
+              enabled: zoom !== null && zoom < CLUSTER_MAX_ZOOM + 1,
+            })}
           </Text>
         </View>
       </Box>

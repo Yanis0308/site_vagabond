@@ -5,6 +5,7 @@ import { router, Stack, useLocalSearchParams } from "expo-router";
 import { AlertCircle } from "lucide-react-native";
 import { type ReactElement, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { ScrollView } from "react-native";
 import { z } from "zod";
 
@@ -39,6 +40,7 @@ type ValidatePlaceType = z.infer<typeof ValidatePlaceSchema>;
 
 //eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function PlaceDetails(): ReactElement {
+  const { t } = useTranslation("common");
   const { data: placesData } = usePlaces(
     useMemo(
       () => ({
@@ -124,10 +126,10 @@ export default function PlaceDetails(): ReactElement {
   const missingPlaceComponent = useMemo(
     () => (
       <Box>
-        <Text>Error - Missing place</Text>
+        <Text>{t("error_missing_place")}</Text>
       </Box>
     ),
-    [],
+    [t],
   );
   if (place === undefined) {
     return missingPlaceComponent;
@@ -152,12 +154,16 @@ export default function PlaceDetails(): ReactElement {
         >
           <FormControlLabel>
             <FormControlLabelText>
-              Your current location is {JSON.stringify(watch("position"))}
+              {t("your_current_location_is", {
+                position: JSON.stringify(watch("position")),
+              })}
             </FormControlLabelText>
           </FormControlLabel>
           <FormControlError>
             <FormControlErrorIcon as={AlertCircle} />
-            <FormControlErrorText>Your position is needed</FormControlErrorText>
+            <FormControlErrorText>
+              {t("your_position_is_needed")}
+            </FormControlErrorText>
           </FormControlError>
         </FormControl>
 
@@ -169,7 +175,7 @@ export default function PlaceDetails(): ReactElement {
           isRequired={true}
         >
           <FormControlLabel>
-            <FormControlLabelText>Your photo</FormControlLabelText>
+            <FormControlLabelText>{t("your_photo")}</FormControlLabelText>
           </FormControlLabel>
           <Controller
             control={control}
@@ -191,7 +197,9 @@ export default function PlaceDetails(): ReactElement {
           />
           <FormControlError>
             <FormControlErrorIcon as={AlertCircle} />
-            <FormControlErrorText>Your photo is needed</FormControlErrorText>
+            <FormControlErrorText>
+              {t("your_photo_is_needed")}
+            </FormControlErrorText>
           </FormControlError>
         </FormControl>
         {/*TODO: utiliser une librairie du style classnames cx()*/}
@@ -201,7 +209,7 @@ export default function PlaceDetails(): ReactElement {
           onPress={void handleSubmit(onSubmit)}
           disabled={isSubmitting}
         >
-          <ButtonText>Submit</ButtonText>
+          <ButtonText>{t("submit")}</ButtonText>
         </Button>
       </VStack>
     </ScrollView>

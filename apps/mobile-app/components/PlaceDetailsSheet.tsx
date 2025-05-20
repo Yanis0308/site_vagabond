@@ -8,6 +8,7 @@ import React, {
   useMemo,
   useRef,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
@@ -23,6 +24,7 @@ import { type PoiType } from "@/utils/types";
 import { ButtonLink } from "./custom-ui/ButtonLink";
 import { Box } from "./ui/box";
 import { Divider } from "./ui/divider";
+
 interface PlaceDetailsSheetV2Props {
   place: PoiType | null;
   validatedPlace: ValidatedPlaceType | null;
@@ -36,6 +38,7 @@ export const PlaceDetailsSheet = memo(
     validatedPlace,
     onPressLink,
   }: PlaceDetailsSheetV2Props): ReactElement => {
+    const { t } = useTranslation("common");
     const DEFAULT_SNAP_POINT = 1;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -74,7 +77,9 @@ export const PlaceDetailsSheet = memo(
           <VStack className="w-full gap-5 px-5 pb-10">
             <Center className={"gap-5"}>
               <Heading size={"2xl"} className={"text-center"}>
-                🏛️ {place?.data[0]?.name}
+                {t("place_details_sheet.title", {
+                  name: place?.data[0]?.name,
+                })}
               </Heading>
               <CustomImage
                 source={`https://picsum.photos/seed/${place?.id}/1000/1000`}
@@ -84,14 +89,18 @@ export const PlaceDetailsSheet = memo(
               />
               {validatedPlace !== null ? null : (
                 <Button onPress={onPressLink}>
-                  <ButtonText>📍 J'y suis !</ButtonText>
+                  <ButtonText>
+                    {t("place_details_sheet.visit_place")}
+                  </ButtonText>
                 </Button>
               )}
             </Center>
             <Text size={"lg"}>{place?.data[0]?.description}</Text>
             {validatedPlace !== null ? (
               <VStack className={"items-center gap-1"}>
-                <Heading size={"xl"}>Your photo :</Heading>
+                <Heading size={"xl"}>
+                  {t("place_details_sheet.your_photo")}
+                </Heading>
                 <CustomImage
                   source={validatedPlace.photo.formats.large.url}
                   alt="Place photo illustration"
@@ -108,19 +117,25 @@ export const PlaceDetailsSheet = memo(
                     href={`https://www.google.com/search?q=${place.data[0].name}`}
                     className="rounded-full"
                   >
-                    <ButtonText>🔍🌐</ButtonText>
+                    <ButtonText>
+                      {t("place_details_sheet.search_on_google")}
+                    </ButtonText>
                   </ButtonLink>
                   <ButtonLink
                     href={`https://www.google.com/maps/search/?api=1&query=${place.data[0].name}`}
                     className="rounded-full"
                   >
-                    <ButtonText>🔍🗺️</ButtonText>
+                    <ButtonText>
+                      {t("place_details_sheet.search_on_google")}
+                    </ButtonText>
                   </ButtonLink>
                   <ButtonLink
                     href={navigationLink as ExternalPathString}
                     className="rounded-full"
                   >
-                    <ButtonText>🧭</ButtonText>
+                    <ButtonText>
+                      {t("place_details_sheet.navigate_to_place")}
+                    </ButtonText>
                   </ButtonLink>
                   <ButtonLink
                     //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
@@ -129,7 +144,9 @@ export const PlaceDetailsSheet = memo(
                     //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
                     isDisabled={place.data[0]?.rawInfo?.wikipedia === undefined}
                   >
-                    <ButtonText>🇼🌐</ButtonText>
+                    <ButtonText>
+                      {t("place_details_sheet.search_on_wikipedia")}
+                    </ButtonText>
                   </ButtonLink>
                   <ButtonLink
                     //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
@@ -138,7 +155,9 @@ export const PlaceDetailsSheet = memo(
                     //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
                     isDisabled={place.data[0]?.rawInfo?.wikidata === undefined}
                   >
-                    <ButtonText>🇼</ButtonText>
+                    <ButtonText>
+                      {t("place_details_sheet.search_on_wikidata")}
+                    </ButtonText>
                   </ButtonLink>
                 </Box>
                 <Divider />

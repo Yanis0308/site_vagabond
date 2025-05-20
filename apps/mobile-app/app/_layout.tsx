@@ -1,6 +1,7 @@
 import "@/global.css";
 import "react-native-reanimated";
 import "../global.css";
+import "@/localization";
 
 import { getAuth } from "@react-native-firebase/auth";
 import Mapbox from "@rnmapbox/maps";

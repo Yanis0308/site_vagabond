@@ -1,0 +1,36 @@
+{
+  "tabs": {
+    "map": "Map",
+    "settings": "Settings"
+  },
+  "camera_permission_required": "We need your permission to use the camera",
+  "place_details_sheet": {
+    "title": "✨ {{name}}",
+    "visit_place": "Visit place",
+    "your_photo": "Your photo",
+    "search_on_google": "Search on Google",
+    "search_on_wikipedia": "Search on Wikipedia",
+    "search_on_wikidata": "Search on Wikidata",
+    "navigate_to_place": "Navigate to place"
+  },
+  "picture_input": {
+    "add_your_photo": "Add your photo",
+    "remove_photo": "Remove photo",
+    "open_camera": "Open camera",
+    "open_gallery": "Open gallery"
+  },
+  "app_name": "Vagabond",
+  "welcome_to_the_neo-tourism": "Welcome to the neo-tourism !",
+  "error_missing_place": "Error - Missing place",
+  "your_current_location_is": "Your current location is {{position}}",
+  "your_position_is_needed": "Your position is needed",
+  "your_photo_is_needed": "Your photo is needed",
+  "submit": "Submit",
+  "green_text": "Green text",
+  "sign_out": "Sign out",
+  "zoom": "Zoom: {{zoom}}",
+  "pois": "POIs: {{pois}}",
+  "img_queue": "Img queue: {{queueLength}}",
+  "img_loading": "Img loading: {{pendingRequests}}",
+  "clustering": "Clustering: {{enabled}}"
+}

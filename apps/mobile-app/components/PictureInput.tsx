@@ -2,6 +2,7 @@ import * as ImagePicker from "expo-image-picker";
 import { Camera, ImagePlus, Images } from "lucide-react-native";
 import { memo, type ReactElement, useMemo, useState } from "react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { Box } from "@/components/ui/box";
@@ -32,6 +33,7 @@ export const PictureInput = memo(
     setImageInfo,
     resetImage,
   }: PictureInputProps): ReactElement => {
+    const { t } = useTranslation("common");
     const [showModal, setShowModal] = useState(false);
 
     const openCamera = async (): Promise<void> => {
@@ -86,7 +88,7 @@ export const PictureInput = memo(
             {currentImageInfo === undefined ? (
               <>
                 <Icon className=" h-32 w-full" as={ImagePlus} />
-                <Text size={"2xl"}>Add your photo</Text>
+                <Text size={"2xl"}>{t("add_your_photo")}</Text>
               </>
             ) : (
               <>
@@ -97,7 +99,7 @@ export const PictureInput = memo(
                   className={"size-full"}
                 />
                 <Button onPress={resetImage}>
-                  <ButtonText>Remove photo</ButtonText>
+                  <ButtonText>{t("remove_photo")}</ButtonText>
                 </Button>
               </>
             )}
@@ -116,11 +118,13 @@ export const PictureInput = memo(
               <VStack className={"gap-4"}>
                 <Button className={"gap-2"} onPress={void openCamera}>
                   <ButtonIcon as={Camera} />
-                  <ButtonText className={""}>Open camera</ButtonText>
+                  <ButtonText className={""}>{t("open_camera")}</ButtonText>
                 </Button>
                 <Button className={"gap-2"} onPress={void pickImage}>
                   <ButtonIcon as={Images} className="mr-2" />
-                  <ButtonText className={"pl-4"}>Open gallery</ButtonText>
+                  <ButtonText className={"pl-4"}>
+                    {t("open_gallery")}
+                  </ButtonText>
                 </Button>
               </VStack>
             </ModalBody>

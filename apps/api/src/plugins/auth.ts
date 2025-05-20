@@ -13,8 +13,9 @@ declare module "fastify" {
 const PUBLIC_PATHS: Array<string | RegExp> = [
   // String or RegExp
   //   "/api/health",
-  //   /^\/api\/public\/.*/, // Tout ce qui commence par /api/public/
-  /^\/documentation.*/,
+  //   /^\/api\/public\/.*/, // All paths starting with /api/public/
+  // /^\/documentation.*/, // Documentation if needed
+  ///.*/, All for testing
 ];
 
 export default fp(

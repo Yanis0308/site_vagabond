@@ -1,6 +1,6 @@
 // https://docs.expo.dev/guides/using-eslint/
 module.exports = {
-  extends: ["../../.eslintrc", "expo"],
+  extends: ["../../.eslintrc", "expo", "plugin:i18next/recommended"],
   parserOptions: {
     project: "./tsconfig.json",
     tsconfigRootDir: __dirname,

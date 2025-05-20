@@ -14,12 +14,14 @@ import {
   useRef,
   useState,
 } from "react";
+import { useTranslation } from "react-i18next";
 import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { logger } from "@/utils/logger";
 
 //eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function CameraTest(): ReactElement {
+  const { t } = useTranslation("common");
   // Tous les hooks doivent être appelés au début, sans condition
   const [permission, requestPermission] = useCameraPermissions();
   const ref = useRef<CameraView>(null);
@@ -92,7 +94,7 @@ export default function CameraTest(): ReactElement {
     return (
       <View style={styles.container}>
         <Text style={{ textAlign: "center" }}>
-          Nous avons besoin de votre permission pour utiliser la caméra
+          {t("camera_permission_required")}
         </Text>
         <Button
           onPress={onPressRequestPermission}

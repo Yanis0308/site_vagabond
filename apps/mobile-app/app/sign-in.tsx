@@ -2,6 +2,7 @@ import { AppleButton } from "@invertase/react-native-apple-authentication";
 import { GoogleSigninButton } from "@react-native-google-signin/google-signin";
 import * as WebBrowser from "expo-web-browser";
 import { type ReactElement, useCallback, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { Box } from "@/components/ui/box";
@@ -13,6 +14,7 @@ import { useGoogleLoginMutation } from "@/hooks/mutations/useGoogleLoginMutation
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function SignInScreen(): ReactElement {
+  const { t } = useTranslation("common");
   const { isPending: googleLoginPending, mutate: googleLoginMutate } =
     useGoogleLoginMutation();
   const { isPending: appleLoginPending, mutate: appleLoginMutate } =
@@ -46,10 +48,10 @@ export default function SignInScreen(): ReactElement {
           className={"size-52"}
         />
         <Heading size={"3xl"} className={"pt-5 text-center text-white"}>
-          Vagabond
+          {t("app_name")}
         </Heading>
         <Text size={"xl"} className={"text-white"}>
-          Welcome to the neo-tourism !
+          {t("welcome_to_the_neo-tourism")}
         </Text>
       </VStack>
       <VStack>

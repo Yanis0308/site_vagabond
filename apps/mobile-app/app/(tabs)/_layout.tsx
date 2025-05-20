@@ -1,12 +1,14 @@
 import { getAuth } from "@react-native-firebase/auth";
 import { Redirect, Tabs, usePathname } from "expo-router";
 import React, { type ReactElement, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { logger } from "@/utils/logger";
 
 //eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function TabLayout(): ReactElement {
+  const { t } = useTranslation("common");
   const user = getAuth().currentUser;
   const pathname = usePathname();
 
@@ -43,7 +45,7 @@ export default function TabLayout(): ReactElement {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Carte",
+          title: t("tabs.map"),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? "map" : "map-outline"} color={color} />
           ),
@@ -53,7 +55,7 @@ export default function TabLayout(): ReactElement {
       <Tabs.Screen
         name="profile"
         options={{
-          title: "Profil",
+          title: t("tabs.settings"),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "person" : "person-outline"}

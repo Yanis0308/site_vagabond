@@ -2,6 +2,7 @@ import { getAuth } from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { router } from "expo-router";
 import { type ReactElement, useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import { logger } from "@/utils/logger";
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function HomeScreen(): ReactElement {
+  const { t } = useTranslation("common");
   const [isSigningOut, setIsSigningOut] = useState(false);
   const signOut = useCallback(async () => {
     setIsSigningOut(true);
@@ -34,11 +36,13 @@ export default function HomeScreen(): ReactElement {
 
   return (
     <Box className={"flex size-full items-center justify-center gap-4"}>
-      <Text className={"text-2xl text-white"}>Welcome !</Text>
-      <Text className={"text-green-500"}>Green text</Text>
+      <Text className={"text-2xl text-white"}>
+        {t("welcome_to_the_neo-tourism")}
+      </Text>
+      <Text className={"text-green-500"}>{t("green_text")}</Text>
       <Button disabled={isSigningOut}>
         <ButtonText onPress={onPress} disabled={isSigningOut}>
-          Sign out
+          {t("sign_out")}
         </ButtonText>
       </Button>
     </Box>
