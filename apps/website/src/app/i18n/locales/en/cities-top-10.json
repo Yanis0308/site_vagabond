@@ -33,8 +33,9 @@
     "title": "🗣️ Share the quiz!",
     "description_share": "Share the quiz with your friends and compare your results to find out which city to choose for your next trip!",
     "description_retake": "You can also retake the quiz to get another result!",
-    "share-button-mobile": "Share the quiz",
+    "share-button-mobile": "Share in story",
     "share-button-desktop": "Copy link",
+    "download-image": "Download image",
     "copied": "Link copied !",
     "retake-test": "🔄 Retake the quiz"
   },

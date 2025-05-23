@@ -120,7 +120,9 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
 
   return (
     <div className="min-h-screen bg-primary-50 md:py-4">
-      {showPopup && <SharePopup onClose={handleClosePopup} lng={lng} />}
+      {showPopup && (
+        <SharePopup onClose={handleClosePopup} lng={lng} city={city} />
+      )}
 
       <div className="mx-auto max-w-4xl overflow-hidden bg-white shadow-lg md:rounded-xl">
         {/* En-tête avec image de couverture */}
@@ -143,14 +145,15 @@ export default function CityPage({ params }: CityPageProps): ReactNode {
         {/* Corps */}
         <div className="p-8">
           {/* Description */}
-          <div className="mb-5">
-            <p className="leading-relaxed text-gray-500">
-              {tWithCity("description")}
-            </p>
-          </div>
-
-          <div className="mb-10 flex justify-center">
-            <ShareContent lng={lng} />
+          <div className="mb-10 grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="flex flex-col items-center justify-center">
+              <p className="leading-relaxed text-gray-500">
+                {tWithCity("description")}
+              </p>
+            </div>
+            <div className="flex flex-col items-center justify-center">
+              <ShareContent lng={lng} city={city} />
+            </div>
           </div>
 
           {/* Incontournables */}

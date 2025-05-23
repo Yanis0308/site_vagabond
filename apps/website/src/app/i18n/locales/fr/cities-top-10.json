@@ -33,8 +33,9 @@
     "title": "🗣️ Partage le quiz !",
     "description_share": "Propose à tes amis de faire le quiz et compare leurs résultats pour savoir quelle ville choisir pour ton prochain voyage !",
     "description_retake": "Tu peux également refaire le quiz pour obtenir un autre résultat !",
-    "share-button-mobile": "Partager le quiz",
+    "share-button-mobile": "Partager en story",
     "share-button-desktop": "Copier le lien",
+    "download-image": "Télécharger l'image",
     "copied": "Lien copié !",
     "retake-test": "🔄 Refaire le quiz"
   },

@@ -6,9 +6,14 @@ import { ShareContent } from "./ShareContent";
 interface SharePopupProps {
   onClose: () => void;
   lng: string;
+  city: string;
 }
 
-export const SharePopup = ({ onClose, lng }: SharePopupProps): ReactNode => {
+export const SharePopup = ({
+  onClose,
+  lng,
+  city,
+}: SharePopupProps): ReactNode => {
   useEffect(() => {
     document.body.classList.add("overflow-hidden");
 
@@ -17,9 +22,18 @@ export const SharePopup = ({ onClose, lng }: SharePopupProps): ReactNode => {
     };
   }, []);
 
+  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>): void => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <ShareContent lng={lng} onClose={onClose} />
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      onClick={handleBackdropClick}
+    >
+      <ShareContent lng={lng} onClose={onClose} city={city} />
     </div>,
     document.body,
   );
