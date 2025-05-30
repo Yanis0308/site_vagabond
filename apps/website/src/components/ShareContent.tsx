@@ -1,3 +1,4 @@
+"use client";
 import { logger } from "@vagabond/shared-utils";
 import Image from "next/image";
 import Link from "next/link";
@@ -124,7 +125,7 @@ export const ShareContent = ({
             onClick={(): void => {
               void handleShareMobile();
             }}
-            className="flex w-full items-center justify-center rounded-lg bg-primary-500 px-4 py-2 text-center text-white hover:bg-primary-600 md:hidden"
+            className="flex w-full animate-bounce items-center justify-center rounded-lg bg-primary-500 px-4 py-2 text-center text-white hover:bg-primary-600 md:hidden"
             aria-label={t("share-popup.share-button-mobile", {
               ns: "cities-top-10",
             })}
@@ -147,7 +148,7 @@ export const ShareContent = ({
             onClick={(): void => {
               void handleDownloadImage();
             }}
-            className="hidden w-full items-center justify-center rounded-lg bg-primary-500 px-4 py-2 text-center text-white hover:bg-primary-600 md:flex"
+            className="hidden w-full animate-bounce items-center justify-center rounded-lg bg-primary-500 px-4 py-2 text-center text-white hover:bg-primary-600 md:flex"
             aria-label={t("share-popup.download-image", {
               ns: "cities-top-10",
             })}

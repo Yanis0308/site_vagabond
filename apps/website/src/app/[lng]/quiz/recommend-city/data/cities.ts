@@ -60,4 +60,14 @@ export const SUPPORTED_CITIES: string[] = [
   "punta-cana",
   "santiago",
   "cairo",
+  // Another new cities
+  "cape-town",
+  "cuzco",
+  "maputo",
+  "montreal",
+  "nairobi",
+  "sapporo",
+  "split",
+  "ushuaia",
+  "zanzibar",
 ];

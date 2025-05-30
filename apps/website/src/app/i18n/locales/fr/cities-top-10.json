@@ -1,4 +1,7 @@
 {
+  "metadata": {
+    "title": "{{city}} - Fiche pratique - Vagabond"
+  },
   "top-6-places": "Top 6 Incontournables",
   "taste": "À goûter absolument",
   "taste-emoji": "🍽️",
@@ -4038,6 +4041,600 @@
       "ambulance": "123",
       "pompiers": "180",
       "police-touristique": "126"
+    }
+  },
+  "cape-town": {
+    "name": "Le Cap",
+    "country": "Afrique du Sud",
+    "country-code": "ZA",
+    "image": "https://media.cntraveller.com/photos/66d724b8446a12744e2568e6/16:9/w_5472,h_3078,c_limit/Cape%20town-GettyImages-671323338.jpg",
+    "title": "Le Cap, entre océan, montagnes et culture arc-en-ciel",
+    "description": "Nichée entre l’océan Atlantique et la majestueuse montagne de la Table, Le Cap est une ville aux multiples visages, où la nature brute côtoie une culture urbaine dynamique. Entre plages sauvages, vignobles renommés, townships chargés d’histoire et scènes artistiques émergentes, la ville sud-africaine séduit par sa diversité et son énergie. Suivez notre guide pour explorer les sites emblématiques, savourer les plats locaux, comprendre l’histoire complexe de la région et vivre une expérience inoubliable au bout du continent africain.",
+    "top-places": [
+      {
+        "name": "Table Mountain",
+        "image": "https://www.capetown.travel/wp-content/uploads/Tmac.jpg"
+      },
+      {
+        "name": "Robben Island",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/a4/f2/14/robben-islandhas-been.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Bo-Kaap",
+        "image": "https://cdn.artphotolimited.com/images/5bf29c0394e4b9227198b2ee/1000x1000/quartier-malais-de-bo-kaap-a-cape-town.jpg"
+      },
+      {
+        "name": "Cape Point",
+        "image": "https://www.intotours.co.za/media/cache/a3/26/a3263ef1cc7bba021773794909866f0b.jpg"
+      },
+      {
+        "name": "Plage de Boulders (pingouins !)",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0d/ce/3c/14/photo1jpg.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Victoria & Alfred Waterfront",
+        "image": "https://images.ctfassets.net/alq2bbxrnc72/2uiW6XvEWD8ehOAhMsKiYu/9fac37fe37f0dbbac39818d37b82119c/untitled-8.jpg?fm=webp&w=3840&q=70"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Bobotie – Plat sucré-salé au bœuf haché épicé",
+        "image": "https://tasteoftheplace.com/wp-content/uploads/2017/05/Bobotie-at-TasteOfThePlace.com-inline.jpg"
+      },
+      {
+        "name": "Biltong – Viande séchée sud-africaine",
+        "image": "https://tb-static.uber.com/prod/image-proc/processed_images/e8fdfa082c7fac05c5f829fa2810b63b/df577d3a0807d3bb859f2fb53aefcd86.jpeg"
+      },
+      {
+        "name": "Gatsby – Sandwich géant ultra-gourmand",
+        "image": "https://www.bona.co.za/wp-content/uploads/2024/09/20240830_132544-e1725022920539.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais (et afrikaans, xhosa...) – l’anglais est la langue touristique",
+      "weather": "Entre 12°C et 22°C en hiver austral (juillet-août), climat doux et venteux",
+      "currency": "Rand sud-africain (ZAR)",
+      "airport": "Aéroport international du Cap (CPT)",
+      "transport": "Uber / Minibus locaux / Bus MyCiTi (carte prépayée)"
+    },
+    "tips": {
+      "payment": "CB acceptée quasiment partout, prévoir du cash pour les marchés",
+      "time-zone": "UTC+02",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 18h30-21h30",
+      "water": "Potable en centre-ville, mais privilégier l’eau en bouteille par précaution",
+      "electric-plugs": "Type M (220V – adaptateur souvent nécessaire)"
+    },
+    "emergency-numbers": {
+      "police": "10111",
+      "ambulance": "10177"
+    }
+  },
+  "cuzco": {
+    "name": "Cusco",
+    "country": "Pérou",
+    "country-code": "PE",
+    "image": "https://www.voyage-perou.com/wp-content/uploads/reg-cus-ville001.jpeg",
+    "title": "Cusco, la porte d’entrée des merveilles andines",
+    "description": "Ancienne capitale de l’Empire Inca, Cusco est aujourd’hui un joyau culturel niché au cœur des Andes, où les pierres sacrées des civilisations précolombiennes cohabitent avec les balcons en bois de l’ère coloniale. Arpentez ses ruelles pavées bordées de marchés colorés, de musées fascinants et de sites archéologiques uniques. Notre guide vous accompagne dans la découverte de cette ville andine incontournable, véritable porte d’entrée vers le légendaire Machu Picchu et les mystères de la vallée sacrée.",
+    "top-places": [
+      {
+        "name": "Machu Picchu",
+        "image": "https://res.cloudinary.com/hello-tickets/image/upload/c_limit,f_auto,q_auto,w_1300/v1686107567/xzkqqky5plb23ou7u6zp.jpg"
+      },
+      {
+        "name": "Sacsayhuamán",
+        "image": "https://trexperienceperu.com/sites/default/files/2023-01/sacsayhuayman-cusco-trexperience.jpg"
+      },
+      {
+        "name": "Qorikancha",
+        "image": "https://photo.comptoir.fr/asset/mot-cle/1568/qorikancha-perou-552228-1440x670.jpg"
+      },
+      {
+        "name": "San Blas",
+        "image": "https://www.peruhop.com/wp-content/uploads/san-blas-cusco-790x395-1.jpg"
+      },
+      {
+        "name": "Marché de San Pedro",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1b/40/2c/f3/souvenir-hunters-can.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Plaza de Armas",
+        "image": "https://cdn.getyourguide.com/img/location/5b79b0d4f2c29.jpeg/99.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Cuy chactado – Cochon d’Inde frit, plat traditionnel",
+        "image": "https://x-tremetourbulencia.com/wp-content/uploads/2025/04/cuy-chactado-arequipa-1024x683.webp"
+      },
+      {
+        "name": "Lomo saltado – Sauté de bœuf aux légumes, fusion andine",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/1b/16/3f/a8/lomo-saltado-a-peruvian.jpg"
+      },
+      {
+        "name": "Chicha morada – Boisson sucrée à base de maïs violet",
+        "image": "https://www.apec2016.pe/wp-content/uploads/2021/07/Chicha-morada.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol (majoritaire), quechua",
+      "weather": "Climat tempéré de haute altitude, nuits fraîches",
+      "currency": "Sol péruvien (PEN)",
+      "airport": "Aéroport international Alejandro Velasco Astete (CUZ)",
+      "transport": "Taxis, minibus, marche pour le centre historique"
+    },
+    "tips": {
+      "payment": "Cash privilégié, cartes acceptées dans les grandes enseignes",
+      "time-zone": "UTC-5",
+      "meal-hours": "Déjeuner 12h-15h, dîner 19h-22h",
+      "water": "Eau en bouteille recommandée",
+      "electric-plugs": "Type A et C (220V, 60Hz)"
+    },
+    "emergency-numbers": {
+      "police": "105",
+      "ambulance": "116"
+    }
+  },
+  "maputo": {
+    "name": "Maputo",
+    "country": "Mozambique",
+    "country-code": "MZ",
+    "image": "https://www.flytap.com/-/media/Flytap/new-tap-pages/destinations/africa/mozambique/maputo/maputo-og-image-v2-1200x630.jpg",
+    "title": "Maputo, entre charme colonial et douceur côtière",
+    "description": "Capitale vibrante au bord de l’océan Indien, Maputo séduit par son énergie chaleureuse, son architecture coloniale aux couleurs pastel, et ses marchés animés où se mêlent odeurs d’épices, fruits tropicaux et artisanat local. Entre musées, street art, musique live et plages à proximité, cette métropole mozambicaine offre un savoureux mélange d’histoire, de culture et de modernité africaine. Notre guide vous accompagne à la découverte de cette ville envoûtante, encore méconnue, mais résolument attachante.",
+    "top-places": [
+      {
+        "name": "Fortaleza de Maputo",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/3/30/Fortaleza_de_Maputo.jpg"
+      },
+      {
+        "name": "Cathédrale de Maputo",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/S%C3%A9_Catedral_de_Maputo_%283911472999%29.jpg/2560px-S%C3%A9_Catedral_de_Maputo_%283911472999%29.jpg"
+      },
+      {
+        "name": "Marché Central",
+        "image": "https://afar.brightspotcdn.com/dims4/default/5be5b92/2147483647/strip/false/crop/1600x800+0+0/resize/1486x743!/quality/90/?url=https%3A%2F%2Fk3-prod-afar-media.s3.us-west-2.amazonaws.com%2Fbrightspot%2Ff0%2F6e%2Fc010748daf1176e8b8a0a7ab25f9%2Foriginal-axi-12319761-2.jpg"
+      },
+      {
+        "name": "Musée National d’Art du Mozambique",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/13/ef/d9/photo0jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Jardins botaniques de Tunduru",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/10/91/da/caption.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Avenida Marginal",
+        "image": "https://enjoymoz.com/wp-content/uploads/2023/06/marginal-1080x675.jpg.webp"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Camarão grelhado – Crevettes grillées à la mozambicaine",
+        "image": "https://www.receitasemenus.net/wp-content/uploads/2013/05/camaroes-moda-mocambique.jpg"
+      },
+      {
+        "name": "Matapa – Feuilles de manioc mijotées au lait de coco",
+        "image": "https://passporterapp.com/fr/blog/wp-content/uploads/2024/12/matapa-mozambique-.jpeg"
+      },
+      {
+        "name": "Pãozinho – Petits pains locaux croustillants",
+        "image": "https://opais.co.mz/wp-content/uploads/2021/03/PAO.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Portugais (officiel), mais aussi langues locales comme le changana",
+      "weather": "Hiver austral doux et sec : 15°C à 25°C en juillet-août",
+      "currency": "Metical mozambicain (MZN)",
+      "airport": "Aéroport international de Maputo (MPM)",
+      "transport": "Minibus (chapas) / taxis / marche à pied en centre-ville"
+    },
+    "tips": {
+      "payment": "CB souvent acceptée en ville, mais cash indispensable dans les petits commerces",
+      "time-zone": "UTC+02",
+      "meal-hours": "Déjeuner 12h-14h, dîner 18h30-21h",
+      "water": "Évite l’eau du robinet, préfère l’eau en bouteille",
+      "electric-plugs": "Type C, F et M (220V – comme en Europe du Sud)"
+    },
+    "emergency-numbers": {
+      "police": "119",
+      "ambulance": "117"
+    }
+  },
+  "montreal": {
+    "name": "Montréal",
+    "country": "Canada",
+    "country-code": "CA",
+    "image": "https://cdn.authentik.com/canada/tr:w-1304,h-716,cm-pad_resize,bg-blurred/uploads/images/orig/dec_montreal/1-centre-ville-montreal.jpg",
+    "title": "Montréal, la métropole culturelle au charme européen",
+    "description": "Ville bilingue et dynamique, Montréal séduit par son mélange unique de culture francophone et nord-américaine. Des ruelles pavées du Vieux-Montréal aux fresques colorées du Plateau, en passant par une scène gastronomique inventive et des festivals effervescents toute l’année, la métropole québécoise vibre au rythme de la créativité. Notre guide vous emmène à la découverte de cette ville chaleureuse et éclectique, idéale pour les amateurs d’art, de cuisine et d’expériences authentiques.",
+    "top-places": [
+      {
+        "name": "Vieux-Montréal",
+        "image": "https://www.guidesulysse.com/images/destinations/iStock_39476666_XXXLARGE.jpg"
+      },
+      {
+        "name": "Mont Royal",
+        "image": "https://avenues.ca/wp-content/uploads/2018/09/37798868_1887346064645837_7206099852965445632_o.jpg"
+      },
+      {
+        "name": "Plateau-Mont-Royal",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/16/90/f8/1e/photo1jpg.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Marché Jean-Talon",
+        "image": "https://hashtagvoyage.fr/wp-content/uploads/2016/12/marche-jean-talon-montreal.jpg"
+      },
+      {
+        "name": "Musée des beaux-arts de Montréal",
+        "image": "https://www.mbam.qc.ca/workspace/uploads/config/aproposdumusee_en-te-te_pav-desmarais_cg_meta-fr-1585343418.jpg"
+      },
+      {
+        "name": "Rue Sainte-Catherine",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0c/4f/6f/de/rue-ste-catherine.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Poutine – Frites, fromage en grains et sauce brune",
+        "image": "https://i0.wp.com/montreal.citycrunch.ca/wp-content/uploads/sites/9/2021/01/Nos_poutines_preferees_a_Montreal-1.jpg"
+      },
+      {
+        "name": "Bagel de Montréal – Bagel dense et sucré, souvent au sésame",
+        "image": "https://www.papillesetpupilles.fr/opengraph_image/118971"
+      },
+      {
+        "name": "Smoked meat – Sandwich de viande fumée, spécialité locale",
+        "image": "https://www.clubhouse.ca/-/media/project/oneweb/mccormick-us/frenchs/recipes/m/800x800/montreal_smoked_meat_sandwiches_55773-1_800x800.jpg?rev=6956dbc7277c471eb76f9a4110732dcb&vd=20230218T224438Z&extension=webp&hash=354283412D1CBD61112A96BC9963C50B"
+      }
+    ],
+    "to-know": {
+      "language": "Français et anglais (bilingue)",
+      "weather": "Hiver froid (-10°C à -20°C), été doux (20-25°C)",
+      "currency": "Dollar canadien (CAD)",
+      "airport": "Aéroport international Pierre-Elliott-Trudeau (YUL)",
+      "transport": "Métro, bus, vélos en libre-service, marche"
+    },
+    "tips": {
+      "payment": "CB largement acceptée, cash moins courante",
+      "time-zone": "UTC-5 (heure normale de l’Est)",
+      "meal-hours": "Déjeuner 11h30-14h, dîner 18h-21h",
+      "water": "Eau potable en ville, sécurisée",
+      "electric-plugs": "Type A et B (120V, 60Hz)"
+    },
+    "emergency-numbers": {
+      "police": "911",
+      "ambulance": "911"
+    }
+  },
+  "nairobi": {
+    "name": "Nairobi",
+    "country": "Kenya",
+    "country-code": "KE",
+    "image": "https://images.ctfassets.net/bth3mlrehms2/28rs6468RzjKz61eXdhLyP/c1f4f6a391c01d35fc752d307f847b4f/Kenia_Nairobi_Nationalpark.jpg?w=1400&q=60&fm=webp",
+    "title": "Nairobi, la jungle urbaine au cœur de la savane",
+    "description": "Ville vibrante et contrastée, Nairobi offre une immersion fascinante entre effervescence urbaine et nature sauvage. Capitale kényane en pleine croissance, elle surprend avec son parc national aux portes de la ville, ses musées captivants, sa scène artistique montante et ses marchés débordants de vie. Notre guide vous révèle les multiples facettes de cette métropole africaine singulière, idéale pour les voyageurs en quête d’authenticité, d’aventure et de rencontres inattendues.",
+    "top-places": [
+      {
+        "name": "Nairobi National Park",
+        "image": "https://www.endallah.org/images/destinations/kenya-nairobi-nairobi-national-park-730x450.jpg"
+      },
+      {
+        "name": "Giraffe Centre",
+        "image": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=450,height=450,dpr=2/tour_img/2b7def6a9464a0e761f4c749e8b6e00573c572dd5bd702171b0d07068c12d43b.jpg"
+      },
+      {
+        "name": "David Sheldrick Wildlife Trust",
+        "image": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,width=450,height=450,dpr=2/tour_img/22d18115ba867ab8273156224ef71f3d65c522191e9b9cb8646511b2252bd590.jpeg"
+      },
+      {
+        "name": "Kenyatta International Conference Centre (KICC)",
+        "image": "https://kicc.co.ke/wp-content/uploads/2023/10/Home2-1.jpg"
+      },
+      {
+        "name": "Karen Blixen Museum",
+        "image": "https://www.masaimara.travel/images/karen-blixen-museum-nairobi-kenya.jpg"
+      },
+      {
+        "name": "Maasai Market",
+        "image": "https://extraordinaryjourneys.com/wp-content/uploads/2014/11/baskets.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Nyama Choma – Viande grillée à la kenyane",
+        "image": "https://www.upkenya.com/wp-content/uploads/2021/03/pexels-photo-3535383.jpg"
+      },
+      {
+        "name": "Ugali – Pâte de maïs, incontournable de la cuisine kenyane",
+        "image": "https://tasteoftheplace.com/wp-content/uploads/2017/03/Ugali-at-TasteOfThePlace.com-inline-2.jpg"
+      },
+      {
+        "name": "Samosas – Beignets farcis inspirés de la cuisine indienne",
+        "image": "https://publish.eastleighvoice.co.ke/mugera_lock/uploads/2024/03/samo1.jpeg"
+      }
+    ],
+    "to-know": {
+      "language": "Anglais et swahili (les deux officiels, largement utilisés)",
+      "weather": "Températures douces en juillet-août : 10°C à 22°C, climat sec",
+      "currency": "Shilling kényan (KES)",
+      "airport": "Aéroport international Jomo Kenyatta (NBO)",
+      "transport": "Matatus (minibus locaux) / Boda-bodas (motos-taxis) / Taxis / Uber"
+    },
+    "tips": {
+      "payment": "CB acceptée en ville, prévoir du cash pour les marchés et petites échoppes",
+      "time-zone": "UTC+03",
+      "meal-hours": "Déjeuner 12h30-14h, Dîner 19h-21h",
+      "water": "Ne bois pas l’eau du robinet, privilégie les bouteilles scellées",
+      "electric-plugs": "Type G (240V – même format qu’au Royaume-Uni)"
+    },
+    "emergency-numbers": {
+      "police": "999",
+      "ambulance": "999"
+    }
+  },
+  "sapporo": {
+    "name": "Sapporo",
+    "country": "Japon",
+    "country-code": "JP",
+    "image": "https://a.travel-assets.com/findyours-php/viewfinder/images/res70/499000/499996-sapporo-and-vicinity.jpg",
+    "title": "Sapporo, la perle du nord japonais",
+    "description": "Capitale de l’île d’Hokkaido, Sapporo séduit par son équilibre unique entre nature, modernité et traditions japonaises. Entourée de montagnes et réputée pour ses hivers enneigés, sa bière iconique et sa scène culinaire généreuse, la ville offre aussi un été doux, parfait pour échapper à la chaleur du Japon continental. Festivals, parcs, musées et quartiers animés font de Sapporo une destination surprenante et accueillante. Suivez notre guide pour explorer ses incontournables et préparer au mieux votre séjour dans le nord du Japon.",
+    "top-places": [
+      {
+        "name": "Odori Park",
+        "image": "https://www.visit-hokkaido.jp/lsc/upfile/spot/0001/0004/10004_2_l.jpg"
+      },
+      {
+        "name": "Tour de télévision de Sapporo",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/9/93/Sapporo-TV-Tower-2025.jpg"
+      },
+      {
+        "name": "Musée de la bière de Sapporo",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Sapporo_Beer_Museum.JPG/1200px-Sapporo_Beer_Museum.JPG"
+      },
+      {
+        "name": "Marché de Nijo",
+        "image": "https://www.japan-experience.com/sites/default/files/styles/scale_crop_760x556/public/legacy/japan_experience/1528360958696.jpg.webp?itok=mlgz0n99"
+      },
+      {
+        "name": "Mont Moiwa",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/07/4c/61/4f/caption.jpg?w=1200&h=-1&s=1"
+      },
+      {
+        "name": "Village historique de Hokkaido",
+        "image": "https://toucanslandmarks.s3.amazonaws.com/media/com_scatalog/images/listings/o/2020071409222423660.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Sapporo Miso Ramen - Ramen au miso typique de la ville",
+        "image": "https://i.redd.it/sapporo-style-miso-ramen-recipe-from-v0-yshw9xzlbcwa1.jpg?width=1351&format=pjpg&auto=webp&s=3bcdf3ac2b665628e079db1e145d6120da5a45d0"
+      },
+      {
+        "name": "Kaisen Don - Bol de riz aux fruits de mer frais",
+        "image": "https://tblg.k-img.com/resize/640x360c/restaurant/images/Rvw/255877/33da2847ca9eb407ef5b9023863aaf12.jpg?token=f409b2a&api=v2"
+      },
+      {
+        "name": "Jingisukann - Barbecue d’agneau façon Hokkaido",
+        "image": "https://byfood.b-cdn.net/api/public/assets/9560/content"
+      }
+    ],
+    "to-know": {
+      "language": "Japonais – l’anglais est peu répandu, prévoir une app de traduction ou quelques mots clés",
+      "weather": "Entre 18°C et 26°C en été, climat sec et agréable",
+      "currency": "Yen (¥)",
+      "airport": "New Chitose Airport (CTS)",
+      "transport": "Métro / Tram / Bus – Pass journaliers disponibles (environ 800¥)"
+    },
+    "tips": {
+      "payment": "CB acceptée dans les grandes enseignes, prévoir du cash pour les petits restos",
+      "time-zone": "UTC+09",
+      "meal-hours": "Déjeuner 11h-14h, Dîner 18h-21h",
+      "water": "Potable au robinet",
+      "electric-plugs": "Type A/B (100V)"
+    },
+    "emergency-numbers": {
+      "police": "110",
+      "ambulance": "119"
+    }
+  },
+  "split": {
+    "name": "Split",
+    "country": "Croatie",
+    "country-code": "HR",
+    "image": "https://www.terra-balka.com/wp-content/uploads/adobestock-291195528-riva-split.jpeg",
+    "title": "Split, entre histoire romaine et ambiance méditerranéenne",
+    "description": "Ville côtière ensoleillée de Croatie, Split séduit par son mélange unique d’héritage romain et d’art de vivre méditerranéen. Au cœur de son centre historique se dresse le majestueux Palais de Dioclétien, véritable ville dans la ville, entouré de ruelles animées, de marchés colorés et de terrasses animées. Entre baignades dans l’Adriatique, excursions vers les îles voisines et découvertes culturelles, Split offre un savant équilibre entre histoire, détente et énergie croate. Suivez notre guide pour une immersion totale dans cette perle de la Dalmatie.",
+    "top-places": [
+      {
+        "name": "Palais de Dioclétien",
+        "image": "https://cdn.generationvoyage.fr/2025/03/Le-Palais-de-Diocletien-a-Split-en-Croatie.jpeg"
+      },
+      {
+        "name": "Riva (front de mer)",
+        "image": "https://cf.bstatic.com/xdata/images/hotel/max1024x768/150442598.jpg?k=a19313ddc8291737f214ef8b8a9335421874ad8c726e4b0554c19e81ab01b263&o=&hp=1"
+      },
+      {
+        "name": "Cathédrale Saint-Domnius",
+        "image": "https://img1.oastatic.com/img2/85584212/max/variant.jpg"
+      },
+      {
+        "name": "Colline de Marjan",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/10/c7/47/b9/view-on-split.jpg?w=1200&h=1200&s=1"
+      },
+      {
+        "name": "Marché de Pazar",
+        "image": "https://www.vacancesencroatie.com/wp-content/uploads/2009/11/march%C3%A9-vert-2.JPG"
+      },
+      {
+        "name": "Galerie Mestrovic",
+        "image": "https://www.terra-balka.com/wp-content/uploads/gallery-mestrovic-silberfuchspixabay.jpg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Pasticada – Ragoût de bœuf mijoté aux épices et pruneaux",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/12/48/5e/31/pasticada-with-homemade.jpg"
+      },
+      {
+        "name": "Soparnik – Tarte traditionnelle aux blettes et à l’ail",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/11/d2/d4/ea/soparnik.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Poisson grillé (brancin ou orada)",
+        "image": "https://iznajmljivaci.laganini.com/img/guests/posts/26/traditional-food.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Croate",
+      "weather": "Climat méditerranéen, étés chauds et secs, hivers doux",
+      "currency": "Euro (EUR)",
+      "airport": "Aéroport de Split (SPU)",
+      "transport": "Bus, taxis, location de vélos et scooters"
+    },
+    "tips": {
+      "payment": "Carte bancaire acceptée presque partout, prévoir un peu de liquide pour les marchés",
+      "time-zone": "UTC+1 (UTC+2 en été)",
+      "meal-hours": "Déjeuner 12h-15h, dîner 19h-22h",
+      "water": "Eau potable sécurisée",
+      "electric-plugs": "Type C et F (230V, 50Hz)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "112"
+    }
+  },
+  "ushuaia": {
+    "name": "Ushuaia",
+    "country": "Argentine",
+    "country-code": "AR",
+    "image": "https://photo.comptoir.fr/asset/guide/1435/595805-1260x630-ushuaia-archipel-de-la-terre-de-feu-argentine.jpg",
+    "title": "Ushuaia, la ville au bout du monde",
+    "description": "À l’extrémité sud du continent sud-américain, Ushuaia est une ville mythique surnommée « la fin du monde ». Nichée entre les montagnes des Andes et les eaux glacées du canal Beagle, elle séduit par ses paysages saisissants mêlant glaciers, forêts australes et faune exceptionnelle. Point de départ vers l’Antarctique et la Terre de Feu, Ushuaia est un paradis pour les amoureux de nature brute, de randonnées spectaculaires et d’aventures polaires. Plongez dans notre guide pour préparer votre expédition vers le bout du monde.",
+    "top-places": [
+      {
+        "name": "Parc National Tierra del Fuego",
+        "image": "https://www.voyages-argentine.com/upload/auto/argentine/1000x405/parc-terre-de-feu-lac-esmeralda-lengas_6703e28d9b7473.00548659.webp"
+      },
+      {
+        "name": "Canal de Beagle",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/08/24/f9/76/beagle-channel.jpg?w=900&h=500&s=1"
+      },
+      {
+        "name": "Train du bout du monde",
+        "image": "https://fulanoinfo.com/wp-content/uploads/2023/05/train-bout-du-monde-08.jpg"
+      },
+      {
+        "name": "Musée Maritime & Prison d’Ushuaia",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/3/30/Ushuaia-museu-maritimo.jpg"
+      },
+      {
+        "name": "Glacier Martial",
+        "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Cerro_Martial_%28Ushuaia%29.jpg/1200px-Cerro_Martial_%28Ushuaia%29.jpg"
+      },
+      {
+        "name": "Laguna Esmeralda",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/29/02/e5/39/caption.jpg?w=1200&h=-1&s=1"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Centolla – Crabe géant, spécialité locale",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/03/59/e5/ec/volver.jpg"
+      },
+      {
+        "name": "Cordero patagónico – Agneau patagonien rôti",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/03/c1/0c/99/tierra-mayor.jpg"
+      },
+      {
+        "name": "Merluza negra – Merlu à la chair délicate",
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/16/4a/67/f5/merluza-negra-con-guarnicion.jpg"
+      }
+    ],
+    "to-know": {
+      "language": "Espagnol",
+      "weather": "Climat subpolaire océanique, frais et humide toute l'année",
+      "currency": "Peso argentin (ARS)",
+      "airport": "Aéroport international de Ushuaia – Malvinas Argentinas (USH)",
+      "transport": "Taxis, bus locaux, excursions organisées"
+    },
+    "tips": {
+      "payment": "Privilégier le cash, certaines petites structures n'acceptent pas la carte",
+      "time-zone": "UTC-3",
+      "meal-hours": "Déjeuner 12h-15h, dîner 19h-22h",
+      "water": "Eau potable généralement sécurisée, mais mieux vaut vérifier",
+      "electric-plugs": "Type C et I (220V, 50Hz)"
+    },
+    "emergency-numbers": {
+      "police": "101",
+      "ambulance": "107"
+    }
+  },
+  "zanzibar": {
+    "name": "Zanzibar",
+    "country": "Tanzanie",
+    "country-code": "TZ",
+    "image": "https://www.easytravel.co.tz/wp-content/uploads/2023/06/Stone-Town-Zanzibar-Tanzania-2.jpg",
+    "title": "Zanzibar, l’île aux parfums d’épices et aux plages infinies",
+    "description": "Zanzibar t’embarque pour une aventure sensorielle inoubliable, entre plages de sable blanc immaculé, récifs coralliens turquoise, forêts tropicales luxuriantes et ruelles anciennes empreintes d’histoire et de traditions swahilies. Ce joyau de l’océan Indien offre un équilibre parfait entre détente, découverte culturelle et immersion dans une nature généreuse. Notre guide te dévoile les lieux incontournables, les spécialités locales à déguster et tous les conseils pour profiter pleinement de cette île paradisiaque, idéale pour un été entre exploration et farniente.",
+    "top-places": [
+      {
+        "name": "Mont Kilimandjaro (excursion depuis Zanzibar)",
+        "image": "https://cdn.futura-sciences.com/sources/images/mont-Kilimanjaro.jpg"
+      },
+      {
+        "name": "Prison Island",
+        "image": "https://www.muchbetteradventures.com/magazine/content/images/2022/08/prison-island-from-above.jpg"
+      },
+      {
+        "name": "Nungwi Beach",
+        "image": "https://www.easytravel.co.tz/wp-content/uploads/2023/07/Panoramic-view-of-Nungwi-Beach-in-Zanzibar-Easy-Travel-Tanzania-scaled.jpg"
+      },
+      {
+        "name": "Jozani Forest",
+        "image": "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2b/9a/dd/84/enjoy-baby-red-monkey.jpg?w=800&h=500&s=1"
+      },
+      {
+        "name": "Stone Town",
+        "image": "https://www.easytravel.co.tz/wp-content/uploads/2020/09/Aerial-wide-shot-of-Zanzibar-Island-Tanzania.jpg"
+      },
+      {
+        "name": "Safari Blue (excursion en bateau)",
+        "image": "https://cdn.getyourguide.com/image/format=auto,fit=crop,gravity=auto,quality=60,dpr=1/tour_img/e66e9a6fc6198a98.jpeg"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Zanzibar Pizza – Street food sucrée ou salée",
+        "image": "https://plochman.com/wp-content/uploads/2023/01/PMR_Recipes_800x600_ZanzibarPizza.jpg"
+      },
+      {
+        "name": "Octopus Curry – Curry de poulpe aux épices locales",
+        "image": "https://zanzibarworld.com/wp-content/uploads/elementor/thumbs/Octopus-Curry-q40stw47ukjai8lz3yrsziougo6brmpi6zakaihf8w.jpg"
+      },
+      {
+        "name": "Urojo – Soupe de rue épicée et garnie",
+        "image": "https://cdn-images-1.medium.com/max/772/1*wqN3OaZqV32PCNcgIucRqg.jpeg"
+      }
+    ],
+    "to-know": {
+      "language": "Swahili et anglais (largement parlé dans les zones touristiques)",
+      "weather": "Entre 24°C et 30°C en juillet-août, climat chaud et sec",
+      "currency": "Shilling tanzanien (TZS), dollars US acceptés dans les zones touristiques",
+      "airport": "Aéroport international Abeid Amani Karume (ZNZ)",
+      "transport": "Taxis / Dala-dala (minibus locaux) / Location de scooters"
+    },
+    "tips": {
+      "payment": "CB acceptée dans les hôtels et restaurants, prévois du cash ailleurs",
+      "time-zone": "UTC+03",
+      "meal-hours": "Déjeuner 12h-14h, Dîner 19h-21h",
+      "water": "Évite l’eau du robinet, privilégie les bouteilles scellées",
+      "electric-plugs": "Type D/G (220V – adaptateur recommandé)"
+    },
+    "emergency-numbers": {
+      "police": "112",
+      "ambulance": "114"
     }
   }
 }

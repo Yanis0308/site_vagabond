@@ -16,7 +16,7 @@ export default function Footer({ lng }: FooterProps): ReactNode {
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center justify-center gap-4 md:flex-row  md:gap-6">
           <Link
-            href="https://www.instagram.com/vagabondapp_fr/"
+            href="https://www.instagram.com/vagabond_france/"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-3 text-gray-600 transition-colors hover:text-primary"

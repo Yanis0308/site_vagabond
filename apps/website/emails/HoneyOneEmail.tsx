@@ -116,7 +116,7 @@ export const HoneyOneEmail = ({
             <Text className="mb-3 text-base leading-6 text-gray-700">
               📲{" "}
               <Link
-                href="https://www.instagram.com/vagabondapp_fr/"
+                href="https://www.instagram.com/vagabond_france/"
                 className="text-primary no-underline hover:underline"
               >
                 {t("instagram")}
@@ -126,7 +126,7 @@ export const HoneyOneEmail = ({
             <Text className="mb-3 text-base leading-6 text-gray-700">
               🎥{" "}
               <Link
-                href="https://www.tiktok.com/@vagabond_app"
+                href="https://www.tiktok.com/@vagabond_france"
                 className="text-primary no-underline hover:underline"
               >
                 {t("tiktok")}
@@ -136,7 +136,7 @@ export const HoneyOneEmail = ({
             <Text className="mb-3 text-base leading-6 text-gray-700">
               📢{" "}
               <Link
-                href="https://www.linkedin.com/company/vagabond-app"
+                href="https://www.tiktok.com/@vagabond_france"
                 className="text-primary no-underline hover:underline"
               >
                 {t("linkedin")}

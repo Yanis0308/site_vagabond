@@ -25,7 +25,7 @@ interface CountdownTimerProps {
   };
 }
 
-const targetDate = new Date("2025-06-15T00:00:00");
+const targetDate = new Date("2025-07-15T00:00:00");
 
 export default function CountdownTimer({
   labels,

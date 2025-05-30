@@ -112,9 +112,9 @@
   "environment": {
     "question": "💭 What kind of environment do you prefer?",
     "options": {
-      "beach": "🌴 Paradise beaches",
+      "beach": "🌴 Sunny beaches",
       "city": "🏙️ Vibrant cities",
-      "mountain": "⛰️ Mountains and wide open spaces",
+      "mountain": "⛰️ Mountains and valleys",
       "countryside": "🌳 Countryside and lush nature",
       "desert": "🐪 Dry and desert landscapes"
     }
