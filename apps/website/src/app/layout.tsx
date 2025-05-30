@@ -1,5 +1,7 @@
 import { type Metadata } from "next";
-import { type ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
+
+import { FacebookPixelEvents } from "@/components/PixelEvent";
 
 import { fallbackLng } from "./i18n/settings";
 import { getMetadata } from "./metadata";
@@ -14,5 +16,12 @@ export default function RootLayout({
 }: {
   children: ReactNode;
 }): ReactNode {
-  return children;
+  return (
+    <>
+      <Suspense fallback={null}>
+        <FacebookPixelEvents />
+      </Suspense>{" "}
+      {children}
+    </>
+  );
 }
