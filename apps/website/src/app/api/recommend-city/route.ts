@@ -3,6 +3,8 @@ import { logger } from "@vagabond/shared-utils";
 import { type NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 
+export const maxDuration = 60;
+
 // Type pour les réponses
 interface QuizResponse {
   question: string;
