@@ -17,7 +17,7 @@ module.exports = {
   safelist: [
     {
       pattern:
-        /(bg|border|text|stroke|fill)-(primary|secondary|tertiary|error|success|warning|info|typography|outline|background|indicator)-(0|50|100|200|300|400|500|600|700|800|900|950|white|gray|black|error|warning|muted|success|info|light|dark|primary)/,
+        /(bg|border|text|stroke|fill)-(primary|secondary|tertiary|error|success|warning|info|typography|outline|background|indicator|black|brightYellow|skyBlue|rust|shadow)-(0|50|100|200|300|400|500|600|700|800|900|950|white|gray|black|error|warning|muted|success|info|light|dark|primary|ratingBlock|polaroidBlock)/,
     },
   ],
   theme: {
@@ -177,6 +177,50 @@ module.exports = {
           info: "rgb(var(--color-indicator-info)/<alpha-value>)",
           error: "rgb(var(--color-indicator-error)/<alpha-value>)",
         },
+        black: {
+          50: "rgb(var(--color-black-50)/<alpha-value>)",
+          100: "rgb(var(--color-black-100)/<alpha-value>)",
+          200: "rgb(var(--color-black-200)/<alpha-value>)",
+          300: "rgb(var(--color-black-300)/<alpha-value>)",
+          400: "rgb(var(--color-black-400)/<alpha-value>)",
+          500: "rgb(var(--color-black-500)/<alpha-value>)",
+          600: "rgb(var(--color-black-600)/<alpha-value>)",
+          700: "rgb(var(--color-black-700)/<alpha-value>)",
+        },
+        brightYellow: {
+          50: "rgb(var(--color-bright-yellow-50)/<alpha-value>)",
+          100: "rgb(var(--color-bright-yellow-100)/<alpha-value>)",
+          200: "rgb(var(--color-bright-yellow-200)/<alpha-value>)",
+          300: "rgb(var(--color-bright-yellow-300)/<alpha-value>)",
+          400: "rgb(var(--color-bright-yellow-400)/<alpha-value>)",
+          500: "rgb(var(--color-bright-yellow-500)/<alpha-value>)",
+          600: "rgb(var(--color-bright-yellow-600)/<alpha-value>)",
+          700: "rgb(var(--color-bright-yellow-700)/<alpha-value>)",
+        },
+        skyBlue: {
+          50: "rgb(var(--color-sky-blue-50)/<alpha-value>)",
+          100: "rgb(var(--color-sky-blue-100)/<alpha-value>)",
+          200: "rgb(var(--color-sky-blue-200)/<alpha-value>)",
+          300: "rgb(var(--color-sky-blue-300)/<alpha-value>)",
+          400: "rgb(var(--color-sky-blue-400)/<alpha-value>)",
+          500: "rgb(var(--color-sky-blue-500)/<alpha-value>)",
+          600: "rgb(var(--color-sky-blue-600)/<alpha-value>)",
+          700: "rgb(var(--color-sky-blue-700)/<alpha-value>)",
+        },
+        rust: {
+          50: "rgb(var(--color-rust-50)/<alpha-value>)",
+          100: "rgb(var(--color-rust-100)/<alpha-value>)",
+          200: "rgb(var(--color-rust-200)/<alpha-value>)",
+          300: "rgb(var(--color-rust-300)/<alpha-value>)",
+          400: "rgb(var(--color-rust-400)/<alpha-value>)",
+          500: "rgb(var(--color-rust-500)/<alpha-value>)",
+          600: "rgb(var(--color-rust-600)/<alpha-value>)",
+          700: "rgb(var(--color-rust-700)/<alpha-value>)",
+        },
+        shadow: {
+          ratingBlock: "rgb(var(--color-shadow-ratingBlock)/<alpha-value>)",
+          polaroidBlock: "rgb(var(--color-shadow-polaroidBlock)/<alpha-value>)",
+        },
       },
       fontFamily: {
         heading: undefined,
@@ -200,6 +244,8 @@ module.exports = {
         "soft-2": "0px 0px 20px rgba(38, 38, 38, 0.2)",
         "soft-3": "0px 0px 30px rgba(38, 38, 38, 0.1)",
         "soft-4": "0px 0px 40px rgba(38, 38, 38, 0.1)",
+        // Custom button shadows
+        "button-submit": "0px 6px 0px 0px rgb(var(--color-primary-700))",
       },
     },
   },

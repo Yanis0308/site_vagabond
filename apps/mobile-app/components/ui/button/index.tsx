@@ -296,8 +296,17 @@ const Button = React.forwardRef<
       <UIButton
         ref={ref}
         {...props}
-        className={buttonStyle({ variant, size, action, class: className })}
-        context={{ variant, size, action }}
+        className={buttonStyle({
+          variant,
+          size,
+          // action,
+          class: className,
+        })}
+        context={{
+          variant,
+          size,
+          // action
+        }}
       />
     );
   },

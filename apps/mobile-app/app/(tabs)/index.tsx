@@ -12,6 +12,7 @@ import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Cam
 import { type Position } from "@rnmapbox/maps/lib/typescript/src/types/Position";
 import { type FilterExpression } from "@rnmapbox/maps/src/utils/MapboxStyles";
 import { router } from "expo-router";
+import { useAtom } from "jotai";
 import React, {
   type ReactElement,
   useCallback,
@@ -30,6 +31,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { View } from "@/components/ui/view";
 import { usePlaces } from "@/hooks/queries/usePlaces";
+import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
@@ -132,68 +134,65 @@ export default React.memo(function MapsTab(): ReactElement {
     });
   }, []);
 
-  const [selectedPlaceInfo, setSelectedPlaceInfo] = useState<{
-    place: PoiType;
-    isValidated: boolean;
-  } | null>(null);
+  const [selectedPlaceInfo, setSelectedPlaceInfo] = useAtom(selectedPlaceAtom);
 
   const onImageMissing = useCallback((imageKey: string) => {
     logger("🎞️🎞️🎞️ image missing", imageKey);
   }, []);
 
-  const onPress = useCallback((event: OnPressEvent) => {
-    logger("onPress");
+  const onPress = useCallback(
+    (event: OnPressEvent) => {
+      logger("onPress");
 
-    try {
-      if (
-        Array.isArray(event.features) &&
-        event.features.length > 0 &&
-        event.features[0]?.properties !== undefined &&
-        typeof event.features[0].properties === "object" &&
-        event.features[0].properties !== null
-      ) {
-        // Accès sécurisé aux propriétés
-        const properties = event.features[0].properties;
+      try {
+        if (
+          Array.isArray(event.features) &&
+          event.features.length > 0 &&
+          event.features[0]?.properties !== undefined &&
+          typeof event.features[0].properties === "object" &&
+          event.features[0].properties !== null
+        ) {
+          // Accès sécurisé aux propriétés
+          const properties = event.features[0].properties;
 
-        // Log toutes les propriétés pour déboguer
-        logger("Feature properties:", properties);
+          // Log toutes les propriétés pour déboguer
+          logger("Feature properties:", properties);
 
-        // Vérifier si c'est un cluster
-        if (properties.cluster === true) {
-          // Récupérer le cluster_id pour zoomer dessus
-          const clusterId = properties.cluster_id as number;
-          logger("Cluster sélectionné", clusterId);
-          logger("Point count:", properties.point_count);
+          // Vérifier si c'est un cluster
+          if (properties.cluster === true) {
+            // Récupérer le cluster_id pour zoomer dessus
+            const clusterId = properties.cluster_id as number;
+            logger("Cluster sélectionné", clusterId);
+            logger("Point count:", properties.point_count);
 
-          // Zoom sur le cluster
-          //TODO: getClusterExpansionZoom via ShapeSource ref
-          void mapRef.current?.getZoom().then((currentZoom) => {
-            cameraRef.current?.moveTo(
-              // Math.min(currentZoom + 2, CLUSTER_MAX_ZOOM + 1),
-              properties.coordinates as Position,
-            );
-            // cameraRef.current?.zoomTo(
-            //   // Math.min(currentZoom + 2, CLUSTER_MAX_ZOOM + 1),
-            //   CLUSTER_MAX_ZOOM + 1,
-            // );
-          });
-          return;
+            // Zoom sur le cluster
+            //TODO: getClusterExpansionZoom via ShapeSource ref
+            void mapRef.current?.getZoom().then((currentZoom) => {
+              cameraRef.current?.moveTo(
+                // Math.min(currentZoom + 2, CLUSTER_MAX_ZOOM + 1),
+                properties.coordinates as Position,
+              );
+              // cameraRef.current?.zoomTo(
+              //   // Math.min(currentZoom + 2, CLUSTER_MAX_ZOOM + 1),
+              //   CLUSTER_MAX_ZOOM + 1,
+              // );
+            });
+            return;
+          }
+
+          const poiData = properties.data as PoiType | undefined;
+
+          if (poiData !== undefined) {
+            logger("event properties", poiData);
+            setSelectedPlaceInfo(poiData);
+          }
         }
-
-        const poiData = properties.data as PoiType | undefined;
-
-        if (poiData !== undefined) {
-          logger("event properties", poiData);
-          setSelectedPlaceInfo({
-            place: poiData,
-            isValidated: false,
-          });
-        }
+      } catch (error) {
+        logger("Erreur lors du traitement de l'événement onPress:", error);
       }
-    } catch (error) {
-      logger("Erreur lors du traitement de l'événement onPress:", error);
-    }
-  }, []);
+    },
+    [setSelectedPlaceInfo],
+  );
 
   // Filtres pour les couches
   const clusterFilter = useMemo<FilterExpression>(
@@ -229,14 +228,13 @@ export default React.memo(function MapsTab(): ReactElement {
     <BottomSheetModalProvider>
       <Box className="flex-1">
         <PlaceDetailsSheet
-          place={selectedPlaceInfo?.place ?? null}
-          validatedPlace={null}
+          place={selectedPlaceInfo ?? null}
           // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- will fix later
           onPressLink={(): void => {
-            if (selectedPlaceInfo?.place !== undefined) {
+            if (selectedPlaceInfo !== null) {
               router.push({
-                pathname: "/place-details/[place]",
-                params: { place: selectedPlaceInfo.place.id },
+                pathname: "/validate-place/[place]",
+                params: { place: selectedPlaceInfo.id },
               });
             }
           }}

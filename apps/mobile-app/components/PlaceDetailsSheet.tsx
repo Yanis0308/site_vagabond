@@ -17,7 +17,6 @@ import { Center } from "@/components/ui/center";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { type ValidatedPlaceType } from "@/http/validate-place";
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
@@ -27,17 +26,12 @@ import { Divider } from "./ui/divider";
 
 interface PlaceDetailsSheetV2Props {
   place: PoiType | null;
-  validatedPlace: ValidatedPlaceType | null;
   onPressLink: () => void;
 }
 
 //TODO: utiliser le BottomSheet classique plutôt que la Modal pour éviter des Mount / Unmount ? La modal sert à en empiler plusieurs uniquement il me semble
 export const PlaceDetailsSheet = memo(
-  ({
-    place,
-    validatedPlace,
-    onPressLink,
-  }: PlaceDetailsSheetV2Props): ReactElement => {
+  ({ place, onPressLink }: PlaceDetailsSheetV2Props): ReactElement => {
     const { t } = useTranslation("common");
     const DEFAULT_SNAP_POINT = 1;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -87,28 +81,25 @@ export const PlaceDetailsSheet = memo(
                 className={"h-52 w-full"}
                 contentFit={"cover"}
               />
-              {validatedPlace !== null ? null : (
-                <Button onPress={onPressLink}>
-                  <ButtonText>
-                    {t("place_details_sheet.visit_place")}
-                  </ButtonText>
-                </Button>
-              )}
+
+              <Button onPress={onPressLink}>
+                <ButtonText>{t("place_details_sheet.visit_place")}</ButtonText>
+              </Button>
             </Center>
             <Text size={"lg"}>{place?.data[0]?.description}</Text>
-            {validatedPlace !== null ? (
+            {/* {validatedPlace !== null ? (
               <VStack className={"items-center gap-1"}>
                 <Heading size={"xl"}>
                   {t("place_details_sheet.your_photo")}
                 </Heading>
                 <CustomImage
-                  source={validatedPlace.photo.formats.large.url}
+                  // source={validatedPlace.photo.formats.large.url}
                   alt="Place photo illustration"
                   className={"h-52 w-full"}
                   contentFit={"contain"}
                 />
               </VStack>
-            ) : null}
+            ) : null} */}
 
             {place?.data[0] !== undefined ? (
               <Box className="flex gap-8">
@@ -139,10 +130,10 @@ export const PlaceDetailsSheet = memo(
                   </ButtonLink>
                   <ButtonLink
                     //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
-                    href={`https://www.wikipedia.org/wiki/${place.data[0]?.rawInfo?.wikipedia}`}
+                    href={`https://www.wikipedia.org/wiki/${place.data[0].rawInfo?.wikipedia}`}
                     className="rounded-full"
                     //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
-                    isDisabled={place.data[0]?.rawInfo?.wikipedia === undefined}
+                    isDisabled={place.data[0].rawInfo?.wikipedia === undefined}
                   >
                     <ButtonText>
                       {t("place_details_sheet.search_on_wikipedia")}
@@ -153,7 +144,7 @@ export const PlaceDetailsSheet = memo(
                     href={`https://www.wikidata.org/wiki/${place.data[0].rawInfo?.wikidata}`}
                     className="rounded-full"
                     //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
-                    isDisabled={place.data[0]?.rawInfo?.wikidata === undefined}
+                    isDisabled={place.data[0].rawInfo?.wikidata === undefined}
                   >
                     <ButtonText>
                       {t("place_details_sheet.search_on_wikidata")}

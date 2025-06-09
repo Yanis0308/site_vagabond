@@ -15,7 +15,9 @@ export const VisitedPoiSchema = Type.Object(
 
 export const CreateVisitedPoiRequestSchema = Type.Object(
   {
-    poiId: Type.String(),
+    imageKey: Type.String(),
+    rating: Type.Number({ minimum: 1, maximum: 5 }),
+    comment: Type.String(),
     coords: Type.Ref(CoordsSchema),
   },
   { $id: "CreateVisitedPoiRequestData" },

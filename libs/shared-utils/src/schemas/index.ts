@@ -1,12 +1,13 @@
+import * as poi from "./api/poi.js";
+import * as response from "./api/response.js";
+import * as upload from "./api/upload.js";
+import * as visitedPoi from "./api/visited-poi.js";
 import * as enums from "./enums.js";
 import * as error from "./error.js";
 import * as etl from "./etl.js";
 import * as geo from "./geo.js";
-import * as poi from "./poi/poi.js";
-import * as primitive from "./primitive.js";
-import * as response from "./response.js";
-import * as visitedPoi from "./poi/visited-poi.js";
 import * as metadata from "./metadata.js";
+import * as primitive from "./primitive.js";
 
 export const jsonSchemas = {
   ...enums,
@@ -18,4 +19,5 @@ export const jsonSchemas = {
   ...primitive,
   ...response,
   ...metadata,
+  ...upload,
 };

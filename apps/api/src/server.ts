@@ -7,9 +7,24 @@ dotenv.config();
 import closeWithGrace from "close-with-grace";
 import Fastify from "fastify";
 
+import { isDev } from "./plugins/config.js";
+
+const envToLogger = {
+  development: {
+    transport: {
+      target: "pino-pretty",
+      options: {
+        translateTime: "HH:MM:ss Z",
+        ignore: "pid,hostname",
+      },
+    },
+  },
+  production: true,
+};
+
 // Instantiate Fastify with some config
 const app = Fastify({
-  logger: true,
+  logger: isDev ? envToLogger.development : envToLogger.production,
 });
 
 // Register your application as a normal plugin.
@@ -35,10 +50,8 @@ const start = async (): Promise<void> => {
     app.log.info(`Server listening on port ${port}`);
   } catch (err) {
     app.log.error(
-      "Error starting server:",
-      err,
-      ", stringified:",
-      JSON.stringify(err),
+      { err, errStr: JSON.stringify(err) },
+      "Error starting server",
     );
     process.exit(1);
   }

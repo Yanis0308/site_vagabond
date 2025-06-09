@@ -5,17 +5,29 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { z } from "zod";
 
+export const isDev = process.env.NODE_ENV === "development";
+
 // Définition du schéma de configuration
 const RawConfigSchema = z.object({
   //NODE_ENV: z.enum(["development", "production", "test"]),
   //PORT: z.string().transform(Number),
   FIREBASE_ADMIN_SERVICE_ACCOUNT_FILE_BASE64: z.string(),
   API_DATABASE_URL: z.string(),
+  AWS_ACCESS_KEY_ID: z.string(),
+  AWS_SECRET_ACCESS_KEY: z.string(),
+  AWS_ENDPOINT_URL_S3: z.string(),
+  AWS_ENDPOINT_URL_IAM: z.string(),
+  AWS_REGION: z.string(),
+  S3_BUCKET_NAME: z.string(),
 });
 
 // Type d'inférence pour TypeScript
 export interface Config {
+  isDev: boolean;
   firebaseAdminServiceAccountFilePath: string;
+  s3: {
+    bucketName: string;
+  };
 }
 
 // Déclaration pour étendre l'interface Fastify
@@ -48,7 +60,11 @@ export default fp(
       );
 
       const config = {
+        isDev,
         firebaseAdminServiceAccountFilePath,
+        s3: {
+          bucketName: rawConfig.S3_BUCKET_NAME,
+        },
       };
 
       // Décoration de l'instance Fastify avec la config

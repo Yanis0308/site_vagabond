@@ -1,5 +1,6 @@
 import { type ConfigContext, type ExpoConfig } from "expo/config";
 
+// eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- not a React component
 export default ({ config }: ConfigContext): ExpoConfig => {
   const buildProfile = process.env.BUILD_PROFILE ?? "";
   const isDevelopmentBuild = buildProfile !== "production";
@@ -79,7 +80,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     scheme: "vagabond-app", // URL Scheme to open the app, here vagabond://mylinkexample
-    userInterfaceStyle: "automatic",
+    userInterfaceStyle: "light", // For light / dark mode
     splash: {
       image: "./assets/images/splash.png",
       resizeMode: "contain",

@@ -31,6 +31,7 @@ export function GluestackUIProvider({
     const cssVariables = Object.keys(
       config[configKey as keyof typeof config],
     ).reduce((acc: string, curr: string) => {
+      //@ts-expect-error -- config is a record of records
       acc += `${curr}:${config[configKey as keyof typeof config][curr]}; `;
       return acc;
     }, "");

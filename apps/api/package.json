@@ -19,15 +19,18 @@
     "test": "pnpm run build && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts",
     "start": "pnpm run prisma-migrate-deploy && node dist/server.js",
     "build": "tsc",
-    "develop": "tsc-watch --onSuccess 'node ./dist/server.js'",
+    "develop": "NODE_ENV=development tsc-watch --onSuccess 'node ./dist/server.js'",
     "prisma-migrate-deploy": "pnpx prisma migrate deploy --schema=node_modules/@vagabond/database-client/src/db/api-schema.prisma"
   },
   "keywords": [],
   "author": "",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.812.0",
+    "@aws-sdk/lib-storage": "^3.815.0",
     "@fastify/autoload": "^6.0.0",
     "@fastify/cors": "^10.0.1",
     "@fastify/helmet": "^12.0.1",
+    "@fastify/multipart": "^9.0.3",
     "@fastify/sensible": "^6.0.0",
     "@fastify/swagger": "^9.4.0",
     "@fastify/swagger-ui": "^5.1.0",
@@ -39,6 +42,7 @@
     "fastify-cli": "^7.0.1",
     "fastify-plugin": "^5.0.0",
     "firebase-admin": "^13.0.1",
+    "sharp": "^0.34.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -46,6 +50,7 @@
     "c8": "^10.1.2",
     "eslint": "~8.57.0",
     "fastify-tsconfig": "^2.0.0",
+    "pino-pretty": "^13.0.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.4.0",
     "tsc-watch": "^6.2.1",

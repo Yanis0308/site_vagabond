@@ -14,5 +14,5 @@
     "nativewind-env.d.ts",
     "../../libs/shared-utils/src/utils/validation.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "**/@gluestack-ui/**"]
 }

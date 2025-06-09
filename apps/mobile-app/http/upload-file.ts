@@ -1,24 +1,19 @@
-import { z } from "zod";
+import { type Static } from "@sinclair/typebox";
+import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
 
 import { type UploadFileParams } from "@/hooks/mutations/useUploadFileMutation";
 import { apiClient } from "@/http/api-client";
 
-const UploadFileResultSchema = z
-  .array(
-    z.object({
-      id: z.number(),
-    }),
-  )
-  .nonempty();
-
-type UploadFileResult = z.infer<typeof UploadFileResultSchema>;
+const validateResponse = generateValidator(
+  jsonSchemas.UploadFileResponseSchema,
+);
 
 export const uploadFile = async (
   params: UploadFileParams,
-): Promise<UploadFileResult> => {
+): Promise<Static<typeof jsonSchemas.FileInfoSchema>> => {
   const formData = new FormData();
   //@ts-expect-error fix this later
-  formData.append("files", {
+  formData.append("file", {
     uri: params.uri,
     name: params.fileName,
     type: params.mimeType,
@@ -26,5 +21,9 @@ export const uploadFile = async (
   const rawResult = await apiClient
     .post("api/upload", { body: formData })
     .json();
-  return UploadFileResultSchema.parse(rawResult);
+  if (!validateResponse(rawResult)) {
+    throw new Error("Invalid response");
+  }
+
+  return rawResult.data;
 };

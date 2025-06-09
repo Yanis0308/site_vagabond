@@ -51,9 +51,9 @@ export default fp(
 
       const userId = request.user.uid;
       const currentUserInfo = {
-        email: request.user.email,
+        email: request.user.email ?? "",
         fullName:
-          typeof request.user.name === "string" ? request.user.name : undefined,
+          typeof request.user.name === "string" ? request.user.name : "",
         oauthProviders: Array.from(
           new Set([request.user.firebase.sign_in_provider]),
         ),

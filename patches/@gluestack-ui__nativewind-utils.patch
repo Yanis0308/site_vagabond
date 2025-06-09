@@ -1,0 +1,28 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+deleted file mode 100644
+index c664e88762a99024fe100c86539832eeda2beee8..0000000000000000000000000000000000000000
+diff --git a/tailwind-plugin/index.ts b/tailwind-plugin/index.ts
+index 0f458b564eebd50c238b90b7ceb0af7f3749fc67..beb3029306af38fc4878c6a478e8566e60dafb03 100644
+--- a/tailwind-plugin/index.ts
++++ b/tailwind-plugin/index.ts
+@@ -35,8 +35,9 @@ const stateObj = {
+   'disabled=true': 10,
+   'disabled=false': 10,
+ } as Record<string, number>;
+-const getStatesWeight = (state: string) => {
+-  return stateObj[state];
++const getStatesWeight = (state: string | undefined): number => {
++  if (!state) return 0;
++  return stateObj[state] ?? 0;
+ };
+ 
+ const gluestackPlugin = plugin(function ({
+@@ -55,7 +56,7 @@ const gluestackPlugin = plugin(function ({
+     },
+     {
+       sort(a: any, z: any) {
+-        return getStatesWeight(a.value) - getStatesWeight(z.value);
++        return getStatesWeight(a?.value) - getStatesWeight(z?.value);
+       },
+     }
+   );

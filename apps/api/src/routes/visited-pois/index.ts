@@ -6,11 +6,14 @@ import { jsonSchemas } from "@vagabond/shared-utils";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.post(
-    "/",
+    "/:poiId",
     {
       schema: {
         tags: ["visited-pois"],
         security: [{ bearerAuth: [] }],
+        params: Type.Object({
+          poiId: Type.String(),
+        }),
         body: Type.Ref(jsonSchemas.CreateVisitedPoiRequestSchema),
         response: {
           200: Type.Ref(jsonSchemas.EmptyResponseSchema),
@@ -19,7 +22,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const { poiId, coords } = request.body;
+      const { poiId } = request.params;
+      const { imageKey, rating, comment, coords } = request.body;
 
       const visitedPoi = await fastify.prisma.visitedPoi.findFirst({
         where: {
@@ -42,6 +46,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
       await fastify.prisma.visitedPoi.createCustom({
         poiId,
+        imageKey,
+        rating,
+        comment,
         coords,
         userId: request.user.uid,
       });

@@ -1,15 +1,22 @@
+import { type Static } from "@sinclair/typebox";
 import { useMutation } from "@tanstack/react-query";
+import { type jsonSchemas } from "@vagabond/shared-utils";
 
 import { queryClient } from "@/constants/QueryClient";
-import { validatePlace, type ValidatePlaceCreate } from "@/http/validate-place";
+import { validatePlace } from "@/http/validate-place";
 import { logger } from "@/utils/logger";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- not important
 export const useValidatePlaceMutation = () => {
   return useMutation({
-    mutationFn: async (body: ValidatePlaceCreate) => {
+    mutationFn: async (
+      body: Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema> & {
+        placeId: string;
+      },
+    ) => {
+      logger("validate place mutation", body);
       try {
-        await validatePlace(body);
+        await validatePlace(body.placeId, body);
       } catch (error) {
         logger(
           "=== error in validate place :",

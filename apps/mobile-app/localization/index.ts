@@ -13,12 +13,14 @@ const resources = {
     common: frCommon,
   },
 };
+type SupportedLocale = keyof typeof resources;
 
 const locales = Localization.getLocales()
   .map((locale) => locale.languageCode)
   .filter((locale) => locale !== null);
+
 const supportedLocales = Object.keys(resources);
-const defaultLocale = "en";
+const defaultLocale: SupportedLocale = "en";
 
 void i18n.use(initReactI18next).init({
   resources,

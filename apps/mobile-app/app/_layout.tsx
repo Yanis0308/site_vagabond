@@ -8,8 +8,15 @@ import Mapbox from "@rnmapbox/maps";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import { type ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
@@ -55,29 +62,41 @@ export default function RootLayout(): ReactElement | null {
     }
   }, [initializing]);
 
+  const screenOptions = useMemo(
+    () => ({
+      headerShown: false,
+      headerBackButtonDisplayMode: "minimal" as const,
+      headerTitle: "",
+      headerShadowVisible: false,
+      headerTintColor: "white",
+    }),
+    [],
+  );
+
   if (initializing) {
     logger("=== RootLayout return null");
     return null;
   }
 
+  //TODO: ajouter Guard sur les Screens https://docs.expo.dev/router/advanced/authentication/
   return (
     <GluestackUIProvider>
       <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
-          <SafeAreaView style={{ flex: 1 }}>
-            <Stack>
-              <Stack.Screen name="sign-in" options={{ headerShown: false }} />
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="place-details/[place]"
-                options={{
-                  headerBackTitle: "Back",
-                }}
-              />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-          </SafeAreaView>
-        </GestureHandlerRootView>
+        <SafeAreaView style={{ flex: 1 }}>
+          <GestureHandlerRootView
+            style={{ flex: 1 }}
+            onLayout={onLayoutRootView}
+          >
+            <KeyboardProvider>
+              <Stack screenOptions={screenOptions}>
+                <Stack.Screen name="sign-in" />
+                <Stack.Screen name="(tabs)" />
+                <Stack.Screen name="validate-place/[place]" />
+                <Stack.Screen name="+not-found" />
+              </Stack>
+            </KeyboardProvider>
+          </GestureHandlerRootView>
+        </SafeAreaView>
       </QueryClientProvider>
     </GluestackUIProvider>
   );
