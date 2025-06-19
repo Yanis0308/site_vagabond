@@ -17,9 +17,9 @@ import {
 } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
+import { FullScreenLoader } from "@/components/validate-place/FullScreenLoader";
 import { config } from "@/constants/Config";
 import { queryClient } from "@/constants/QueryClient";
 import { logger } from "@/utils/logger";
@@ -82,21 +82,23 @@ export default function RootLayout(): ReactElement | null {
   return (
     <GluestackUIProvider>
       <QueryClientProvider client={queryClient}>
-        <SafeAreaView style={{ flex: 1 }}>
-          <GestureHandlerRootView
-            style={{ flex: 1 }}
-            onLayout={onLayoutRootView}
-          >
-            <KeyboardProvider>
-              <Stack screenOptions={screenOptions}>
-                <Stack.Screen name="sign-in" />
-                <Stack.Screen name="(tabs)" />
-                <Stack.Screen name="validate-place/[place]" />
-                <Stack.Screen name="+not-found" />
-              </Stack>
-            </KeyboardProvider>
-          </GestureHandlerRootView>
-        </SafeAreaView>
+        <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
+          <KeyboardProvider>
+            <FullScreenLoader />
+            <Stack screenOptions={screenOptions}>
+              <Stack.Screen name="sign-in" />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="validate-place/take-photo" />
+              <Stack.Screen
+                name="validate-place/review-form"
+                options={{
+                  animation: "fade",
+                }}
+              />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+          </KeyboardProvider>
+        </GestureHandlerRootView>
       </QueryClientProvider>
     </GluestackUIProvider>
   );

@@ -4,6 +4,7 @@ import { PoiDataSourceEnumSchema } from "../enums.js";
 import { LanguageEnumSchema } from "../enums.js";
 import { CoordsSchema } from "../geo.js";
 import { ApiResponseSchema } from "../utils.js";
+import { VisitedPoiSchema } from "./visited-poi.js";
 
 export const PoiDataSchema = Type.Object(
   {
@@ -28,6 +29,7 @@ export const POISchema = Type.Object(
     id: Type.String(),
     coords: Type.Ref(CoordsSchema),
     data: Type.Array(Type.Ref(PoiDataSchema)),
+    visitedPois: Type.Array(Type.Ref(VisitedPoiSchema)),
   },
   { $id: "POI" },
 );

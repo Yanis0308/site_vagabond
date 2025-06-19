@@ -200,6 +200,28 @@ export const themeColors = {
     "600": { rgb: "130 47 27", hex: "#822f1b" },
     "700": { rgb: "97 35 20", hex: "#612314" },
   },
+  // Burnt orange
+  burntOrange: {
+    "50": { rgb: "253 233 228", hex: "#fde9e4" },
+    "100": { rgb: "250 195 182", hex: "#fac3b6" },
+    "200": { rgb: "247 157 135", hex: "#f79d87" },
+    "300": { rgb: "244 119 89", hex: "#f47759" },
+    "400": { rgb: "241 81 42", hex: "#f1512a" },
+    "500": { rgb: "232 92 44", hex: "#e85c2c" },
+    "600": { rgb: "186 74 35", hex: "#ba4a23" },
+    "700": { rgb: "139 55 26", hex: "#8b371a" },
+  },
+  // Plum
+  plum: {
+    "50": { rgb: "230 213 228", hex: "#e6d5e4" },
+    "100": { rgb: "204 171 201", hex: "#ccabc9" },
+    "200": { rgb: "179 128 174", hex: "#b380ae" },
+    "300": { rgb: "153 85 147", hex: "#995593" },
+    "400": { rgb: "128 43 120", hex: "#802b78" },
+    "500": { rgb: "142 69 133", hex: "#8e4585" },
+    "600": { rgb: "114 55 106", hex: "#72376a" },
+    "700": { rgb: "85 41 80", hex: "#552950" },
+  },
   // Not categorized
   shadow: {
     ratingBlock: { rgb: "233 186 136", hex: "#E9BA88" },
@@ -400,6 +422,26 @@ export const config = {
     "--color-rust-500": themeColors.rust["500"].rgb,
     "--color-rust-600": themeColors.rust["600"].rgb,
     "--color-rust-700": themeColors.rust["700"].rgb,
+
+    /* Custom burntOrange  */
+    "--color-burnt-orange-50": themeColors.burntOrange["50"].rgb,
+    "--color-burnt-orange-100": themeColors.burntOrange["100"].rgb,
+    "--color-burnt-orange-200": themeColors.burntOrange["200"].rgb,
+    "--color-burnt-orange-300": themeColors.burntOrange["300"].rgb,
+    "--color-burnt-orange-400": themeColors.burntOrange["400"].rgb,
+    "--color-burnt-orange-500": themeColors.burntOrange["500"].rgb,
+    "--color-burnt-orange-600": themeColors.burntOrange["600"].rgb,
+    "--color-burnt-orange-700": themeColors.burntOrange["700"].rgb,
+
+    /* Custom plum  */
+    "--color-plum-50": themeColors.plum["50"].rgb,
+    "--color-plum-100": themeColors.plum["100"].rgb,
+    "--color-plum-200": themeColors.plum["200"].rgb,
+    "--color-plum-300": themeColors.plum["300"].rgb,
+    "--color-plum-400": themeColors.plum["400"].rgb,
+    "--color-plum-500": themeColors.plum["500"].rgb,
+    "--color-plum-600": themeColors.plum["600"].rgb,
+    "--color-plum-700": themeColors.plum["700"].rgb,
 
     /* Custom colors */
     "--color-shadow-ratingBlock": themeColors.shadow.ratingBlock.rgb,

@@ -78,14 +78,30 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           poiId: true,
           userId: true,
           createdAt: true,
+          rating: true,
+          comment: true,
+          imageKey: true,
+          user: {
+            select: {
+              email: true,
+            },
+          },
         },
       });
 
       return await reply.status(200).send({
-        data: visitedPois.map((visitedPoi) => ({
-          ...visitedPoi,
-          createdAt: visitedPoi.createdAt.toISOString(),
-        })),
+        data: visitedPois.map((visitedPoi) => {
+          const { user, ...visitedPoiWithoutUser } = visitedPoi;
+          const username = user.email?.includes("@")
+            ? (user.email.split("@")[0] ?? "John Doe")
+            : "John Doe";
+
+          return {
+            ...visitedPoiWithoutUser,
+            username,
+            createdAt: visitedPoi.createdAt.toISOString(),
+          };
+        }),
       });
     },
   );

@@ -49,15 +49,27 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
                     updatedAt: unknown | null;
                   }[]
                 | null;
+              visitedPois:
+                | {
+                    id: number | null;
+                    poiId: string | null;
+                    userId: string | null;
+                    username: unknown | null | string;
+                    createdAt: unknown | null;
+                    comment: string | null;
+                    imageKey: string | null;
+                    rating: number | null;
+                  }[]
+                | null;
             }>
           >`SELECT 
               p.id,
-              json_build_object(
+              jsonb_build_object(
                 'longitude', ST_X(p.coords::geometry),
                 'latitude', ST_Y(p.coords::geometry)
               ) as coords,
               json_agg (
-                json_build_object(
+                DISTINCT jsonb_build_object(
                   'id', pd.id,
                   'name', pd.name,
                   'description', pd.description,
@@ -67,9 +79,27 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
                     'createdAt', to_char(pd.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
                     'updatedAt', to_char(pd.updated_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')
                 )
-              ) AS data
+              ) FILTER (WHERE pd.id IS NOT NULL) AS data,
+              json_agg (
+                DISTINCT jsonb_build_object(
+                  'id', vp.id,
+                  'poiId', vp.poi_id,
+                  'userId', vp.user_id,
+                  'username', CASE 
+                    WHEN u.email IS NOT NULL AND POSITION('@' IN u.email) > 0 THEN 
+                      SUBSTRING(u.email FROM 1 FOR POSITION('@' IN u.email) - 1)
+                    ELSE 'John Doe'
+                  END,
+                  'createdAt', to_char(vp.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
+                  'comment', vp.comment,
+                  'imageKey', vp.image_key,
+                  'rating', vp.rating
+                )
+              ) FILTER (WHERE vp.id IS NOT NULL) AS "visitedPois"
             FROM pois p
             LEFT JOIN poi_data pd ON p.id = pd.poi_id
+            LEFT JOIN visited_pois vp ON p.id = vp.poi_id
+            LEFT JOIN users u ON vp.user_id = u.user_id
             WHERE ST_Within(p.coords::geometry, ST_GeomFromText(${polygon}, 4326))
             AND p.disabled = false
             GROUP BY p.id
@@ -91,6 +121,16 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
               dataSource: "OSM" | "AI" | "CUSTOM";
               createdAt: string;
               updatedAt: string;
+            }[];
+            visitedPois: {
+              id: number;
+              poiId: string;
+              userId: string;
+              username: string;
+              createdAt: string;
+              comment: string;
+              imageKey: string;
+              rating: number;
             }[];
           }>;
         },

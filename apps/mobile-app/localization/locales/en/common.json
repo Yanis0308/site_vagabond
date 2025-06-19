@@ -5,7 +5,7 @@
   },
   "camera_permission_required": "We need your permission to use the camera",
   "place_details_sheet": {
-    "title": "✨ {{name}}",
+    "title": "{{name}}",
     "visit_place": "Visit place",
     "your_photo": "Your photo",
     "search_on_google": "Search on Google",

@@ -1,22 +1,22 @@
 import { ajvResolver } from "@hookform/resolvers/ajv";
-import { usePreventRemove } from "@react-navigation/native";
 import { type Static } from "@sinclair/typebox";
 import { jsonSchemas } from "@vagabond/shared-utils";
 import { type JSONSchemaType } from "ajv";
-import { useRouter } from "expo-router";
+import { useSetAtom } from "jotai";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller, type ControllerProps, useForm } from "react-hook-form";
-import { Alert, View } from "react-native";
+import { View } from "react-native";
 
 import { StarRating } from "@/components/validate-place/StarRating";
 import { useValidatePlaceMutation } from "@/hooks/mutations/useValidatePlaceMutation";
+import { displayingLoaderAtom } from "@/stores/displayingLoader";
 import { logger } from "@/utils/logger";
 
 import { CustomButton } from "../custom-ui/CustomButton";
 import { CustomText } from "../custom-ui/CustomText";
 import { CustomTextarea } from "../custom-ui/CustomTextarea";
+import { PolaroidForm } from "../polaroid/PolaroidForm";
 import { Box } from "../ui/box";
-import { PolaroidImage } from "./PolaroidImage";
 import { type Place } from "./types";
 
 interface ReviewStepProps {
@@ -27,14 +27,13 @@ interface ReviewStepProps {
     lng: number;
   };
   imageKey: string;
-  onGoBack: () => void;
-  setIsLoading: (isLoading: boolean) => void;
+  setReviewFormEnded: (value: boolean) => void;
 }
 
 export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
-  ({ place, capturedImage, position, imageKey, setIsLoading, onGoBack }) => {
-    const router = useRouter();
+  ({ place, capturedImage, position, imageKey, setReviewFormEnded }) => {
     const validatePlace = useValidatePlaceMutation();
+    const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
 
     const {
       handleSubmit,
@@ -88,8 +87,8 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
     }, [register, setValue, position]);
 
     useEffect(() => {
-      setIsLoading(isSubmitting);
-    }, [isSubmitting, setIsLoading]);
+      setDisplayingLoader(isSubmitting);
+    }, [isSubmitting, setDisplayingLoader]);
 
     const onSubmit = useCallback(() => {
       void handleSubmit(
@@ -105,41 +104,14 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
               coords: data.coords,
             });
 
-            router.back();
+            setReviewFormEnded(true);
           } catch (error) {
             // Important: ne pas re-throw l'erreur pour que handleSubmit puisse reset isSubmitting
             logger("=== FORM ON SUBMIT ERROR ===", error);
           }
         },
       )();
-    }, [handleSubmit, validatePlace, place.id, router]);
-
-    usePreventRemove(
-      true,
-      useCallback(() => {
-        // Prompt the user before leaving the screen
-        Alert.alert(
-          "Discard changes?",
-          "You have unsaved changes. Discard them and leave the screen?",
-          [
-            {
-              text: "Don't leave",
-              style: "cancel",
-              onPress: (): void => {
-                // Do nothing
-              },
-            },
-            {
-              text: "Discard",
-              style: "destructive",
-              onPress: (): void => {
-                onGoBack();
-              },
-            },
-          ],
-        );
-      }, [onGoBack]),
-    );
+    }, [handleSubmit, validatePlace, place.id, setReviewFormEnded]);
 
     const renderRating = useCallback(
       ({
@@ -185,12 +157,12 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
       <View className="flex flex-1">
         {/* Étape validation */}
         <View className="flex items-center">
-          <PolaroidImage
+          <PolaroidForm
             imageUrl={capturedImage}
             title={place.data[0]?.name ?? ""}
           />
         </View>
-        <Box className="mx-8 mb-8 flex flex-col items-center gap-6">
+        <Box className="mx-8 mb-12 flex flex-col items-center gap-6">
           <Controller control={control} name="rating" render={renderRating} />
           <Controller control={control} name="comment" render={renderComment} />
           <CustomButton

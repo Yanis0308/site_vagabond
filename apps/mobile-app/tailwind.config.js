@@ -217,6 +217,16 @@ module.exports = {
           600: "rgb(var(--color-rust-600)/<alpha-value>)",
           700: "rgb(var(--color-rust-700)/<alpha-value>)",
         },
+        plum: {
+          50: "rgb(var(--color-plum-50)/<alpha-value>)",
+          100: "rgb(var(--color-plum-100)/<alpha-value>)",
+          200: "rgb(var(--color-plum-200)/<alpha-value>)",
+          300: "rgb(var(--color-plum-300)/<alpha-value>)",
+          400: "rgb(var(--color-plum-400)/<alpha-value>)",
+          500: "rgb(var(--color-plum-500)/<alpha-value>)",
+          600: "rgb(var(--color-plum-600)/<alpha-value>)",
+          700: "rgb(var(--color-plum-700)/<alpha-value>)",
+        },
         shadow: {
           ratingBlock: "rgb(var(--color-shadow-ratingBlock)/<alpha-value>)",
           polaroidBlock: "rgb(var(--color-shadow-polaroidBlock)/<alpha-value>)",

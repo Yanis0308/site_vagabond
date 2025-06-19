@@ -9,8 +9,12 @@ const text = tva({
   base: "",
   variants: {
     type: {
-      title: "text-2xl font-semibold leading-[133.346%]",
+      title: "text-2xl font-semibold leading-[133%]",
       rating: "text-xs not-italic font-bold leading-[normal];",
+      username: "text-xs font-medium leading-[133%];",
+      placeTitle: "text-2xl font-bold",
+      ratingText: "text-base font-normal leading-[133%]",
+      tabBarTitle: "text-xs font-bold",
     },
   },
 });
@@ -22,7 +26,13 @@ export const CustomText = memo(
     ...props
   }: {
     children: React.ReactNode;
-    type?: "title" | "rating";
+    type?:
+      | "title"
+      | "rating"
+      | "username"
+      | "placeTitle"
+      | "ratingText"
+      | "tabBarTitle";
     className?: string;
   } & React.ComponentProps<typeof Text>) => {
     return (

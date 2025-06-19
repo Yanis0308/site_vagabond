@@ -29,13 +29,16 @@ export const useValidatePlaceMutation = () => {
       }
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(
-        {
+      return await Promise.all([
+        queryClient.invalidateQueries({
           queryKey: ["validated-places"],
           refetchType: "all",
-        },
-        // { throwOnError, cancelRefetch },
-      );
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["places"],
+          refetchType: "all",
+        }),
+      ]);
     },
   });
 };

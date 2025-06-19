@@ -8,7 +8,11 @@ export const VisitedPoiSchema = Type.Object(
     id: Type.Number(),
     poiId: Type.String(),
     userId: Type.String(),
+    username: Type.String(),
     createdAt: Type.String(),
+    comment: Type.String(),
+    rating: Type.Number(),
+    imageKey: Type.String(),
   },
   { $id: "VisitedPoi" },
 );

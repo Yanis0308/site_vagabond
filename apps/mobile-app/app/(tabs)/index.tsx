@@ -25,7 +25,8 @@ import { useTranslation } from "react-i18next";
 import colors from "tailwindcss/colors";
 
 import { useImageLoader } from "@/components/maps/imgLoader";
-import { PlaceDetailsSheet } from "@/components/PlaceDetailsSheet";
+import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
+import { PlaceDetailsSheet } from "@/components/place-details/PlaceDetailsSheet";
 import { Box } from "@/components/ui/box";
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
@@ -35,11 +36,9 @@ import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
-// Constantes pour la gestion des images
-
 // Constantes pour le clustering
 const CLUSTER_MAX_ZOOM = 14;
-const CLUSTER_RADIUS = 20;
+const CLUSTER_RADIUS = 30;
 
 export interface OnPressEvent {
   features: GeoJSON.Feature[];
@@ -55,6 +54,8 @@ export interface OnPressEvent {
 
 export default React.memo(function MapsTab(): ReactElement {
   const { t } = useTranslation("common");
+
+  const [selectedPlaceInfo, setSelectedPlaceInfo] = useAtom(selectedPlaceAtom);
 
   const [bounds, setBounds] = useState<
     [[number, number], [number, number]] | null
@@ -82,6 +83,18 @@ export default React.memo(function MapsTab(): ReactElement {
   const cameraRef = useRef<CameraRef>(null);
 
   const { data: placesData, isFetching: isFetchingPlaces } = usePlaces(bbox);
+
+  useEffect(() => {
+    if (selectedPlaceInfo !== null && placesData !== undefined) {
+      const updatedPlace = placesData.find(
+        (place) => place.id === selectedPlaceInfo.id,
+      );
+      if (updatedPlace !== undefined && updatedPlace !== selectedPlaceInfo) {
+        setSelectedPlaceInfo(updatedPlace);
+      }
+    }
+  }, [placesData, selectedPlaceInfo, setSelectedPlaceInfo]);
+
   logger(placesData?.length, "places");
 
   const initialRegion = useMemo(() => {
@@ -100,6 +113,7 @@ export default React.memo(function MapsTab(): ReactElement {
             name: place.data[0]?.name ?? "foo",
             data: place,
             imageUrl: `https://picsum.photos/seed/${place.id}/20/20`,
+            isVisited: place.visitedPois.length > 0,
           },
           geometry: {
             type: "Point" as const,
@@ -133,8 +147,6 @@ export default React.memo(function MapsTab(): ReactElement {
       }
     });
   }, []);
-
-  const [selectedPlaceInfo, setSelectedPlaceInfo] = useAtom(selectedPlaceAtom);
 
   const onImageMissing = useCallback((imageKey: string) => {
     logger("🎞️🎞️🎞️ image missing", imageKey);
@@ -225,7 +237,12 @@ export default React.memo(function MapsTab(): ReactElement {
     useImageLoader(imagesUrls);
 
   return (
-    <BottomSheetModalProvider>
+    <CustomScreenContainer
+      isLightScreen={true}
+      bgColor="transparent"
+      withHeader={false}
+      isTabScreen={true}
+    >
       <Box className="flex-1">
         <PlaceDetailsSheet
           place={selectedPlaceInfo ?? null}
@@ -233,15 +250,14 @@ export default React.memo(function MapsTab(): ReactElement {
           onPressLink={(): void => {
             if (selectedPlaceInfo !== null) {
               router.push({
-                pathname: "/validate-place/[place]",
-                params: { place: selectedPlaceInfo.id },
+                pathname: "/validate-place/take-photo",
               });
             }
           }}
         />
 
         {isFetchingPlaces && (
-          <Box className="absolute left-0 top-0 z-50 flex size-full items-center justify-center">
+          <Box className="absolute left-0 top-0 z-50 flex items-center justify-center">
             <Spinner
               size="small"
               color={colors.gray[500]}
@@ -272,7 +288,7 @@ export default React.memo(function MapsTab(): ReactElement {
           {/* <Images images={imagesDefault} onImageMissing={onImageMissing} /> */}
           <Images images={imagesLoaded} onImageMissing={onImageMissing} />
           <ShapeSource
-            id="earthquakes"
+            id="pois"
             shape={customShape}
             onPress={onPress}
             cluster
@@ -282,7 +298,7 @@ export default React.memo(function MapsTab(): ReactElement {
           >
             <CircleLayer
               id="clusters"
-              sourceID="earthquakes"
+              sourceID="pois"
               filter={clusterFilter}
               style={{
                 circleColor: [
@@ -311,7 +327,7 @@ export default React.memo(function MapsTab(): ReactElement {
             {/* Couche pour le compte de points dans les clusters */}
             <SymbolLayer
               id="cluster-count"
-              sourceID="earthquakes"
+              sourceID="pois"
               filter={clusterFilter}
               style={{
                 textField: "{point_count_abbreviated}",
@@ -326,11 +342,16 @@ export default React.memo(function MapsTab(): ReactElement {
             {/* Couche pour les points non clusterisés */}
             <CircleLayer
               id="unclustered-point"
-              sourceID="earthquakes"
+              sourceID="pois"
               filter={unclusteredFilter}
               style={{
-                circleColor: "#11b4da",
-                circleRadius: 4,
+                circleColor: [
+                  "case",
+                  ["get", "isVisited"],
+                  "#10b981", // vert pour les POI visités (green-500)
+                  "#9b4dca", // bleu pour les POI non visités (couleur originale)
+                ],
+                circleRadius: 8,
                 circleStrokeWidth: 1,
                 circleStrokeColor: "#fff",
               }}
@@ -339,7 +360,7 @@ export default React.memo(function MapsTab(): ReactElement {
             {/* Couche pour les icônes sur les points non clusterisés */}
             <SymbolLayer
               id="custom-marker-symbol"
-              sourceID="earthquakes"
+              sourceID="pois"
               filter={unclusteredFilter}
               style={{
                 iconImage: [
@@ -376,6 +397,6 @@ export default React.memo(function MapsTab(): ReactElement {
           </Text>
         </View>
       </Box>
-    </BottomSheetModalProvider>
+    </CustomScreenContainer>
   );
 });
