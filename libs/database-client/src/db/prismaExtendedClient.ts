@@ -45,6 +45,7 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
                     rawInfo: any | null;
                     language: "EN" | "FR" | null;
                     dataSource: "OSM" | "AI" | "CUSTOM" | null;
+                    nbOfTags: number | null;
                     createdAt: unknown | null;
                     updatedAt: unknown | null;
                   }[]
@@ -76,6 +77,7 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
                   'rawInfo', pd.raw_info,
                   'language', pd.language,
                     'dataSource', pd.source,
+                    'nbOfTags', pd.nb_of_tags,
                     'createdAt', to_char(pd.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
                     'updatedAt', to_char(pd.updated_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')
                 )
@@ -119,6 +121,7 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
               rawInfo: Record<string, unknown>;
               language: "EN" | "FR";
               dataSource: "OSM" | "AI" | "CUSTOM";
+              nbOfTags: number | null;
               createdAt: string;
               updatedAt: string;
             }[];
@@ -153,7 +156,8 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
                 const point = `POINT(${item.coords.longitude} ${item.coords.latitude})`;
                 return Prisma.sql`(${item.id}, CAST(${item.source} AS "PoiSourceEnum"), ${item.sourceId}, ST_GeomFromText(${point}, 4326))`;
               }),
-            )};
+            )}
+            ON CONFLICT (source, source_id) DO NOTHING;
           `;
           /* eslint-enable @ts-safeql/check-sql -- re-enable linting */
         },

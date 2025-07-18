@@ -1,4 +1,4 @@
-import { type TSchema } from "@sinclair/typebox";
+import { type TNull, type TSchema, type TUnion } from "@sinclair/typebox";
 import { type TObject } from "@sinclair/typebox";
 import { type TRef } from "@sinclair/typebox";
 import { type TOptional } from "@sinclair/typebox";
@@ -20,3 +20,8 @@ export const ApiResponseSchema = <T extends TSchema>(
     },
     { $id: schemaId },
   );
+
+export const Nullable = <T extends TSchema>(T: T): TUnion<[T, TNull]> => {
+  // type Nullable<T> = T | null
+  return Type.Union([T, Type.Null()]);
+};

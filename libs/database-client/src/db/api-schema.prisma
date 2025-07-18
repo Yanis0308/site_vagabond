@@ -56,6 +56,7 @@ model PoiData {
   source      PoiDataSourceEnum @map("source")
   sourceId    String            @map("source_id") @db.VarChar(1000)
   language    LanguageEnum      @map("language")
+  nbOfTags    Int?              @map("nb_of_tags")
 
   poiId String @map("poi_id") @db.VarChar(1000)
 
