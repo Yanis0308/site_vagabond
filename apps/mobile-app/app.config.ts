@@ -2,7 +2,7 @@ import { type ConfigContext, type ExpoConfig } from "expo/config";
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- not a React component
 export default ({ config }: ConfigContext): ExpoConfig => {
-  const buildProfile = process.env.BUILD_PROFILE ?? "";
+  const buildProfile = process.env.BUILD_PROFILE ?? "empty-build-profile";
   const isDevelopmentBuild = buildProfile !== "production";
 
   // eslint-disable-next-line no-console -- AppConfig debug logs
@@ -13,7 +13,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     isDevelopmentBuild,
   );
 
-  //TODO: on pourrait peut-être vérifier le contenu de process.env avec Zod -> les valeurs sont peut-être remplacées directement dans le code donc attention à bien mentionner chaque process.env.[VARIABLE_NAME] dans le code
   const variantConfig: {
     appName: string;
     packageAndBundleIdentifier: string;
@@ -24,51 +23,60 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     privateMapboxToken: string | undefined;
     runtimeConfig: {
       apiBaseUrl: string | undefined;
+      cdnUrl: string | undefined;
       appleSignInRedirectUrl: string | undefined;
       appleSignInServiceId: string | undefined;
       googleSignInWebClientId: string | undefined;
       publicMapboxToken: string | undefined;
     };
-  } = isDevelopmentBuild
-    ? {
-        appName: "DEV Vagabond",
-        packageAndBundleIdentifier: "dev.com.vagabond.explore.tourism",
-        googleServicesFiles: {
-          ios: process.env.DEV_GOOGLE_SERVICES_PLIST,
-          android: process.env.DEV_GOOGLE_SERVICES_JSON,
-        },
-        privateMapboxToken: process.env.DEV_PRIVATE_MAPBOX_TOKEN,
-        runtimeConfig: {
-          apiBaseUrl: process.env.DEV_EXPO_PUBLIC_API_URL,
-          appleSignInRedirectUrl:
-            process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
-          appleSignInServiceId:
-            process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
-          googleSignInWebClientId:
-            process.env.DEV_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
-          publicMapboxToken: process.env.DEV_PUBLIC_MAPBOX_TOKEN,
-        },
-      }
-    : // We have never tested this before
-      {
-        appName: "Vagabond",
-        packageAndBundleIdentifier: "com.vagabond.explore.tourism",
-        googleServicesFiles: {
-          ios: process.env.PRD_GOOGLE_SERVICES_PLIST,
-          android: process.env.PRD_GOOGLE_SERVICES_JSON,
-        },
-        privateMapboxToken: process.env.PRD_PRIVATE_MAPBOX_TOKEN,
-        runtimeConfig: {
-          apiBaseUrl: process.env.PRD_EXPO_PUBLIC_API_URL,
-          appleSignInRedirectUrl:
-            process.env.PRD_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
-          appleSignInServiceId:
-            process.env.PRD_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
-          googleSignInWebClientId:
-            process.env.PRD_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
-          publicMapboxToken: process.env.PRD_PUBLIC_MAPBOX_TOKEN,
-        },
-      };
+  } =
+    // isDevelopmentBuild
+    // ?
+    {
+      appName: buildProfile === "development" ? "DEV Vagabond" : "TST Vagabond",
+      packageAndBundleIdentifier: "dev.com.vagabond.explore.tourism",
+      googleServicesFiles: {
+        ios: process.env.DEV_GOOGLE_SERVICES_PLIST,
+        android: process.env.DEV_GOOGLE_SERVICES_JSON,
+      },
+      privateMapboxToken: process.env.DEV_PRIVATE_MAPBOX_TOKEN,
+      runtimeConfig: {
+        apiBaseUrl:
+          buildProfile === "development"
+            ? process.env.DEV_EXPO_PUBLIC_API_URL
+            : // : process.env.PREVIEW_EXPO_PUBLIC_API_URL,
+              process.env.DEV_EXPO_PUBLIC_API_URL,
+        cdnUrl: process.env.DEV_EXPO_PUBLIC_CDN_URL,
+        appleSignInRedirectUrl:
+          process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
+        appleSignInServiceId:
+          process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
+        googleSignInWebClientId:
+          process.env.DEV_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
+        publicMapboxToken: process.env.DEV_PUBLIC_MAPBOX_TOKEN,
+      },
+    };
+  // : // We have never tested this before
+  // {
+  //   appName: "Vagabond",
+  //   packageAndBundleIdentifier: "com.vagabond.explore.tourism",
+  //   googleServicesFiles: {
+  //     ios: process.env.PRD_GOOGLE_SERVICES_PLIST,
+  //     android: process.env.PRD_GOOGLE_SERVICES_JSON,
+  //   },
+  //   privateMapboxToken: process.env.PRD_PRIVATE_MAPBOX_TOKEN,
+  //   runtimeConfig: {
+  //     apiBaseUrl: process.env.PRD_EXPO_PUBLIC_API_URL,
+  //     cdnUrl: process.env.PRD_EXPO_PUBLIC_CDN_URL,
+  //     appleSignInRedirectUrl:
+  //       process.env.PRD_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
+  //     appleSignInServiceId:
+  //       process.env.PRD_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
+  //     googleSignInWebClientId:
+  //       process.env.PRD_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
+  //     publicMapboxToken: process.env.PRD_PUBLIC_MAPBOX_TOKEN,
+  //   },
+  // };
   return {
     ...config,
     newArchEnabled: true,
@@ -77,15 +85,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     owner: "vagabond-app", // Expo account name
     version: "1.0.0",
     runtimeVersion: "1.0.0", // For Expo OTA updates
+    updates: {
+      fallbackToCacheTimeout: 30000,
+      url: process.env.EXPO_EAS_UPDATES_URL,
+    },
     orientation: "portrait",
-    icon: "./assets/images/icon.png",
+    icon: "./assets/images/full-icon.png",
     scheme: "vagabond-app", // URL Scheme to open the app, here vagabond://mylinkexample
     userInterfaceStyle: "light", // For light / dark mode
-    splash: {
-      image: "./assets/images/splash.png",
-      resizeMode: "contain",
-      backgroundColor: "#ffffff",
-    },
     ios: {
       bundleIdentifier: variantConfig.packageAndBundleIdentifier,
       supportsTablet: true,
@@ -101,9 +108,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       },
     },
     android: {
+      edgeToEdgeEnabled: true,
+      icon: "./assets/images/full-icon.png",
       adaptiveIcon: {
-        foregroundImage: "./assets/images/adaptive-icon.png",
-        backgroundColor: "#ffffff",
+        foregroundImage: "./assets/images/icon-transparent-with-padding.png",
+        backgroundImage: "./assets/images/icon-background.png",
       },
       permissions: [
         "android.permission.ACCESS_COARSE_LOCATION",
@@ -189,6 +198,16 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           RNMapboxMapsDownloadToken: variantConfig.privateMapboxToken,
           // Manually update the version when needed
           RNMapboxMapsVersion: "11.10.1",
+        },
+      ],
+      "expo-localization",
+      "expo-web-browser",
+      [
+        "expo-splash-screen",
+        {
+          backgroundColor: "#faf1e4",
+          image: "./assets/images/icon-transparent.png",
+          imageWidth: 190, // doc says 200 but it's not working https://github.com/expo/expo/issues/32515
         },
       ],
     ],

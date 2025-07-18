@@ -3,7 +3,7 @@ import { memo } from "react";
 
 import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
-import { displayingLoaderAtom } from "@/stores/displayingLoader";
+import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 
 import {
   AlertDialog,

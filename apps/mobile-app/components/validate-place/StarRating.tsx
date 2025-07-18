@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import { Pressable, View } from "react-native";
 
+import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
 
 import { CustomText } from "../custom-ui/CustomText";
@@ -26,10 +27,11 @@ export const StarRating: React.FC<StarRatingProps> = React.memo(
   }) => {
     return (
       <View
+        style={!withoutBackground ? shadowStyles.ratingBlock : undefined}
         className={cn(
           "flex flex-row items-center gap-1",
           !withoutBackground &&
-            "bg-brightYellow-100 border-secondary-500 shadow-[0px_4px_4px_-2px] shadow-shadow-ratingBlock border-2 border-solid px-4 py-2 rounded-[34px]",
+            "bg-brightYellow-100 border-secondary-500 border-2 border-solid px-4 py-2 rounded-[34px]",
           className,
         )}
       >

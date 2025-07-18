@@ -17,7 +17,7 @@ module.exports = {
   safelist: [
     {
       pattern:
-        /(bg|border|text|stroke|fill)-(primary|secondary|tertiary|error|success|warning|info|typography|outline|background|indicator|black|brightYellow|skyBlue|rust|shadow)-(0|50|100|200|300|400|500|600|700|800|900|950|white|gray|black|error|warning|muted|success|info|light|dark|primary|ratingBlock|polaroidBlock)/,
+        /(bg|border|text|stroke|fill)-(primary|secondary|tertiary|error|success|warning|info|typography|outline|background|indicator|black|brightYellow|skyBlue|rust|burntOrange|plum|shadow)-(0|50|100|200|300|400|500|600|700|800|900|950|white|gray|black|error|warning|muted|success|info|light|dark|primary|ratingBlock|polaroidBlock)/,
     },
   ],
   theme: {
@@ -216,6 +216,16 @@ module.exports = {
           500: "rgb(var(--color-rust-500)/<alpha-value>)",
           600: "rgb(var(--color-rust-600)/<alpha-value>)",
           700: "rgb(var(--color-rust-700)/<alpha-value>)",
+        },
+        burntOrange: {
+          50: "rgb(var(--color-burnt-orange-50)/<alpha-value>)",
+          100: "rgb(var(--color-burnt-orange-100)/<alpha-value>)",
+          200: "rgb(var(--color-burnt-orange-200)/<alpha-value>)",
+          300: "rgb(var(--color-burnt-orange-300)/<alpha-value>)",
+          400: "rgb(var(--color-burnt-orange-400)/<alpha-value>)",
+          500: "rgb(var(--color-burnt-orange-500)/<alpha-value>)",
+          600: "rgb(var(--color-burnt-orange-600)/<alpha-value>)",
+          700: "rgb(var(--color-burnt-orange-700)/<alpha-value>)",
         },
         plum: {
           50: "rgb(var(--color-plum-50)/<alpha-value>)",

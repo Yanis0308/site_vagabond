@@ -45,6 +45,7 @@ export const Handle = memo(({ animatedIndex, rating }: HandleProps) => {
         alignItems: "center" as const,
         justifyContent: "center" as const,
         paddingVertical: 10,
+        marginHorizontal: -2,
       },
     ],
     [],

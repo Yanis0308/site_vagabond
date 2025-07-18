@@ -9,7 +9,8 @@ import { View } from "react-native";
 
 import { StarRating } from "@/components/validate-place/StarRating";
 import { useValidatePlaceMutation } from "@/hooks/mutations/useValidatePlaceMutation";
-import { displayingLoaderAtom } from "@/stores/displayingLoader";
+import { useUserLocation } from "@/hooks/queries/useUserLocation";
+import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { logger } from "@/utils/logger";
 
 import { CustomButton } from "../custom-ui/CustomButton";
@@ -22,16 +23,13 @@ import { type Place } from "./types";
 interface ReviewStepProps {
   place: Place;
   capturedImage: string;
-  position: {
-    lat: number;
-    lng: number;
-  };
   imageKey: string;
   setReviewFormEnded: (value: boolean) => void;
 }
 
 export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
-  ({ place, capturedImage, position, imageKey, setReviewFormEnded }) => {
+  ({ place, capturedImage, imageKey, setReviewFormEnded }) => {
+    const { data: userLocation } = useUserLocation();
     const validatePlace = useValidatePlaceMutation();
     const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
 
@@ -83,8 +81,19 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
 
     useEffect(() => {
       register("coords");
-      setValue("coords", { latitude: position.lat, longitude: position.lng });
-    }, [register, setValue, position]);
+      setValue(
+        "coords",
+        userLocation === undefined || userLocation === null
+          ? {
+              latitude: 0,
+              longitude: 0,
+            }
+          : {
+              latitude: userLocation.latitude,
+              longitude: userLocation.longitude,
+            },
+      );
+    }, [register, setValue, userLocation]);
 
     useEffect(() => {
       setDisplayingLoader(isSubmitting);

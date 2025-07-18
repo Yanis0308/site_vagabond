@@ -4,6 +4,7 @@ import { z } from "zod";
 //TODO: remove zod and use typebox to validate the config
 const ConfigSchema = z.object({
   apiBaseUrl: z.string().url(),
+  cdnUrl: z.string().url(),
   appleSignInServiceId: z.string(),
   appleSignInRedirectUrl: z.string().url(),
   googleSignInWebClientId: z.string(),

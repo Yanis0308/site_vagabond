@@ -1,10 +1,11 @@
 import { memo, useMemo } from "react";
+import { ScrollView } from "react-native-gesture-handler";
 
+import { config } from "@/constants/Config";
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
 import { PolaroidReview } from "../polaroid/PolaroidReview";
-import { ScrollView } from "../ui/scroll-view";
 
 interface ReviewsListProps {
   poi: PoiType;
@@ -17,7 +18,7 @@ export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
     const items = poi.visitedPois.map((visitedPoi) => (
       <PolaroidReview
         key={visitedPoi.id}
-        imageUrl={`https://dev-vagabond-public.t3.storage.dev/${visitedPoi.imageKey}`}
+        imageUrl={`${config.cdnUrl}/${visitedPoi.imageKey}`}
         username={visitedPoi.username}
         rating={visitedPoi.rating}
         dateString={visitedPoi.createdAt}
@@ -27,7 +28,7 @@ export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
     items.push(
       <PolaroidReview
         key={"123"}
-        imageUrl={`https://dev-vagabond-public.t3.storage.dev/square-photo.jpg`}
+        imageUrl={`${config.cdnUrl}/square-photo.jpg`}
         username={"John Doe"}
         rating={2}
         dateString={"2025-01-01"}
@@ -40,7 +41,7 @@ export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
     items.push(
       <PolaroidReview
         key={"1234"}
-        imageUrl={`https://dev-vagabond-public.t3.storage.dev/square-photo.jpg`}
+        imageUrl={`${config.cdnUrl}/square-photo.jpg`}
         username={"John Doe"}
         rating={3}
         dateString={"2025-01-01"}

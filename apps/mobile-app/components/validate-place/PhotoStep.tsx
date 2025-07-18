@@ -7,7 +7,7 @@ import { Alert } from "react-native";
 
 import { Text } from "@/components/ui/text";
 import { useUploadFileMutation } from "@/hooks/mutations/useUploadFileMutation";
-import { displayingLoaderAtom } from "@/stores/displayingLoader";
+import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { cn } from "@/utils/cn";
 import { logger } from "@/utils/logger";
 
@@ -64,17 +64,15 @@ export const PhotoStep: React.FC<PhotoStepProps> = React.memo(
           shutterSound: false,
         });
 
-        if (photo !== undefined) {
-          const imageData: ImageInfo = {
-            uri: photo.uri,
-            fileName: `photo_${Date.now()}.jpg`,
-            mimeType: "image/jpeg",
-          };
+        const imageData: ImageInfo = {
+          uri: photo.uri,
+          fileName: `photo_${Date.now()}.jpg`,
+          mimeType: "image/jpeg",
+        };
 
-          const uploadedKey = await uploadImage(imageData);
-          if (uploadedKey !== null) {
-            onPhotoTaken(photo.uri, uploadedKey);
-          }
+        const uploadedKey = await uploadImage(imageData);
+        if (uploadedKey !== null) {
+          onPhotoTaken(photo.uri, uploadedKey);
         }
       } catch (error) {
         logger("Error taking picture:", error);

@@ -78,7 +78,6 @@ export const useGoogleLoginMutation = (): UseMutationResult<
     },
     onSuccess: () => {
       logger("success google login");
-      router.replace("/");
     },
   });
 };

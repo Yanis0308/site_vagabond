@@ -94,7 +94,6 @@ export const useAppleLoginMutation = (): UseMutationResult<
     },
     onSuccess: () => {
       logger("success apple login");
-      router.replace("/");
     },
   });
 };

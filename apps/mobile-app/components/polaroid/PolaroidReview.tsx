@@ -2,7 +2,6 @@ import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { getPlainTextDate } from "@/utils/date";
-import { logger } from "@/utils/logger";
 
 import { CustomText } from "../custom-ui/CustomText";
 import { Box } from "../ui/box";
@@ -22,7 +21,6 @@ interface PolaroidReviewProps {
 export const PolaroidReview = memo(
   ({ imageUrl, username, rating, comment, className }: PolaroidReviewProps) => {
     const { i18n } = useTranslation();
-    logger(imageUrl, "imageUrl");
 
     return (
       <PolaroidBase

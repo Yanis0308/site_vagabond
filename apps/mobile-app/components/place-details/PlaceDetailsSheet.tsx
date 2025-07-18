@@ -25,13 +25,15 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import { TAB_BAR_HEIGHT } from "@/app/(tabs)/_layout";
+import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
 import { Text } from "@/components/ui/text";
+import { useBottomSheetBack } from "@/hooks/other/useBottomSheetBack";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { useUser } from "@/hooks/other/useUser";
+import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
 import { type PoiType } from "@/utils/types";
 
@@ -50,11 +52,12 @@ import { Handle } from "./Handle";
 interface PlaceDetailsSheetV2Props {
   place: PoiType | null;
   onPressLink: () => void;
+  onClose?: () => void;
 }
 
 //TODO: utiliser le BottomSheet classique plutôt que la Modal pour éviter des Mount / Unmount ? La modal sert à en empiler plusieurs uniquement il me semble
 export const PlaceDetailsSheet = memo(
-  ({ place, onPressLink }: PlaceDetailsSheetV2Props): ReactElement => {
+  ({ place, onPressLink, onClose }: PlaceDetailsSheetV2Props): ReactElement => {
     const { t } = useTranslation("common");
     const DEFAULT_SNAP_POINT = 1;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -65,6 +68,8 @@ export const PlaceDetailsSheet = memo(
       [],
     );
 
+    useBottomSheetBack(place !== null, bottomSheetModalRef, onClose);
+
     const isVisited = useMemo(() => {
       return (
         place?.visitedPois.find(
@@ -73,14 +78,18 @@ export const PlaceDetailsSheet = memo(
       );
     }, [place, user]);
 
-    useEffect(() => {
-      if (place !== null) {
-        bottomSheetModalRef.current?.present();
-        bottomSheetModalRef.current?.snapToIndex(DEFAULT_SNAP_POINT);
-      } else {
-        bottomSheetModalRef.current?.close();
-      }
-    }, [place]);
+    useEffect(
+      () => {
+        if (place !== null) {
+          bottomSheetModalRef.current?.present();
+          bottomSheetModalRef.current?.snapToIndex(DEFAULT_SNAP_POINT);
+        } else {
+          bottomSheetModalRef.current?.close();
+        }
+      },
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- necessary
+      [place?.id],
+    );
 
     const snapPoints = useMemo(() => ["15%", "60%", "90%"], []);
 
@@ -93,9 +102,7 @@ export const PlaceDetailsSheet = memo(
     const backgroundStyle = useMemo(
       () => ({
         backgroundColor: themeColors.background["200"].hex,
-        borderWidth: 2,
         marginHorizontal: -2,
-        borderColor: themeColors.burntOrange["200"].hex,
         borderTopLeftRadius: 40,
         borderTopRightRadius: 40,
       }),
@@ -147,10 +154,12 @@ export const PlaceDetailsSheet = memo(
     );
 
     const rating = useMemo(() => {
-      return (
-        place?.visitedPois.reduce((acc, visitedPoi) => {
-          return acc + visitedPoi.rating;
-        }, 0) ?? 0 / (place?.visitedPois.length ?? 1)
+      return Math.round(
+        place !== null
+          ? place.visitedPois.reduce((acc, visitedPoi) => {
+              return acc + visitedPoi.rating;
+            }, 0) / place.visitedPois.length
+          : 0,
       );
     }, [place]);
 
@@ -193,13 +202,14 @@ export const PlaceDetailsSheet = memo(
         bottomInset={TAB_BAR_HEIGHT}
       >
         {place !== null ? (
-          <BottomSheetScrollView stickyHeaderIndices={stickyHeaderIndices}>
+          <BottomSheetScrollView
+            stickyHeaderIndices={stickyHeaderIndices}
+            key={place.id}
+          >
             <Center className={"z-20 gap-5 px-6"}>
               <Animated.View
-                style={imageBoxAnimatedStyle}
-                className={cn(
-                  "w-full rounded-2xl bg-background-50 p-2 shadow-[0_4px_4px_-2px] shadow-shadow-ratingBlock",
-                )}
+                style={[imageBoxAnimatedStyle, shadowStyles.ratingBlock]}
+                className={cn("w-full rounded-2xl bg-background-50 p-2")}
               >
                 <Image
                   source={
@@ -217,8 +227,8 @@ export const PlaceDetailsSheet = memo(
             </Center>
 
             <Animated.View
-              style={contentAnimatedStyle}
-              className="bg-background-200 pb-2 shadow-[0px_24px_24px_0px] shadow-background-200"
+              style={[contentAnimatedStyle, shadowStyles.contentLarge]}
+              className="bg-background-200 pb-2"
             >
               <CustomText
                 type="placeTitle"

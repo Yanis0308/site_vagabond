@@ -6,15 +6,10 @@ import "@/localization";
 import { getAuth } from "@react-native-firebase/auth";
 import Mapbox from "@rnmapbox/maps";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { Stack } from "expo-router";
+import { Stack, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import {
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useAtom } from "jotai";
+import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
@@ -22,6 +17,8 @@ import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { FullScreenLoader } from "@/components/validate-place/FullScreenLoader";
 import { config } from "@/constants/Config";
 import { queryClient } from "@/constants/QueryClient";
+import { defaultScreenOptions } from "@/constants/ScreenOptions";
+import { authenticatedUserAtom } from "@/stores/authenticatedUserAtom";
 import { logger } from "@/utils/logger";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -30,22 +27,40 @@ void SplashScreen.preventAutoHideAsync();
 //eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function RootLayout(): ReactElement | null {
   // void Location.enableNetworkProviderAsync();
+  const pathname = usePathname();
+  logger("= root layout pathname:", pathname);
 
-  const [initializing, setInitializing] = useState(true);
+  // Splash screen management
+  const [initializing, setInitializing] = useState({
+    userLoading: true,
+  });
+  const onLayoutRootView = useCallback(() => {
+    if (!initializing.userLoading) {
+      SplashScreen.hide();
+    }
+  }, [initializing.userLoading]);
 
+  // Authentification management
+  const [authenticatedUser, setAuthenticatedUser] = useAtom(
+    authenticatedUserAtom,
+  );
   useEffect(() => {
     const subscriber = getAuth().onAuthStateChanged((user) => {
-      logger("onAuthStateChanged user:", typeof user);
-      setInitializing((prevInitializing) => {
-        if (prevInitializing) {
-          return false;
-        }
-        return prevInitializing;
-      });
+      logger("onAuthStateChanged user:", JSON.stringify(user));
+      setAuthenticatedUser(
+        user !== null
+          ? {
+              email: user.email ?? "empty-email",
+              displayName: user.displayName ?? "empty-display-name",
+            }
+          : null,
+      );
+      setInitializing((prev) => ({ ...prev, userLoading: false }));
     });
     return subscriber; // unsubscribe on unmount
-  }, [initializing]);
+  }, [setAuthenticatedUser]);
 
+  // Mapbox init
   useEffect(() => {
     Mapbox.setAccessToken(config.publicMapboxToken)
       .then(() => {
@@ -56,46 +71,25 @@ export default function RootLayout(): ReactElement | null {
       });
   }, []);
 
-  const onLayoutRootView = useCallback(() => {
-    if (!initializing) {
-      SplashScreen.hide();
-    }
-  }, [initializing]);
-
-  const screenOptions = useMemo(
-    () => ({
-      headerShown: false,
-      headerBackButtonDisplayMode: "minimal" as const,
-      headerTitle: "",
-      headerShadowVisible: false,
-      headerTintColor: "white",
-    }),
-    [],
-  );
-
-  if (initializing) {
+  if (initializing.userLoading) {
     logger("=== RootLayout return null");
     return null;
   }
 
-  //TODO: ajouter Guard sur les Screens https://docs.expo.dev/router/advanced/authentication/
   return (
     <GluestackUIProvider>
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
           <KeyboardProvider>
             <FullScreenLoader />
-            <Stack screenOptions={screenOptions}>
-              <Stack.Screen name="sign-in" />
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="validate-place/take-photo" />
-              <Stack.Screen
-                name="validate-place/review-form"
-                options={{
-                  animation: "fade",
-                }}
-              />
-              <Stack.Screen name="+not-found" />
+            <Stack screenOptions={defaultScreenOptions}>
+              <Stack.Protected guard={authenticatedUser !== null}>
+                <Stack.Screen name="(app)" />
+              </Stack.Protected>
+
+              <Stack.Protected guard={authenticatedUser === null}>
+                <Stack.Screen name="sign-in" />
+              </Stack.Protected>
             </Stack>
           </KeyboardProvider>
         </GestureHandlerRootView>

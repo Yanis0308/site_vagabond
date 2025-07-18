@@ -64,6 +64,7 @@ const buttonStyle = tva({
       md: "px-5 h-10",
       lg: "px-6 h-11",
       xl: "px-7 h-12",
+      none: "",
     },
   },
   compoundVariants: [

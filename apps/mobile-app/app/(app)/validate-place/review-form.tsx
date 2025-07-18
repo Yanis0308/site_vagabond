@@ -1,6 +1,4 @@
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
-import * as Location from "expo-location";
-import { type PermissionStatus } from "expo-modules-core/src/PermissionsInterface";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import React, {
@@ -21,12 +19,8 @@ import { ReviewStep } from "@/components/validate-place";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 
-interface Position {
-  lat: number;
-  lng: number;
-}
-
-const PlaceDetails = React.memo((): ReactElement => {
+// eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- page file
+export default function ReviewForm(): ReactElement {
   const { t } = useTranslation("common");
   const place = useAtomValue(selectedPlaceAtom);
   const currentPhoto = useAtomValue(currentPhotoAtom);
@@ -35,36 +29,15 @@ const PlaceDetails = React.memo((): ReactElement => {
   const router = useRouter();
   const [reviewFormEnded, setReviewFormEnded] = useState(false);
 
-  const [, setLocationPermissionStatus] = useState<PermissionStatus | null>(
-    null,
-  );
-  const [position, setPosition] = useState<Position>({ lat: 0, lng: 0 });
-
-  useEffect(() => {
-    void (async (): Promise<void> => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      setLocationPermissionStatus(status);
-      if (status !== Location.PermissionStatus.GRANTED) {
-        Alert.alert(
-          "Permission refusée",
-          "Nous avons besoin d'accéder à votre position",
-        );
-        return;
-      }
-
-      const location = await Location.getCurrentPositionAsync({});
-      setPosition({
-        lat: location.coords.latitude,
-        lng: location.coords.longitude,
-      });
-    })();
-  }, []);
-
   useEffect(() => {
     if (reviewFormEnded) {
-      router.dismissAll();
+      setCurrentPhoto(null);
+      // Small delay to ensure usePreventRemove is properly disabled
+      setTimeout(() => {
+        router.dismissAll();
+      }, 0);
     }
-  }, [reviewFormEnded, router]);
+  }, [reviewFormEnded, router, setCurrentPhoto]);
 
   usePreventRemove(
     !reviewFormEnded,
@@ -123,15 +96,10 @@ const PlaceDetails = React.memo((): ReactElement => {
         <ReviewStep
           place={place}
           capturedImage={currentPhoto.imageUri}
-          position={position}
           imageKey={currentPhoto.fileId}
           setReviewFormEnded={setReviewFormEnded}
         />
       </KeyboardAwareScrollView>
     </CustomScreenContainer>
   );
-});
-
-export default PlaceDetails;
-
-PlaceDetails.displayName = "PlaceDetails";
+}

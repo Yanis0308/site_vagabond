@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@sinclair/typebox": "^0.33.22",
+    "geolib": "^3.3.4",
     "zx": "^8.3.0"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "@prettier/plugin-lua": "^0.0.3",
     "@tanstack/eslint-plugin-query": "^5.66.1",
     "@ts-safeql/eslint-plugin": "^3.4.7",
+    "@types/geolib": "^2.0.3",
     "@typescript-eslint/parser": "^8.12.0",
     "concurrently": "^9.1.2",
     "eslint": "~8.57.0",

@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 
+  // https://www.nativewind.dev/docs/tailwind/typography/font-size
+  // we disabled nativewind default rem (14px on mobile instead of 16px) in metro.config.js then set it to 16px in global.css
+  // this affects not only text but also padding, margin, etc.
+   */
+:root {
+  font-size: 16px;
+}

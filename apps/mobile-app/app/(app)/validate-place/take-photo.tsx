@@ -11,7 +11,6 @@ import { Text } from "@/components/ui/text";
 import { PhotoStep } from "@/components/validate-place";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
-import { logger } from "@/utils/logger";
 
 const PlaceDetails = React.memo((): ReactElement => {
   const { t } = useTranslation("common");
@@ -19,8 +18,6 @@ const PlaceDetails = React.memo((): ReactElement => {
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const router = useRouter();
-
-  logger("take photo", place);
 
   const onPhotoTaken = useCallback(
     (imageUri: string, fileId: string): void => {

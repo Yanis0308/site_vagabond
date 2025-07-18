@@ -1,22 +1,21 @@
 import { getAuth } from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { router } from "expo-router";
 import { type ReactElement, useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { CustomButton } from "@/components/custom-ui/CustomButton";
+import { CustomText } from "@/components/custom-ui/CustomText";
 import { Box } from "@/components/ui/box";
-import { Button, ButtonText } from "@/components/ui/button";
-import { Text } from "@/components/ui/text";
 import { logger } from "@/utils/logger";
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function HomeScreen(): ReactElement {
   const { t } = useTranslation("common");
   const [isSigningOut, setIsSigningOut] = useState(false);
+
   const signOut = useCallback(async () => {
     setIsSigningOut(true);
     try {
-      //TODO: on pourrait checker si l'utilisateur est connecté avec Google
       try {
         // Prevent sign-in with same Google account without asking
         await GoogleSignin.revokeAccess();
@@ -24,27 +23,23 @@ export default function HomeScreen(): ReactElement {
         logger("Error GoogleSignin revoking access", error);
       }
       await getAuth().signOut();
-      router.replace("/sign-in");
     } catch (error) {
       logger("Error signing out", error);
-    } finally {
       setIsSigningOut(false);
     }
   }, []);
 
-  const onPress = useCallback(() => void signOut, [signOut]);
+  const onPress = useCallback(() => void signOut(), [signOut]);
 
   return (
     <Box className={"flex size-full items-center justify-center gap-4"}>
-      <Text className={"text-2xl text-white"}>
-        {t("welcome_to_the_neo-tourism")}
-      </Text>
-      <Text className={"text-green-500"}>{t("green_text")}</Text>
-      <Button disabled={isSigningOut}>
-        <ButtonText onPress={onPress} disabled={isSigningOut}>
-          {t("sign_out")}
-        </ButtonText>
-      </Button>
+      <CustomText>{isSigningOut ? "Loading..." : "Can sign out"}</CustomText>
+      <CustomButton
+        onPress={onPress}
+        disabled={isSigningOut}
+        label={t("sign_out")}
+        type="submit"
+      />
     </Box>
   );
 }
