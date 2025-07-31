@@ -8,7 +8,7 @@ export async function postLoad(): Promise<void> {
   await prismaExtendedClient.$connect();
 
   try {
-    await disableMhsDuplicates(prismaExtendedClient);
+    // await disableMhsDuplicates(prismaExtendedClient);
   } catch (error) {
     if (error instanceof Error) {
       logger.error("Error during post load:", error);
@@ -34,3 +34,4 @@ async function disableMhsDuplicates(
 
   logger.info("Post load step ended: Disable MHS duplicates");
 }
+

@@ -143,6 +143,9 @@ export const useMapLogic = (): UseMapLogicReturn => {
             isVisited:
               place.visitedPois.find(({ userId }) => userId === user?.uid) !==
               undefined,
+            // Ajout des propriétés de popularité pour différencier la taille des points
+            isPopular: (place.popularity ?? 0) >= 0.5,
+            popularity: place.popularity ?? 0,
           },
           geometry: {
             type: "Point" as const,

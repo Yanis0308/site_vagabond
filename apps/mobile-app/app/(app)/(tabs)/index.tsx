@@ -2,6 +2,7 @@ import {
   Camera,
   CircleLayer,
   Images,
+  LocationPuck,
   type MapState,
   MapView,
   ShapeSource,
@@ -12,6 +13,7 @@ import { router } from "expo-router";
 import { getDistance } from "geolib";
 import { type ReactElement, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Platform } from "react-native";
 import colors from "tailwindcss/colors";
 
 import { MapButtons } from "@/components/custom-ui/MapButtons";
@@ -101,6 +103,8 @@ export default function MapsTab(): ReactElement {
     [userLocation],
   );
 
+  const pulsing = useMemo(() => ({ isEnabled: false }), []);
+
   return (
     <CustomScreenContainer
       isLightScreen={true}
@@ -143,12 +147,12 @@ export default function MapsTab(): ReactElement {
           scaleBarEnabled={false}
         >
           <Camera pitch={0} heading={0} ref={cameraRef} />
-          {/* <LocationPuck
+          <LocationPuck
             puckBearingEnabled
             puckBearing="heading"
             bearingImage={Platform.OS === "ios" ? undefined : "bearingImage"}
-            // pulsing={pulsing} currently create bug to get map event https://github.com/rnmapbox/maps/issues/2902
-          /> */}
+            pulsing={pulsing} // currently create bug to get map event https://github.com/rnmapbox/maps/issues/2902
+          />
           <Images images={images} />
           <Images images={imagesLoaded} onImageMissing={onImageMissing} />
           <ShapeSource
@@ -215,7 +219,13 @@ export default function MapsTab(): ReactElement {
                   "#10b981", // vert pour les POI visités (green-500)
                   "#9b4dca", // bleu pour les POI non visités (couleur originale)
                 ],
-                circleRadius: 8,
+                // Taille des points basée sur la popularité : 10px pour populaires (>=0.5), 7px pour normaux
+                circleRadius: [
+                  "case",
+                  ["get", "isPopular"],
+                  10, // rayon pour les POI populaires
+                  7, // rayon pour les POI normaux
+                ],
                 circleStrokeWidth: 1,
                 circleStrokeColor: "#fff",
               }}

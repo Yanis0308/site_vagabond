@@ -25,24 +25,16 @@ const validateRows = generateValidator(
 async function transform(): Promise<void> {
   const BATCH_SIZE = 1000;
 
-  try {
-    // Traitement par lots avec un stream
-    //TODO: utiliser raw`` sans parenthèses pour SafeQL
-    const stream = knexInstance
-      .raw<
-        Array<{
-          osm_type: string;
-          osm_id: string;
-          name: string | null;
+  const baseSelectQuery = `SELECT 
+      p.osm_id,
+      p.osm_type,
+      p.name,
+      ST_X(ST_Transform(p.geom, 4326)) as longitude,
+      ST_Y(ST_Transform(p.geom, 4326)) as latitude,
+      p.tags
+    FROM raw_pois p`;
 
-          longitude: unknown | null;
-
-          latitude: unknown | null;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- conflict with SafeQL
-          tags: any | null;
-        }>
-      >(
-        `SELECT 
+  const filteredQuery = `SELECT 
       p.osm_id,
       p.osm_type,
       p.name,
@@ -66,9 +58,25 @@ async function transform(): Promise<void> {
         OR p.tags->>'wikipedia' IS NOT NULL
       )
       OR (p.tags->>'amenity' = 'place_of_worship')
-    )
-    `,
-      )
+    )`;
+
+  try {
+    // Traitement par lots avec un stream
+    //TODO: utiliser raw`` sans parenthèses pour SafeQL
+    const stream = knexInstance
+      .raw<
+        Array<{
+          osm_type: string;
+          osm_id: string;
+          name: string | null;
+
+          longitude: unknown | null;
+
+          latitude: unknown | null;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- conflict with SafeQL
+          tags: any | null;
+        }>
+      >(baseSelectQuery)
       .stream();
 
     let batch: ExtractedPoiDatabaseRow[] = [];

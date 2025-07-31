@@ -32,6 +32,7 @@ export async function load(data: ExtractedPoiDatabaseRow[]): Promise<void> {
           name: item.tags.name ?? "",
           description: item.tags.description ?? "",
           rawInfo: item.tags,
+          nbOfTags: Object.keys(item.tags).length,
           source: PoiSourceEnum.OSM,
           sourceId: getComputedId(item),
           language: LanguageEnum.FR,
@@ -41,7 +42,10 @@ export async function load(data: ExtractedPoiDatabaseRow[]): Promise<void> {
     );
 
     await prismaExtendedClient.poi.createManyCustom(poisToSave);
-    await prismaExtendedClient.poiData.createMany({ data: poiDatasToSave });
+    await prismaExtendedClient.poiData.createMany({
+      data: poiDatasToSave,
+      skipDuplicates: true,
+    });
 
     logger.info(`Lot de ${data.length} lignes inséré avec succès`);
   } catch (error) {
