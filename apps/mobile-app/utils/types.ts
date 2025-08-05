@@ -7,4 +7,8 @@ export type PoiType = Static<
   popularity?: number;
 };
 
+export type VisitedPoiType = Static<
+  typeof jsonSchemas.GetVisitedPoisResponseSchema.properties.data
+>[0];
+
 export type BoundingBoxType = Static<typeof jsonSchemas.BoundingBoxSchema>;

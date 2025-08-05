@@ -4,6 +4,7 @@ import { generateValidator } from "@vagabond/shared-utils";
 import { apiClient } from "@/http/api-client";
 import { logger } from "@/utils/logger";
 import { type BoundingBoxType, type PoiType } from "@/utils/types";
+
 const validateResponse = generateValidator(jsonSchemas.GetPoisResponseSchema);
 
 export const getPlaces = async (

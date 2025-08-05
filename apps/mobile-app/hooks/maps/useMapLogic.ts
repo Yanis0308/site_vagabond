@@ -1,6 +1,5 @@
 import { type MapState, type MapView } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
-import { type Position } from "@rnmapbox/maps/lib/typescript/src/types/Position";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -8,9 +7,130 @@ import { useUser } from "@/hooks/other/useUser";
 import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
-import { calculateBboxWithMinSize, CLUSTER_MAX_ZOOM } from "@/utils/bbox";
+import { calculateBboxWithMinSize } from "@/utils/bbox";
+// import { CLUSTER_MAX_ZOOM } from "@/utils/bbox"; // Pour le clustering
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
+
+// Type pour les tags OSM
+interface OsmTags {
+  tourism?: string;
+  historic?: string;
+  amenity?: string;
+  leisure?: string;
+  building?: string;
+  man_made?: string;
+  bridge?: string;
+  government?: string;
+  landuse?: string;
+  [key: string]: string | undefined;
+}
+
+// Fonction pour obtenir l'emoji selon le type de POI
+function getPoiEmoji(rawInfo: unknown): string {
+  if (
+    rawInfo === null ||
+    rawInfo === undefined ||
+    typeof rawInfo !== "object"
+  ) {
+    return "📍"; // Emoji par défaut
+  }
+
+  // Les tags OSM sont dans rawInfo
+  const tags = rawInfo as OsmTags;
+
+  // Tourism
+  if (tags.tourism !== undefined) {
+    switch (tags.tourism) {
+      case "museum":
+        return "🏛️";
+      case "zoo":
+        return "🦁";
+      case "monument":
+        return "🗿";
+      case "artwork":
+        return "🎨";
+      case "viewpoint":
+        return "🔭";
+      case "attraction":
+        return "🎢";
+      case "aquarium":
+        return "🐠";
+      case "tower":
+        return "🗼";
+      case "information":
+        return "ℹ️";
+      default:
+        return "🧳";
+    }
+  }
+
+  // Historic
+  if (tags.historic !== undefined) {
+    switch (tags.historic) {
+      case "castle":
+        return "🏰";
+      case "monument":
+      case "memorial":
+        return "🗿";
+      case "city_gate":
+        return "🚪";
+      case "fort":
+        return "🏰";
+      default:
+        return "🏺";
+    }
+  }
+
+  // Amenity
+  if (tags.amenity !== undefined) {
+    switch (tags.amenity) {
+      case "place_of_worship":
+        return "⛪";
+      case "townhall":
+        return "🏛️";
+      case "theatre":
+        return "🎭";
+      default:
+        return "🏢";
+    }
+  }
+
+  // Leisure
+  if (tags.leisure !== undefined) {
+    switch (tags.leisure) {
+      case "park":
+        return "🌳";
+      case "marina":
+        return "⚓";
+      default:
+        return "🎯";
+    }
+  }
+
+  // Building historique
+  if (tags.building !== undefined) {
+    return "🏛️";
+  }
+
+  // Bridge
+  if (tags.man_made === "bridge" || Boolean(tags.bridge)) {
+    return "🌉";
+  }
+
+  // Government
+  if (tags.government !== undefined) {
+    return "🏛️";
+  }
+
+  // Cemetery
+  if (tags.landuse === "cemetery") {
+    return "⚰️";
+  }
+
+  // Fallback par défaut
+  return "📍";
+}
 
 export interface OnPressEvent {
   features: GeoJSON.Feature[];
@@ -146,6 +266,8 @@ export const useMapLogic = (): UseMapLogicReturn => {
             // Ajout des propriétés de popularité pour différencier la taille des points
             isPopular: (place.popularity ?? 0) >= 0.5,
             popularity: place.popularity ?? 0,
+            // Emoji selon le type de POI
+            emoji: getPoiEmoji(place.data[0]?.rawInfo),
           },
           geometry: {
             type: "Point" as const,
@@ -186,18 +308,19 @@ export const useMapLogic = (): UseMapLogicReturn => {
           const properties = event.features[0].properties;
           logger("Feature properties:", properties);
 
+          // CLUSTERING DÉSACTIVÉ - pour réactiver, décommenter le code ci-dessous :
           // Vérifier si c'est un cluster
-          if (properties.cluster === true) {
-            const clusterId = properties.cluster_id as number;
-            logger("Cluster sélectionné", clusterId);
-            logger("Point count:", properties.point_count);
-
-            // Zoom sur le cluster
-            void mapRef.current?.getZoom().then((currentZoom) => {
-              cameraRef.current?.moveTo(properties.coordinates as Position);
-            });
-            return;
-          }
+          // if (properties.cluster === true) {
+          //   const clusterId = properties.cluster_id as number;
+          //   logger("Cluster sélectionné", clusterId);
+          //   logger("Point count:", properties.point_count);
+          //
+          //   // Zoom sur le cluster
+          //   void mapRef.current?.getZoom().then((currentZoom) => {
+          //     cameraRef.current?.moveTo(properties.coordinates as Position);
+          //   });
+          //   return;
+          // }
 
           const poiData = properties.data as PoiType | undefined;
 
@@ -215,16 +338,18 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
   // URLs des images pour le chargement
   const imagesUrls = useMemo(() => {
-    if (zoom === null || zoom < CLUSTER_MAX_ZOOM) {
-      return [];
-    }
+    // CLUSTERING DÉSACTIVÉ - toujours charger les images
+    // Avec clustering activé, utiliser cette logique :
+    // if (zoom === null || zoom < CLUSTER_MAX_ZOOM) {
+    //   return [];
+    // }
 
     return (
       placesData?.map(
         (place) => `https://picsum.photos/seed/${place.id}/20/20`,
       ) ?? []
     );
-  }, [placesData, zoom]);
+  }, [placesData]); // Avec clustering: }, [placesData, zoom]);
 
   return useMemo(
     () => ({

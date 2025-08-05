@@ -28,6 +28,8 @@
   "submit": "Submit",
   "green_text": "Green text",
   "sign_out": "Sign out",
+  "validated_places": "My validated places",
+  "no_validated_places": "No validated places yet",
   "zoom": "Zoom: {{zoom}}",
   "pois": "POIs: {{pois}}",
   "img_queue": "Img queue: {{queueLength}}",

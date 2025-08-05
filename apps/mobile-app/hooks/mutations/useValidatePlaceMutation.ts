@@ -36,7 +36,7 @@ export const useValidatePlaceMutation = () => {
         // }),
         queryClient.invalidateQueries({
           queryKey: ["places"],
-          refetchType: "all",
+          refetchType: "active",
         }),
       ]);
     },

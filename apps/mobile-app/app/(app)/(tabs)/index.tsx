@@ -8,7 +8,7 @@ import {
   ShapeSource,
   SymbolLayer,
 } from "@rnmapbox/maps";
-import { type FilterExpression } from "@rnmapbox/maps/src/utils/MapboxStyles";
+// import { type FilterExpression } from "@rnmapbox/maps/src/utils/MapboxStyles";
 import { router } from "expo-router";
 import { getDistance } from "geolib";
 import { type ReactElement, useCallback, useMemo, useState } from "react";
@@ -24,9 +24,9 @@ import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import { View } from "@/components/ui/view";
 import { useMapLogic } from "@/hooks/maps/useMapLogic";
-import { useImageLoader } from "@/hooks/other/useImageLoader";
-import { CLUSTER_MAX_ZOOM, CLUSTER_RADIUS } from "@/utils/bbox";
-import { logger } from "@/utils/logger";
+// import { useImageLoader } from "@/hooks/other/useImageLoader";
+// import { CLUSTER_MAX_ZOOM, CLUSTER_RADIUS } from "@/utils/bbox";
+// import { logger } from "@/utils/logger";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- will fix later
 const bearingImage = require("@/assets/images/bearing-icon.png");
@@ -40,7 +40,7 @@ export default function MapsTab(): ReactElement {
     placesData,
     customShape,
     selectedPlaceInfo,
-    imagesUrls,
+    // imagesUrls,
     zoom,
     mapRef,
     cameraRef,
@@ -55,22 +55,23 @@ export default function MapsTab(): ReactElement {
 
   const [headingRealtime, setHeadingRealtime] = useState(0);
 
-  // Filtres pour les couches
-  const clusterFilter = useMemo<FilterExpression>(
-    () => ["has", "point_count"] as const,
-    [],
-  );
-  const unclusteredFilter = useMemo<FilterExpression>(
-    () => ["!", ["has", "point_count"]] as const,
-    [],
-  );
+  // Note: Clustering désactivé - tous les points sont maintenant affichés individuellement
+  // Filtres pour les couches (clustering désactivé)
+  // const clusterFilter = useMemo<FilterExpression>(
+  //   () => ["has", "point_count"] as const,
+  //   [],
+  // );
+  // const unclusteredFilter = useMemo<FilterExpression>(
+  //   () => ["!", ["has", "point_count"]] as const,
+  //   [],
+  // );
 
-  const onImageMissing = useCallback((imageKey: string) => {
-    logger("🎞️🎞️🎞️ image missing", imageKey);
-  }, []);
+  // const onImageMissing = useCallback((imageKey: string) => {
+  //   logger("🎞️🎞️🎞️ image missing", imageKey);
+  // }, []);
 
-  const { imagesLoaded, pendingRequests, queueLength } =
-    useImageLoader(imagesUrls);
+  // const { imagesLoaded, pendingRequests, queueLength } =
+  //   useImageLoader(imagesUrls);
 
   const images = useMemo(
     () => ({
@@ -154,17 +155,89 @@ export default function MapsTab(): ReactElement {
             pulsing={pulsing} // currently create bug to get map event https://github.com/rnmapbox/maps/issues/2902
           />
           <Images images={images} />
-          <Images images={imagesLoaded} onImageMissing={onImageMissing} />
+          {/* <Images images={imagesLoaded} onImageMissing={onImageMissing} /> */}
           <ShapeSource
             id="pois"
             shape={customShape}
             onPress={onPress}
-            cluster
-            clusterMaxZoomLevel={CLUSTER_MAX_ZOOM}
-            clusterRadius={CLUSTER_RADIUS}
+            // CLUSTERING DÉSACTIVÉ - pour réactiver, décommenter les lignes suivantes :
+            // cluster
+            // clusterMaxZoomLevel={CLUSTER_MAX_ZOOM}
+            // clusterRadius={CLUSTER_RADIUS}
             // clusterProperties={clusterProperties}
           >
+            {/* Couche pour tous les points avec 3 tailles selon la popularité */}
             <CircleLayer
+              id="all-points"
+              sourceID="pois"
+              style={{
+                circleColor: [
+                  "case",
+                  ["get", "isVisited"],
+                  "#10b981", // vert pour les POI visités (green-500)
+                  "#9b4dca", // violet pour les POI non visités
+                ],
+                // Taille des points basée sur 3 niveaux de popularité
+                circleRadius: [
+                  "case",
+                  [">=", ["get", "popularity"], 0.7],
+                  12, // grande taille pour haute popularité (>=0.7)
+                  [">=", ["get", "popularity"], 0.3],
+                  8, // taille moyenne pour popularité moyenne (>=0.3 et <0.7)
+                  5, // petite taille pour faible popularité (<0.3)
+                ],
+                circleStrokeWidth: 1,
+                circleStrokeColor: "#fff",
+
+                // GESTION DE L'OVERLAP ET DES PRIORITÉS
+                // circleAllowOverlap: false, // Empêche la superposition des points
+
+                // Priorité d'affichage : les points visités ET populaires ont la priorité
+                // Plus la valeur est élevée, plus la priorité est haute
+                circleSortKey: [
+                  "+",
+                  // Bonus pour les POI visités (+100 points)
+                  ["case", ["get", "isVisited"], 100, 0],
+                  // Score basé sur la popularité (0-100 points)
+                  ["*", ["get", "popularity"], 100],
+                ],
+              }}
+            />
+
+            {/* Couche pour les emojis sur tous les points */}
+            <SymbolLayer
+              id="custom-marker-symbol"
+              sourceID="pois"
+              style={{
+                // Affichage de l'emoji selon le type de POI
+                textField: ["get", "emoji"],
+                textSize: [
+                  "case",
+                  [">=", ["get", "popularity"], 0.7],
+                  18, // Grande taille pour haute popularité
+                  [">=", ["get", "popularity"], 0.3],
+                  16, // Taille moyenne
+                  14, // Petite taille
+                ],
+                textAnchor: "center",
+                textOffset: [0, 0],
+                textAllowOverlap: true,
+                textIgnorePlacement: true,
+                // Priorité d'affichage
+                symbolSortKey: [
+                  "+",
+                  // Bonus pour les POI visités
+                  ["case", ["get", "isVisited"], 100, 0],
+                  // Score basé sur la popularité
+                  ["*", ["get", "popularity"], 100],
+                ],
+              }}
+            />
+
+            {/* ====== CODE DE CLUSTERING DÉSACTIVÉ ====== */}
+            {/* Pour réactiver le clustering, décommenter ce code et commenter la couche "all-points" ci-dessus */}
+            {/* Couche pour les clusters */}
+            {/* <CircleLayer
               id="clusters"
               sourceID="pois"
               filter={clusterFilter}
@@ -190,10 +263,10 @@ export default function MapsTab(): ReactElement {
                 circleStrokeWidth: 2,
                 circleStrokeColor: "#ffffff",
               }}
-            />
+            /> */}
 
             {/* Couche pour le compte de points dans les clusters */}
-            <SymbolLayer
+            {/* <SymbolLayer
               id="cluster-count"
               sourceID="pois"
               filter={clusterFilter}
@@ -205,10 +278,10 @@ export default function MapsTab(): ReactElement {
                 // textAllowOverlap: true,
                 // iconAllowOverlap: true,
               }}
-            />
+            /> */}
 
             {/* Couche pour les points non clusterisés */}
-            <CircleLayer
+            {/* <CircleLayer
               id="unclustered-point"
               sourceID="pois"
               filter={unclusteredFilter}
@@ -229,24 +302,24 @@ export default function MapsTab(): ReactElement {
                 circleStrokeWidth: 1,
                 circleStrokeColor: "#fff",
               }}
-            />
+            /> */}
 
             {/* Couche pour les icônes sur les points non clusterisés */}
-            <SymbolLayer
-              id="custom-marker-symbol"
+            {/* <SymbolLayer
+              id="custom-marker-symbol-unclustered"
               sourceID="pois"
               filter={unclusteredFilter}
               style={{
-                iconImage: [
-                  "case",
-                  ["has", ["get", "imageUrl"], ["literal", imagesLoaded]],
-                  ["get", "imageUrl"],
-                  "empty",
-                ],
+                // iconImage: [
+                //   "case",
+                //   ["has", ["get", "imageUrl"], ["literal", imagesLoaded]],
+                //   ["get", "imageUrl"],
+                //   "empty",
+                // ],
                 iconAllowOverlap: true,
               }}
               minZoomLevel={CLUSTER_MAX_ZOOM}
-            />
+            /> */}
           </ShapeSource>
         </MapView>
 
@@ -268,11 +341,12 @@ export default function MapsTab(): ReactElement {
         >
           <Text>{t("zoom", { zoom })}</Text>
           <Text>{t("pois", { pois: placesData?.length ?? 0 })}</Text>
-          <Text>{t("img_queue", { queueLength })}</Text>
-          <Text>{t("img_loading", { pendingRequests })}</Text>
+          {/* <Text>{t("img_queue", { queueLength })}</Text>
+          <Text>{t("img_loading", { pendingRequests })}</Text> */}
           <Text>
             {t("clustering", {
-              enabled: zoom !== null && zoom < CLUSTER_MAX_ZOOM + 1,
+              enabled: false, // CLUSTERING DÉSACTIVÉ
+              // Avec clustering: enabled: zoom !== null && zoom < CLUSTER_MAX_ZOOM + 1,
             })}
           </Text>
         </View>

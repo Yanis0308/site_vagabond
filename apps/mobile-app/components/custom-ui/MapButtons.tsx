@@ -54,7 +54,7 @@ export const MapButtons = memo(
         className="absolute inset-y-0 right-4 flex flex-col items-center justify-between gap-4"
         style={{
           paddingTop: safeAreaInsets.top + 100,
-          paddingBottom: 100,
+          paddingBottom: 200,
         }}
       >
         <MapActionButton action={compassAction} />

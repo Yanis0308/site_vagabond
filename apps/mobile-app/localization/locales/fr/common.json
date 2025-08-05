@@ -2,6 +2,9 @@
   "tabs": {
     "map": "Carte"
   },
+  "sign_out": "Se déconnecter",
+  "validated_places": "Mes lieux validés",
+  "no_validated_places": "Aucun lieu validé pour le moment",
   "auth": {
     "sign_in_with_apple": "Connexion avec Apple",
     "sign_in_with_google": "Connexion avec Google",
