@@ -6,10 +6,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "pnpm run clean &&tsc",
-    "watch": "pnpm run clean && tsc --watch",
+    "build": "pnpm run clean && tsc",
     "clean": "rm -rf dist",
-    "develop": "pnpm run watch",
+    "develop": "pnpm run clean && tsc --watch",
     "postinstall": "pnpm run build"
   },
   "dependencies": {

@@ -1,4 +1,4 @@
-import { firebase, getAuth } from "@react-native-firebase/auth";
+import { getAuth, GoogleAuthProvider } from "@react-native-firebase/auth";
 import {
   GoogleSignin,
   isErrorWithCode,
@@ -6,7 +6,6 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import { router } from "expo-router";
 
 import { config } from "@/constants/Config";
 import { logger } from "@/utils/logger";
@@ -48,10 +47,11 @@ export const useGoogleLoginMutation = (): UseMutationResult<
           }
 
           // Create a Google credential with the token
-          const googleCredential =
-            firebase.auth.GoogleAuthProvider.credential(idToken);
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- weird
+          const googleCredential = GoogleAuthProvider.credential(idToken);
 
           // Sign-in the user with the credential
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- weird
           await getAuth().signInWithCredential(googleCredential);
         } else {
           // sign in was cancelled by user

@@ -28,11 +28,14 @@ const AnimatedPressable = createMotionAnimatedComponent(Pressable);
 
 export const UIActionsheet = createActionsheet({
   Root: View,
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Content expectation
   Content: withStyleContext(Motion.View),
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Item expectation
   Item: withStyleContext(Pressable),
   ItemText: Text,
   DragIndicator: View,
   IndicatorWrapper: View,
+  // @ts-expect-error gluestack-ui createMotionAnimatedComponent typing mismatch with expected ComponentType
   Backdrop: AnimatedPressable,
   ScrollView: ScrollView,
   VirtualizedList: VirtualizedList,
@@ -44,6 +47,7 @@ export const UIActionsheet = createActionsheet({
 });
 
 cssInterop(UIActionsheet, { className: "style" });
+// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, withStyleContext lacks it
 cssInterop(UIActionsheet.Content, { className: "style" });
 cssInterop(UIActionsheet.Item, { className: "style" });
 cssInterop(UIActionsheet.ItemText, { className: "style" });
@@ -304,6 +308,7 @@ const ActionsheetContent = React.forwardRef<
 >(({ className, ...props }, ref) => {
   return (
     <UIActionsheet.Content
+      // @ts-expect-error gluestack-ui Motion.View props typing does not include className
       className={actionsheetContentStyle({
         class: className,
       })}

@@ -53,7 +53,48 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         userId: request.user.uid,
       });
 
-      return await reply.status(200).send();
+      // Envoyer la réponse HTTP immédiatement
+      const response = reply.status(200).send();
+
+      // Envoyer notification Slack en arrière-plan (sans await)
+      void (async (): Promise<void> => {
+        try {
+          const poiData = await fastify.prisma.poiData.findFirst({
+            where: { poiId },
+            select: { name: true },
+          });
+
+          if (poiData !== null) {
+            const poiName =
+              poiData.name.length > 0 ? poiData.name : "Lieu inconnu";
+            const username = request.user.email?.includes("@")
+              ? (request.user.email.split("@")[0] ?? "Utilisateur inconnu")
+              : "Utilisateur inconnu";
+
+            await fastify.slack.sendMessage(
+              `🏆 *Nouveau lieu validé !*\n` +
+                `👤 *Utilisateur:* ${username} (${request.user.email})\n` +
+                `📍 *Lieu:* ${poiName}\n` +
+                `⭐ *Note:* ${rating}/5\n` +
+                `💬 *Commentaire:* ${
+                  comment.length > 0 ? comment : "Aucun commentaire"
+                }\n` +
+                `📅 *Date:* ${new Date().toLocaleString("fr-FR")}`,
+            );
+
+            fastify.log.info(
+              `Place validated: ${poiName} by ${username} (${request.user.uid})`,
+            );
+          }
+        } catch (error) {
+          fastify.log.error(
+            "Failed to send Slack notification for place validation:",
+            error,
+          );
+        }
+      })();
+
+      return await response;
     },
   );
 

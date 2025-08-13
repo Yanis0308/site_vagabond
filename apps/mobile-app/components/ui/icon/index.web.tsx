@@ -34,6 +34,7 @@ export const Icon = React.forwardRef<
   if (typeof size === "number") {
     return (
       <UIIcon
+        // @ts-expect-error gluestack-ui ref typing mismatch with PrimitiveIcon/Svg
         ref={ref}
         {...props}
         className={iconStyle({ class: className })}
@@ -46,6 +47,7 @@ export const Icon = React.forwardRef<
   ) {
     return (
       <UIIcon
+        // @ts-expect-error gluestack-ui ref typing mismatch with PrimitiveIcon/Svg
         ref={ref}
         {...props}
         className={iconStyle({ class: className })}
@@ -54,6 +56,7 @@ export const Icon = React.forwardRef<
   }
   return (
     <UIIcon
+      // @ts-expect-error gluestack-ui ref typing mismatch with PrimitiveIcon/Svg
       ref={ref}
       {...props}
       className={iconStyle({ size, class: className })}
@@ -66,7 +69,7 @@ type ParameterTypes = Omit<Parameters<typeof createIcon>[0], "Root">;
 const accessClassName = (style: any) => {
   const styleObject = Array.isArray(style) ? style[0] : style;
   const keys = Object.keys(styleObject);
-  // @ts-expect-error gluestack-ui type error
+  // @ts-expect-error styleObject key access may be undefined or non-existent
   return styleObject[keys[1]];
 };
 
@@ -86,6 +89,7 @@ const createIconUI = ({ ...props }: ParameterTypes) => {
         : className;
     }, [className, inComingprops?.style]);
     return (
+      // @ts-expect-error gluestack-ui Icon ref typing mismatch with Svg component
       <NewUIIcon ref={ref} {...inComingprops} className={calculateClassName} />
     );
   });

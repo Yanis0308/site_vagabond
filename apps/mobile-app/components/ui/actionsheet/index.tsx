@@ -33,11 +33,13 @@ const AnimatedPressable = createMotionAnimatedComponent(Pressable);
 
 export const UIActionsheet = createActionsheet({
   Root: View,
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Content expectation
   Content: Motion.View,
   Item: ItemWrapper,
   ItemText: Text,
   DragIndicator: View,
   IndicatorWrapper: View,
+  // @ts-expect-error gluestack-ui createMotionAnimatedComponent typing mismatch with expected ComponentType
   Backdrop: AnimatedPressable,
   ScrollView: ScrollView,
   VirtualizedList: VirtualizedList,

@@ -2,7 +2,10 @@
 
 module.exports = {
   extends: [
-    "plugin:@typescript-eslint/strict-type-checked",
+    // create infinite eslint check, so for new we use recommended-type-checked and strict
+    // "plugin:@typescript-eslint/strict-type-checked",
+    "plugin:@typescript-eslint/recommended-type-checked",
+    "plugin:@typescript-eslint/strict",
     "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:eslint-comments/recommended",
     "plugin:tailwindcss/recommended",

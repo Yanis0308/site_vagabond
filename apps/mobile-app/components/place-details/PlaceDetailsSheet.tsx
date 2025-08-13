@@ -3,7 +3,6 @@ import {
   BottomSheetModal,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { Image } from "expo-image";
 import { type ExternalPathString } from "expo-router";
 import React, {
   memo,
@@ -26,19 +25,18 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
-import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
-import { Text } from "@/components/ui/text";
 import { useBottomSheetBack } from "@/hooks/other/useBottomSheetBack";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
-import { useUser } from "@/hooks/other/useUser";
+import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
 import { type PoiType } from "@/utils/types";
 
 import { ButtonLink } from "../custom-ui/ButtonLink";
 import { CustomButton } from "../custom-ui/CustomButton";
+import { CustomImage } from "../custom-ui/CustomImage";
 import { CustomText } from "../custom-ui/CustomText";
 import { ReviewsList } from "../place-details/ReviewsList";
 import { Box } from "../ui/box";
@@ -61,7 +59,7 @@ export const PlaceDetailsSheet = memo(
     const { t } = useTranslation("common");
     const DEFAULT_SNAP_POINT = 1;
     const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-    const user = useUser();
+    const user = useUsersMe();
     const animatedIndex = useSharedValue(0);
     const insets = useSafeAreaCustom();
     const [stickyHeaderIndices, setStickyHeaderIndices] = useState<number[]>(
@@ -73,7 +71,7 @@ export const PlaceDetailsSheet = memo(
     const isVisited = useMemo(() => {
       return (
         place?.visitedPois.find(
-          (visitedPoi) => visitedPoi.userId === user?.uid,
+          (visitedPoi) => visitedPoi.userId === user.data?.id,
         ) !== undefined
       );
     }, [place, user]);
@@ -211,7 +209,7 @@ export const PlaceDetailsSheet = memo(
                 style={[imageBoxAnimatedStyle, shadowStyles.ratingBlock]}
                 className={cn("w-full rounded-2xl bg-background-50 p-2")}
               >
-                <Image
+                <CustomImage
                   source={
                     "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Smileys/Star%20Struck.webp"
                   }
@@ -264,9 +262,9 @@ export const PlaceDetailsSheet = memo(
 
               <DescriptionSection className="px-6 pt-10" />
 
-              <Text size={"lg"} className="px-6">
+              <CustomText type="ratingText" className="px-6">
                 {place.data[0]?.description}
-              </Text>
+              </CustomText>
 
               {place.data[0] !== undefined ? (
                 <Box className="flex gap-8 px-6">
@@ -326,10 +324,10 @@ export const PlaceDetailsSheet = memo(
                       //eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- safe for testing
                       Object.entries(place.data[0].rawInfo).map(
                         ([key, value]) => (
-                          <Text key={key}>
+                          <CustomText key={key}>
                             {/* @ts-expect-error safe for testing */}
                             {key}: {value}
-                          </Text>
+                          </CustomText>
                         ),
                       )
                     }

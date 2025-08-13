@@ -1,5 +1,7 @@
 import { type ConfigContext, type ExpoConfig } from "expo/config";
 
+import { type ConfigType } from "./constants/Config";
+
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- not a React component
 export default ({ config }: ConfigContext): ExpoConfig => {
   const buildProfile = process.env.BUILD_PROFILE ?? "empty-build-profile";
@@ -21,14 +23,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       android: string | undefined;
     };
     privateMapboxToken: string | undefined;
-    runtimeConfig: {
-      apiBaseUrl: string | undefined;
-      cdnUrl: string | undefined;
-      appleSignInRedirectUrl: string | undefined;
-      appleSignInServiceId: string | undefined;
-      googleSignInWebClientId: string | undefined;
-      publicMapboxToken: string | undefined;
-    };
+    runtimeConfig: ConfigType;
   } =
     // isDevelopmentBuild
     // ?
@@ -54,6 +49,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         googleSignInWebClientId:
           process.env.DEV_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
         publicMapboxToken: process.env.DEV_PUBLIC_MAPBOX_TOKEN,
+        vexoApiKey: process.env.DEV_EXPO_PUBLIC_VEXO_API_KEY,
+        vexoApiKeyAdmin: process.env.DEV_EXPO_PUBLIC_VEXO_API_KEY_ADMIN,
       },
     };
   // : // We have never tested this before
@@ -75,6 +72,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   //     googleSignInWebClientId:
   //       process.env.PRD_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
   //     publicMapboxToken: process.env.PRD_PUBLIC_MAPBOX_TOKEN,
+  //     vexoApiKey: process.env.PRD_EXPO_PUBLIC_VELO_API_KEY,
   //   },
   // };
   return {
@@ -182,6 +180,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
       ],
       "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
       "@react-native-firebase/auth",
       [
         "expo-build-properties",

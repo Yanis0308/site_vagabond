@@ -19,6 +19,8 @@ const RawConfigSchema = z.object({
   AWS_ENDPOINT_URL_IAM: z.string(),
   AWS_REGION: z.string(),
   S3_BUCKET_NAME: z.string(),
+  SLACK_WEBHOOK_URL: z.string(),
+  SLACK_CHANNEL: z.string(),
 });
 
 // Type d'inférence pour TypeScript
@@ -27,6 +29,10 @@ export interface Config {
   firebaseAdminServiceAccountFilePath: string;
   s3: {
     bucketName: string;
+  };
+  slack: {
+    webhookUrl: string;
+    channel: string;
   };
 }
 
@@ -64,6 +70,10 @@ export default fp(
         firebaseAdminServiceAccountFilePath,
         s3: {
           bucketName: rawConfig.S3_BUCKET_NAME,
+        },
+        slack: {
+          webhookUrl: rawConfig.SLACK_WEBHOOK_URL,
+          channel: rawConfig.SLACK_CHANNEL,
         },
       };
 

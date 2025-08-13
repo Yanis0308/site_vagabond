@@ -1,10 +1,10 @@
-import { Image } from "expo-image";
-import { memo, useEffect, useState } from "react";
+import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/utils/cn";
 import { getPlainTextDate } from "@/utils/date";
 
+import { CustomImage } from "../custom-ui/CustomImage";
 import { CustomText } from "../custom-ui/CustomText";
 import { Box } from "../ui/box";
 import { Text } from "../ui/text";
@@ -36,7 +36,7 @@ export const PolaroidForm = memo(
             {getPlainTextDate({ locale: i18n.language })}
           </Text>
         </Box>
-        <Image
+        <CustomImage
           source={
             "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Smileys/Star%20Struck.webp"
           }

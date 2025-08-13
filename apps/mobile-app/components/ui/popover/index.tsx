@@ -19,18 +19,24 @@ const AnimatedPressable = createMotionAnimatedComponent(Pressable);
 const SCOPE = "POPOVER";
 
 const UIPopover = createPopover({
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Root expectation
   Root: withStyleContext(View, SCOPE),
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Arrow expectation
   Arrow: Motion.View,
+  // @ts-expect-error gluestack-ui createMotionAnimatedComponent typing mismatch with expected ComponentType
   Backdrop: AnimatedPressable,
   Body: ScrollView,
   CloseButton: Pressable,
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Content expectation
   Content: Motion.View,
   Footer: View,
   Header: View,
   AnimatePresence: AnimatePresence,
 });
 
+// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, Motion.View lacks it
 cssInterop(Motion.View, { className: "style" });
+// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, AnimatedPressable lacks it
 cssInterop(AnimatedPressable, { className: "style" });
 
 const popoverStyle = tva({
@@ -144,6 +150,7 @@ const Popover = React.forwardRef<
       ref={ref}
       placement={placement}
       {...props}
+      // @ts-expect-error gluestack-ui props typing does not include className/context/pointerEvents
       className={popoverStyle({ size, class: className })}
       context={{ size, placement }}
       pointerEvents="box-none"

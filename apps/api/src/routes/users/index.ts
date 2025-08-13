@@ -1,0 +1,32 @@
+import {
+  type FastifyPluginCallbackTypebox,
+  Type,
+} from "@fastify/type-provider-typebox";
+import { jsonSchemas } from "@vagabond/shared-utils";
+
+const routes: FastifyPluginCallbackTypebox = (fastify) => {
+  fastify.get(
+    "/me",
+    {
+      schema: {
+        tags: ["users"],
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: Type.Ref(jsonSchemas.UsersMeResponseSchema),
+        },
+      },
+    },
+    async function (request, reply) {
+      const user = request.user.db;
+
+      return await reply.status(200).send({
+        data: {
+          ...user,
+          lastLogin: user.lastLogin.toISOString(),
+        },
+      });
+    },
+  );
+};
+
+export default routes;

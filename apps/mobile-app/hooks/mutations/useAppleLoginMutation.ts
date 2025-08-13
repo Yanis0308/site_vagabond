@@ -4,9 +4,8 @@ import {
   appleAuthAndroid,
   type AppleRequestResponse,
 } from "@invertase/react-native-apple-authentication";
-import { firebase, getAuth } from "@react-native-firebase/auth";
+import { AppleAuthProvider, getAuth } from "@react-native-firebase/auth";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
-import { router } from "expo-router";
 import { Platform } from "react-native";
 
 import { config } from "@/constants/Config";
@@ -79,15 +78,17 @@ export const useAppleLoginMutation = (): UseMutationResult<
       if (identityToken === null || identityToken === undefined) {
         throw new Error("No identity token found");
       }
-      const appleCredential = firebase.auth.AppleAuthProvider.credential(
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access -- weird
+      const appleCredential = AppleAuthProvider.credential(
         identityToken,
         nonce,
       );
 
       const userCredential =
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- weird
         await getAuth().signInWithCredential(appleCredential);
 
-      // user is now signed in, any Firebase `onAuthStateChanged` listeners you have will trigger
       logger(
         `Firebase authenticated via Apple, UID: ${userCredential.user.uid}`,
       );

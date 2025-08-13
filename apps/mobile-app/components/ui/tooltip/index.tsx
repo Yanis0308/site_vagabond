@@ -8,12 +8,15 @@ import { withStyleContext } from "@gluestack-ui/nativewind-utils/withStyleContex
 import { Motion, AnimatePresence } from "@legendapp/motion";
 import { cssInterop } from "nativewind";
 export const UITooltip = createTooltip({
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Root expectation
   Root: withStyleContext(View),
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Content expectation
   Content: Motion.View,
   Text: Text,
   AnimatePresence: AnimatePresence,
 });
 
+// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, Motion.View lacks it
 cssInterop(Motion.View, { className: "style" });
 
 const tooltipStyle = tva({
@@ -81,6 +84,7 @@ const Tooltip = React.forwardRef<
   return (
     <UITooltip
       ref={ref}
+      // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
       className={tooltipStyle({ class: className })}
       {...props}
     />

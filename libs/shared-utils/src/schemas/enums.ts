@@ -23,3 +23,8 @@ export const ErrorEnumSchema = Type.Union(
   [Type.Literal("RESOURCE_ALREADY_EXISTS")],
   { $id: "ErrorEnum" },
 );
+
+export const RoleEnumSchema = Type.Union(
+  [Type.Literal("ADMIN"), Type.Literal("USER")],
+  { $id: "RoleEnum" },
+);

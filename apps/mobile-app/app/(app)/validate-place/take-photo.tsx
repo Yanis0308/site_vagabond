@@ -5,9 +5,9 @@ import React, { type ReactElement, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 
+import { CustomText } from "@/components/custom-ui/CustomText";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { Box } from "@/components/ui/box";
-import { Text } from "@/components/ui/text";
 import { PhotoStep } from "@/components/validate-place";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
@@ -44,9 +44,9 @@ const PlaceDetails = React.memo((): ReactElement => {
   if (place === null) {
     return (
       <Box className="flex-1 items-center justify-center">
-        <Text className="text-lg text-gray-600">
+        <CustomText className="text-lg text-gray-600">
           {"take photo" + t("error_missing_place")}
-        </Text>
+        </CustomText>
       </Box>
     );
   }

@@ -1,8 +1,8 @@
 import { useAtomValue } from "jotai";
 import { memo } from "react";
 
+import { CustomText } from "@/components/custom-ui/CustomText";
 import { Spinner } from "@/components/ui/spinner";
-import { Text } from "@/components/ui/text";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 
 import {
@@ -20,9 +20,9 @@ export const FullScreenLoader = memo(() => {
       <AlertDialogContent className="bg-white">
         <AlertDialogBody className="mb-4 mt-3">
           <Spinner size="large" className="text-primary-600" />
-          <Text className="mt-4 text-center font-medium text-gray-700">
+          <CustomText className="mt-4 text-center font-medium text-gray-700">
             {"Chargement..."}
-          </Text>
+          </CustomText>
         </AlertDialogBody>
       </AlertDialogContent>
     </AlertDialog>

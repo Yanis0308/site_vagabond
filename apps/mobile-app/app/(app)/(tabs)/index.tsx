@@ -14,16 +14,17 @@ import { getDistance } from "geolib";
 import { type ReactElement, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Platform } from "react-native";
-import colors from "tailwindcss/colors";
 
+import { CustomText } from "@/components/custom-ui/CustomText";
 import { MapButtons } from "@/components/custom-ui/MapButtons";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { PlaceDetailsSheet } from "@/components/place-details/PlaceDetailsSheet";
 import { Box } from "@/components/ui/box";
+import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { Spinner } from "@/components/ui/spinner";
-import { Text } from "@/components/ui/text";
 import { View } from "@/components/ui/view";
 import { useMapLogic } from "@/hooks/maps/useMapLogic";
+import { useUsersMe } from "@/hooks/queries/useUsersMe";
 // import { useImageLoader } from "@/hooks/other/useImageLoader";
 // import { CLUSTER_MAX_ZOOM, CLUSTER_RADIUS } from "@/utils/bbox";
 // import { logger } from "@/utils/logger";
@@ -34,6 +35,8 @@ const bearingImage = require("@/assets/images/bearing-icon.png");
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- page file
 export default function MapsTab(): ReactElement {
   const { t } = useTranslation("common");
+
+  const { data: userMe } = useUsersMe();
 
   // Utilisation du hook personnalisé pour toute la logique de la carte
   const {
@@ -126,12 +129,15 @@ export default function MapsTab(): ReactElement {
         />
 
         {isFetchingPlaces && (
-          <Box className="absolute left-0 top-0 z-50 flex items-center justify-center">
-            <Spinner
-              size="large"
-              color={colors.gray[500]}
-              className="bg-red-500"
-            />
+          <Box
+            className="absolute inset-0 z-50 flex items-center justify-center"
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.3)",
+            }}
+          >
+            <Box className="flex items-center justify-center rounded-xl bg-white p-6">
+              <Spinner size="large" color={themeColors.secondary[500].hex} />
+            </Box>
           </Box>
         )}
 
@@ -330,26 +336,30 @@ export default function MapsTab(): ReactElement {
           heading={headingRealtime}
         />
         {/* Indicateurs de chargement */}
-        <View
-          style={{
-            position: "absolute",
-            top: 20,
-            left: 10,
-            padding: 5,
-            borderRadius: 5,
-          }}
-        >
-          <Text>{t("zoom", { zoom })}</Text>
-          <Text>{t("pois", { pois: placesData?.length ?? 0 })}</Text>
-          {/* <Text>{t("img_queue", { queueLength })}</Text>
-          <Text>{t("img_loading", { pendingRequests })}</Text> */}
-          <Text>
-            {t("clustering", {
-              enabled: false, // CLUSTERING DÉSACTIVÉ
-              // Avec clustering: enabled: zoom !== null && zoom < CLUSTER_MAX_ZOOM + 1,
-            })}
-          </Text>
-        </View>
+        {userMe?.role === "ADMIN" && (
+          <View
+            style={{
+              position: "absolute",
+              top: 20,
+              left: 10,
+              padding: 5,
+              borderRadius: 5,
+            }}
+          >
+            <CustomText>{t("zoom", { zoom })}</CustomText>
+            <CustomText>
+              {t("pois", { pois: placesData?.length ?? 0 })}
+            </CustomText>
+            {/* <Text>{t("img_queue", { queueLength })}</Text>
+            <Text>{t("img_loading", { pendingRequests })}</Text> */}
+            <CustomText>
+              {t("clustering", {
+                enabled: false, // CLUSTERING DÉSACTIVÉ
+                // Avec clustering: enabled: zoom !== null && zoom < CLUSTER_MAX_ZOOM + 1,
+              })}
+            </CustomText>
+          </View>
+        )}
       </Box>
     </CustomScreenContainer>
   );

@@ -31,5 +31,40 @@ module.exports = {
     ],
     "@arthurgeron/react-usememo/require-memo": "error",
     // "@arthurgeron/react-usememo/require-usememo-children": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        paths: [
+          {
+            name: "react-native-safe-area-context",
+            importNames: ["useSafeAreaInsets"],
+            message:
+              "Use useSafeAreaCustom from @/hooks/other/useSafeAreaCustom instead.",
+          },
+          {
+            name: "react-native",
+            importNames: ["Text", "Image"],
+            message:
+              "Use CustomText or CustomImage instead of Text/Image from react-native.",
+          },
+          {
+            name: "@/components/ui/text",
+            message:
+              "Use CustomText from @/components/custom-ui/CustomText instead.",
+          },
+          {
+            name: "@/components/ui/image",
+            message:
+              "Use CustomImage from @/components/custom-ui/CustomImage instead.",
+          },
+          {
+            name: "expo-image",
+            importNames: ["Image"],
+            message:
+              "Use CustomImage from @/components/custom-ui/CustomImage instead.",
+          },
+        ],
+      },
+    ],
   },
 };

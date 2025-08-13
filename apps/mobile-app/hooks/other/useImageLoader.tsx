@@ -1,5 +1,5 @@
 import { type ImageEntry } from "@rnmapbox/maps";
-import { Image } from "expo-image";
+import { Image as ExpoImage } from "expo-image"; // eslint-disable-line no-restricted-imports -- we need to use the expo image component
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { logger } from "@/utils/logger";
@@ -52,7 +52,7 @@ export const useImageLoader = (
     pendingRequestsRef.current += 1;
 
     // Charger l'image
-    Image.prefetch(imageToLoad.url, "memory-disk")
+    ExpoImage.prefetch(imageToLoad.url, "memory-disk")
       .then((success) => {
         if (success) {
           // Mettre à jour l'état des images chargées

@@ -17,6 +17,7 @@ cssInterop(H5, { className: "style" });
 cssInterop(H6, { className: "style" });
 
 const MappedHeading = memo(
+  // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
   forwardRef<React.ElementRef<typeof H1>, IHeadingProps>(
     (
       {
@@ -51,7 +52,7 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error
+              // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
               ref={ref}
             />
           );
@@ -70,7 +71,7 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error
+              // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
               ref={ref}
             />
           );
@@ -89,7 +90,7 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error
+              // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
               ref={ref}
             />
           );
@@ -108,7 +109,7 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error
+              // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
               ref={ref}
             />
           );
@@ -127,7 +128,7 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error
+              // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
               ref={ref}
             />
           );
@@ -147,7 +148,7 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error
+              // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
               ref={ref}
             />
           );
@@ -166,7 +167,7 @@ const MappedHeading = memo(
                 class: className,
               })}
               {...props}
-              // @ts-expect-error
+              // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
               ref={ref}
             />
           );
@@ -176,6 +177,7 @@ const MappedHeading = memo(
 );
 
 const Heading = memo(
+  // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
   forwardRef<React.ElementRef<typeof H1>, IHeadingProps>(
     ({ className, size = "lg", as: AsComp, ...props }, ref) => {
       const {

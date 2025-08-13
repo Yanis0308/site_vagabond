@@ -1,10 +1,10 @@
-import { type PoiType } from "@/utils/types";
 import {
+  bboxToKey,
   type CachedBoundingBox,
   findContainingCachedBbox,
-  bboxToKey,
 } from "@/utils/bbox";
 import { logger } from "@/utils/logger";
+import { type PoiType } from "@/utils/types";
 
 interface CachedPlacesData {
   places: PoiType[];
@@ -16,7 +16,10 @@ interface CachedPlacesData {
  * Évite les requêtes redondantes en vérifiant si une zone est déjà couverte par le cache
  */
 class PlacesCacheManager {
-  private cachedData: Map<string, CachedPlacesData> = new Map();
+  private cachedData: Map<string, CachedPlacesData> = new Map<
+    string,
+    CachedPlacesData
+  >();
   private loadedBboxes: CachedBoundingBox[] = [];
 
   /**
@@ -44,14 +47,14 @@ class PlacesCacheManager {
   }): PoiType[] | null {
     const containingBbox = findContainingCachedBbox(bbox, this.loadedBboxes);
 
-    if (!containingBbox) {
+    if (containingBbox === null) {
       return null;
     }
 
     const cacheKey = bboxToKey(containingBbox);
     const cachedData = this.cachedData.get(cacheKey);
 
-    if (!cachedData) {
+    if (cachedData === undefined) {
       logger("Cache inconsistency: bbox found but no data", {
         containingBbox,
         cacheKey,
@@ -109,7 +112,7 @@ class PlacesCacheManager {
       (existing) => bboxToKey(existing) === cacheKey,
     );
 
-    if (!existingBbox) {
+    if (existingBbox === undefined) {
       this.loadedBboxes.push(cachedBbox);
     }
 

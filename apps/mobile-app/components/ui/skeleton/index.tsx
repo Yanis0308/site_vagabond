@@ -17,6 +17,7 @@ type ISkeletonTextProps = React.ComponentProps<typeof View> &
   };
 
 const Skeleton = forwardRef<
+  // @ts-expect-error gluestack-ui forwardRef generic with Animated.View type
   React.ElementRef<typeof Animated.View>,
   ISkeletonProps
 >(

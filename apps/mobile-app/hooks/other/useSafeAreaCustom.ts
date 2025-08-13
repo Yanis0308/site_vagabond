@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import {
   type EdgeInsets,
+  // eslint-disable-next-line no-restricted-imports -- ok
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-
-import { logger } from "@/utils/logger";
 
 export const useSafeAreaCustom = (): EdgeInsets => {
   const insets = useSafeAreaInsets();

@@ -1,20 +1,11 @@
-import { Image, type ImageProps, type ImageSource } from "expo-image";
+import { Image, type ImageProps } from "expo-image"; // eslint-disable-line no-restricted-imports -- allowed here
 import { cssInterop } from "nativewind";
-import { memo, useMemo } from "react";
-
-import { replaceLocalhost } from "@/utils/image";
+import { memo } from "react";
 
 cssInterop(Image, { className: "style" });
 
-export const CustomImage = memo(({ source, ...props }: ImageProps) => {
-  const sourceModified = useMemo((): ImageSource => {
-    if (typeof source === "string") {
-      return { uri: replaceLocalhost(source) };
-    } else {
-      return source as ImageSource;
-    }
-  }, [source]);
-  return <Image source={sourceModified} {...props} />;
+export const CustomImage = memo(({ ...props }: ImageProps) => {
+  return <Image {...props} />;
 });
 
 CustomImage.displayName = "CustomImage";

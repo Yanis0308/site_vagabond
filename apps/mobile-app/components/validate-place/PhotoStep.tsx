@@ -5,12 +5,12 @@ import { useSetAtom } from "jotai";
 import React, { useCallback, useRef, useState } from "react";
 import { Alert } from "react-native";
 
-import { Text } from "@/components/ui/text";
 import { useUploadFileMutation } from "@/hooks/mutations/useUploadFileMutation";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { cn } from "@/utils/cn";
 import { logger } from "@/utils/logger";
 
+import { CustomText } from "../custom-ui/CustomText";
 import { GalleryIcon } from "../icons/GalleryIcon";
 import { SwitchCameraIcon } from "../icons/SwitchCameraIcon";
 import { TakePhotoIcon } from "../icons/TakePhotoIcon";
@@ -143,9 +143,9 @@ export const PhotoStep: React.FC<PhotoStepProps> = React.memo(
             />
           ) : (
             <View className="flex-1 items-center justify-center">
-              <Text className="mt-4 px-4 text-center text-white">
+              <CustomText className="mt-4 px-4 text-center text-white">
                 {"Give me permission"}
-              </Text>
+              </CustomText>
             </View>
           )}
         </View>

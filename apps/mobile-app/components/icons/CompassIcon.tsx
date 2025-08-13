@@ -1,4 +1,4 @@
-﻿import React, { memo } from "react";
+import React, { memo } from "react";
 import Svg, { Circle, G, Path } from "react-native-svg";
 
 import { themeColors } from "../ui/gluestack-ui-provider/config";

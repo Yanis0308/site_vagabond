@@ -18,8 +18,16 @@ import { FullScreenLoader } from "@/components/validate-place/FullScreenLoader";
 import { config } from "@/constants/Config";
 import { queryClient } from "@/constants/QueryClient";
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
+import { getMe } from "@/http/users";
+import { UnifiedAnalyticsService } from "@/lib/analytics/UnifiedAnalyticsService";
 import { authenticatedUserAtom } from "@/stores/authenticatedUserAtom";
 import { logger } from "@/utils/logger";
+
+// Initialize unified analytics (includes both Crashlytics and Vexo)
+void UnifiedAnalyticsService.getInstance().initialize({
+  environment: config.isLocalDev ? "development" : "production",
+  version: "1.0.0", // TODO: Get from app.json or package.json
+});
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 void SplashScreen.preventAutoHideAsync();
@@ -47,14 +55,60 @@ export default function RootLayout(): ReactElement | null {
   useEffect(() => {
     const subscriber = getAuth().onAuthStateChanged((user) => {
       logger("onAuthStateChanged user:", JSON.stringify(user));
-      setAuthenticatedUser(
-        user !== null
-          ? {
-              email: user.email ?? "empty-email",
-              displayName: user.displayName ?? "empty-display-name",
-            }
-          : null,
-      );
+
+      if (user !== null) {
+        // User is signed in
+        const userContext = {
+          email: user.email ?? "empty-email",
+          displayName: user.displayName ?? "empty-display-name",
+        };
+
+        setAuthenticatedUser(userContext);
+
+        // Determine sign-in method
+        const signInMethod = user.providerData[0]?.providerId;
+
+        // Prefetch user profile and set analytics context
+        void (async (): Promise<void> => {
+          try {
+            const userProfile = await queryClient.fetchQuery({
+              queryKey: ["users", "me"],
+              queryFn: getMe,
+            });
+
+            // Set unified analytics user context with role (handles both Crashlytics and Vexo)
+            void UnifiedAnalyticsService.getInstance().setUserContext({
+              email: user.email ?? undefined,
+              displayName: user.displayName ?? undefined,
+              signInMethod,
+              sessionStartTime: new Date().toISOString(),
+              userId: user.uid,
+              creationTime: user.metadata.creationTime,
+              lastSignInTime: user.metadata.lastSignInTime,
+              role: userProfile.role,
+            });
+          } catch {
+            // Fallback: set analytics without role if API fails
+            void UnifiedAnalyticsService.getInstance().setUserContext({
+              email: user.email ?? undefined,
+              displayName: user.displayName ?? undefined,
+              signInMethod,
+              sessionStartTime: new Date().toISOString(),
+              userId: user.uid,
+              creationTime: user.metadata.creationTime,
+              lastSignInTime: user.metadata.lastSignInTime,
+              role: "USER", // default fallback
+            });
+          }
+        })();
+      } else {
+        // User is signed out
+        setAuthenticatedUser(null);
+
+        // Clear unified analytics user context (handles both Crashlytics and Vexo)
+        void UnifiedAnalyticsService.getInstance().clearUserContext();
+      }
+
       setInitializing((prev) => ({ ...prev, userLoading: false }));
     });
     return subscriber; // unsubscribe on unmount
@@ -66,8 +120,8 @@ export default function RootLayout(): ReactElement | null {
       .then(() => {
         Mapbox.setTelemetryEnabled(false);
       })
-      .catch((error: unknown) => {
-        logger("Error setting Mapbox access token:", error);
+      .catch((_error: unknown) => {
+        logger("Error setting Mapbox access token:", _error);
       });
   }, []);
 

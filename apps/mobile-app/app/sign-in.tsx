@@ -1,14 +1,14 @@
-import { Image } from "expo-image";
 import * as WebBrowser from "expo-web-browser";
 import { type ReactElement, useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { PixelRatio, Platform, View } from "react-native";
+import { PixelRatio, Platform } from "react-native";
 
 import { CustomButton } from "@/components/custom-ui/CustomButton";
+import { CustomImage } from "@/components/custom-ui/CustomImage";
+import { CustomText } from "@/components/custom-ui/CustomText";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
-import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
 import { useAppleLoginMutation } from "@/hooks/mutations/useAppleLoginMutation";
 import { useGoogleLoginMutation } from "@/hooks/mutations/useGoogleLoginMutation";
@@ -48,7 +48,7 @@ export default function SignInScreen(): ReactElement {
 
   const googleIcon = useMemo(
     () => (
-      <Image
+      <CustomImage
         //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
         source={require("../assets/images/google-logo.png")}
         alt="Google Logo"
@@ -64,7 +64,7 @@ export default function SignInScreen(): ReactElement {
 
   const appleIcon = useMemo(
     () => (
-      <Image
+      <CustomImage
         //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
         source={require("../assets/images/apple-logo.png")}
         alt="Apple Logo"
@@ -118,7 +118,7 @@ export default function SignInScreen(): ReactElement {
     >
       <Box className={"flex flex-1 items-center justify-center gap-4"}>
         <VStack className={"items-center gap-4"}>
-          <Image
+          <CustomImage
             //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
             source={require("../assets/images/full-icon-with-text.png")}
             alt={"Vagabond App Logo"}
@@ -128,11 +128,11 @@ export default function SignInScreen(): ReactElement {
               resizeMode: "contain",
             }}
           />
-          <Text size={"xl"}>{t("auth.sign_in_to_start")}</Text>
+          <CustomText size={"xl"}>{t("auth.sign_in_to_start")}</CustomText>
           <Box
             className={"flex animate-bounce items-center justify-center pt-2"}
           >
-            <Text className={"text-[50px]"}>{"👇"}</Text>
+            <CustomText className={"text-[50px]"}>{"👇"}</CustomText>
           </Box>
         </VStack>
         <VStack className={"w-full items-center justify-stretch gap-4 px-8"}>

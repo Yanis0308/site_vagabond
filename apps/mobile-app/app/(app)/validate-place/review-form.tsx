@@ -11,10 +11,10 @@ import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
+import { CustomText } from "@/components/custom-ui/CustomText";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
-import { Text } from "@/components/ui/text";
 import { ReviewStep } from "@/components/validate-place";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
@@ -73,9 +73,9 @@ export default function ReviewForm(): ReactElement {
   if (place === null || currentPhoto === null) {
     return (
       <Box className="flex-1 items-center justify-center p-4">
-        <Text className="text-lg text-gray-600">
+        <CustomText className="text-lg text-gray-600">
           {"review form" + t("error_missing_place")}
-        </Text>
+        </CustomText>
       </Box>
     );
   }

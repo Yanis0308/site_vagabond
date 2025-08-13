@@ -21,17 +21,22 @@ const AnimatedPressable = createMotionAnimatedComponent(Pressable);
 const SCOPE = "ALERT_DIALOG";
 
 const UIAccessibleAlertDialog = createAlertDialog({
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Root expectation
   Root: withStyleContext(View, SCOPE),
   Body: ScrollView,
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Content expectation
   Content: Motion.View,
   CloseButton: Pressable,
   Header: View,
   Footer: View,
+  // @ts-expect-error gluestack-ui createMotionAnimatedComponent typing mismatch with expected ComponentType
   Backdrop: AnimatedPressable,
   AnimatePresence: AnimatePresence,
 });
 
+// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, Motion.View lacks it
 cssInterop(Motion.View, { className: "style" });
+// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, createMotionAnimatedComponent lacks it
 cssInterop(AnimatedPressable, { className: "style" });
 
 const alertDialogStyle = tva({
@@ -121,6 +126,7 @@ const AlertDialog = React.forwardRef<
     <UIAccessibleAlertDialog
       ref={ref}
       {...props}
+      // @ts-expect-error gluestack-ui props typing does not include className/context/pointerEvents
       className={alertDialogStyle({ class: className })}
       context={{ size }}
       pointerEvents="box-none"

@@ -12,3 +12,7 @@ export type VisitedPoiType = Static<
 >[0];
 
 export type BoundingBoxType = Static<typeof jsonSchemas.BoundingBoxSchema>;
+
+export type UsersMeType = Static<
+  typeof jsonSchemas.UsersMeResponseSchema.properties.data
+>;

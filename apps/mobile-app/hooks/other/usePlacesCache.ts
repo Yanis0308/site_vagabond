@@ -7,7 +7,16 @@ import { placesCacheManager } from "@/utils/placesCache";
  * Hook utilitaire pour gérer le cache des places
  * Utile pour le debugging et la gestion du cache
  */
-export const usePlacesCache = () => {
+export const usePlacesCache = (): {
+  clearCache: () => void;
+  getCacheInfo: () => unknown;
+  isBboxCovered: (bbox: {
+    minLat: number;
+    maxLat: number;
+    minLng: number;
+    maxLng: number;
+  }) => boolean;
+} => {
   const clearCache = useCallback(() => {
     placesCacheManager.clearCache();
     logger("Cache cleared via hook");
@@ -37,6 +46,6 @@ export const usePlacesCache = () => {
       getCacheInfo,
       isBboxCovered,
     }),
-    [],
+    [clearCache, getCacheInfo, isBboxCovered],
   );
 };

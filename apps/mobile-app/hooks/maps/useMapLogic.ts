@@ -3,9 +3,9 @@ import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Cam
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useUser } from "@/hooks/other/useUser";
 import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
+import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 import { calculateBboxWithMinSize } from "@/utils/bbox";
 // import { CLUSTER_MAX_ZOOM } from "@/utils/bbox"; // Pour le clustering
@@ -179,7 +179,7 @@ interface UseMapLogicReturn {
 }
 
 export const useMapLogic = (): UseMapLogicReturn => {
-  const user = useUser();
+  const user = useUsersMe();
   const { data: userLocation, isLoading: isLoadingLocation } =
     useUserLocation();
 
@@ -261,8 +261,9 @@ export const useMapLogic = (): UseMapLogicReturn => {
             data: place,
             imageUrl: `https://picsum.photos/seed/${place.id}/20/20`,
             isVisited:
-              place.visitedPois.find(({ userId }) => userId === user?.uid) !==
-              undefined,
+              place.visitedPois.find(
+                ({ userId }: { userId: string }) => userId === user.data?.id,
+              ) !== undefined,
             // Ajout des propriétés de popularité pour différencier la taille des points
             isPopular: (place.popularity ?? 0) >= 0.5,
             popularity: place.popularity ?? 0,
@@ -275,7 +276,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
           },
         })) ?? [],
     };
-  }, [placesData, user?.uid]);
+  }, [placesData, user.data?.id]);
 
   // Gestion des événements de la carte
   const onMapIdle = useCallback((mapState: MapState) => {

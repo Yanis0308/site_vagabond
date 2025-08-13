@@ -1,9 +1,9 @@
-import { Image } from "expo-image";
 import { memo, useEffect, useState } from "react";
 
 import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
 
+import { CustomImage } from "../custom-ui/CustomImage";
 import { Box } from "../ui/box";
 
 interface PolaroidBaseProps {
@@ -45,7 +45,7 @@ export const PolaroidBase = memo(
             imageWithBorder && "border border-gray-100",
           )}
         >
-          <Image
+          <CustomImage
             source={imageUrl}
             className={cn(
               "w-full transition-opacity delay-150 duration-1000 ease-in-out h-full",

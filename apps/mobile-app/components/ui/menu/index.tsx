@@ -113,6 +113,7 @@ const Separator = React.forwardRef(
   },
 );
 export const UIMenu = createMenu({
+  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Root expectation
   Root: Motion.View,
   Item: Item,
   Label: Text,
@@ -121,6 +122,7 @@ export const UIMenu = createMenu({
   Separator: Separator,
 });
 
+// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, Motion.View lacks it
 cssInterop(Motion.View, { className: "style" });
 
 type IMenuProps = React.ComponentProps<typeof UIMenu> &

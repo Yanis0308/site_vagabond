@@ -171,6 +171,7 @@ const BadgeIcon = React.forwardRef<
   if (typeof size === "number") {
     return (
       <UIIcon
+        // @ts-expect-error gluestack-ui ref typing mismatch with PrimitiveIcon/Svg
         ref={ref}
         {...props}
         className={badgeIconStyle({ class: className })}
@@ -183,6 +184,7 @@ const BadgeIcon = React.forwardRef<
   ) {
     return (
       <UIIcon
+        // @ts-expect-error gluestack-ui ref typing mismatch with PrimitiveIcon/Svg
         ref={ref}
         {...props}
         className={badgeIconStyle({ class: className })}
@@ -200,6 +202,7 @@ const BadgeIcon = React.forwardRef<
         class: className,
       })}
       {...props}
+      // @ts-expect-error gluestack-ui Icon ref typing mismatch with PrimitiveIcon/Svg
       ref={ref}
     />
   );

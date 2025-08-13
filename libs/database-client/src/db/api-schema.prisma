@@ -19,10 +19,16 @@ model User {
   fullName       String?  @map("full_name") @db.VarChar(1000)
   oauthProviders String[] @map("oauth_providers") @db.VarChar(1000)
   lastLogin      DateTime @default(now()) @map("last_login")
+  role           RoleEnum @default(USER) @map("role")
 
   visitedPois VisitedPoi[]
 
   @@map("users")
+}
+
+enum RoleEnum {
+  ADMIN
+  USER
 }
 
 model Poi {

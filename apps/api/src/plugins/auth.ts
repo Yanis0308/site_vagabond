@@ -5,7 +5,16 @@ import { getAuth } from "firebase-admin/auth";
 
 declare module "fastify" {
   interface FastifyRequest {
-    user: auth.DecodedIdToken;
+    user: auth.DecodedIdToken & {
+      db: {
+        id: string;
+        email: string | null;
+        fullName: string | null;
+        oauthProviders: string[];
+        lastLogin: Date;
+        role: "ADMIN" | "USER";
+      };
+    };
   }
 }
 
@@ -42,30 +51,31 @@ export default fp(
         if (token === undefined) {
           throw new Error("Token manquant ou invalide");
         }
-        request.user = await getAuth().verifyIdToken(token);
-      } catch (error) {
-        // eslint-disable-next-line no-console -- TODO: remove
-        console.error(error);
-        throw fastify.httpErrors.unauthorized("Non autorisé");
-      }
 
-      const userId = request.user.uid;
-      const currentUserInfo = {
-        email: request.user.email ?? "",
-        fullName:
-          typeof request.user.name === "string" ? request.user.name : "",
-        oauthProviders: Array.from(
-          new Set([request.user.firebase.sign_in_provider]),
-        ),
-        lastLogin: new Date(),
-      };
+        const decodedToken = await getAuth().verifyIdToken(token);
 
-      // We don't await because we don't want to block the request
-      void fastify.prisma.user
-        .upsert({
-          where: {
-            id: userId,
-          },
+        // Build current user info from token
+        const userId = decodedToken.uid;
+        const currentUserInfo = {
+          email: decodedToken.email ?? "",
+          fullName:
+            typeof decodedToken.name === "string" ? decodedToken.name : "",
+          oauthProviders: Array.from(
+            new Set([decodedToken.firebase.sign_in_provider]),
+          ),
+          lastLogin: new Date(),
+        };
+
+        // Ensure user exists and get the fresh DB record (awaited)
+        const existingUser = await fastify.prisma.user.findUnique({
+          where: { id: userId },
+          select: { id: true, oauthProviders: true },
+        });
+
+        const isNewUser = existingUser === null;
+
+        const dbUser = await fastify.prisma.user.upsert({
+          where: { id: userId },
           create: {
             id: userId,
             ...currentUserInfo,
@@ -73,31 +83,57 @@ export default fp(
           update: {
             ...currentUserInfo,
             oauthProviders: {
-              set: await fastify.prisma.user
-                .findUnique({
-                  where: { id: userId },
-                  select: { oauthProviders: true },
-                })
-                .then((previousUser) => {
-                  return Array.from(
-                    new Set([
-                      ...(previousUser?.oauthProviders ?? []),
-                      ...currentUserInfo.oauthProviders,
-                    ]),
-                  );
-                }),
+              set:
+                existingUser !== null
+                  ? Array.from(
+                      new Set([
+                        ...existingUser.oauthProviders,
+                        ...currentUserInfo.oauthProviders,
+                      ]),
+                    )
+                  : currentUserInfo.oauthProviders,
             },
           },
-          select: { id: true },
-        })
-        .catch((error: unknown) => {
-          // eslint-disable-next-line no-console -- TODO: remove
-          console.error(error);
+          select: {
+            id: true,
+            email: true,
+            fullName: true,
+            oauthProviders: true,
+            lastLogin: true,
+            role: true,
+          },
         });
+
+        // Attach DB user to request.user
+        request.user = Object.assign(decodedToken, { db: dbUser });
+
+        // Fire-and-forget Slack notification for new user
+        if (isNewUser) {
+          void (async (): Promise<void> => {
+            try {
+              await fastify.slack.sendMessage(
+                `🎉 Nouvel utilisateur inscrit ! \n **Email:** ${currentUserInfo.email}\n**Nom:** ${currentUserInfo.fullName}\n**Provider:** ${currentUserInfo.oauthProviders.join(
+                  ", ",
+                )}\n**Date:** ${new Date().toLocaleString("fr-FR")}`,
+              );
+              fastify.log.info(
+                `New user created: ${currentUserInfo.email} (${userId})`,
+              );
+            } catch (error) {
+              // eslint-disable-next-line no-console -- TODO: remove
+              console.error(error);
+            }
+          })();
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console -- TODO: remove
+        console.error(error);
+        throw fastify.httpErrors.unauthorized("Non autorisé");
+      }
     });
   },
   {
     name: "auth",
-    dependencies: ["sensible", "firebase-admin", "fastify-prisma"],
+    dependencies: ["sensible", "firebase-admin", "fastify-prisma", "slack"],
   },
 );

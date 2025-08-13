@@ -44,11 +44,12 @@ type ITableDataProps = React.ComponentProps<typeof View | typeof Text> & {
 };
 type ITableCaptionProps = React.ComponentProps<typeof ExpoTCaption>;
 
+// @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
 const Table = React.forwardRef<React.ElementRef<typeof ExpoTable>, ITableProps>(
   ({ className, ...props }, ref) => {
     return (
       <ExpoTable
-        // @ts-expect-error
+        // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
         ref={ref}
         className={tableStyle({ class: className })}
         {...props}
@@ -58,6 +59,7 @@ const Table = React.forwardRef<React.ElementRef<typeof ExpoTable>, ITableProps>(
 );
 
 const TableHeader = React.forwardRef<
+  // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
   React.ElementRef<typeof ExpoTHead>,
   ITableHeaderProps
 >(({ className, ...props }, ref) => {
@@ -69,7 +71,7 @@ const TableHeader = React.forwardRef<
   return (
     <TableHeaderContext.Provider value={contextValue}>
       <ExpoTHead
-        // @ts-expect-error
+        // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
         ref={ref}
         className={tableHeaderStyle({ class: className })}
         {...props}
@@ -79,12 +81,13 @@ const TableHeader = React.forwardRef<
 });
 
 const TableBody = React.forwardRef<
+  // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
   React.ElementRef<typeof ExpoTBody>,
   ITableBodyProps
 >(({ className, ...props }, ref) => {
   return (
     <ExpoTBody
-      // @ts-expect-error
+      // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
       ref={ref}
       className={tableBodyStyle({ class: className })}
       {...props}
@@ -93,6 +96,7 @@ const TableBody = React.forwardRef<
 });
 
 const TableFooter = React.forwardRef<
+  // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
   React.ElementRef<typeof ExpoTFoot>,
   ITableFooterProps
 >(({ className, ...props }, ref) => {
@@ -104,7 +108,7 @@ const TableFooter = React.forwardRef<
   return (
     <TableFooterContext.Provider value={contextValue}>
       <ExpoTFoot
-        // @ts-expect-error
+        // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
         ref={ref}
         className={tableFooterStyle({ class: className })}
         {...props}
@@ -120,7 +124,7 @@ const TableHead = React.forwardRef<
   if (useRNView) {
     return (
       <View
-        // @ts-expect-error gluestack-ui type error
+        // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
         ref={ref}
         className={tableHeadStyle({ class: className })}
         {...props}
@@ -129,7 +133,7 @@ const TableHead = React.forwardRef<
   } else {
     return (
       <Text
-        // @ts-expect-error gluestack-ui type error
+        // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
         ref={ref}
         className={tableHeadStyle({ class: className })}
         {...props}
@@ -139,6 +143,7 @@ const TableHead = React.forwardRef<
 });
 
 const TableRow = React.forwardRef<
+  // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
   React.ElementRef<typeof ExpoTR>,
   ITableRowProps
 >(({ className, ...props }, ref) => {
@@ -147,7 +152,7 @@ const TableRow = React.forwardRef<
 
   return (
     <ExpoTR
-      // @ts-expect-error
+      // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
       ref={ref}
       className={tableRowStyleStyle({
         isHeaderRow,
@@ -166,7 +171,7 @@ const TableData = React.forwardRef<
   if (useRNView) {
     return (
       <View
-        // @ts-expect-error gluestack-ui type error
+        // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
         ref={ref}
         className={tableDataStyle({ class: className })}
         {...props}
@@ -175,7 +180,7 @@ const TableData = React.forwardRef<
   } else {
     return (
       <Text
-        // @ts-expect-error gluestack-ui type error
+        // @ts-expect-error @expo/html-elements ref typing mismatch with React.forwardRef
         ref={ref}
         className={tableDataStyle({ class: className })}
         {...props}
@@ -185,12 +190,13 @@ const TableData = React.forwardRef<
 });
 
 const TableCaption = React.forwardRef<
+  // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
   React.ElementRef<typeof ExpoTCaption>,
   ITableCaptionProps
 >(({ className, ...props }, ref) => {
   return (
     <ExpoTCaption
-      // @ts-expect-error
+      // @ts-expect-error gluestack-ui forwardRef generic with @expo/html-elements types
       ref={ref}
       className={tableCaptionStyle({ class: className })}
       {...props}
