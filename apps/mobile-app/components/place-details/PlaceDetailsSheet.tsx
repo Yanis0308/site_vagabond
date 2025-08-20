@@ -240,7 +240,7 @@ export const PlaceDetailsSheet = memo(
 
               {isVisited ? null : (
                 <CustomButton
-                  label="✨ Valider le lieu"
+                  label="📸 Valider le lieu"
                   onPress={onPressLink}
                   type="submit"
                   className="mx-6 mt-4"

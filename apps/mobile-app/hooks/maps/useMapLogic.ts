@@ -218,7 +218,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
     ) {
       cameraRef.current.setCamera({
         centerCoordinate: [userLocation.longitude, userLocation.latitude],
-        zoomLevel: 12,
+        zoomLevel: 14,
         heading: 0, // reset orientation
         animationMode: "flyTo",
         animationDuration: 1000,
