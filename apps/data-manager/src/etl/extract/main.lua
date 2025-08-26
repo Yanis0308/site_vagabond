@@ -28,7 +28,8 @@ function process_poi(object, geom)
             geom = geom,
             tags = object.tags,
             class = poi_data.class,
-            subclass = poi_data.subclass
+            subclass = poi_data.subclass,
+            filter_level = poi_data.filter_level
         }
 
         tables.pois:insert(current_poi)

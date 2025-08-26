@@ -1,55 +1,119 @@
--- POI filters based on Overpass V1 query criteria
+-- POI filters based on Overpass V1.1 query criteria
 -- Contains all the filtering logic for determining which OSM objects should be imported as POIs
+-- Implements 4-level filtering system: strict, standard, intermediaire, laxiste
 local M = {}
+
+-- Filter level constants (lower number = higher filter level)
+local FILTER_LEVEL_STRICT = 1
+local FILTER_LEVEL_STANDARD = 2
+local FILTER_LEVEL_INTERMEDIAIRE = 3
+local FILTER_LEVEL_LAXISTE = 4
+
+-- Helper function to check if wikidata or wikipedia is present
+local function has_wiki_reference(tags)
+    return tags.wikidata or tags.wikipedia
+end
+
+-- Helper function to check if name should be excluded
+local function should_exclude_name(tags)
+    if not tags.name then
+        return true
+    end
+
+    local name = tags.name:lower()
+    -- Exclude empty names or generic building names
+    if name == "" or name:match("^maisons?$") or name:match("^immeubles?$") or name:match("^h[ôo]tel particulier$") then
+        return true
+    end
+
+    return false
+end
 
 -- Tourism filter handler
 local function filter_tourism(tags)
-    -- tourism = attraction + wikidata obligatoire + heritage = 1 ou 2
-    if tags.tourism == "attraction" and tags.wikidata and tags.heritage and
-        (tags.heritage == "1" or tags.heritage == "2") then
+    -- Filter level STRICT: tourism = attraction + heritage=1 + (wikidata or wikipedia)
+    if tags.tourism == "attraction" and tags.heritage == "1" and has_wiki_reference(tags) then
         return {
             class = "tourism",
-            subclass = "attraction"
+            subclass = "attraction",
+            filter_level = FILTER_LEVEL_STRICT
         }
     end
 
-    -- tourism = zoo, monument, tower, aquarium (pas de wikidata obligatoire)
-    if tags.tourism == "zoo" or tags.tourism == "monument" or tags.tourism == "tower" or tags.tourism == "aquarium" then
+    -- Filter level STRICT: tourism = zoo, monument, tower, museum, aquarium + (wikidata or wikipedia)
+    if (tags.tourism == "zoo" or tags.tourism == "monument" or tags.tourism == "tower" or tags.tourism == "museum" or
+        tags.tourism == "aquarium") and has_wiki_reference(tags) then
         return {
             class = "tourism",
-            subclass = tags.tourism
+            subclass = tags.tourism,
+            filter_level = FILTER_LEVEL_STRICT
         }
     end
 
-    -- tourism = museum (pas de wikidata obligatoire en V1)
-    if tags.tourism == "museum" then
+    -- Filter level STRICT: tourism = artwork + artwork_type=(statue|sculpture|fountain) + (wikidata or wikipedia)
+    if tags.tourism == "artwork" and
+        (tags.artwork_type == "statue" or tags.artwork_type == "sculpture" or tags.artwork_type == "fountain") and
+        has_wiki_reference(tags) then
         return {
             class = "tourism",
-            subclass = "museum"
+            subclass = "artwork",
+            filter_level = FILTER_LEVEL_STRICT
         }
     end
 
-    -- tourism = information + information=office uniquement
-    if tags.tourism == "information" and tags.information == "office" then
+    -- Filter level STANDARD: tourism = attraction + heritage=2 + (wikidata or wikipedia)
+    if tags.tourism == "attraction" and tags.heritage == "2" and has_wiki_reference(tags) then
         return {
             class = "tourism",
-            subclass = "information"
+            subclass = "attraction",
+            filter_level = FILTER_LEVEL_STANDARD
         }
     end
 
-    -- tourism = artwork + artwork_type=statue (wikidata obligatoire)
-    if tags.tourism == "artwork" and tags.artwork_type == "statue" and tags.wikidata then
+    -- Filter level STANDARD: tourism = museum, aquarium (no wikidata required)
+    if tags.tourism == "museum" or tags.tourism == "aquarium" then
         return {
             class = "tourism",
-            subclass = "artwork"
+            subclass = tags.tourism,
+            filter_level = FILTER_LEVEL_STANDARD
         }
     end
 
-    -- tourism = viewpoint (aucune condition supplémentaire)
+    -- Filter level INTERMEDIAIRE: tourism = attraction (no conditions)
+    if tags.tourism == "attraction" then
+        return {
+            class = "tourism",
+            subclass = "attraction",
+            filter_level = FILTER_LEVEL_INTERMEDIAIRE
+        }
+    end
+
+    -- Filter level INTERMEDIAIRE: tourism = zoo, monument, tower, museum, aquarium (no conditions)
+    if tags.tourism == "zoo" or tags.tourism == "monument" or tags.tourism == "tower" or tags.tourism == "museum" or
+        tags.tourism == "aquarium" then
+        return {
+            class = "tourism",
+            subclass = tags.tourism,
+            filter_level = FILTER_LEVEL_INTERMEDIAIRE
+        }
+    end
+
+    -- Filter level INTERMEDIAIRE: tourism = artwork + artwork_type=(statue|sculpture|fountain) (no wikidata required)
+    if tags.tourism == "artwork" and
+        (tags.artwork_type == "statue" or tags.artwork_type == "sculpture" or tags.artwork_type == "fountain") then
+        return {
+            class = "tourism",
+            subclass = "artwork",
+            filter_level = FILTER_LEVEL_INTERMEDIAIRE
+        }
+    end
+
+    -- Filter level INTERMEDIAIRE: tourism = viewpoint
     if tags.tourism == "viewpoint" then
         return {
             class = "tourism",
-            subclass = "viewpoint"
+            subclass = "viewpoint",
+            filter_level = FILTER_LEVEL_INTERMEDIAIRE
         }
     end
 
@@ -58,70 +122,118 @@ end
 
 -- Historic filter handler
 local function filter_historic(tags)
-    -- historic = castle, monument, memorial, yes + wikidata obligatoire
+    -- Filter level STRICT: historic = castle, monument, memorial, city_gate, fort, citywalls, tower, yes + (wikidata or wikipedia)
     if (tags.historic == "castle" or tags.historic == "monument" or tags.historic == "memorial" or tags.historic ==
-        "yes") and tags.wikidata then
+        "city_gate" or tags.historic == "fort" or tags.historic == "citywalls" or tags.historic == "tower" or
+        tags.historic == "yes") and has_wiki_reference(tags) then
         return {
             class = "historic",
-            subclass = tags.historic
+            subclass = tags.historic,
+            filter_level = FILTER_LEVEL_STRICT
         }
     end
 
-    -- historic = city_gate, fort, citywalls + wikidata obligatoire
-    if (tags.historic == "city_gate" or tags.historic == "fort" or tags.historic == "citywalls") and tags.wikidata then
+    -- Filter level STRICT: historic = yes|building + heritage = 1|2 + (wikidata or wikipedia)
+    if (tags.historic == "yes" or tags.historic == "building") and (tags.heritage == "1" or tags.heritage == "2") and
+        has_wiki_reference(tags) then
         return {
             class = "historic",
-            subclass = tags.historic
+            subclass = tags.historic,
+            filter_level = FILTER_LEVEL_STRICT
+        }
+    end
+
+    -- Filter level STANDARD: historic = building (no conditions)
+    if tags.historic == "building" then
+        return {
+            class = "historic",
+            subclass = "building",
+            filter_level = FILTER_LEVEL_STANDARD
+        }
+    end
+
+    -- Filter level INTERMEDIAIRE: heritage = 1|2|3 + (wikidata or wikipedia)
+    if (tags.heritage == "1" or tags.heritage == "2" or tags.heritage == "3") and has_wiki_reference(tags) then
+        return {
+            class = "historic",
+            subclass = "heritage",
+            filter_level = FILTER_LEVEL_INTERMEDIAIRE
+        }
+    end
+
+    -- Filter level INTERMEDIAIRE: historic = city_gate, fort, tower (no conditions)
+    if tags.historic == "city_gate" or tags.historic == "fort" or tags.historic == "tower" then
+        return {
+            class = "historic",
+            subclass = tags.historic,
+            filter_level = FILTER_LEVEL_INTERMEDIAIRE
+        }
+    end
+
+    -- Filter level INTERMEDIAIRE: historic = yes, building (no conditions)
+    if tags.historic == "yes" or tags.historic == "building" then
+        return {
+            class = "historic",
+            subclass = tags.historic,
+            filter_level = FILTER_LEVEL_INTERMEDIAIRE
+        }
+    end
+
+    -- Filter level LAXISTE: heritage = 1|2|3 (no wikidata required)
+    if tags.heritage == "1" or tags.heritage == "2" or tags.heritage == "3" then
+        return {
+            class = "historic",
+            subclass = "heritage",
+            filter_level = FILTER_LEVEL_LAXISTE
+        }
+    end
+
+    -- Filter level LAXISTE: historic = monument (no conditions)
+    if tags.historic == "monument" then
+        return {
+            class = "historic",
+            subclass = "monument",
+            filter_level = FILTER_LEVEL_LAXISTE
         }
     end
 
     return nil
 end
 
--- Building filter handler
+-- Building filter handler (now handled via historic filter)
 local function filter_building(tags)
-    -- building + historic = yes + wikidata obligatoire
-    if tags.building and tags.historic and tags.wikidata then
-        return {
-            class = "building",
-            subclass = "historic"
-        }
-    end
-
-    -- building + historic = yes + memorial (pas de wikidata obligatoire)
-    if tags.building and tags.historic and tags.memorial then
-        return {
-            class = "building",
-            subclass = "memorial"
-        }
-    end
-
+    -- Building filtering is now handled through the historic filter
+    -- This function is kept for compatibility but returns nil
     return nil
 end
 
 -- Amenity filter handler
 local function filter_amenity(tags)
-    -- amenity = place_of_worship + wikidata obligatoire
-    if tags.amenity == "place_of_worship" and tags.wikidata then
+    -- Filter level STRICT: amenity = place_of_worship, townhall, theatre + (wikidata or wikipedia)
+    if (tags.amenity == "place_of_worship" or tags.amenity == "townhall" or tags.amenity == "theatre") and
+        has_wiki_reference(tags) then
         return {
             class = "amenity",
-            subclass = "place_of_worship"
+            subclass = tags.amenity,
+            filter_level = FILTER_LEVEL_STRICT
         }
     end
 
-    -- amenity = townhall (pas de wikidata obligatoire)
-    if tags.amenity == "townhall" then
+    -- Filter level STRICT: amenity = fountain + heritage = 1|2 + (wikidata or wikipedia)
+    if tags.amenity == "fountain" and (tags.heritage == "1" or tags.heritage == "2") and has_wiki_reference(tags) then
         return {
             class = "amenity",
-            subclass = "townhall"
+            subclass = "fountain",
+            filter_level = FILTER_LEVEL_STRICT
         }
     end
 
-    -- amenity = theatre + wikidata obligatoire
-    if tags.amenity == "theatre" and tags.wikidata then
+    -- Filter level INTERMEDIAIRE: amenity = fountain, townhall (no conditions)
+    if tags.amenity == "fountain" or tags.amenity == "townhall" then
         return {
             class = "amenity",
-            subclass = "theatre"
+            subclass = tags.amenity,
+            filter_level = FILTER_LEVEL_INTERMEDIAIRE
         }
     end
 
@@ -130,11 +242,12 @@ end
 
 -- Bridge filter handler
 local function filter_bridge(tags)
-    -- bridge = yes + wikidata obligatoire
-    if tags.bridge and tags.wikidata then
+    -- Filter level STRICT: bridge + (wikidata or wikipedia)
+    if tags.bridge and has_wiki_reference(tags) then
         return {
             class = "bridge",
-            subclass = tags.bridge
+            subclass = tags.bridge,
+            filter_level = FILTER_LEVEL_STRICT
         }
     end
     return nil
@@ -142,19 +255,13 @@ end
 
 -- Leisure filter handler
 local function filter_leisure(tags)
-    -- leisure = park + wikidata obligatoire
-    if tags.leisure == "park" and tags.wikidata then
+    -- Filter level STRICT: leisure = marina + (wikidata or wikipedia)
+    -- Note: park is commented out to reduce volume
+    if tags.leisure == "marina" and has_wiki_reference(tags) then
         return {
             class = "leisure",
-            subclass = "park"
-        }
-    end
-
-    -- leisure = marina (pas de wikidata obligatoire)
-    if tags.leisure == "marina" then
-        return {
-            class = "leisure",
-            subclass = "marina"
+            subclass = tags.leisure,
+            filter_level = FILTER_LEVEL_STRICT
         }
     end
 
@@ -163,28 +270,46 @@ end
 
 -- Government filter handler
 local function filter_government(tags)
-    -- government + heritage ≤ 3
+    -- Filter level STRICT: government + heritage = 1|2|3
     if tags.government and tags.heritage then
         local heritage_num = tonumber(tags.heritage)
-        if heritage_num and heritage_num <= 3 then
+        if heritage_num and heritage_num >= 1 and heritage_num <= 3 then
             return {
                 class = "government",
-                subclass = "heritage"
+                subclass = "heritage",
+                filter_level = FILTER_LEVEL_STRICT
             }
         end
     end
     return nil
 end
 
--- Landuse filter handler
+-- Landuse filter handler (removed as not present in v1.1)
 local function filter_landuse(tags)
-    -- landuse = cemetery + wikidata obligatoire
-    if tags.landuse == "cemetery" and tags.wikidata then
+    -- Landuse filtering removed in v1.1
+    return nil
+end
+
+-- Heritage filter handler (cross-category)
+local function filter_heritage(tags)
+    -- Filter level INTERMEDIAIRE: heritage = 1|2|3 + (wikidata or wikipedia)
+    if (tags.heritage == "1" or tags.heritage == "2" or tags.heritage == "3") and has_wiki_reference(tags) then
         return {
-            class = "landuse",
-            subclass = "cemetery"
+            class = "heritage",
+            subclass = "heritage",
+            filter_level = FILTER_LEVEL_INTERMEDIAIRE
         }
     end
+
+    -- Filter level LAXISTE: heritage = 1|2|3 (no wikidata required)
+    if tags.heritage == "1" or tags.heritage == "2" or tags.heritage == "3" then
+        return {
+            class = "heritage",
+            subclass = "heritage",
+            filter_level = FILTER_LEVEL_LAXISTE
+        }
+    end
+
     return nil
 end
 
@@ -197,20 +322,32 @@ local poi_filters = {
     bridge = filter_bridge,
     leisure = filter_leisure,
     government = filter_government,
-    landuse = filter_landuse
+    landuse = filter_landuse,
+    heritage = filter_heritage
 }
 
 -- Main function to check if an OSM object matches POI criteria
 function M.get_poi_data(tags)
+    -- First check if name should be excluded
+    if should_exclude_name(tags) then
+        return nil
+    end
+
+    local best_poi_data = nil
+    local best_filter_level = 999
+
+    -- Check all category filters and find the one with best filter level (lowest number)
     for tag_type, filter_func in pairs(poi_filters) do
         if tags[tag_type] then
             local poi_data = filter_func(tags)
-            if poi_data then
-                return poi_data
+            if poi_data and poi_data.filter_level and poi_data.filter_level < best_filter_level then
+                best_poi_data = poi_data
+                best_filter_level = poi_data.filter_level
             end
         end
     end
-    return nil
+
+    return best_poi_data
 end
 
 return M

@@ -4,13 +4,52 @@
 
 ### Extract
 
-`pnpm run extract`
+#### Extraction par fichier PBF
 
-### Transform
+Vous pouvez maintenant extraire les données pour un fichier PBF spécifique en utilisant le nom complet du fichier :
 
-`pnpm run transform-and-load`
+```bash
+pnpm run extract france-2024-01-15.osm.pbf
+pnpm run extract belgium-2024-12-01.osm.pbf
+pnpm run extract netherlands-2024-11-15.osm.pbf
+```
+
+Le script va automatiquement :
+
+- Vérifier que le fichier PBF existe dans `src/etl/extract/pbf-files/`
+- Créer un schéma de base de données avec le nom du fichier (sans l'extension `.osm.pbf`)
+- Afficher la commande osm2pgsql complète à copier-coller
+
+**Note**: Le script n'exécute plus automatiquement la commande osm2pgsql. Il affiche la commande formatée que vous devez copier et exécuter manuellement.
+
+#### Extraction classique
+
+`pnpm run extract` (utilise le fichier PBF codé en dur)
+
+### Transform and Load
+
+Transforme et charge les données dans la base de données principale. Le nom du schéma est **obligatoire**.
+
+```bash
+# Usage obligatoire avec un nom de schéma
+pnpm run transform-and-load belgium-2024-12-01
+
+# Autres exemples
+pnpm run transform-and-load france-2024-01-15
+pnpm run transform-and-load netherlands-2024-11-15
+```
+
+Le script va automatiquement :
+
+- Valider que le nom du schéma est fourni (argument obligatoire)
+- Utiliser le schéma spécifié dans les requêtes SQL (ex: `belgium-2025.raw_pois`)
+- Traiter les données par lots pour l'optimisation des performances
+- Charger les données dans la base de données principale via Prisma
+
+**Note**: Si aucun argument n'est fourni, le script affichera un message d'erreur avec l'usage correct.
 
 ### Load
+
 - automatically done by the transform script
 
 ## CLI Examples

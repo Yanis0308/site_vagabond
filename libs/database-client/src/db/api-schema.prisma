@@ -41,6 +41,7 @@ model Poi {
   coords         Unsupported("geometry(Point, 4326)") @map("coords")
   disabled       Boolean                              @default(false) @map("disabled")
   disabledReason String?                              @map("disabled_reason") @db.VarChar(1000)
+  filterLevel    PoiFilterLevelEnum                   @default(UNKNOWN) @map("filter_level")
 
   @@unique(name: "unique_source_and_source_id", [source, sourceId])
   @@index([coords], name: "coords_index", type: Gist)
@@ -49,6 +50,14 @@ model Poi {
 
 enum PoiSourceEnum {
   OSM
+}
+
+enum PoiFilterLevelEnum {
+  UNKNOWN
+  STRICT
+  STANDARD
+  INTERMEDIATE
+  LAXIST
 }
 
 model PoiData {

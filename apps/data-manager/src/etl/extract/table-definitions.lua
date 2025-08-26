@@ -23,6 +23,10 @@ M.pois = osm2pgsql.define_table({
         type = 'text',
         not_null = true
     }, {
+        column = 'filter_level',
+        type = 'int',
+        not_null = true
+    }, {
         column = 'geom',
         type = 'point',
         not_null = true

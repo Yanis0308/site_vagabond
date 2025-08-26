@@ -8,6 +8,7 @@ export const ExtractedPoiDatabaseRowSchema = Type.Object(
     osm_type: Type.String(),
     latitude: Type.Ref(Latitude),
     longitude: Type.Ref(Longitude),
+    filter_level: Type.Number(),
     tags: Type.Record(Type.String(), Type.String()),
   },
   { $id: "ExtractedPoiDatabaseRow" },

@@ -6,6 +6,21 @@ import knex from "knex";
 import { load } from "./load";
 import { postLoad } from "./post-load";
 
+// Parse command line arguments
+function parseArgs(): { schema: string } {
+  const args = process.argv.slice(2);
+
+  const schema = args[0]?.trim() ?? "";
+  if (schema === "") {
+    logger.error(
+      "Error - correct usage is: pnpm run transform-and-load <schema-name>",
+    );
+    process.exit(1);
+  }
+
+  return { schema };
+}
+
 export type ExtractedPoiDatabaseRow = Static<
   typeof jsonSchemas.ExtractedPoiDatabaseRowSchema
 >;
@@ -24,41 +39,19 @@ const validateRows = generateValidator(
 
 async function transform(): Promise<void> {
   const BATCH_SIZE = 1000;
+  const { schema } = parseArgs();
 
-  const baseSelectQuery = `SELECT 
+  logger.info(`Using database schema: ${schema}`);
+
+  const baseSelectQuery = `SELECT
       p.osm_id,
       p.osm_type,
+      p.filter_level,
       p.name,
       ST_X(ST_Transform(p.geom, 4326)) as longitude,
       ST_Y(ST_Transform(p.geom, 4326)) as latitude,
       p.tags
-    FROM raw_pois p`;
-
-  const filteredQuery = `SELECT 
-      p.osm_id,
-      p.osm_type,
-      p.name,
-      ST_X(ST_Transform(p.geom, 4326)) as longitude,
-      ST_Y(ST_Transform(p.geom, 4326)) as latitude,
-      p.tags
-    FROM raw_pois p
-    WHERE
-    -- (osm_type <> 'R') AND
-    (p.name IS NOT NULL OR p.name <> '' OR p.tags->>'wikidata' IS NOT NULL OR p.tags->>'wikipedia' IS NOT NULL)
-    AND (
-      (p.tags->>'leisure' = 'park')
-      OR (
-        (p.tags->>'tourism' IN ('attraction', 'museum', 'zoo', 'monument', 'artwork'))
-        OR p.tags->>'wikidata' IS NOT NULL 
-        OR p.tags->>'wikipedia' IS NOT NULL
-      )
-      OR (
-        (p.tags->>'historic' IN ('memorial', 'yes', 'castle', 'monument'))
-        OR p.tags->>'wikidata' IS NOT NULL 
-        OR p.tags->>'wikipedia' IS NOT NULL
-      )
-      OR (p.tags->>'amenity' = 'place_of_worship')
-    )`;
+    FROM ${schema}.raw_pois p`;
 
   try {
     // Traitement par lots avec un stream

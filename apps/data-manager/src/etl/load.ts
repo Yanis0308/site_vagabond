@@ -1,6 +1,7 @@
 import { getPrismaExtendedClient } from "@vagabond/database-client";
 import {
   LanguageEnum,
+  type PoiFilterLevelEnum,
   PoiSourceEnum,
   type Prisma,
 } from "@vagabond/database-client/dist/db/generated/client";
@@ -23,6 +24,7 @@ export async function load(data: ExtractedPoiDatabaseRow[]): Promise<void> {
           latitude: item.latitude,
           longitude: item.longitude,
         },
+        filterLevel: getFilterLevel(item),
       };
     });
 
@@ -64,4 +66,19 @@ function getComputedId(item: ExtractedPoiDatabaseRow): string {
 
 function getSourceId(source: PoiSourceEnum, computedId: string): string {
   return `${source}-${computedId}`;
+}
+
+function getFilterLevel(item: ExtractedPoiDatabaseRow): PoiFilterLevelEnum {
+  switch (item.filter_level) {
+    case 1:
+      return "STRICT";
+    case 2:
+      return "STANDARD";
+    case 3:
+      return "INTERMEDIATE";
+    case 4:
+      return "LAXIST";
+    default:
+      return "UNKNOWN";
+  }
 }

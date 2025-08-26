@@ -1,0 +1,358 @@
+﻿---
+# Overpass Ultra query (https://overpass-ultra.us/)
+# - 🟥 Strict (Fermé) : Rouge
+# - 🟧 Standard (Fermé) : Orange
+# - 🟩 Intermédiaire (Fermé) : Vert
+# - 🟦 Laxiste (Fermé) : Bleu
+# - ⚫️ Ouvert : Noir (non-fermé)
+
+popupTemplate: >
+  <h2>
+    {{ tags["osm_type"] }}
+    <a href="https://www.openstreetmap.org/{{ tags["osm_type"] }}/{{ id }}" target="_blank">{{ id }}</a>
+    {{ tags["name"] }}
+  </h2>
+  {% assign wikidata = tags["wikidata"] %}
+  {%- if wikidata %}
+  Image Wikidata:<br/>
+  <img src="https://hub.toolforge.org/{{ wikidata }}?p=image&w=200&h=150">
+  <hr>
+  {%- endif %}
+  {%- for tag in tags %}
+    <code>{{ tag[0] }} = {{ tag[1] }}</code>
+    <br>
+  {%- endfor %}
+
+style:
+  layers:
+    # Niveau STRICT (Fermé) - Étoile rouge
+    - type: symbol
+      filter: ["has", "strict_results"]
+      layout:
+        icon-image: maki:marker
+        icon-size: 1
+        icon-allow-overlap: true
+      paint:
+        icon-color: "#DC143C"
+    - type: symbol
+      filter: ["has", "strict_results"]
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Semibold", "Arial Unicode MS Bold"]
+        text-offset: [0, 1.5]
+        text-size: 12
+        text-anchor: "top"
+        text-allow-overlap: false
+      paint:
+        text-color: "#DC143C"
+        text-halo-color: "white"
+        text-halo-width: 1
+
+    # Niveau STANDARD (Fermé) - Monument orange
+    - type: symbol
+      filter: ["has", "standard_results"]
+      layout:
+        icon-image: maki:marker
+        icon-size: 0.85
+        icon-allow-overlap: true
+      paint:
+        icon-color: "#FF4500"
+    - type: symbol
+      filter: ["has", "standard_results"]
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Semibold", "Arial Unicode MS Bold"]
+        text-offset: [0, 1.5]
+        text-size: 11
+        text-anchor: "top"
+        text-allow-overlap: false
+      paint:
+        text-color: "#FF4500"
+        text-halo-color: "white"
+        text-halo-width: 1
+
+    # Niveau INTERMÉDIAIRE (Fermé) - Attraction verte
+    - type: symbol
+      filter: ["has", "intermediaire_results"]
+      layout:
+        icon-image: maki:marker
+        icon-size: 0.8
+        icon-allow-overlap: true
+      paint:
+        icon-color: "#32CD32"
+    - type: symbol
+      filter: ["has", "intermediaire_results"]
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Semibold", "Arial Unicode MS Bold"]
+        text-offset: [0, 1.5]
+        text-size: 10
+        text-anchor: "top"
+        text-allow-overlap: false
+      paint:
+        text-color: "#32CD32"
+        text-halo-color: "white"
+        text-halo-width: 1
+
+    # Niveau LAXISTE (Fermé) - Marqueur bleu
+    - type: symbol
+      filter: ["has", "laxiste_results"]
+      layout:
+        icon-image: maki:marker
+        icon-size: 0.7
+        icon-allow-overlap: true
+      paint:
+        icon-color: "#4169E1"
+    - type: symbol
+      filter: ["has", "laxiste_results"]
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Semibold", "Arial Unicode MS Bold"]
+        text-offset: [0, 1.5]
+        text-size: 9
+        text-anchor: "top"
+        text-allow-overlap: false
+      paint:
+        text-color: "#4169E1"
+        text-halo-color: "white"
+        text-halo-width: 1
+
+    # NOUVEAU STYLE : ÉLÉMENTS OUVERTS (non-fermés) - Danger noir
+    # Ce style est placé à la fin pour s'afficher par-dessus les autres.
+    - type: symbol
+      filter: ["has", "is_open_results"]
+      layout:
+        icon-image: maki:danger # Icône distinctive
+        icon-size: 1.1 # Un peu plus grand pour être bien visible
+        icon-allow-overlap: true
+      paint:
+        icon-color: "#000000" # Noir
+    - type: symbol
+      filter: ["has", "is_open_results"]
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Semibold", "Arial Unicode MS Bold"]
+        text-offset: [0, 1.5]
+        text-size: 12
+        text-anchor: "top"
+        text-allow-overlap: false
+      paint:
+        text-color: "#000000" # Noir
+        text-halo-color: "white"
+        text-halo-width: 2 # Halo plus large pour la lisibilité
+---
+
+[out:json][timeout:120];
+
+/*
+=================================================================================
+  ÉTAPE 1 : DÉFINITION DES GROUPES DE FILTRES (SANS FILTRE DE NOM)
+=================================================================================
+*/
+
+// --- GROUPE 1 : FILTRES STRICT UNIQUEMENT ---
+(
+  // Tourism (attractions, monuments, towers, museums, aquariums, artwork)
+  nwr["tourism"="attraction"]["heritage"="1"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+  nwr["tourism"~"^(zoo|monument|tower|museum|aquarium)$"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+  nwr["tourism"="artwork"]["artwork_type"~"^(statue|sculpture|fountain)$"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+
+  // Historic (castles, monuments, memorials, yes, city gates, forts, city walls, towers)
+  nwr["historic"~"^(castle|monument|memorial|city_gate|fort|citywalls|tower|yes)$"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+  nwr["historic"~"^(yes|building)$"]["heritage"~"^[12]$"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+
+  // Amenity (places of worship, town halls, fountains, theatres)
+  nwr["amenity"~"^(place_of_worship|townhall|theatre)$"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+  nwr["amenity"="fountain"]["heritage"~"^[12]$"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+
+  // Leisure (parks, marinas)
+  nwr["leisure"~"^(park|marina)$"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+
+  // Government (government buildings)
+  nwr["government"]["heritage"~"^[123]$"]({{bbox}});
+
+  // Bridges (bridges)
+  nwr["bridge"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+
+)->.group_strict;
+
+// --- GROUPE 2 : AJOUTS POUR LE NIVEAU STANDARD ---
+(
+  // Tourism (attractions, museums, aquariums)
+  nwr["tourism"="attraction"]["heritage"="2"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+  nwr["tourism"~"^(museum|aquarium)$"]({{bbox}});
+
+  // Historic (building)
+  nwr["historic"="building"]({{bbox}});
+  
+)->.group_standard;
+
+// --- GROUPE 3 : AJOUTS POUR LE NIVEAU INTERMÉDIAIRE ---
+(
+  nwr["tourism"="attraction"]({{bbox}});
+  nwr["tourism"~"^(zoo|monument|tower|museum|aquarium)$"]({{bbox}});
+  nwr["tourism"="artwork"]["artwork_type"~"^(statue|sculpture|fountain)$"]({{bbox}});
+  nwr["tourism"="viewpoint"]({{bbox}});
+
+  nwr["heritage"~"^[123]$"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+
+  nwr["historic"~"^(city_gate|fort|tower)$"]({{bbox}});
+  nwr["historic"~"^(yes|building)$"]({{bbox}});
+
+  nwr["amenity"~"^(fountain|townhall)$"]({{bbox}});
+)->.group_intermediaire;
+
+// --- GROUPE 4 : AJOUTS POUR LE NIVEAU LAXISTE ---
+(
+  nwr["heritage"~"^[123]$"]({{bbox}});
+  nwr["historic"="monument"]({{bbox}});
+
+  // We dont' save park for now because it's too many without sub filters
+  // nwr["leisure"="park"]
+)->.group_laxiste;
+
+
+/*
+=================================================================================
+  ÉTAPE 2 : CONSTRUCTION DES ENSEMBLES CUMULATIFS PAR NIVEAU
+=================================================================================
+*/
+
+(.group_strict;)->.strict;
+(.group_strict; .group_standard;)->.standard;
+(.group_strict; .group_standard; .group_intermediaire;)->.intermediaire;
+(.group_strict; .group_standard; .group_intermediaire; .group_laxiste;)->.laxiste;
+
+
+/*
+=================================================================================
+  ÉTAPE 3 : CRÉATION DES ENSEMBLES EXCLUSIFS
+=================================================================================
+*/
+
+(.strict;)->.strict_exclusive;
+(.standard; - .strict;)->.standard_exclusive;
+(.intermediaire; - .standard;)->.intermediaire_exclusive;
+(.laxiste; - .intermediaire;)->.laxiste_exclusive;
+
+
+/*
+=================================================================================
+  ÉTAPE 4 : FILTRAGES GLOBAUX (NOMS ET LIMITES ADMINISTRATIVES)
+=================================================================================
+*/
+
+(
+  .strict_exclusive;
+  .standard_exclusive;
+  .intermediaire_exclusive;
+  .laxiste_exclusive;
+)->.all_results;
+
+
+// --- Exclusion des noms indésirables ---
+(
+  nwr.all_results(if:!is_tag("name"));
+  nwr.all_results["name"~"^$|^[Mm]aisons?$|^[Ii]mmeubles?$|^[Hh][ôo]tel particulier$"];
+)->.name_exclusions;
+
+// --- NOUVELLE EXCLUSION : Limites administratives ---
+(
+  nwr.all_results["boundary"="administrative"]["admin_level"];
+)->.boundary_exclusions;
+
+// --- Combinaison de toutes les exclusions ---
+(
+  .name_exclusions;
+  .boundary_exclusions;
+)->.to_exclude;
+
+
+(.strict_exclusive; - .to_exclude;) -> .strict_final;
+(.standard_exclusive; - .to_exclude;) -> .standard_final;
+(.intermediaire_exclusive; - .to_exclude;) -> .intermediaire_final;
+(.laxiste_exclusive; - .to_exclude;) -> .laxiste_final;
+
+
+/*
+=================================================================================
+  ÉTAPE 5 : ASSIGNATION DES TAGS POUR LE STYLE YAML (LOGIQUE INVERSÉE)
+=================================================================================
+*/
+
+// On regroupe tous les résultats finaux
+(.strict_final; .standard_final; .intermediaire_final; .laxiste_final;)->.all_final;
+
+// On isole les éléments OUVERTS (non-fermés) en utilisant l'inverse de is_closed()
+nwr.all_final(if:!is_closed())->.all_open;
+
+// --- Style pour les éléments OUVERTS (Danger) ---
+.all_open convert item
+  ::id = id(),
+  ::geom = geom(),
+  ::=::,
+  osm_type = type(),
+  is_open_results = "true" // Nouveau tag pour le style des points ouverts
+->.open_styled;
+
+
+// --- Style pour les éléments FERMÉS (par niveau) ---
+
+// On retire les éléments ouverts de chaque niveau pour ne garder que les fermés
+(.strict_final; - .all_open;) -> .strict_closed;
+(.standard_final; - .all_open;) -> .standard_closed;
+(.intermediaire_final; - .all_open;) -> .intermediaire_closed;
+(.laxiste_final; - .all_open;) -> .laxiste_closed;
+
+// Convertir les éléments strict (fermés) avec leur style de niveau
+.strict_closed convert item
+  ::id = id(),
+  ::geom = geom(),
+  ::=::,
+  osm_type = type(),
+  strict_results = "true"
+->.strict_styled;
+
+// Convertir les éléments standard (fermés) avec leur style de niveau
+.standard_closed convert item
+  ::id = id(),
+  ::geom = geom(),
+  ::=::,
+  osm_type = type(),
+  standard_results = "true"
+->.standard_styled;
+
+// Convertir les éléments intermédiaire (fermés) avec leur style de niveau
+.intermediaire_closed convert item
+  ::id = id(),
+  ::geom = geom(),
+  ::=::,
+  osm_type = type(),
+  intermediaire_results = "true"
+->.intermediaire_styled;
+
+// Convertir les éléments laxiste (fermés) avec leur style de niveau
+.laxiste_closed convert item
+  ::id = id(),
+  ::geom = geom(),
+  ::=::,
+  osm_type = type(),
+  laxiste_results = "true"
+->.laxiste_styled;
+
+
+/*
+==========================================================
+  ÉTAPE 6 : Affichage des résultats avec styles
+==========================================================
+*/
+
+// Affichage de tous les éléments convertis avec leurs tags de style
+(
+  .open_styled;         // Tous les points ouverts en noir
+  .strict_styled;       // Points fermés du niveau strict en rouge
+  .standard_styled;     // etc.
+  .intermediaire_styled;
+  .laxiste_styled;
+);
+out center;
