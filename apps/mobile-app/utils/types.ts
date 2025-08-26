@@ -3,9 +3,7 @@ import { type jsonSchemas } from "@vagabond/shared-utils";
 
 export type PoiType = Static<
   typeof jsonSchemas.GetPoisResponseSchema.properties.data
->[0] & {
-  popularity?: number;
-};
+>[0];
 
 export type VisitedPoiType = Static<
   typeof jsonSchemas.GetVisitedPoisResponseSchema.properties.data

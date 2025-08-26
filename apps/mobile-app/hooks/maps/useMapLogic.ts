@@ -12,125 +12,22 @@ import { calculateBboxWithMinSize } from "@/utils/bbox";
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
-// Type pour les tags OSM
-interface OsmTags {
-  tourism?: string;
-  historic?: string;
-  amenity?: string;
-  leisure?: string;
-  building?: string;
-  man_made?: string;
-  bridge?: string;
-  government?: string;
-  landuse?: string;
-  [key: string]: string | undefined;
-}
-
-// Fonction pour obtenir l'emoji selon le type de POI
-function getPoiEmoji(rawInfo: unknown): string {
-  if (
-    rawInfo === null ||
-    rawInfo === undefined ||
-    typeof rawInfo !== "object"
-  ) {
-    return "📍"; // Emoji par défaut
+const getPoiIsVisited = (poi: PoiType, userId: string | undefined): boolean => {
+  if (userId === undefined) {
+    return false;
   }
 
-  // Les tags OSM sont dans rawInfo
-  const tags = rawInfo as OsmTags;
+  return (
+    poi.visitedPois.find(
+      ({ userId: visitedUserId }: { userId: string }) =>
+        visitedUserId === userId,
+    ) !== undefined
+  );
+};
 
-  // Tourism
-  if (tags.tourism !== undefined) {
-    switch (tags.tourism) {
-      case "museum":
-        return "🏛️";
-      case "zoo":
-        return "🦁";
-      case "monument":
-        return "🗿";
-      case "artwork":
-        return "🎨";
-      case "viewpoint":
-        return "🔭";
-      case "attraction":
-        return "🎢";
-      case "aquarium":
-        return "🐠";
-      case "tower":
-        return "🗼";
-      case "information":
-        return "ℹ️";
-      default:
-        return "🧳";
-    }
-  }
-
-  // Historic
-  if (tags.historic !== undefined) {
-    switch (tags.historic) {
-      case "castle":
-        return "🏰";
-      case "monument":
-      case "memorial":
-        return "🗿";
-      case "city_gate":
-        return "🚪";
-      case "fort":
-        return "🏰";
-      default:
-        return "🏺";
-    }
-  }
-
-  // Amenity
-  if (tags.amenity !== undefined) {
-    switch (tags.amenity) {
-      case "place_of_worship":
-        return "⛪";
-      case "townhall":
-        return "🏛️";
-      case "theatre":
-        return "🎭";
-      default:
-        return "🏢";
-    }
-  }
-
-  // Leisure
-  if (tags.leisure !== undefined) {
-    switch (tags.leisure) {
-      case "park":
-        return "🌳";
-      case "marina":
-        return "⚓";
-      default:
-        return "🎯";
-    }
-  }
-
-  // Building historique
-  if (tags.building !== undefined) {
-    return "🏛️";
-  }
-
-  // Bridge
-  if (tags.man_made === "bridge" || Boolean(tags.bridge)) {
-    return "🌉";
-  }
-
-  // Government
-  if (tags.government !== undefined) {
-    return "🏛️";
-  }
-
-  // Cemetery
-  if (tags.landuse === "cemetery") {
-    return "⚰️";
-  }
-
-  // Fallback par défaut
-  return "📍";
-}
+const getPoiIconName = (poi: PoiType, isVisited: boolean): string | null => {
+  return isVisited ? "checkmark" : "questionMark";
+};
 
 export interface OnPressEvent {
   features: GeoJSON.Feature[];
@@ -252,29 +149,29 @@ export const useMapLogic = (): UseMapLogicReturn => {
     return {
       type: "FeatureCollection" as const,
       features:
-        placesData?.map((place, index) => ({
-          type: "Feature" as const,
-          properties: {
-            id: place.id.toString(),
-            baseId: index.toString(),
-            name: place.data[0]?.name ?? "foo",
-            data: place,
-            imageUrl: `https://picsum.photos/seed/${place.id}/20/20`,
-            isVisited:
-              place.visitedPois.find(
-                ({ userId }: { userId: string }) => userId === user.data?.id,
-              ) !== undefined,
-            // Ajout des propriétés de popularité pour différencier la taille des points
-            isPopular: (place.popularity ?? 0) >= 0.5,
-            popularity: place.popularity ?? 0,
-            // Emoji selon le type de POI
-            emoji: getPoiEmoji(place.data[0]?.rawInfo),
-          },
-          geometry: {
-            type: "Point" as const,
-            coordinates: [place.coords.longitude, place.coords.latitude],
-          },
-        })) ?? [],
+        placesData?.map((place, index) => {
+          const isVisited = getPoiIsVisited(place, user.data?.id);
+          const iconName = getPoiIconName(place, isVisited);
+
+          return {
+            type: "Feature" as const,
+            properties: {
+              id: place.id.toString(),
+              baseId: index.toString(),
+              name: place.data[0]?.name ?? "",
+              data: place,
+              imageUrl: `https://picsum.photos/seed/${place.id}/20/20`,
+              isVisited: isVisited,
+              iconName: iconName,
+              // Filter level pour l'affichage différencié
+              filterLevel: place.data[0]?.filterLevel ?? "UNKNOWN",
+            },
+            geometry: {
+              type: "Point" as const,
+              coordinates: [place.coords.longitude, place.coords.latitude],
+            },
+          };
+        }) ?? [],
     };
   }, [placesData, user.data?.id]);
 

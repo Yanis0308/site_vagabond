@@ -28,3 +28,14 @@ export const RoleEnumSchema = Type.Union(
   [Type.Literal("ADMIN"), Type.Literal("USER")],
   { $id: "RoleEnum" },
 );
+
+export const PoiFilterLevelEnumSchema = Type.Union(
+  [
+    Type.Literal("UNKNOWN"),
+    Type.Literal("STRICT"),
+    Type.Literal("STANDARD"),
+    Type.Literal("INTERMEDIATE"),
+    Type.Literal("LAXIST"),
+  ],
+  { $id: "PoiFilterLevelEnum" },
+);

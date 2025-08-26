@@ -1,9 +1,9 @@
 import { Type } from "@sinclair/typebox";
 
-import { PoiDataSourceEnumSchema } from "../enums.js";
+import { PoiDataSourceEnumSchema, PoiFilterLevelEnumSchema } from "../enums.js";
 import { LanguageEnumSchema } from "../enums.js";
 import { CoordsSchema } from "../geo.js";
-import { ApiResponseSchema, Nullable } from "../utils.js";
+import { ApiResponseSchema } from "../utils.js";
 import { VisitedPoiSchema } from "./visited-poi.js";
 
 export const PoiDataSchema = Type.Object(
@@ -15,7 +15,7 @@ export const PoiDataSchema = Type.Object(
         "Place centrale historique de Lille avec son emblématique Vieille Bourse",
       ],
     }),
-    nbOfTags: Nullable(Type.Number()),
+    filterLevel: Type.Ref(PoiFilterLevelEnumSchema),
     rawInfo: Type.Any(),
     language: Type.Ref(LanguageEnumSchema),
     dataSource: Type.Ref(PoiDataSourceEnumSchema),

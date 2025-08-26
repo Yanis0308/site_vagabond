@@ -2,6 +2,7 @@ import { type Static } from "@sinclair/typebox";
 import { type jsonSchemas } from "@vagabond/shared-utils";
 
 import {
+  type PoiFilterLevelEnum,
   type PoiSourceEnum,
   Prisma,
   PrismaClient,
@@ -41,11 +42,16 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
                     id: number | null;
                     name: string | null;
                     description: string | null;
+                    filterLevel:
+                      | "UNKNOWN"
+                      | "STRICT"
+                      | "STANDARD"
+                      | "INTERMEDIATE"
+                      | "LAXIST";
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any -- SafeQL generated type
                     rawInfo: any | null;
                     language: "EN" | "FR" | null;
                     dataSource: "OSM" | "AI" | "CUSTOM" | null;
-                    nbOfTags: number | null;
                     createdAt: unknown | null;
                     updatedAt: unknown | null;
                   }[]
@@ -74,10 +80,10 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
                   'id', pd.id,
                   'name', pd.name,
                   'description', pd.description,
+                  'filterLevel', p.filter_level,
                   'rawInfo', pd.raw_info,
                   'language', pd.language,
                     'dataSource', pd.source,
-                    'nbOfTags', pd.nb_of_tags,
                     'createdAt', to_char(pd.created_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
                     'updatedAt', to_char(pd.updated_at AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')
                 )
@@ -118,10 +124,15 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
               id: number;
               name: string;
               description: string;
+              filterLevel:
+                | "UNKNOWN"
+                | "STRICT"
+                | "STANDARD"
+                | "INTERMEDIATE"
+                | "LAXIST";
               rawInfo: Record<string, unknown>;
               language: "EN" | "FR";
               dataSource: "OSM" | "AI" | "CUSTOM";
-              nbOfTags: number | null;
               createdAt: string;
               updatedAt: string;
             }[];
@@ -142,6 +153,7 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
             id: string;
             source: PoiSourceEnum;
             sourceId: string;
+            filterLevel: PoiFilterLevelEnum;
             coords: {
               latitude: number;
               longitude: number;
@@ -150,11 +162,11 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
         ) {
           /* eslint-disable @ts-safeql/check-sql -- disable linting for this query */
           return await prismaExtendedClient.$executeRaw`
-            INSERT INTO pois (id, source, source_id, coords)
+            INSERT INTO pois (id, source, source_id, coords, filter_level)
             VALUES ${Prisma.join(
               data.map((item) => {
                 const point = `POINT(${item.coords.longitude} ${item.coords.latitude})`;
-                return Prisma.sql`(${item.id}, CAST(${item.source} AS "PoiSourceEnum"), ${item.sourceId}, ST_GeomFromText(${point}, 4326))`;
+                return Prisma.sql`(${item.id}, CAST(${item.source} AS "PoiSourceEnum"), ${item.sourceId}, ST_GeomFromText(${point}, 4326), CAST(${item.filterLevel} AS "PoiFilterLevelEnum"))`;
               }),
             )}
             ON CONFLICT (source, source_id) DO NOTHING;

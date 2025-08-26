@@ -62,6 +62,7 @@ async function transform(): Promise<void> {
           osm_type: string;
           osm_id: string;
           name: string | null;
+          filter_level: number;
 
           longitude: unknown | null;
 
