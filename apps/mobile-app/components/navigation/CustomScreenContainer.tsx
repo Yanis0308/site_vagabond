@@ -4,8 +4,6 @@ import { memo, type ReactNode, useEffect } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
-import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { cn } from "@/utils/cn";
 
 import { Box } from "../ui/box";
@@ -26,10 +24,10 @@ export const CustomScreenContainer = memo(
     isLightScreen,
     bgColor,
     withHeader,
-    isTabScreen,
+    //isTabScreen,
   }: CustomScreenContainerProps): ReactNode => {
     const navigation = useNavigation();
-    const insets = useSafeAreaCustom();
+    //const insets = useSafeAreaCustom();
 
     useEffect(() => {
       if (withHeader) {
@@ -59,7 +57,7 @@ export const CustomScreenContainer = memo(
           }
           style={{
             backgroundColor: bgColor,
-            paddingBottom: isTabScreen ? TAB_BAR_HEIGHT + insets.bottom : 0,
+            //paddingBottom: isTabScreen ? TAB_BAR_HEIGHT + insets.bottom : 0,
           }}
         >
           <BottomSheetModalProvider>

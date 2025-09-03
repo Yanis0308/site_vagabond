@@ -1,3 +1,4 @@
+import { type ImageProps } from "expo-image";
 import { memo, useEffect, useState } from "react";
 
 import { shadowStyles } from "@/styles/shadows";
@@ -7,7 +8,7 @@ import { CustomImage } from "../custom-ui/CustomImage";
 import { Box } from "../ui/box";
 
 interface PolaroidBaseProps {
-  imageUrl: string;
+  imageUrl: ImageProps["source"];
   children: React.ReactNode;
   imageWithBorder: boolean;
   maintainAspectRatio: boolean;
@@ -47,12 +48,15 @@ export const PolaroidBase = memo(
         >
           <CustomImage
             source={imageUrl}
+            height="full"
+            width="full"
             className={cn(
-              "w-full transition-opacity delay-150 duration-1000 ease-in-out h-full",
+              "transition-opacity delay-150 duration-1000 ease-in-out",
               isLoaded ? "opacity-100" : "opacity-0",
               isSmall && "rounded-lg",
             )}
             contentFit={isSmall ? "cover" : "contain"}
+            showLoader={true}
           />
         </Box>
         {children}

@@ -51,7 +51,7 @@ export const MapButtons = memo(
 
     return (
       <View
-        className="absolute inset-y-0 right-4 flex flex-col items-center justify-between gap-4"
+        className="absolute inset-y-0 right-4 mb-40 flex flex-col items-center justify-between gap-4"
         style={{
           paddingTop: safeAreaInsets.top + 100,
           paddingBottom: 200,

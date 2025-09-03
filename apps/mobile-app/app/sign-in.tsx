@@ -3,11 +3,11 @@ import { type ReactElement, useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { PixelRatio, Platform } from "react-native";
 
-import { CustomButton } from "@/components/custom-ui/CustomButton";
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { VStack } from "@/components/ui/vstack";
 import { useAppleLoginMutation } from "@/hooks/mutations/useAppleLoginMutation";
@@ -52,11 +52,10 @@ export default function SignInScreen(): ReactElement {
         //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
         source={require("../assets/images/google-logo.png")}
         alt="Google Logo"
-        style={{
-          width: 20,
-          height: 20,
-          resizeMode: "contain",
-        }}
+        height={20}
+        width={20}
+        contentFit="contain"
+        showLoader={false}
       />
     ),
     [],
@@ -68,11 +67,10 @@ export default function SignInScreen(): ReactElement {
         //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
         source={require("../assets/images/apple-logo.png")}
         alt="Apple Logo"
-        style={{
-          width: 20,
-          height: 20,
-          resizeMode: "contain",
-        }}
+        height={20}
+        width={20}
+        contentFit="contain"
+        showLoader={false}
       />
     ),
     [],
@@ -80,28 +78,30 @@ export default function SignInScreen(): ReactElement {
 
   const appleButton = useMemo(
     () => (
-      <CustomButton
-        type="social"
-        label={t("auth.sign_in_with_apple")}
+      <Button
+        action="login"
         onPress={appleLogin}
         isDisabled={loginPending}
         className="w-full"
-        icon={appleIcon}
-      />
+      >
+        {appleIcon}
+        <ButtonText>{t("auth.sign_in_with_apple")}</ButtonText>
+      </Button>
     ),
     [t, appleLogin, loginPending, appleIcon],
   );
 
   const googleButton = useMemo(
     () => (
-      <CustomButton
-        type="social"
-        label={t("auth.sign_in_with_google")}
+      <Button
+        action="login"
         onPress={googleLogin}
         isDisabled={loginPending}
         className="w-full"
-        icon={googleIcon}
-      />
+      >
+        {googleIcon}
+        <ButtonText>{t("auth.sign_in_with_google")}</ButtonText>
+      </Button>
     ),
     [t, googleLogin, loginPending, googleIcon],
   );
@@ -122,11 +122,10 @@ export default function SignInScreen(): ReactElement {
             //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
             source={require("../assets/images/full-icon-with-text.png")}
             alt={"Vagabond App Logo"}
-            style={{
-              width: 1000, // to fill max height value
-              height: 125,
-              resizeMode: "contain",
-            }}
+            height={125}
+            width={1000} // to fill max height value
+            contentFit="contain"
+            showLoader={false}
           />
           <CustomText size={"xl"}>{t("auth.sign_in_to_start")}</CustomText>
           <Box

@@ -70,7 +70,7 @@ export default function MapsTab(): ReactElement {
       isLightScreen={true}
       bgColor="transparent"
       withHeader={false}
-      isTabScreen={true}
+      isTabScreen={false}
     >
       <Box className="flex-1">
         <PlaceDetailsSheet

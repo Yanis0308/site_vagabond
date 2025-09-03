@@ -1,3 +1,4 @@
+import { type ImageProps } from "expo-image";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -10,16 +11,23 @@ import { StarRating } from "../validate-place/StarRating";
 import { PolaroidBase } from "./PolaroidBase";
 
 interface PolaroidReviewProps {
-  imageUrl: string;
+  imageUrl: ImageProps["source"];
   username: string;
-  rating: number;
+  rating: number | undefined;
   dateString: string;
   comment: string;
   className?: string;
 }
 
 export const PolaroidReview = memo(
-  ({ imageUrl, username, rating, comment, className }: PolaroidReviewProps) => {
+  ({
+    imageUrl,
+    username,
+    rating,
+    dateString,
+    comment,
+    className,
+  }: PolaroidReviewProps) => {
     const { i18n } = useTranslation();
 
     return (
@@ -38,12 +46,17 @@ export const PolaroidReview = memo(
               <CustomText type="username" className="text-black-700">
                 {username}
               </CustomText>
-              <StarRating rating={rating} size={12} withoutBackground />
+              {rating !== undefined && (
+                <StarRating rating={rating} size={12} withoutBackground />
+              )}
             </Box>
 
             {/* Colonne 2: Date */}
             <Text className="self-center text-sm text-black-300">
-              {getPlainTextDate({ locale: i18n.language, date: new Date() })}
+              {getPlainTextDate({
+                locale: i18n.language,
+                date: new Date(dateString),
+              })}
             </Text>
           </Box>
 

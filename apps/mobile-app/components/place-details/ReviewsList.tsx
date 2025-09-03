@@ -5,6 +5,7 @@ import { config } from "@/constants/Config";
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
+import WeNeedYou from "../../assets/images/content/we-need-you.png";
 import { PolaroidReview } from "../polaroid/PolaroidReview";
 
 interface ReviewsListProps {
@@ -28,26 +29,11 @@ export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
     items.push(
       <PolaroidReview
         key={"123"}
-        imageUrl={`${config.cdnUrl}/square-photo.jpg`}
-        username={"John Doe"}
-        rating={2}
-        dateString={"2025-01-01"}
-        comment={
-          "Praesent massa dui, accumsan et lobortis at, ornare vel lacus. Crasat, ornare vel lacus. Crasat, ornare vel lacus. Crasat, ornare vel lacus. Cras non libero metus. Maecenas accumsan odio et ipsum elementum finibus."
-        }
-      />,
-    );
-
-    items.push(
-      <PolaroidReview
-        key={"1234"}
-        imageUrl={`${config.cdnUrl}/square-photo.jpg`}
-        username={"John Doe"}
-        rating={3}
-        dateString={"2025-01-01"}
-        comment={
-          "Integer a velit eu nisi posuere tincidunt nec nec ligula. In massa dolor, tempor quis diam at, ornare bibendum sem."
-        }
+        imageUrl={WeNeedYou}
+        username={"Jane Doe"}
+        rating={undefined}
+        dateString={new Date().toISOString()}
+        comment={`Ajoutez votre propre avis ✍🏻\nC'est très simple !\nIl suffit d'appuyer sur le bouton "Valider le lieu" ci-dessus ☝`}
       />,
     );
     return items;

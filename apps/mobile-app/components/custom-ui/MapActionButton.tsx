@@ -5,7 +5,6 @@ import {
 } from "lucide-react-native";
 import React, { memo, useCallback } from "react";
 
-import { cn } from "../..//utils/cn";
 import { CompassIcon } from "../icons/CompassIcon";
 import { Button, ButtonIcon } from "../ui/button";
 import { themeColors } from "../ui/gluestack-ui-provider/config";
@@ -65,13 +64,11 @@ export const MapActionButton = memo(function MapActionButton({
   return (
     <Button
       onPress={action.onPress}
-      className={cn(
-        "rounded-full border-2 border-background-200 bg-background-100 p-2",
-        className,
-      )}
-      size={"none"}
+      action="mapAction"
+      size="none"
+      className={className}
     >
-      <ButtonIcon as={icon} className="size-8 text-burntOrange-700" />
+      <ButtonIcon as={icon} />
     </Button>
   );
 });

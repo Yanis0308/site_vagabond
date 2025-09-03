@@ -13,16 +13,8 @@ export const FunFactsSection = memo(
   ({
     funFacts = [
       {
-        emoji: "🤫",
-        text: "Vestibulum dolor lectus, accumsan ut convallis id, lobortis vitae justous felis a augue commodo euismod. Pellentesque elementum, justo mollis lacinia commodo, libero nisi tincidunt libero, ac consectetur purus turpis in ipsum.",
-      },
-      {
         emoji: "😲",
-        text: "Integer blandit egestas egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris id purus ipsum.",
-      },
-      {
-        emoji: "🤔",
-        text: "Donec a magna sagittis, scelerisque urna ac, ultridrerit enim ac est posuere egestas. Arsus. Sed in augue turpis. Aliquam in odio tellus. Pellentesque varius augue nulla, non ultricies libero imperdiet vel.",
+        text: "Aucun fun fact n'est disponible pour ce lieu, nous travaillons actuellement pour en ajouter 😉",
       },
     ],
     className,

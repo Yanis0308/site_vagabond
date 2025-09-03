@@ -5,15 +5,12 @@ import { Box } from "@/components/ui/box";
 import { cn } from "@/utils/cn";
 
 interface DescriptionSectionProps {
-  text?: string;
+  text: string | undefined;
   className?: string;
 }
 
 export const DescriptionSection = memo(
-  ({
-    text = "Vestibulum dolor lectus, accumsan ut convallis id, lobortis vitae justous felis a augulectus, accumsan ut convallis id, lobortis vitae justous felis a augue commods, accumsan ut convallis id, lobortis vitae justous felis a augue commodo euismod. Pellentesque elementum,umsan ut convallis id, lobortis vitae justous felis a augue commodo euismod. Pellentesque elementum, justo mollis lacinia commodo, libero nisi tincidunt libero, ac consectetur purus turpis commodo euismod. Pellentesque elementum, justo mollis lacinia commodo, libero nisi tincidunt libero, ac consectetur purus turpis in ipsum.",
-    className,
-  }: DescriptionSectionProps): ReactNode => {
+  ({ text, className }: DescriptionSectionProps): ReactNode => {
     return (
       <Box className={cn("gap-8 justify-center items-stretch", className)}>
         <CustomText type="title" className="text-center text-primary-700">
@@ -30,7 +27,9 @@ export const DescriptionSection = memo(
             type="ratingText"
             className="flex-1 rounded-2xl border border-background-300 bg-background-50 p-4"
           >
-            {text}
+            {(text?.length ?? 0) === 0
+              ? "Aucune description n'est disponible pour ce lieu, nous travaillons actuellement pour en ajouter une ✍🏻"
+              : text}
           </CustomText>
         </Box>
       </Box>

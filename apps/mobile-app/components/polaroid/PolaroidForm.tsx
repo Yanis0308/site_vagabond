@@ -37,10 +37,14 @@ export const PolaroidForm = memo(
           </Text>
         </Box>
         <CustomImage
-          source={
-            "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Smileys/Star%20Struck.webp"
-          }
-          className="absolute -bottom-3 -left-5 size-[60px]"
+          //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
+          source={require("@/assets/images/emojis/animated/star-struck.webp")}
+          useAppleWebpCodec={false}
+          height={60}
+          width={60}
+          containerClassName="absolute -bottom-3 -left-5"
+          contentFit={"contain"}
+          showLoader={false}
         />
       </PolaroidBase>
     );

@@ -3,7 +3,6 @@ import {
   BottomSheetModal,
   BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
-import { type ExternalPathString } from "expo-router";
 import React, {
   memo,
   type ReactElement,
@@ -14,7 +13,7 @@ import React, {
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
-import { Platform } from "react-native";
+import { Linking } from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -25,22 +24,22 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
-import { ButtonText } from "@/components/ui/button";
 import { Center } from "@/components/ui/center";
+import { config } from "@/constants/Config";
 import { useBottomSheetBack } from "@/hooks/other/useBottomSheetBack";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
+import { useWikipediaLink } from "@/hooks/queries/useWikipediaLink";
 import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
+import { getOsmUrl } from "@/utils/openstreetmap";
 import { type PoiType } from "@/utils/types";
 
-import { ButtonLink } from "../custom-ui/ButtonLink";
-import { CustomButton } from "../custom-ui/CustomButton";
 import { CustomImage } from "../custom-ui/CustomImage";
 import { CustomText } from "../custom-ui/CustomText";
 import { ReviewsList } from "../place-details/ReviewsList";
 import { Box } from "../ui/box";
-import { Divider } from "../ui/divider";
+import { Button, ButtonText } from "../ui/button";
 import { themeColors } from "../ui/gluestack-ui-provider/config";
 import { StarRating } from "../validate-place/StarRating";
 import { DescriptionSection } from "./DescriptionSection";
@@ -52,6 +51,49 @@ interface PlaceDetailsSheetV2Props {
   onPressLink: () => void;
   onClose?: () => void;
 }
+
+// Composant pour les boutons sociaux publics
+interface SocialButtonProps {
+  label: string;
+  url?: string | null;
+  icon?: ReactElement;
+}
+
+const SocialButton = memo(({ label, url, icon }: SocialButtonProps) => {
+  const handlePress = useCallback(() => {
+    if (url !== null && url !== undefined && url !== "") {
+      Linking.canOpenURL(url)
+        .then((supported) => {
+          if (supported) {
+            return Linking.openURL(url);
+          }
+          return Promise.resolve();
+        })
+        .catch(() => {
+          // Handle error silently for better UX
+        });
+    }
+  }, [url]);
+
+  return (
+    <Button
+      size="medium"
+      action="link"
+      onPress={
+        url !== null && url !== undefined && url !== ""
+          ? handlePress
+          : undefined
+      }
+      isDisabled={url === null || url === undefined || url === ""}
+      className="flex-1"
+    >
+      {icon}
+      <ButtonText>{label}</ButtonText>
+    </Button>
+  );
+});
+
+SocialButton.displayName = "SocialButton";
 
 //TODO: utiliser le BottomSheet classique plutôt que la Modal pour éviter des Mount / Unmount ? La modal sert à en empiler plusieurs uniquement il me semble
 export const PlaceDetailsSheet = memo(
@@ -65,6 +107,18 @@ export const PlaceDetailsSheet = memo(
     const [stickyHeaderIndices, setStickyHeaderIndices] = useState<number[]>(
       [],
     );
+
+    // Récupération du lien Wikipedia via Hub Toolforge
+    const wikipediaParams = useMemo(
+      () => ({
+        //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
+        wikidataId: place?.data[0]?.rawInfo?.wikidata as string | undefined,
+        //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
+        wikipediaId: place?.data[0]?.rawInfo?.wikipedia as string | undefined,
+      }),
+      [place],
+    );
+    const { data: wikipediaLink } = useWikipediaLink(wikipediaParams);
 
     useBottomSheetBack(place !== null, bottomSheetModalRef, onClose);
 
@@ -90,12 +144,6 @@ export const PlaceDetailsSheet = memo(
     );
 
     const snapPoints = useMemo(() => ["15%", "60%", "90%"], []);
-
-    const navigationLink =
-      Platform.select({
-        ios: `maps://?q=${place?.data[0]?.name}&ll=${place?.coords.latitude},${place?.coords.longitude}`,
-        android: `geo:${place?.coords.latitude},${place?.coords.longitude}?q=${place?.coords.latitude},${place?.coords.longitude}(${place?.data[0]?.name})`,
-      }) ?? "";
 
     const backgroundStyle = useMemo(
       () => ({
@@ -187,6 +235,94 @@ export const PlaceDetailsSheet = memo(
       },
     );
 
+    // Prepare image sources in priority order: wikidata -> first visited poi -> placeholder
+    const imageSources = useMemo(() => {
+      const sources: (string | number)[] = [];
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe
+      if (place?.data[0]?.rawInfo?.wikidata !== undefined) {
+        sources.push(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe
+          `https://hub.toolforge.org/${place.data[0]?.rawInfo?.wikidata}?p=image`,
+        );
+      }
+
+      const lastVisitedPoiImageKey =
+        place?.visitedPois[place.visitedPois.length - 1]?.imageKey;
+
+      if (lastVisitedPoiImageKey !== undefined) {
+        sources.push(`${config.cdnUrl}/${lastVisitedPoiImageKey}`);
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- safe
+      sources.push(require("@/assets/images/content/no-photo-placeholder.png"));
+
+      return sources;
+    }, [place?.data, place?.visitedPois]);
+
+    // Prepare social links
+    const socialLinks = useMemo(() => {
+      if (place?.data[0] === null || place?.data[0] === undefined) {
+        return { wikipediaUrl: null, googleSearchUrl: null };
+      }
+
+      const placeName = place.data[0].name;
+
+      // Construire la recherche Google avec nom et position GPS
+      let googleQuery = "";
+      if (placeName !== undefined && placeName !== "") {
+        googleQuery = placeName;
+
+        // // Ajouter les coordonnées GPS si disponibles
+        // if (
+        //   place.coords?.latitude !== undefined &&
+        //   place.coords?.longitude !== undefined
+        // ) {
+        //   googleQuery += ` ${place.coords.latitude},${place.coords.longitude}`;
+        // }
+      }
+
+      return {
+        // Utiliser le lien Wikipedia dynamique du hook ou null
+        wikipediaUrl: wikipediaLink ?? null,
+        googleSearchUrl:
+          googleQuery !== ""
+            ? `https://www.google.com/search?q=${encodeURIComponent(googleQuery)}`
+            : null,
+      };
+    }, [place?.data, wikipediaLink]);
+
+    // Social icons
+    const googleIcon = useMemo(
+      () => (
+        <CustomImage
+          //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
+          source={require("@/assets/images/google-logo.png")}
+          alt="Google Logo"
+          height={24}
+          width={24}
+          contentFit="contain"
+          showLoader={false}
+        />
+      ),
+      [],
+    );
+
+    const wikipediaIcon = useMemo(
+      () => (
+        <CustomImage
+          //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
+          source={require("@/assets/images/wikipedia-logo.png")}
+          alt="Wikipedia Logo"
+          height={28}
+          width={28}
+          contentFit="contain"
+          showLoader={false}
+        />
+      ),
+      [],
+    );
+
     return (
       <BottomSheetModal
         ref={bottomSheetModalRef}
@@ -210,16 +346,23 @@ export const PlaceDetailsSheet = memo(
                 className={cn("w-full rounded-2xl bg-background-50 p-2")}
               >
                 <CustomImage
-                  source={
-                    "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Telegram-Animated-Emojis/main/Smileys/Star%20Struck.webp"
-                  }
-                  className="absolute -left-5 -top-3 z-10 size-[60px] rotate-[-16deg]"
+                  //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
+                  source={require("@/assets/images/emojis/animated/star-struck.webp")}
+                  useAppleWebpCodec={false}
+                  height={60}
+                  width={60}
+                  containerClassName="absolute -left-5 -top-3 z-10 rotate-[-16deg]"
+                  contentFit={"contain"}
+                  showLoader={false}
                 />
                 <CustomImage
-                  source={`https://picsum.photos/seed/${place.id}/1000/1000`}
+                  sources={imageSources}
                   alt="Place photo illustration"
-                  className={"h-[236px] w-full rounded-lg"}
-                  contentFit={"cover"}
+                  height={236}
+                  className={"rounded-lg"}
+                  contentFit={"autoWithBackground"}
+                  priority={"high"}
+                  showLoader={true}
                 />
               </Animated.View>
             </Center>
@@ -239,12 +382,13 @@ export const PlaceDetailsSheet = memo(
               </CustomText>
 
               {isVisited ? null : (
-                <CustomButton
-                  label="📸 Valider le lieu"
+                <Button
                   onPress={onPressLink}
-                  type="submit"
+                  action="submit"
                   className="mx-6 mt-4"
-                />
+                >
+                  <ButtonText>{"📸   Valider le lieu"}</ButtonText>
+                </Button>
               )}
             </Animated.View>
 
@@ -258,68 +402,77 @@ export const PlaceDetailsSheet = memo(
 
               <ReviewsList poi={place} />
 
+              {/* Boutons sociaux */}
+              <Box className="mx-6 mb-2 mt-8">
+                <Box className="flex-col gap-3">
+                  <SocialButton
+                    label="Voir sur Wikipédia"
+                    url={socialLinks.wikipediaUrl}
+                    icon={wikipediaIcon}
+                  />
+                  <SocialButton
+                    label="Rechercher sur Google"
+                    url={socialLinks.googleSearchUrl}
+                    icon={googleIcon}
+                  />
+                </Box>
+              </Box>
+
               <FunFactsSection className="px-6 pt-10" />
 
-              <DescriptionSection className="px-6 pt-10" />
+              <DescriptionSection
+                className="px-6 pt-10"
+                text={place.data[0]?.description}
+              />
 
-              <CustomText type="ratingText" className="px-6">
-                {place.data[0]?.description}
-              </CustomText>
+              {place.data[0] !== undefined && user.data?.role === "ADMIN" ? (
+                <Box className="mx-3 mt-6 flex gap-2 border border-dashed border-primary-500 px-3">
+                  <CustomText
+                    type="title"
+                    className="text-center text-primary-700"
+                  >
+                    {"- Admin section -"}
+                  </CustomText>
 
-              {place.data[0] !== undefined ? (
-                <Box className="flex gap-8 px-6">
                   <Box className="flex-row flex-wrap gap-2">
-                    <ButtonLink
-                      href={`https://www.google.com/search?q=${place.data[0].name}`}
-                      className="rounded-full"
+                    <Button
+                      size="small"
+                      action="secondary"
+                      href={getOsmUrl(place.id)}
+                      isDisabled={getOsmUrl(place.id) === null}
                     >
-                      <ButtonText>
-                        {t("place_details_sheet.search_on_google")}
-                      </ButtonText>
-                    </ButtonLink>
-                    <ButtonLink
+                      <ButtonText>{"OSM"}</ButtonText>
+                    </Button>
+                    <Button
+                      size="small"
+                      action="secondary"
                       href={`https://www.google.com/maps/search/?api=1&query=${place.data[0].name}`}
-                      className="rounded-full"
                     >
-                      <ButtonText>
-                        {t("place_details_sheet.search_on_google")}
-                      </ButtonText>
-                    </ButtonLink>
-                    <ButtonLink
-                      href={navigationLink as ExternalPathString}
-                      className="rounded-full"
-                    >
-                      <ButtonText>
-                        {t("place_details_sheet.navigate_to_place")}
-                      </ButtonText>
-                    </ButtonLink>
-                    <ButtonLink
-                      //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
-                      href={`https://www.wikipedia.org/wiki/${place.data[0].rawInfo?.wikipedia}`}
-                      className="rounded-full"
-                      isDisabled={
-                        //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
-                        place.data[0].rawInfo?.wikipedia === undefined
-                      }
-                    >
-                      <ButtonText>
-                        {t("place_details_sheet.search_on_wikipedia")}
-                      </ButtonText>
-                    </ButtonLink>
-                    <ButtonLink
+                      <ButtonText>{"Maps"}</ButtonText>
+                    </Button>
+                    <Button
+                      size="small"
+                      action="secondary"
                       //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
                       href={`https://www.wikidata.org/wiki/${place.data[0].rawInfo?.wikidata}`}
-                      className="rounded-full"
                       //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
                       isDisabled={place.data[0].rawInfo?.wikidata === undefined}
                     >
-                      <ButtonText>
-                        {t("place_details_sheet.search_on_wikidata")}
-                      </ButtonText>
-                    </ButtonLink>
+                      <ButtonText>{"Wikidata"}</ButtonText>
+                    </Button>
                   </Box>
-                  <Divider />
+
+                  <CustomText
+                    type="title"
+                    className="text-center text-primary-700"
+                  >
+                    {"- OSM tags -"}
+                  </CustomText>
                   <Box className="flex">
+                    <CustomText>
+                      {`ID: ${place.id}\n`}
+                      {`Filter level: ${place.data[0].filterLevel}`}
+                    </CustomText>
                     {
                       //eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- safe for testing
                       Object.entries(place.data[0].rawInfo).map(
@@ -335,7 +488,8 @@ export const PlaceDetailsSheet = memo(
                 </Box>
               ) : null}
             </Box>
-            <Box style={{ height: insets.bottom }} />
+
+            <Box style={{ height: insets.bottom + 50 }} />
           </BottomSheetScrollView>
         ) : null}
       </BottomSheetModal>

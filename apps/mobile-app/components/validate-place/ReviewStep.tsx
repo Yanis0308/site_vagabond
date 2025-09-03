@@ -13,11 +13,11 @@ import { useUserLocation } from "@/hooks/queries/useUserLocation";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { logger } from "@/utils/logger";
 
-import { CustomButton } from "../custom-ui/CustomButton";
 import { CustomText } from "../custom-ui/CustomText";
 import { CustomTextarea } from "../custom-ui/CustomTextarea";
 import { PolaroidForm } from "../polaroid/PolaroidForm";
 import { Box } from "../ui/box";
+import { Button, ButtonText } from "../ui/button";
 import { type Place } from "./types";
 
 interface ReviewStepProps {
@@ -174,12 +174,13 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
         <Box className="mx-8 mb-12 flex flex-col items-center gap-6">
           <Controller control={control} name="rating" render={renderRating} />
           <Controller control={control} name="comment" render={renderComment} />
-          <CustomButton
-            label="✨ Valider le lieu"
+          <Button
             onPress={onSubmit}
-            type="submit"
+            action="submit"
             isDisabled={!isValid || isSubmitting}
-          />
+          >
+            <ButtonText>{"✨ Valider le lieu"}</ButtonText>
+          </Button>
         </Box>
       </View>
     );

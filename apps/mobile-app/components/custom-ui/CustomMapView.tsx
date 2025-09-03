@@ -27,6 +27,10 @@ interface CustomMapViewProps {
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- will fix later
 const bearingImage = require("@/assets/images/bearing-icon.png");
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- will fix later
+const checkIcon = require("@/assets/images/icons/check.png");
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- will fix later
+const questionMarkIcon = require("@/assets/images/icons/question-mark.png");
 
 export const CustomMapView = memo(function CustomMapView({
   mapRef,
@@ -40,14 +44,10 @@ export const CustomMapView = memo(function CustomMapView({
     () => ({
       //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- will fix later
       bearingImage: bearingImage,
-      checkmark: {
-        uri: "https://em-content.zobj.net/source/apple/419/check-mark-button_2705.png",
-        cache: "force-cache",
-      },
-      questionMark: {
-        uri: "https://em-content.zobj.net/source/apple/419/white-question-mark_2754.png",
-        cache: "force-cache",
-      },
+      //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- will fix later
+      checkmark: checkIcon,
+      //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- will fix later
+      questionMark: questionMarkIcon,
     }),
     [],
   );
@@ -84,7 +84,7 @@ export const CustomMapView = memo(function CustomMapView({
               "case",
               // Points visités - transparents
               ["get", "isVisited"],
-              "white", // Blanc transparent pour tous les visités
+              "green", // Blanc transparent pour tous les visités
               // Points non visités - couleurs selon filter_level
               [
                 "case",
@@ -107,11 +107,7 @@ export const CustomMapView = memo(function CustomMapView({
               ],
             ],
             // Taille des points : fixe pour les visités, variable selon filter_level pour les non visités
-            circleRadius: [
-              "case",
-              // Points visités - taille fixe
-              ["get", "isVisited"],
-              12, // Taille fixe pour tous les lieux validés
+            circleRadius:
               // Points non visités - taille selon filter_level
               [
                 "case",
@@ -132,7 +128,6 @@ export const CustomMapView = memo(function CustomMapView({
                 // UNKNOWN ou autres - taille moyenne (6px)
                 6,
               ],
-            ],
             circleStrokeWidth: 1,
             circleStrokeColor: "#fff",
 
@@ -173,16 +168,16 @@ export const CustomMapView = memo(function CustomMapView({
                 ["==", ["get", "filterLevel"], "STRICT"],
                 ["==", ["get", "filterLevel"], "STANDARD"],
               ],
-              0.1,
+              0.6,
               // LAXIST et INTERMEDIATE - petites icônes (14px)
               [
                 "any",
                 ["==", ["get", "filterLevel"], "LAXIST"],
                 ["==", ["get", "filterLevel"], "INTERMEDIATE"],
               ],
-              0.1,
+              0.3,
               // UNKNOWN ou autres - taille moyenne (16px)
-              0.1,
+              0.3,
             ],
             // Priorité d'affichage
             symbolSortKey: [
