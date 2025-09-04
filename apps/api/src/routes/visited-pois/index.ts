@@ -71,6 +71,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
               ? (request.user.email.split("@")[0] ?? "Utilisateur inconnu")
               : "Utilisateur inconnu";
 
+            const imageUrl = `${fastify.config.cdnUrl}/${imageKey}`;
+
             await fastify.slack.sendMessage(
               `🏆 *Nouveau lieu validé !*\n` +
                 `👤 *Utilisateur:* ${username} (${request.user.email})\n` +
@@ -79,7 +81,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
                 `💬 *Commentaire:* ${
                   comment.length > 0 ? comment : "Aucun commentaire"
                 }\n` +
-                `📅 *Date:* ${new Date().toLocaleString("fr-FR")}`,
+                `📅 *Date:* ${new Date().toLocaleString("fr-FR")}\n` +
+                `🖼️ *Image:* ${imageUrl}`,
             );
 
             fastify.log.info(

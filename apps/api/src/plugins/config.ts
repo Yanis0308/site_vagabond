@@ -19,6 +19,7 @@ const RawConfigSchema = z.object({
   AWS_ENDPOINT_URL_IAM: z.string(),
   AWS_REGION: z.string(),
   S3_BUCKET_NAME: z.string(),
+  CDN_URL: z.string(),
   SLACK_WEBHOOK_URL: z.string(),
   SLACK_CHANNEL: z.string(),
 });
@@ -27,6 +28,7 @@ const RawConfigSchema = z.object({
 export interface Config {
   isDev: boolean;
   firebaseAdminServiceAccountFilePath: string;
+  cdnUrl: string;
   s3: {
     bucketName: string;
   };
@@ -68,6 +70,7 @@ export default fp(
       const config = {
         isDev,
         firebaseAdminServiceAccountFilePath,
+        cdnUrl: rawConfig.CDN_URL,
         s3: {
           bucketName: rawConfig.S3_BUCKET_NAME,
         },
