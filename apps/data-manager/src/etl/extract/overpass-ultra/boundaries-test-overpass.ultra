@@ -1,0 +1,286 @@
+﻿---
+# Overpass Ultra query pour les limites administratives (boundaries)
+# Affichage selon les niveaux de zoom et admin_level
+# Basé sur la configuration de boundary-mapping-config.ts
+#
+# LÉGENDE DES COULEURS :
+# =====================
+# Admin Level 2 (COUNTRY)      : Rouge foncé    #8B0000 (Dark Red)     - Zoom max 5
+# Admin Level 4 (REGION)       : Orange rouge   #FF4500 (Orange Red)   - Zoom 6-10
+# Admin Level 6 (COUNTY)       : Vert citron    #32CD32 (Lime Green)   - Zoom 7-10
+# Admin Level 8 (CITY)         : Bleu royal     #4169E1 (Royal Blue)   - Zoom 8-11
+# Admin Level 9 (DISTRICT)     : Violet         #9932CC (Dark Orchid)  - Zoom 9-12
+# Admin Level 10 (NEIGHBORHOOD): Rose vif       #FF69B4 (Hot Pink)     - Zoom 10+
+#
+# TAILLES :
+# =========
+# Lignes : 5px → 4px → 3.5px → 3px → 2.5px → 2px (du plus gros au plus fin)
+# Texte  : 24px → 20px → 18px → 16px → 14px → 12px (du plus gros au plus petit)
+#
+# PRIORITÉ D'AFFICHAGE :
+# ======================
+# Basée sur la population (symbol-sort-key) : plus la population est élevée, plus la priorité est haute
+# Exemple : Lille (230k hab) s'affiche avant Tourcoing (97k hab)
+# Fallback sur l'admin_level inversé si pas de population
+
+popupTemplate: >
+  <h2>{{ tags["name"] || tags["name:fr"] || tags["name:en"] || "Sans nom" }}</h2>
+  <p><strong>{{ tags["admin_level"] ? "Admin Level " + tags["admin_level"] : "Boundary" }}</strong></p>
+  
+  {% assign wikidata = tags["wikidata"] %}
+  {%- if wikidata %}
+  <img src="https://hub.toolforge.org/{{ wikidata }}?p=image&w=200&h=150" style="max-width: 100%; height: auto;">
+  <hr>
+  {%- endif %}
+  
+  <p><strong>Type:</strong> {{ tags["place"] || tags["boundary"] }}</p>
+  <p><strong>Population:</strong> {{ tags["population"] || "Non renseigné" }}</p>
+  
+  <p><strong>🔗 Liens:</strong></p>
+  <ul>
+    <li><a href="https://www.openstreetmap.org/{{ tags["osm_type"] }}/{{ id }}" target="_blank">🗺️ Voir sur OpenStreetMap</a></li>
+    {%- if wikidata %}
+    <li><a href="https://www.wikidata.org/wiki/{{ wikidata }}" target="_blank">📖 Voir sur Wikidata</a></li>
+    {%- endif %}
+  </ul>
+  
+  <hr>
+  <details>
+    <summary><strong>Tags OSM</strong></summary>
+    {%- for tag in tags %}
+      <code>{{ tag[0] }} = {{ tag[1] }}</code><br>
+    {%- endfor %}
+  </details>
+
+style:
+  layers:
+    # COUNTRY (Admin Level 2) - Visible jusqu'à zoom 5
+    - type: line
+      filter: ["==", ["get", "admin_level"], "2"]
+      maxzoom: 5
+      layout:
+        line-cap: "round"
+        line-join: "round"
+      paint:
+        line-color: "#8B0000"
+        line-width: 5
+        line-opacity: 0.8
+    - type: symbol
+      filter: ["==", ["get", "admin_level"], "2"]
+      maxzoom: 5
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Bold", "Arial Unicode MS Bold"]
+        text-size: 24
+        text-anchor: "center"
+        text-allow-overlap: true
+        symbol-placement: "point"
+        text-padding: 20
+        symbol-sort-key: [
+          "case",
+          ["has", "population"],
+          ["to-number", ["get", "population"]],
+          ["*", ["-", 10, ["to-number", ["get", "admin_level"]]], 1000000]
+        ]
+      paint:
+        text-color: "#8B0000"
+        text-halo-color: "white"
+        text-halo-width: 3
+
+    # REGION (Admin Level 4) - Visible zoom 6-10
+    - type: line
+      filter: ["==", ["get", "admin_level"], "4"]
+      minzoom: 6
+      maxzoom: 10
+      layout:
+        line-cap: "round"
+        line-join: "round"
+      paint:
+        line-color: "#FF4500"
+        line-width: 4
+        line-opacity: 0.7
+    - type: symbol
+      filter: ["==", ["get", "admin_level"], "4"]
+      minzoom: 6
+      maxzoom: 10
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Semibold", "Arial Unicode MS Bold"]
+        text-size: 20
+        text-anchor: "center"
+        text-allow-overlap: true
+        symbol-placement: "point"
+        text-padding: 25
+        symbol-sort-key: [
+          "case",
+          ["has", "population"],
+          ["to-number", ["get", "population"]],
+          ["*", ["-", 10, ["to-number", ["get", "admin_level"]]], 1000000]
+        ]
+      paint:
+        text-color: "#FF4500"
+        text-halo-color: "white"
+        text-halo-width: 3
+
+    # COUNTY (Admin Level 6) - Visible zoom 7-10
+    - type: line
+      filter: ["==", ["get", "admin_level"], "6"]
+      minzoom: 7
+      maxzoom: 10
+      layout:
+        line-cap: "round"
+        line-join: "round"
+      paint:
+        line-color: "#32CD32"
+        line-width: 3.5
+        line-opacity: 0.6
+    - type: symbol
+      filter: ["==", ["get", "admin_level"], "6"]
+      minzoom: 7
+      maxzoom: 10
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Semibold", "Arial Unicode MS Bold"]
+        text-size: 18
+        text-anchor: "center"
+        text-allow-overlap: false
+        symbol-placement: "point"
+        text-padding: 30
+        symbol-sort-key: [
+          "case",
+          ["has", "population"],
+          ["to-number", ["get", "population"]],
+          ["*", ["-", 10, ["to-number", ["get", "admin_level"]]], 1000000]
+        ]
+      paint:
+        text-color: "#32CD32"
+        text-halo-color: "white"
+        text-halo-width: 2.5
+
+    # CITY (Admin Level 8) - Visible zoom 8-11
+    - type: line
+      filter: ["==", ["get", "admin_level"], "8"]
+      minzoom: 8
+      maxzoom: 11
+      layout:
+        line-cap: "round"
+        line-join: "round"
+      paint:
+        line-color: "#4169E1"
+        line-width: 3
+        line-opacity: 0.5
+    - type: symbol
+      filter: ["==", ["get", "admin_level"], "8"]
+      minzoom: 8
+      maxzoom: 11
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Regular", "Arial Unicode MS Regular"]
+        text-size: 16
+        text-anchor: "center"
+        text-allow-overlap: false
+        symbol-placement: "point"
+        text-padding: 35
+        symbol-sort-key: [
+          "case",
+          ["has", "population"],
+          ["to-number", ["get", "population"]],
+          ["*", ["-", 10, ["to-number", ["get", "admin_level"]]], 1000000]
+        ]
+      paint:
+        text-color: "#4169E1"
+        text-halo-color: "white"
+        text-halo-width: 2.5
+
+    # DISTRICT (Admin Level 9) - Visible zoom 9-12
+    - type: line
+      filter: ["==", ["get", "admin_level"], "9"]
+      minzoom: 9
+      maxzoom: 12
+      layout:
+        line-cap: "round"
+        line-join: "round"
+      paint:
+        line-color: "#9932CC"
+        line-width: 2.5
+        line-opacity: 0.4
+    - type: symbol
+      filter: ["==", ["get", "admin_level"], "9"]
+      minzoom: 9
+      maxzoom: 12
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Regular", "Arial Unicode MS Regular"]
+        text-size: 14
+        text-anchor: "center"
+        text-allow-overlap: false
+        symbol-placement: "point"
+        text-padding: 40
+        symbol-sort-key: [
+          "case",
+          ["has", "population"],
+          ["to-number", ["get", "population"]],
+          ["*", ["-", 10, ["to-number", ["get", "admin_level"]]], 1000000]
+        ]
+      paint:
+        text-color: "#9932CC"
+        text-halo-color: "white"
+        text-halo-width: 2
+
+    # NEIGHBORHOOD (Admin Level 10) - Visible zoom 10+
+    - type: line
+      filter: ["==", ["get", "admin_level"], "10"]
+      minzoom: 10
+      layout:
+        line-cap: "round"
+        line-join: "round"
+      paint:
+        line-color: "#FF69B4"
+        line-width: 2
+        line-opacity: 0.3
+    - type: symbol
+      filter: ["==", ["get", "admin_level"], "10"]
+      minzoom: 10
+      layout:
+        text-field: ["get", "name"]
+        text-font: ["Open Sans Regular", "Arial Unicode MS Regular"]
+        text-size: 12
+        text-anchor: "center"
+        text-allow-overlap: false
+        symbol-placement: "point"
+        text-padding: 50
+        symbol-sort-key: [
+          "case",
+          ["has", "population"],
+          ["to-number", ["get", "population"]],
+          ["*", ["-", 10, ["to-number", ["get", "admin_level"]]], 1000000]
+        ]
+      paint:
+        text-color: "#FF69B4"
+        text-halo-color: "white"
+        text-halo-width: 2
+---
+
+[out:json][timeout:120];
+
+/*
+=================================================================================
+  REQUÊTE OVERPASS POUR LES LIMITES ADMINISTRATIVES
+  Basée sur boundary-mapping-config.ts et ZoomLevels.ts
+=================================================================================
+*/
+
+// Requête unifiée : admin levels 2,4,6,8,9,10 avec nom existant
+relation["boundary"="administrative"][~"admin_level"~"^(2|4|6|8|9|10)$"]["name"]({{bbox}})->.named_boundaries;
+
+// Convertir pour ajouter les métadonnées nécessaires
+.named_boundaries convert item
+  ::id = id(),
+  ::geom = geom(),
+  ::=::,
+  osm_type = type(),
+  admin_level = t["admin_level"],
+  name = t["name"]
+;
+
+out center;

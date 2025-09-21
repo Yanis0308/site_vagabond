@@ -15,7 +15,7 @@ export default fp(
     const decoratorName = "prisma";
 
     if (!fastify.hasDecorator(decoratorName)) {
-      const prismaExtendedClient = getPrismaExtendedClient();
+      const prismaExtendedClient = getPrismaExtendedClient(true);
       await prismaExtendedClient.$connect();
       fastify.decorate(decoratorName, prismaExtendedClient);
 

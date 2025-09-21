@@ -1,0 +1,23 @@
+﻿[out:json][timeout:120];
+
+/*
+=================================================================================
+  REQUÊTE OVERPASS POUR LES LIMITES ADMINISTRATIVES
+  Basée sur boundary-mapping-config.ts et ZoomLevels.ts
+=================================================================================
+*/
+
+// Requête unifiée : admin levels 2,4,6,8,9,10 avec nom existant
+relation["boundary"="administrative"][~"admin_level"~"^(2|4|6|8|9|10)$"]["name"]({{bbox}})->.named_boundaries;
+
+// Convertir pour ajouter les métadonnées nécessaires
+.named_boundaries convert item
+  ::id = id(),
+  ::geom = geom(),
+  ::=::,
+  osm_type = type(),
+  admin_level = t["admin_level"],
+  name = t["name"]
+;
+
+out center;

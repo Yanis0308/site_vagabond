@@ -50,17 +50,57 @@ M.boundaries = osm2pgsql.define_table({
         not_null = true
     }, {
         column = 'admin_level',
+        type = 'int',
+        not_null = true
+    }, {
+        column = 'geom',
+        type = 'multipolygon',
+        not_null = true
+    }, {
+        column = 'admin_centre_members',
+        type = 'jsonb'
+    }, {
+        column = 'tags',
+        type = 'jsonb'
+    }}
+})
+
+-- Define the admin_centres table structure
+M.admin_centres = osm2pgsql.define_table({
+    name = 'admin_centres',
+    ids = {
+        type = 'any',
+        type_column = 'osm_type',
+        id_column = 'osm_id'
+    },
+    columns = {{
+        column = 'boundary_osm_id',
+        type = 'bigint'
+    }, {
+        column = 'boundary_osm_type',
+        type = 'text'
+    }, {
+        column = 'name',
         type = 'text',
         not_null = true
     }, {
-        column = 'wikidata',
+        column = 'place_type',
         type = 'text'
     }, {
-        column = 'wikipedia',
-        type = 'text'
+        column = 'population',
+        type = 'int'
+    }, {
+        column = 'is_capital',
+        type = 'boolean'
+    }, {
+        column = 'capital_level',
+        type = 'int'
+    }, {
+        column = 'importance_score',
+        type = 'int'
     }, {
         column = 'geom',
-        type = 'geometry',
+        type = 'point',
         not_null = true
     }, {
         column = 'tags',

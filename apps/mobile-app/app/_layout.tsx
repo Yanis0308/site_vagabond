@@ -3,13 +3,22 @@ import "react-native-reanimated";
 import "../global.css";
 import "@/localization";
 
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuth } from "@react-native-firebase/auth";
 import Mapbox from "@rnmapbox/maps";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useAtom } from "jotai";
-import { type ReactElement, useCallback, useEffect, useState } from "react";
+import {
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
@@ -125,6 +134,15 @@ export default function RootLayout(): ReactElement | null {
       });
   }, []);
 
+  const persistOptions = useMemo(
+    () => ({
+      persister: createAsyncStoragePersister({
+        storage: AsyncStorage,
+      }),
+    }),
+    [],
+  );
+
   if (initializing.userLoading) {
     logger("=== RootLayout return null");
     return null;
@@ -132,7 +150,10 @@ export default function RootLayout(): ReactElement | null {
 
   return (
     <GluestackUIProvider>
-      <QueryClientProvider client={queryClient}>
+      <PersistQueryClientProvider
+        client={queryClient}
+        persistOptions={persistOptions}
+      >
         <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
           <KeyboardProvider>
             <FullScreenLoader />
@@ -147,7 +168,7 @@ export default function RootLayout(): ReactElement | null {
             </Stack>
           </KeyboardProvider>
         </GestureHandlerRootView>
-      </QueryClientProvider>
+      </PersistQueryClientProvider>
     </GluestackUIProvider>
   );
 }

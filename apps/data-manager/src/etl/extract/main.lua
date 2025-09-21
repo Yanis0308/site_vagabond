@@ -10,6 +10,7 @@ end
 local tables = require('table-definitions')
 local poi_filters = require('poi-filters')
 local boundary_processor = require('boundary-processor')
+local admin_centre_processor = require('admin-centre-processor')
 
 -- Process POI objects using the filter module
 function process_poi(object, geom)
@@ -46,24 +47,35 @@ function process_boundary(tables, object, geom)
     boundary_processor.process_boundary(tables, object, geom)
 end
 
+-- Process admin_centre with geometry validation
+function process_admin_centre(tables, object, geom)
+    -- Vérifier si la géométrie est valide avant de continuer
+    if geom:is_null() then
+        return
+    end
+
+    admin_centre_processor.process_admin_centre(tables, object, geom)
+end
+
 -- Process nodes - check if they match POI criteria
 function osm2pgsql.process_node(object)
     local geom = object:as_point()
-    -- Toujours appeler process_poi, la vérification geom:is_null() se fait à l'intérieur
+
+    -- Process as POI
     process_poi(object, geom)
+
+    -- Also process as potential admin_centre if it has place tag
+    if object.tags.place then
+        process_admin_centre(tables, object, geom)
+    end
+
 end
 
--- Process ways - handle both boundaries and POIs
+-- Process ways - check if they match POI criteria
 function osm2pgsql.process_way(object)
-    -- Check for administrative boundaries
-    if object.tags.boundary == 'administrative' and object.tags.admin_level then
+    if object.is_closed then
         local geom = object:as_polygon()
-        -- Toujours appeler process_boundary, la vérification geom:is_null() se fait à l'intérieur
-        process_boundary(tables, object, geom)
-        -- Check for closed ways that could be POIs
-    elseif object.is_closed then
-        local geom = object:as_polygon()
-        -- Toujours appeler process_poi avec le centroïde, la vérification se fait à l'intérieur
+        -- Toujours appeler process_poi avec le centroïde, la vérification geom:is_null() se fait à l'intérieur
         process_poi(object, geom:centroid())
     end
 end
@@ -84,3 +96,5 @@ function osm2pgsql.process_relation(object)
         process_poi(object, geom:centroid())
     end
 end
+
+-- Association with boundaries will be done in transform.ts

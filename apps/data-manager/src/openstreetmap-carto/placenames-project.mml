@@ -1,0 +1,176 @@
+﻿  - id: country-names
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      # By splitting MPs into polygons, finding the largest in real area, and
+      # finding a label point in 4326 we get better labeling points. 4326 does
+      # distort the placement, but it does so in a way that results in better
+      # results for most countries.
+      table: |-
+        (SELECT
+            (SELECT ST_Transform(ST_PointOnSurface(geom),3857)
+              FROM ST_Dump(ST_Transform(way,4326))
+              ORDER BY ST_Area(geom::geography) DESC
+              LIMIT 1) AS way,
+            way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels,
+            name
+          FROM planet_osm_polygon
+          WHERE way && !bbox!
+            AND name IS NOT NULL
+            AND boundary = 'administrative'
+            AND admin_level = '2'
+            AND way_area > 100*POW(!scale_denominator!*0.001*0.28,2)
+            AND way_area < 4000000*POW(!scale_denominator!*0.001*0.28,2)
+            AND osm_id < 0
+          ORDER BY way_area DESC
+        ) AS country_names
+    properties:
+      minzoom: 2
+  - id: capital-names
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+            way,
+            name,
+            CASE
+              WHEN (tags->'population' ~ '^[0-9]{1,8}$') THEN (tags->'population')::INTEGER ELSE 0
+            END as population,
+            round(ascii(md5(osm_id::text)) / 55) AS dir -- base direction factor on geometry to be consistent across metatiles
+          FROM planet_osm_point
+          WHERE place IN ('city', 'town', 'village', 'hamlet')
+            AND name IS NOT NULL
+            AND tags @> 'capital=>yes'
+          ORDER BY population DESC
+        ) AS capital_names
+    properties:
+      minzoom: 3
+      maxzoom: 15
+  - id: state-names
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+            ST_PointOnSurface(way) AS way,
+            way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels,
+            name,
+            admin_level,
+            ref
+          FROM planet_osm_polygon
+          WHERE ST_PointOnSurface(way) && !bbox!
+            AND name IS NOT NULL
+            AND boundary = 'administrative'
+            AND admin_level = '4'openstreetmap-carto-flex.lua
+            AND way_area > 3000*POW(!scale_denominator!*0.001*0.28,2)
+            AND way_area < 4000000*POW(!scale_denominator!*0.001*0.28,2)
+            AND osm_id < 0
+          ORDER BY way_area DESC
+        ) AS state_names
+    properties:
+      minzoom: 4
+  - id: placenames-medium
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+            way,
+            name,
+            score,
+            CASE
+              WHEN (place = 'city') THEN 1
+              ELSE 2
+            END as category,
+            round(ascii(md5(osm_id::text)) / 55) AS dir -- base direction factor on geometry to be consistent across metatiles
+          FROM
+            (SELECT
+                osm_id,
+                way,
+                place,
+                name,
+                (
+                  (CASE
+                    WHEN (tags->'population' ~ '^[0-9]{1,8}$') THEN (tags->'population')::INTEGER
+                    WHEN (place = 'city') THEN 100000
+                    WHEN (place = 'town') THEN 1000
+                    ELSE 1
+                  END)
+                  *
+                  (CASE
+                    WHEN (tags @> 'capital=>4') THEN 2
+                    ELSE 1
+                  END)
+                ) AS score
+              FROM planet_osm_point
+              WHERE place IN ('city', 'town')
+                AND name IS NOT NULL
+                AND NOT (tags @> 'capital=>yes')
+            ) as p
+          ORDER BY score DESC, length(name) DESC, name
+        ) AS placenames_medium
+    properties:
+      cache-features: true
+      minzoom: 4
+      maxzoom: 15
+  - id: placenames-small
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+            way,
+            place,
+            name
+          FROM planet_osm_point
+          WHERE place IN ('village', 'hamlet')
+             AND name IS NOT NULL
+             AND NOT tags @> 'capital=>yes'
+             OR (place IN ('suburb', 'quarter', 'neighbourhood', 'isolated_dwelling', 'farm')
+             ) AND name IS NOT NULL
+          ORDER BY CASE
+              WHEN place = 'suburb' THEN 7
+              WHEN place = 'village' THEN 6
+              WHEN place = 'hamlet' THEN 5
+              WHEN place = 'quarter' THEN 4
+              WHEN place = 'neighbourhood' THEN 3
+              WHEN place = 'isolated_dwelling' THEN 2
+              WHEN place = 'farm' THEN 1
+            END DESC,
+            length(name) DESC,
+            name
+        ) AS placenames_small
+    properties:
+      cache-features: true
+      minzoom: 12
+  - id: county-names
+    geometry: point
+    <<: *extents
+    Datasource:
+      <<: *osm2pgsql
+      table: |-
+        (SELECT
+            ST_PointOnSurface(way) AS way,
+            way_area/NULLIF(POW(!scale_denominator!*0.001*0.28,2),0) AS way_pixels,
+            name,
+            admin_level
+          FROM planet_osm_polygon
+          WHERE ST_PointOnSurface(way) && !bbox!
+            AND name IS NOT NULL
+            AND boundary = 'administrative'
+            AND admin_level IN ('5', '6')
+            AND way_area > 12000*POW(!scale_denominator!*0.001*0.28,2)
+            AND way_area < 196000*POW(!scale_denominator!*0.001*0.28,2)
+            AND osm_id < 0
+          ORDER BY
+            admin_level,
+            way_area DESC
+        ) AS county_names
+    properties:
+      minzoom: 8

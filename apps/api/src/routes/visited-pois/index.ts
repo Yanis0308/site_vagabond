@@ -113,37 +113,25 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const visitedPois = await fastify.prisma.visitedPoi.findMany({
-        where: {
-          userId: request.user.uid,
-        },
-        select: {
-          id: true,
-          poiId: true,
-          userId: true,
-          createdAt: true,
-          rating: true,
-          comment: true,
-          imageKey: true,
-          user: {
-            select: {
-              email: true,
-            },
-          },
-        },
-      });
+      const visitedPoisWithBoundaries =
+        await fastify.prisma.visitedPoi.findManyWithZones(request.user.uid);
 
       return await reply.status(200).send({
-        data: visitedPois.map((visitedPoi) => {
-          const { user, ...visitedPoiWithoutUser } = visitedPoi;
-          const username = user.email?.includes("@")
-            ? (user.email.split("@")[0] ?? "John Doe")
+        data: visitedPoisWithBoundaries.map((visitedPoi) => {
+          const username = visitedPoi.email?.includes("@")
+            ? (visitedPoi.email.split("@")[0] ?? "John Doe")
             : "John Doe";
 
           return {
-            ...visitedPoiWithoutUser,
+            id: visitedPoi.id,
+            poiId: visitedPoi.poi_id,
+            userId: visitedPoi.user_id,
+            rating: visitedPoi.rating,
+            comment: visitedPoi.comment,
+            imageKey: visitedPoi.image_key,
             username,
-            createdAt: visitedPoi.createdAt.toISOString(),
+            createdAt: visitedPoi.created_at.toISOString(),
+            zoneId: visitedPoi.zone_id ?? "",
           };
         }),
       });

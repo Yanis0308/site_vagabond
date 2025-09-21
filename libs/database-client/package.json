@@ -6,9 +6,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "prisma-generate": "pnpx prisma generate --schema=src/db/api-schema.prisma",
-    "prisma-generate-watch": "pnpx prisma generate --schema=src/db/api-schema.prisma --watch",
-    "prisma-migrate-dev": "pnpx prisma migrate dev --schema=src/db/api-schema.prisma",
+    "prisma-generate": "pnpm exec prisma generate --schema=src/db/api-schema.prisma",
+    "prisma-generate-watch": "pnpm exec prisma generate --schema=src/db/api-schema.prisma --watch",
+    "prisma-migrate-dev": "pnpm exec prisma migrate dev --schema=src/db/api-schema.prisma",
     "build": "pnpm run clean && tsc && cp -r src/db/generated dist/db/generated",
     "watch": "pnpm run clean && tsc --watch",
     "clean": "rm -rf dist",

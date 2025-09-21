@@ -14,3 +14,7 @@ export type BoundingBoxType = Static<typeof jsonSchemas.BoundingBoxSchema>;
 export type UsersMeType = Static<
   typeof jsonSchemas.UsersMeResponseSchema.properties.data
 >;
+
+export type ZoneStatType = Static<
+  typeof jsonSchemas.GetZoneStatsResponseSchema.properties.data
+>[0];

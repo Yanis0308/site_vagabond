@@ -2,20 +2,34 @@
 export const CLUSTER_MAX_ZOOM = 14;
 export const CLUSTER_RADIUS = 30;
 
-// Constante pour la taille minimale de la bbox (10km en degrés approximatifs)
+// Constante pour la taille minimale de la bbox (10km en degrés approximatifs) - conservée pour compatibilité
 export const MIN_BBOX_SIZE_DEGREES = 0.09; // ~10km
 
-// Type pour représenter une bounding box avec les données associées
-export interface CachedBoundingBox {
-  minLat: number;
-  maxLat: number;
-  minLng: number;
-  maxLng: number;
-  timestamp: number; // Pour un éventuel nettoyage du cache
-}
+/**
+ * Convertit une distance en mètres vers des degrés pour la latitude
+ * 1 degré de latitude ≈ 111 320 mètres
+ */
+export const metersToLatDegrees = (meters: number): number => {
+  return meters / 111320;
+};
+
+/**
+ * Convertit une distance en mètres vers des degrés pour la longitude
+ * à une latitude donnée. La formule prend en compte que les degrés
+ * de longitude sont plus petits aux pôles.
+ */
+export const metersToLngDegrees = (
+  meters: number,
+  latitude: number,
+): number => {
+  const latRadians = (latitude * Math.PI) / 180;
+  const metersPerDegreeLng = 111320 * Math.cos(latRadians);
+  return meters / metersPerDegreeLng;
+};
 
 /**
  * Vérifie si une bounding box est entièrement contenue dans une autre
+ * Note: Fonction conservée pour d'autres usages potentiels
  */
 export const isBboxContainedIn = (
   innerBbox: {
@@ -40,42 +54,15 @@ export const isBboxContainedIn = (
 };
 
 /**
- * Trouve la première bounding box cachée qui contient la bbox demandée
- */
-export const findContainingCachedBbox = (
-  requestedBbox: {
-    minLat: number;
-    maxLat: number;
-    minLng: number;
-    maxLng: number;
-  },
-  cachedBboxes: CachedBoundingBox[],
-): CachedBoundingBox | null => {
-  return (
-    cachedBboxes.find((cachedBbox) =>
-      isBboxContainedIn(requestedBbox, cachedBbox),
-    ) ?? null
-  );
-};
-
-/**
- * Convertit une bounding box en clé unique pour le cache
- */
-export const bboxToKey = (bbox: {
-  minLat: number;
-  maxLat: number;
-  minLng: number;
-  maxLng: number;
-}): string => {
-  return `${bbox.minLat.toFixed(6)}_${bbox.maxLat.toFixed(6)}_${bbox.minLng.toFixed(6)}_${bbox.maxLng.toFixed(6)}`;
-};
-
-/**
- * Calcule une bbox avec une taille minimale de 10km x 10km
+ * Calcule une bbox avec une taille minimale configurable en mètres
+ * @param northEast Coin nord-est de la bbox
+ * @param southWest Coin sud-ouest de la bbox
+ * @param minSizeMeters Taille minimale de la bbox en mètres (par défaut 10km)
  */
 export const calculateBboxWithMinSize = (
   northEast: GeoJSON.Position,
   southWest: GeoJSON.Position,
+  minSizeMeters: number,
 ): {
   minLat: number;
   maxLat: number;
@@ -95,13 +82,16 @@ export const calculateBboxWithMinSize = (
   const currentLatDiff = northEast[1] - southWest[1];
   const currentLngDiff = northEast[0] - southWest[0];
 
-  // Calculer la taille minimale en degrés pour la longitude basée sur la latitude moyenne
+  // Calculer la latitude moyenne pour les conversions
   const avgLat = (northEast[1] + southWest[1]) / 2;
-  const minLngSize = MIN_BBOX_SIZE_DEGREES / Math.cos((avgLat * Math.PI) / 180);
+
+  // Convertir la taille minimale en mètres vers des degrés
+  const minLatSizeDegrees = metersToLatDegrees(minSizeMeters);
+  const minLngSizeDegrees = metersToLngDegrees(minSizeMeters, avgLat);
 
   // Assurer une taille minimale
-  const latDiff = Math.max(currentLatDiff, MIN_BBOX_SIZE_DEGREES);
-  const lngDiff = Math.max(currentLngDiff, minLngSize);
+  const latDiff = Math.max(currentLatDiff, minLatSizeDegrees);
+  const lngDiff = Math.max(currentLngDiff, minLngSizeDegrees);
 
   // Calculer le centre
   const centerLat = (northEast[1] + southWest[1]) / 2;

@@ -43,6 +43,9 @@ model Poi {
   disabledReason String?                              @map("disabled_reason") @db.VarChar(1000)
   filterLevel    PoiFilterLevelEnum                   @default(UNKNOWN) @map("filter_level")
 
+  // Relations
+  poiBoundaries PoiBoundary[]
+
   @@unique(name: "unique_source_and_source_id", [source, sourceId])
   @@index([coords], name: "coords_index", type: Gist)
   @@map("pois")
@@ -113,4 +116,65 @@ model VisitedPoi {
 enum VisitedPoiStatus {
   PENDING
   CONFIRMED
+}
+
+model Boundary {
+  id        String   @id @map("id") @db.VarChar(1000) // format is {source}-{sourceId}, for example "[OSM]-[R-1234567890]"
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  name          String?                                     @map("name") @db.VarChar(1000)
+  boundaryLevel BoundaryLevelEnum                           @map("boundary_level")
+  geom          Unsupported("geometry(MultiPolygon, 4326)") @map("geom")
+  rawInfo       Json                                        @map("raw_info")
+
+  // Hierarchy relation
+  parentId String? @map("parent_id") @db.VarChar(1000)
+
+  // Placenames display fields (consolidated from admin_centres)
+  displayPoint    Unsupported("geometry(Point, 4326)") @map("display_point") // Point for placename positioning
+  placeType       String                               @map("place_type") @db.VarChar(100) // country, state, city, etc.
+  population      Int                                  @map("population")
+  isCapital       Boolean                              @map("is_capital")
+  importanceScore Float                                @map("importance_score") // OSM importance calculation
+  wayArea         Float                                @map("way_area") // ST_Area for OSM rendering logic
+
+  // Relations
+  poiBoundaries PoiBoundary[]
+
+  // Self-referencing hierarchy
+  parent   Boundary?  @relation("BoundaryHierarchy", fields: [parentId], references: [id])
+  children Boundary[] @relation("BoundaryHierarchy")
+
+  @@index([geom], name: "boundary_geom_index", type: Gist)
+  @@index([boundaryLevel], name: "boundary_level_index")
+  @@index([parentId], name: "boundary_parent_index")
+  @@index([displayPoint], name: "boundary_display_point_index", type: Gist)
+  @@index([importanceScore], name: "boundary_importance_index")
+  @@map("boundaries")
+}
+
+enum BoundaryLevelEnum {
+  COUNTRY // admin_level=2
+  REGION // admin_level=4  
+  COUNTY // admin_level=6
+  CITY // admin_level=8
+  DISTRICT // admin_level=9
+  NEIGHBORHOOD // admin_level=10
+}
+
+model PoiBoundary {
+  id        Int      @id @default(autoincrement()) @map("id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
+
+  poiId      String @map("poi_id") @db.VarChar(1000)
+  boundaryId String @map("boundary_id") @db.VarChar(1000)
+
+  // Relations
+  poi      Poi      @relation(fields: [poiId], references: [id], onDelete: Cascade)
+  boundary Boundary @relation(fields: [boundaryId], references: [id], onDelete: Cascade)
+
+  @@unique(name: "unique_poi_boundary", [poiId, boundaryId])
+  @@map("poi_boundaries")
 }

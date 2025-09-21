@@ -49,7 +49,7 @@ import { Handle } from "./Handle";
 interface PlaceDetailsSheetV2Props {
   place: PoiType | null;
   onPressLink: () => void;
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 // Composant pour les boutons sociaux publics
@@ -215,9 +215,10 @@ export const PlaceDetailsSheet = memo(
           animatedIndex={animatedIndex}
           animatedPosition={animatedPosition}
           rating={rating}
+          onClose={onClose}
         />
       ),
-      [rating],
+      [rating, onClose],
     );
 
     // Reel time update of stickyHeaderIndices

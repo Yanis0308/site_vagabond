@@ -39,3 +39,15 @@ export const PoiFilterLevelEnumSchema = Type.Union(
   ],
   { $id: "PoiFilterLevelEnum" },
 );
+
+export const BoundaryLevelEnum = Type.Union(
+  [
+    Type.Literal("COUNTRY"),
+    Type.Literal("REGION"),
+    Type.Literal("COUNTY"),
+    Type.Literal("CITY"),
+    Type.Literal("DISTRICT"),
+    Type.Literal("NEIGHBORHOOD"),
+  ],
+  { $id: "BoundaryLevelEnum" },
+);

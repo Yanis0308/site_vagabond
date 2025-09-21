@@ -5,17 +5,20 @@
   "keywords": [],
   "author": "",
   "scripts": {
-    "extract": "zx src/etl/extract.mjs",
-    "transform-and-load": "tsx src/etl/transform.ts"
+    "extract": "dotenvx run -- zx src/etl/extract.mjs",
+    "transform": "dotenvx run -- tsx src/etl/transform.ts",
+    "load": "dotenvx run -- tsx src/etl/load.ts"
   },
   "dependencies": {
-    "knex": "^3.1.0",
-    "pg": "^8.13.1",
-    "pg-query-stream": "^4.7.1",
     "@vagabond/database-client": "workspace:*",
-    "@vagabond/shared-utils": "workspace:*"
+    "@vagabond/shared-utils": "workspace:*",
+    "knex": "^3.1.0",
+    "ndjson": "^2.0.0",
+    "pg": "^8.13.1",
+    "pg-query-stream": "^4.7.1"
   },
   "devDependencies": {
+    "@types/ndjson": "^2.0.4",
     "@types/pg": "^8.11.11"
   }
 }

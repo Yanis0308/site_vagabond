@@ -3,6 +3,7 @@ import * as response from "./api/response.js";
 import * as upload from "./api/upload.js";
 import * as user from "./api/user.js";
 import * as visitedPoi from "./api/visited-poi.js";
+import * as zones from "./api/zones.js";
 import * as enums from "./enums.js";
 import * as error from "./error.js";
 import * as etl from "./etl.js";
@@ -18,6 +19,7 @@ export const jsonSchemas = {
   ...poi,
   ...visitedPoi,
   ...user,
+  ...zones,
   ...primitive,
   ...response,
   ...metadata,

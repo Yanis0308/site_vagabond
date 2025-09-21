@@ -6,6 +6,7 @@ export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: Infinity,
+      gcTime: Infinity,
       throwOnError: true,
     },
     mutations: {

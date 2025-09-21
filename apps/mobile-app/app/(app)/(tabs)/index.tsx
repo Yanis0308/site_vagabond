@@ -25,12 +25,14 @@ export default function MapsTab(): ReactElement {
   // Utilisation du hook personnalisé pour toute la logique de la carte
   const {
     placesData,
+    allZonesData,
     customShape,
     selectedPlaceInfo,
     zoom,
     mapRef,
     cameraRef,
     isFetchingPlaces,
+    isFetchingAllZones,
     onMapIdle,
     onPress,
     setSelectedPlaceInfo,
@@ -41,7 +43,7 @@ export default function MapsTab(): ReactElement {
 
   const [headingRealtime, setHeadingRealtime] = useState(0);
 
-  const onClose = useCallback(() => {
+  const onBottomSheetClose = useCallback(() => {
     setSelectedPlaceInfo(null);
   }, [setSelectedPlaceInfo]);
 
@@ -81,10 +83,10 @@ export default function MapsTab(): ReactElement {
               pathname: "/validate-place/take-photo",
             });
           }}
-          onClose={onClose}
+          onClose={onBottomSheetClose}
         />
 
-        {isFetchingPlaces && (
+        {(isFetchingPlaces || isFetchingAllZones) && (
           <Box
             className="absolute inset-0 z-50 flex items-center justify-center"
             style={{
@@ -93,6 +95,11 @@ export default function MapsTab(): ReactElement {
           >
             <Box className="flex items-center justify-center rounded-xl bg-white p-6">
               <Spinner size="large" color={themeColors.secondary[500].hex} />
+              <CustomText>
+                {isFetchingPlaces
+                  ? "Chargement des points..."
+                  : "Chargement des zones..."}
+              </CustomText>
             </Box>
           </Box>
         )}
@@ -101,6 +108,7 @@ export default function MapsTab(): ReactElement {
           mapRef={mapRef}
           cameraRef={cameraRef}
           customShape={customShape}
+          selectedPlace={selectedPlaceInfo}
           onMapIdle={onMapIdle}
           onCameraChanged={onCameraChanged}
           onPress={onPress}
@@ -117,22 +125,21 @@ export default function MapsTab(): ReactElement {
           <View
             style={{
               position: "absolute",
-              top: 20,
+              top: 100,
               left: 10,
               padding: 5,
               borderRadius: 5,
+              backgroundColor: "rgba(0, 0, 0, 0.6)",
             }}
           >
-            <CustomText>{t("zoom", { zoom })}</CustomText>
-            <CustomText>
+            <CustomText className="text-white">
+              {t("zoom", { zoom })}
+            </CustomText>
+            <CustomText className="text-white">
               {t("pois", { pois: placesData?.length ?? 0 })}
             </CustomText>
-            {/* <Text>{t("img_queue", { queueLength })}</Text>
-            <Text>{t("img_loading", { pendingRequests })}</Text> */}
-            <CustomText>
-              {t("clustering", {
-                enabled: false, // CLUSTERING DÉSACTIVÉ
-              })}
+            <CustomText className="text-white">
+              {`Zones: ${allZonesData?.length ?? 0}`}
             </CustomText>
           </View>
         )}

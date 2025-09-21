@@ -29,9 +29,9 @@ function findPbfFile(filename) {
   return pbfPath;
 }
 
-// Function to get schema name from filename (remove .osm.pbf extension)
+// Function to get schema name from filename (remove .osm.pbf extension and replace hyphens with underscores)
 function getSchemaName(filename) {
-  return filename.replace(".osm.pbf", "");
+  return filename.replace(".osm.pbf", "").replace(/-/g, "_");
 }
 
 const pbfPath = findPbfFile(pbfFilename);
@@ -52,6 +52,7 @@ try {
   await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "CREATE SCHEMA IF NOT EXISTS ${schemaName};"`;
   console.log(`Schema ${schemaName} created successfully.`);
 } catch (error) {
+  console.error(error);
   console.warn(
     "Could not create schema via Docker. Continuing anyway - osm2pgsql might create it automatically.",
   );
@@ -69,8 +70,45 @@ const params = [
 const osm2pgsqlCommand = `${osm2pgsqlPath} ${params.join(" ")}`;
 
 console.log("\n" + "=".repeat(80));
-console.log("COPY AND PASTE THIS COMMAND TO RUN osm2pgsql:");
+console.log("RUNNING osm2pgsql:");
 console.log("=".repeat(80));
 console.log(osm2pgsqlCommand);
 console.log("=".repeat(80));
-console.log("\nScript completed. Please run the above command manually.");
+
+// Increase work_mem
+await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "SET work_mem = '1024MB';"`;
+console.log("✅ Increased work_mem to 1024MB");
+
+// Run osm2pgsql
+try {
+  await $`${osm2pgsqlPath} ${params}`;
+  console.log("✅ osm2pgsql completed successfully!");
+} catch (error) {
+  console.error("❌ osm2pgsql failed:", error);
+  process.exit(1);
+}
+
+// Create indexes on raw tables for better performance
+console.log("\n" + "=".repeat(80));
+console.log("CREATING INDEXES ON RAW OSM TABLES:");
+console.log("=".repeat(80));
+
+try {
+  // Create B-tree index on admin_level (most important missing index)
+  await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_${schemaName}_boundaries_admin_level ON ${schemaName}.boundaries (admin_level);"`;
+  console.log("✅ Created B-tree index on boundaries.admin_level");
+
+  // Create composite index for better query performance (optional but recommended)
+  // await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_${schemaName}_boundaries_admin_level_geom ON ${schemaName}.boundaries (admin_level) INCLUDE (geom);"`;
+  // console.log("✅ Created composite index on boundaries.admin_level with geom");
+
+  console.log(
+    "\n🎉 OSM import and additional indexing completed successfully!",
+  );
+} catch (error) {
+  console.warn(
+    "⚠️  Some indexes may already exist or failed to create:",
+    error,
+  );
+  console.log("Continuing anyway - the import was successful.");
+}

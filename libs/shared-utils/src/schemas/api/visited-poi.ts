@@ -7,6 +7,7 @@ export const VisitedPoiSchema = Type.Object(
   {
     id: Type.Number(),
     poiId: Type.String(),
+    zoneId: Type.String(),
     userId: Type.String(),
     username: Type.String(),
     createdAt: Type.String(),

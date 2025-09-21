@@ -32,11 +32,7 @@ Transforme et charge les données dans la base de données principale. Le nom du
 
 ```bash
 # Usage obligatoire avec un nom de schéma
-pnpm run transform-and-load belgium-2024-12-01
-
-# Autres exemples
-pnpm run transform-and-load france-2024-01-15
-pnpm run transform-and-load netherlands-2024-11-15
+pnpm run transform-and-load belgium_2024_12_01
 ```
 
 Le script va automatiquement :

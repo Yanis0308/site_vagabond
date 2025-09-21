@@ -20,6 +20,7 @@ export const apiClient: KyInstance = httpClient.extend({
       async (request): Promise<void> => {
         // Ajouter le token d'authentification Firebase
         const idToken = await getAuth().currentUser?.getIdToken();
+        //logger("idToken", idToken);
         if (idToken !== undefined) {
           request.headers.set("Authorization", `Bearer ${idToken}`);
         }

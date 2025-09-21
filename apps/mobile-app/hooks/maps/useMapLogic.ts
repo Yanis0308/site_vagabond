@@ -7,10 +7,10 @@ import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
-import { calculateBboxWithMinSize } from "@/utils/bbox";
-// import { CLUSTER_MAX_ZOOM } from "@/utils/bbox"; // Pour le clustering
 import { logger } from "@/utils/logger";
-import { type PoiType } from "@/utils/types";
+import { type PoiType, type ZoneStatType } from "@/utils/types";
+
+import { useAllZones } from "../queries/useAllZones";
 
 const getPoiIsVisited = (poi: PoiType, userId: string | undefined): boolean => {
   if (userId === undefined) {
@@ -44,6 +44,7 @@ export interface OnPressEvent {
 interface UseMapLogicReturn {
   // Data
   placesData: PoiType[] | undefined;
+  allZonesData: ZoneStatType[] | undefined;
   customShape: GeoJSON.FeatureCollection;
   selectedPlaceInfo: PoiType | null;
   userLocation: { latitude: number; longitude: number } | undefined | null;
@@ -64,6 +65,7 @@ interface UseMapLogicReturn {
   // Loading states
   isLoadingLocation: boolean;
   isFetchingPlaces: boolean;
+  isFetchingAllZones: boolean;
 
   // Event handlers
   onMapIdle: (mapState: MapState) => void;
@@ -93,7 +95,11 @@ export const useMapLogic = (): UseMapLogicReturn => {
   const mapRef = useRef<MapView>(null);
   const cameraRef = useRef<CameraRef>(null);
 
-  const { data: placesData, isFetching: isFetchingPlaces } = usePlaces(bbox);
+  const { data: placesData, isFetching: isFetchingPlaces } = usePlaces(
+    bbox,
+    zoom,
+  );
+  const { data: allZonesData, isFetching: isFetchingAllZones } = useAllZones();
 
   // Mettre à jour le lieu sélectionné quand les données changent pour que le composant PlaceDetailsSheet se mette à jour avec les nouveaux avis etc
   useEffect(() => {
@@ -145,6 +151,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
   );
 
   // Données formatées pour la carte
+  // TODO: déplacer ça ailleurs
   const customShape = useMemo(() => {
     return {
       type: "FeatureCollection" as const,
@@ -182,13 +189,12 @@ export const useMapLogic = (): UseMapLogicReturn => {
       setHeading(mapState.properties.heading);
     }
     const { ne: northEast, sw: southWest } = mapState.properties.bounds;
-
-    try {
-      const newBbox = calculateBboxWithMinSize(northEast, southWest);
-      setBbox(newBbox);
-    } catch (error) {
-      logger("Erreur lors du calcul de la bbox:", error);
-    }
+    setBbox({
+      minLat: southWest[1] ?? 0,
+      maxLat: northEast[1] ?? 0,
+      minLng: southWest[0] ?? 0,
+      maxLng: northEast[0] ?? 0,
+    });
   }, []);
 
   const onPress = useCallback(
@@ -253,6 +259,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
     () => ({
       // Data
       placesData,
+      allZonesData,
       customShape,
       selectedPlaceInfo,
       userLocation,
@@ -268,7 +275,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
       // Loading states
       isLoadingLocation,
       isFetchingPlaces,
-
+      isFetchingAllZones,
       // Event handlers
       onMapIdle,
       onPress,
@@ -280,6 +287,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
     }),
     [
       placesData,
+      allZonesData,
       customShape,
       selectedPlaceInfo,
       userLocation,
@@ -291,6 +299,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
       cameraRef,
       isLoadingLocation,
       isFetchingPlaces,
+      isFetchingAllZones,
       onMapIdle,
       onPress,
       setSelectedPlaceInfo,
