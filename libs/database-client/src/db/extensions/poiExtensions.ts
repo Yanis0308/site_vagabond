@@ -102,7 +102,7 @@ export const createPoiExtensions = (
       WHERE ST_Within(p.coords::geometry, ST_GeomFromText(${polygon}, 4326))
       AND p.disabled = false
       GROUP BY p.id
-      LIMIT 1000;`;
+      LIMIT 10000;`;
 
     //TODO: au lieu de cast on pourrait utiliser une validation en JS mais cela ajouterait du runtime
     return poisWithData as unknown as Array<{
