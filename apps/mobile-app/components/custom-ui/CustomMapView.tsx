@@ -6,16 +6,22 @@ import {
   MapView,
 } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
-import { memo, type ReactElement, type RefObject, useMemo } from "react";
+import {
+  memo,
+  type ReactElement,
+  type RefObject,
+  useCallback,
+  useMemo,
+} from "react";
 import { Platform } from "react-native";
 
 import { MapPOILayers } from "@/components/custom-ui/MapPOILayers";
 import { useMapImages } from "@/hooks/maps/useMapImages";
 import { type OnPressEvent } from "@/hooks/maps/useMapLogic";
-import { useZonesGeoJSON } from "@/hooks/queries/useZonesGeoJSON";
+import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
-import { MapZonesLayers } from "./MapZonesLayers";
+import { RemoteMapZonesLayers } from "./RemoteMapZonesLayers";
 
 // Types
 interface CustomMapViewProps {
@@ -26,6 +32,7 @@ interface CustomMapViewProps {
   onMapIdle: (mapState: MapState) => void;
   onCameraChanged: (mapState: MapState) => void;
   onPress: (event: OnPressEvent) => void;
+  enableCountryFeatureLogging?: boolean;
 }
 
 export const CustomMapView = memo(function CustomMapView({
@@ -36,9 +43,10 @@ export const CustomMapView = memo(function CustomMapView({
   onMapIdle,
   onCameraChanged,
   onPress,
+  enableCountryFeatureLogging = false,
 }: CustomMapViewProps): ReactElement {
   const images = useMapImages();
-  const { data: zonesGeoJSON } = useZonesGeoJSON();
+  // const { data: zonesGeoJSON } = useZonesGeoJSON();
 
   const pulsing = useMemo(() => ({ isEnabled: false }), []);
   const scaleBarPosition = useMemo(() => ({ bottom: 100, right: 200 }), []);
@@ -80,7 +88,7 @@ export const CustomMapView = memo(function CustomMapView({
       />
 
       {/* Zones administratives */}
-      <MapZonesLayers zonesGeoJSON={zonesGeoJSON} />
+      <RemoteMapZonesLayers tilesetUrl="mapbox://glutomax.boundaries-tileset-v1" />
     </MapView>
   );
 });

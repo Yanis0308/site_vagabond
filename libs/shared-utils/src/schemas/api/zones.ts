@@ -30,7 +30,26 @@ export const ZoneStatSchema = Type.Object(
   { $id: "ZoneStat" },
 );
 
+export const ZoneUserStatSchema = Type.Object(
+  {
+    zone_id: Type.String(),
+    name: Type.String(),
+    boundary_level: Type.Ref(BoundaryLevelEnum),
+    parent_id: Type.Union([Type.Null(), Type.String()]),
+    validated_pois_count: Type.Number({ minimum: 0 }),
+    total_pois_count: Type.Number({ minimum: 0 }),
+    total_subzones_count: Type.Number({ minimum: 0 }),
+    completed_subzones_count: Type.Number({ minimum: 0 }),
+  },
+  { $id: "ZoneUserStat" },
+);
+
 export const GetZoneStatsResponseSchema = ApiResponseSchema(
   Type.Array(Type.Ref(ZoneStatSchema)),
   "GetZoneStatsResponse",
+);
+
+export const GetUserZoneStatsResponseSchema = ApiResponseSchema(
+  Type.Array(Type.Ref(ZoneUserStatSchema)),
+  "GetUserZoneStatsResponse",
 );

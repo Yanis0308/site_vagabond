@@ -1,123 +1,97 @@
-# Data manager
+# Data Manager
 
-## ETL
+ETL pour traiter les données OpenStreetMap et les préparer pour l'API et Mapbox.
 
-### Extract
+## Architecture
 
-#### Extraction par fichier PBF
+```
+output/
+└── schema_countryCode_YYYY-MM-DD-HH-mm-ss/
+    ├── db/                    # Données pour la base
+    │   ├── pois.jsonl
+    │   ├── boundaries.jsonl
+    │   ├── associations.jsonl
+    │   └── hierarchies.jsonl
+    └── geojson/              # Données pour Mapbox
+        ├── boundaries-country.jsonl
+        ├── boundaries-region.jsonl
+        ├── boundaries-county.jsonl
+        ├── boundaries-city.jsonl
+        ├── boundaries-district.jsonl
+        └── boundaries-neighborhood.jsonl
+```
 
-Vous pouvez maintenant extraire les données pour un fichier PBF spécifique en utilisant le nom complet du fichier :
+## Utilisation
+
+### 1. Extract
+
+Extraction depuis fichier PBF OpenStreetMap vers PostgreSQL :
 
 ```bash
 pnpm run extract france-2024-01-15.osm.pbf
-pnpm run extract belgium-2024-12-01.osm.pbf
-pnpm run extract netherlands-2024-11-15.osm.pbf
 ```
 
-Le script va automatiquement :
+Le script crée automatiquement le schéma et exécute osm2pgsql.
 
-- Vérifier que le fichier PBF existe dans `src/etl/extract/pbf-files/`
-- Créer un schéma de base de données avec le nom du fichier (sans l'extension `.osm.pbf`)
-- Afficher la commande osm2pgsql complète à copier-coller
+### 2. Transform
 
-**Note**: Le script n'exécute plus automatiquement la commande osm2pgsql. Il affiche la commande formatée que vous devez copier et exécuter manuellement.
-
-#### Extraction classique
-
-`pnpm run extract` (utilise le fichier PBF codé en dur)
-
-### Transform and Load
-
-Transforme et charge les données dans la base de données principale. Le nom du schéma est **obligatoire**.
+Transformation des données PostgreSQL vers fichiers JSONL :
 
 ```bash
-# Usage obligatoire avec un nom de schéma
-pnpm run transform-and-load belgium_2024_12_01
+pnpm run transform --schema=france_2024_01_15 --country=FR
 ```
 
-Le script va automatiquement :
+Génère un dossier `output/schema_country_timestamp/` avec sous-dossiers `db/` et `geojson/`.
 
-- Valider que le nom du schéma est fourni (argument obligatoire)
-- Utiliser le schéma spécifié dans les requêtes SQL (ex: `belgium-2025.raw_pois`)
-- Traiter les données par lots pour l'optimisation des performances
-- Charger les données dans la base de données principale via Prisma
+### 3. Load Database
 
-**Note**: Si aucun argument n'est fourni, le script affichera un message d'erreur avec l'usage correct.
-
-### Load
-
-- automatically done by the transform script
-
-## CLI Examples
-
-### osm2pgsql
-
-- Doc https://osm2pgsql.org/doc/manual.html
-
-Semble plus lent en mode slim ?
-
-- On peut remplacer "--create" par "--append" pour ne pas supprimer les tables existantes
+Chargement des fichiers JSONL en base de données :
 
 ```bash
-osm2pgsql --database=vagabond-data-manager --user=user --password --host=localhost --port=5442 --slim --create --output=flex --style=import-pois.lua pbf-files/nord-pas-de-calais-latest.osm.pbf
+pnpm run load-db --transform-dir=france_2024_01_15_2025-01-01-12-00-00
 ```
 
-### ogr2ogr
+**Obligatoire :** `--transform-dir` doit pointer vers un dossier existant dans `output/`.
+
+### 4. Load Mapbox
+
+Upload vers Mapbox Tileset :
 
 ```bash
-OGR_GEOJSON_MAX_OBJ_SIZE=0 ogr2ogr -f "PostgreSQL" "postgresql://user:password@localhost:5442/vagabond-data-manager" "OSM Boundaries-with-admin-level.geojson" -nln osm_boundaries_import -append
+pnpm run load-mapbox --transform-dir=france_2024_01_15_2025-01-01-12-00-00
 ```
 
-## SQL requests
+**Obligatoire :** `--transform-dir` doit pointer vers un dossier existant dans `output/`.
 
-### Get all pois intersecting with boundaries
+**Prérequis :**
 
-```sql
-SELECT p.name, b.name, b.admin_level, p.tags, b.tags
-FROM pois as p
-JOIN boundaries as b
-ON ST_Intersects(p.geom, b.geom)
-where p.name is not null
-and b.name is not null
-and b.admin_level = '8'
---and b.name = 'Lille'
+- Variables d'environnement : `MAPBOX_ACCESS_TOKEN`, `MAPBOX_USERNAME`
+- Installation : `pip install tilesets`
+
+## Scripts disponibles
+
+- `pnpm run extract <fichier.pbf>` - Extraction PBF → PostgreSQL
+- `pnpm run transform` - PostgreSQL → JSONL
+- `pnpm run load-db` - JSONL → Base de données
+- `pnpm run load-mapbox` - JSONL → Mapbox Tileset
+
+## Configuration
+
+### Variables d'environnement
+
+```bash
+DATABASE_URL=postgresql://user:password@localhost:5442/vagabond-data-manager
+MAPBOX_ACCESS_TOKEN=your_token
+MAPBOX_USERNAME=your_username
 ```
 
-### Get all pois with their boundaries as JSON
+### Mapbox Tileset
 
-```sql
-SELECT jsonb_agg(
-  jsonb_build_object(
-    'osm_id', p.osm_id,
-    'poi_name', p.name,
-    'poi_tags', p.tags,
-    'coordinates', jsonb_build_object(
-      'latitude', ST_Y(ST_Transform(p.geom, 4326)),
-      'longitude', ST_X(ST_Transform(p.geom, 4326))
-    ),
-    'boundaries', (
-      SELECT jsonb_agg(
-        jsonb_build_object(
-          'osm_id', b.osm_id,
-          'boundary_name', b.name,
-          'admin_level', b.admin_level,
-          'boundary_tags', b.tags
-        )
-      )
-      FROM boundaries b
-      WHERE ST_Intersects(p.geom, b.geom) AND b.name IS NOT NULL
-    )
-  )
-)
-FROM pois p
-WHERE p.name IS NOT NULL;
-```
+Les fichiers GeoJSON sont organisés par niveau administratif avec optimisation zoom :
 
-### Get all subclasss unique values
-
-```sql
-SELECT subclass, COUNT(*) as count
-FROM pois
-GROUP BY subclass
-ORDER BY count DESC;
-```
+- **Country** (zoom 0-5)
+- **Region** (zoom 6-10)
+- **County** (zoom 7-10)
+- **City** (zoom 8-11)
+- **District** (zoom 9-12)
+- **Neighborhood** (zoom 10-16)

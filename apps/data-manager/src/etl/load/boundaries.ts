@@ -55,10 +55,8 @@ export async function loadBoundariesConsolidated(
         continue;
       }
 
-      // Calculer way_area pour la logique OSM
-      const wayArea = await prismaExtendedClient.$queryRaw<[{ area: number }]>`
-        SELECT ST_Area(ST_GeomFromGeoJSON(${item.geom_json})::geography) as area
-      `;
+      // Utiliser way_area pré-calculé depuis l'étape Transform
+      const wayArea = item.way_area;
 
       // Déterminer le place_type selon l'admin_level ou depuis admin_centre
       const placeType =
@@ -90,6 +88,14 @@ export async function loadBoundariesConsolidated(
           `Using admin_centre data for boundary ${computedId}: ${item.admin_centre_name ?? "unknown"}`,
         );
       } else {
+        // Pas d'admin_centre, utiliser le centroïde calculé dans l'étape Transform
+        const pointResult = await prismaExtendedClient.$queryRaw<
+          [{ point: string }]
+        >`
+          SELECT ST_AsGeoJSON(ST_SetSRID(ST_MakePoint(${item.display_point_lon}, ${item.display_point_lat}), 4326)) as point
+        `;
+        displayPoint = pointResult[0]?.point ?? null;
+
         // Importance par défaut basée sur l'admin_level
         importanceScore =
           item.admin_level <= 4
@@ -130,27 +136,25 @@ export async function loadBoundariesConsolidated(
       // Insérer dans la table boundaries avec toutes les données consolidées
       await prismaExtendedClient.$executeRaw`
         INSERT INTO public.boundaries (
-          id, name, boundary_level, geom, raw_info, display_point, place_type, 
+          id, name, boundary_level, raw_info, display_point, place_type, 
           population, is_capital, importance_score, way_area, created_at, updated_at
         ) VALUES (
           ${computedId},
           ${item.name},
           ${boundaryLevelEnum}::"BoundaryLevelEnum",
-          ST_GeomFromGeoJSON(${item.geom_json}),
           ${JSON.stringify(item.tags)}::jsonb,
-          COALESCE(ST_GeomFromGeoJSON(${displayPoint}), ST_PointOnSurface(ST_GeomFromGeoJSON(${item.geom_json}))),
+          ST_GeomFromGeoJSON(${displayPoint}),
           ${placeType},
           ${finalPopulation},
           ${isCapital},
           ${importanceScore},
-          ${wayArea[0]?.area ?? 0},
+          ${wayArea},
           NOW(),
           NOW()
         )
         ON CONFLICT (id) DO UPDATE SET
           name = EXCLUDED.name,
           boundary_level = EXCLUDED.boundary_level,
-          geom = EXCLUDED.geom,
           raw_info = EXCLUDED.raw_info,
           display_point = EXCLUDED.display_point,
           place_type = EXCLUDED.place_type,

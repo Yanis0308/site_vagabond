@@ -6,9 +6,9 @@ import { dirname } from "path";
 
 import { type JsonlReader, type JsonlWriter } from "./types";
 
-// Créer le répertoire data/ s'il n'existe pas
+// Créer le répertoire transform-output/ s'il n'existe pas
 export function ensureDataDirectory(): void {
-  const dataDir = "data";
+  const dataDir = "output";
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir, { recursive: true });
     logger.info(`Répertoire créé: ${dataDir}`);
@@ -119,8 +119,16 @@ export function generateTransformOutputFiles(
   boundaries: { filePath: string; batchSize: number };
   associations: { filePath: string; batchSize: number };
   hierarchies: { filePath: string; batchSize: number };
+  boundariesGeoJsonl: {
+    country: { filePath: string };
+    region: { filePath: string };
+    county: { filePath: string };
+    city: { filePath: string };
+    district: { filePath: string };
+    neighborhood: { filePath: string };
+  };
 } {
-  const baseDir = "data";
+  const baseDir = "output";
   const timestamp = new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-");
   const transformDir = `${baseDir}/${schema}_${countryCode}_${timestamp}`;
 
@@ -129,30 +137,49 @@ export function generateTransformOutputFiles(
     fs.mkdirSync(transformDir, { recursive: true });
   }
 
+  // Créer les sous-dossiers db et tileset
+  const dbDir = `${transformDir}/db`;
+  const geojsonDir = `${transformDir}/geojson`;
+
+  if (!fs.existsSync(dbDir)) {
+    fs.mkdirSync(dbDir, { recursive: true });
+  }
+  if (!fs.existsSync(geojsonDir)) {
+    fs.mkdirSync(geojsonDir, { recursive: true });
+  }
+
   return {
     transformDir,
     pois: {
-      filePath: `${transformDir}/pois.jsonl`,
+      filePath: `${dbDir}/pois.jsonl`,
       batchSize: 1000,
     },
     boundaries: {
-      filePath: `${transformDir}/boundaries.jsonl`,
+      filePath: `${dbDir}/boundaries.jsonl`,
       batchSize: 500, // Plus petit batch à cause des géométries
     },
     associations: {
-      filePath: `${transformDir}/associations.jsonl`,
+      filePath: `${dbDir}/associations.jsonl`,
       batchSize: 1000,
     },
     hierarchies: {
-      filePath: `${transformDir}/hierarchies.jsonl`,
+      filePath: `${dbDir}/hierarchies.jsonl`,
       batchSize: 1000,
+    },
+    boundariesGeoJsonl: {
+      country: { filePath: `${geojsonDir}/boundaries-country.jsonl` },
+      region: { filePath: `${geojsonDir}/boundaries-region.jsonl` },
+      county: { filePath: `${geojsonDir}/boundaries-county.jsonl` },
+      city: { filePath: `${geojsonDir}/boundaries-city.jsonl` },
+      district: { filePath: `${geojsonDir}/boundaries-district.jsonl` },
+      neighborhood: { filePath: `${geojsonDir}/boundaries-neighborhood.jsonl` },
     },
   };
 }
 
 // Fonction pour lister les dossiers de transformation disponibles
 export function listAvailableTransformDirs(): string[] {
-  const dataDir = "data";
+  const dataDir = "output";
   if (!fs.existsSync(dataDir)) {
     return [];
   }
@@ -172,24 +199,18 @@ export function getTransformFiles(transformDir: string): {
   associations: string;
   hierarchies: string;
 } {
-  const baseDir = transformDir.startsWith("data/")
+  const baseDir = transformDir.startsWith("output/")
     ? transformDir
-    : `data/${transformDir}`;
+    : `output/${transformDir}`;
 
   if (!fs.existsSync(baseDir)) {
     throw new Error(`Dossier de transformation non trouvé: ${baseDir}`);
   }
 
   return {
-    pois: `${baseDir}/pois.jsonl`,
-    boundaries: `${baseDir}/boundaries.jsonl`,
-    associations: `${baseDir}/associations.jsonl`,
-    hierarchies: `${baseDir}/hierarchies.jsonl`,
+    pois: `${baseDir}/db/pois.jsonl`,
+    boundaries: `${baseDir}/db/boundaries.jsonl`,
+    associations: `${baseDir}/db/associations.jsonl`,
+    hierarchies: `${baseDir}/db/hierarchies.jsonl`,
   };
-}
-
-// Fonction pour obtenir le dossier de transformation le plus récent
-export function getLatestTransformDir(): string | null {
-  const dirs = listAvailableTransformDirs();
-  return dirs.at(0) ?? null;
 }

@@ -139,6 +139,7 @@ export default function RootLayout(): ReactElement | null {
       persister: createAsyncStoragePersister({
         storage: AsyncStorage,
       }),
+      maxAge: 1000 * 1, //  1 second
     }),
     [],
   );

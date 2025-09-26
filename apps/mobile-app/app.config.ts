@@ -48,7 +48,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
         googleSignInWebClientId:
           process.env.DEV_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
-        publicMapboxToken: process.env.DEV_PUBLIC_MAPBOX_TOKEN,
+        publicMapboxToken: process.env.DEV_SEMI_PUBLIC_MAPBOX_TOKEN,
         vexoApiKey: process.env.DEV_EXPO_PUBLIC_VEXO_API_KEY,
         vexoApiKeyAdmin: process.env.DEV_EXPO_PUBLIC_VEXO_API_KEY_ADMIN,
       },

@@ -1,7 +1,5 @@
-import { type MapState } from "@rnmapbox/maps";
 import { router } from "expo-router";
-import { getDistance } from "geolib";
-import { type ReactElement, useCallback, useState } from "react";
+import { type ReactElement, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 import { CustomMapView } from "@/components/custom-ui/CustomMapView";
@@ -28,44 +26,24 @@ export default function MapsTab(): ReactElement {
     allZonesData,
     customShape,
     selectedPlaceInfo,
-    zoom,
     mapRef,
     cameraRef,
     isFetchingPlaces,
     isFetchingAllZones,
     onMapIdle,
+    onCameraChanged,
     onPress,
     setSelectedPlaceInfo,
     moveToUserLocation,
     resetMapOrientation,
-    userLocation,
+    headingRealtime,
+    zoomRealtime,
+    isCentered,
   } = useMapLogic();
-
-  const [headingRealtime, setHeadingRealtime] = useState(0);
 
   const onBottomSheetClose = useCallback(() => {
     setSelectedPlaceInfo(null);
   }, [setSelectedPlaceInfo]);
-
-  const [isCentered, setIsCentered] = useState(true);
-
-  const onCameraChanged = useCallback(
-    (mapState: MapState) => {
-      const { center, heading } = mapState.properties;
-      setHeadingRealtime(heading);
-      if (userLocation !== null && userLocation !== undefined) {
-        const distance = getDistance(
-          { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
-          {
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-          },
-        );
-        setIsCentered(distance < 20); // 20 meters of tolerance
-      }
-    },
-    [userLocation],
-  );
 
   return (
     <CustomScreenContainer
@@ -133,7 +111,7 @@ export default function MapsTab(): ReactElement {
             }}
           >
             <CustomText className="text-white">
-              {t("zoom", { zoom })}
+              {t("zoom", { zoom: zoomRealtime })}
             </CustomText>
             <CustomText className="text-white">
               {t("pois", { pois: placesData?.length ?? 0 })}

@@ -24,4 +24,4 @@ export const jsonSchemas = {
   ...response,
   ...metadata,
   ...upload,
-};
+} as const;

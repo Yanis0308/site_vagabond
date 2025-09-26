@@ -125,7 +125,6 @@ model Boundary {
 
   name          String?                                     @map("name") @db.VarChar(1000)
   boundaryLevel BoundaryLevelEnum                           @map("boundary_level")
-  geom          Unsupported("geometry(MultiPolygon, 4326)") @map("geom")
   rawInfo       Json                                        @map("raw_info")
 
   // Hierarchy relation
@@ -146,7 +145,6 @@ model Boundary {
   parent   Boundary?  @relation("BoundaryHierarchy", fields: [parentId], references: [id])
   children Boundary[] @relation("BoundaryHierarchy")
 
-  @@index([geom], name: "boundary_geom_index", type: Gist)
   @@index([boundaryLevel], name: "boundary_level_index")
   @@index([parentId], name: "boundary_parent_index")
   @@index([displayPoint], name: "boundary_display_point_index", type: Gist)

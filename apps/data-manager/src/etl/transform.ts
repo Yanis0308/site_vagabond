@@ -36,15 +36,7 @@ async function transformOnly(): Promise<void> {
     logger.info("Début du traitement des POIs...");
     await processPois(schema, outputFiles.pois.filePath);
 
-    // Traiter les boundaries (avec jointure directe admin_centres et consolidation)
-    logger.info("Début du traitement des boundaries...");
-    await processBoundaries(
-      schema,
-      countryCode,
-      outputFiles.boundaries.filePath,
-    );
-
-    // Traiter les associations POI-Boundary
+    // Traiter les associations POI-Boundary d'abord
     logger.info("Début du traitement des associations...");
     await processPoiBoundaryAssociations(
       schema,
@@ -52,11 +44,23 @@ async function transformOnly(): Promise<void> {
       outputFiles.associations.filePath,
     );
 
-    // Traiter les hiérarchies de boundaries (mise à jour des parentId)
+    // Traiter les hiérarchies de boundaries (pour les comptes de sous-zones)
     logger.info("Début du traitement des hiérarchies...");
     await processBoundaryHierarchies(
       schema,
       countryCode,
+      outputFiles.hierarchies.filePath,
+    );
+
+    // Traiter les boundaries (avec jointure directe admin_centres et consolidation)
+    // en passant les fichiers d'associations et hiérarchies pour optimiser les comptes
+    logger.info("Début du traitement des boundaries...");
+    await processBoundaries(
+      schema,
+      countryCode,
+      outputFiles.boundaries.filePath,
+      outputFiles.boundariesGeoJsonl,
+      outputFiles.associations.filePath,
       outputFiles.hierarchies.filePath,
     );
 
@@ -72,10 +76,15 @@ async function transformOnly(): Promise<void> {
     logger.info(`- boundaries.jsonl`);
     logger.info(`- associations.jsonl`);
     logger.info(`- hierarchies.jsonl`);
+    logger.info(`- boundaries-country.jsonl (pour Mapbox Tileset)`);
+    logger.info(`- boundaries-region.jsonl (pour Mapbox Tileset)`);
+    logger.info(`- boundaries-county.jsonl (pour Mapbox Tileset)`);
+    logger.info(`- boundaries-city.jsonl (pour Mapbox Tileset)`);
+    logger.info(`- boundaries-district.jsonl (pour Mapbox Tileset)`);
+    logger.info(`- boundaries-neighborhood.jsonl (pour Mapbox Tileset)`);
     logger.info("=======================================");
-    logger.info("Utilisez 'pnpm run load' pour charger ces données en base");
     logger.info(
-      `Ou: pnpm run load --transform-dir ${outputFiles.transformDir.replace("data/", "")}`,
+      `Pour charger les données en base, exécutez: pnpm run load --transform-dir ${outputFiles.transformDir.replace("output/", "")}`,
     );
   } catch (error) {
     logger.error("Erreur lors de la transformation:", error);

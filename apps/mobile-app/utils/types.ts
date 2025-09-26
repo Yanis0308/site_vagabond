@@ -18,3 +18,7 @@ export type UsersMeType = Static<
 export type ZoneStatType = Static<
   typeof jsonSchemas.GetZoneStatsResponseSchema.properties.data
 >[0];
+
+export type ZoneUserStatType = Static<
+  typeof jsonSchemas.GetUserZoneStatsResponseSchema.properties.data
+>[0];

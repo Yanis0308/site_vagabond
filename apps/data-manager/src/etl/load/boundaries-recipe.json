@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "layers": {
+    "country-data-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/bounds-co-src-v1",
+      "minzoom": 0,
+      "maxzoom": 10
+    },
+    "region-data-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/bounds-re-src-v1",
+      "minzoom": 3,
+      "maxzoom": 10
+    },
+    "county-data-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/bounds-ct-src-v1",
+      "minzoom": 3,
+      "maxzoom": 10
+    },
+    "city-data-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/bounds-ci-src-v1",
+      "minzoom": 6,
+      "maxzoom": 10
+    },
+    "district-data-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/bounds-di-src-v1",
+      "minzoom": 7,
+      "maxzoom": 10
+    },
+    "neighborhood-data-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/bounds-ne-src-v1",
+      "minzoom": 9,
+      "maxzoom": 10
+    }
+  }
+}

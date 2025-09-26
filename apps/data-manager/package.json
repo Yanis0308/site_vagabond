@@ -7,7 +7,8 @@
   "scripts": {
     "extract": "dotenvx run -- zx src/etl/extract.mjs",
     "transform": "dotenvx run -- tsx src/etl/transform.ts",
-    "load": "dotenvx run -- tsx src/etl/load.ts"
+    "load-db": "dotenvx run -- tsx src/etl/load-db.ts",
+    "load-mapbox": "dotenvx run -- zx src/etl/load-mapbox.mjs"
   },
   "dependencies": {
     "@vagabond/database-client": "workspace:*",

@@ -6,14 +6,6 @@ export type ExtractedPoiDatabaseRow = Static<
   typeof jsonSchemas.ExtractedPoiDatabaseRowSchema
 >;
 
-export type ExtractedBoundaryDatabaseRow = Static<
-  typeof jsonSchemas.ExtractedBoundaryDatabaseRowSchema
->;
-
-export type ExtractedAdminCentreDatabaseRow = Static<
-  typeof jsonSchemas.ExtractedAdminCentreDatabaseRowSchema
->;
-
 export type PoiBoundaryAssociation = Static<
   typeof jsonSchemas.PoiBoundaryAssociationSchema
 >;
@@ -28,9 +20,13 @@ export interface ConsolidatedBoundaryRow {
   osm_type: string;
   name: string | null;
   admin_level: number;
-  geom_json: string;
   admin_centre_members: string | null;
   tags: Record<string, string>;
+  // Coordonnées du point d'affichage (centroïde)
+  display_point_lat: number;
+  display_point_lon: number;
+  // Aire calculée depuis la géométrie (pour logique OSM)
+  way_area: number;
   // Données admin_centre (optionnelles)
   admin_centre_name?: string | null;
   admin_centre_place_type?: string | null;

@@ -1,5 +1,6 @@
 import { type MapState, type MapView } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
+import { getDistance } from "geolib";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
@@ -9,8 +10,6 @@ import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 import { logger } from "@/utils/logger";
 import { type PoiType, type ZoneStatType } from "@/utils/types";
-
-import { useAllZones } from "../queries/useAllZones";
 
 const getPoiIsVisited = (poi: PoiType, userId: string | undefined): boolean => {
   if (userId === undefined) {
@@ -49,14 +48,17 @@ interface UseMapLogicReturn {
   selectedPlaceInfo: PoiType | null;
   userLocation: { latitude: number; longitude: number } | undefined | null;
   imagesUrls: string[];
-  zoom: number | null;
   bbox: {
     minLat: number;
     maxLat: number;
     minLng: number;
     maxLng: number;
   } | null;
-  heading: number;
+
+  // Realtime states
+  headingRealtime: number;
+  zoomRealtime: number | null;
+  isCentered: boolean;
 
   // Refs
   mapRef: React.RefObject<MapView | null>;
@@ -69,6 +71,7 @@ interface UseMapLogicReturn {
 
   // Event handlers
   onMapIdle: (mapState: MapState) => void;
+  onCameraChanged: (mapState: MapState) => void;
   onPress: (event: OnPressEvent) => void;
 
   // Actions
@@ -89,8 +92,14 @@ export const useMapLogic = (): UseMapLogicReturn => {
     minLng: number;
     maxLng: number;
   } | null>(null);
+
+  // États pour le zoom et heading (uniquement pour affichage en temps réel)
+  const [headingRealtime, setHeadingRealtime] = useState(0);
+  const [zoomRealtime, setZoomRealtime] = useState<number | null>(null);
+  const [isCentered, setIsCentered] = useState(true);
+
+  // État pour le zoom utilisé dans les requêtes
   const [zoom, setZoom] = useState<number | null>(null);
-  const [heading, setHeading] = useState<number>(0);
 
   const mapRef = useRef<MapView>(null);
   const cameraRef = useRef<CameraRef>(null);
@@ -99,7 +108,9 @@ export const useMapLogic = (): UseMapLogicReturn => {
     bbox,
     zoom,
   );
-  const { data: allZonesData, isFetching: isFetchingAllZones } = useAllZones();
+  // const { data: allZonesData, isFetching: isFetchingAllZones } = useAllZones();
+  const isFetchingAllZones = false;
+  const allZonesData = useMemo(() => [], []);
 
   // Mettre à jour le lieu sélectionné quand les données changent pour que le composant PlaceDetailsSheet se mette à jour avec les nouveaux avis etc
   useEffect(() => {
@@ -185,9 +196,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
   // Gestion des événements de la carte
   const onMapIdle = useCallback((mapState: MapState) => {
     setZoom(mapState.properties.zoom);
-    if (typeof mapState.properties.heading === "number") {
-      setHeading(mapState.properties.heading);
-    }
     const { ne: northEast, sw: southWest } = mapState.properties.bounds;
     setBbox({
       minLat: southWest[1] ?? 0,
@@ -196,6 +204,25 @@ export const useMapLogic = (): UseMapLogicReturn => {
       maxLng: northEast[0] ?? 0,
     });
   }, []);
+
+  const onCameraChanged = useCallback(
+    (mapState: MapState) => {
+      const { center, heading } = mapState.properties;
+      setHeadingRealtime(heading);
+      setZoomRealtime(mapState.properties.zoom);
+      if (userLocation !== null && userLocation !== undefined) {
+        const distance = getDistance(
+          { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
+          {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          },
+        );
+        setIsCentered(distance < 20); // 20 meters of tolerance
+      }
+    },
+    [userLocation],
+  );
 
   const onPress = useCallback(
     (event: OnPressEvent) => {
@@ -264,9 +291,12 @@ export const useMapLogic = (): UseMapLogicReturn => {
       selectedPlaceInfo,
       userLocation,
       imagesUrls,
-      zoom,
       bbox,
-      heading,
+
+      // Realtime states
+      headingRealtime,
+      zoomRealtime,
+      isCentered,
 
       // Refs
       mapRef,
@@ -276,8 +306,10 @@ export const useMapLogic = (): UseMapLogicReturn => {
       isLoadingLocation,
       isFetchingPlaces,
       isFetchingAllZones,
+
       // Event handlers
       onMapIdle,
+      onCameraChanged,
       onPress,
 
       // Actions
@@ -292,15 +324,17 @@ export const useMapLogic = (): UseMapLogicReturn => {
       selectedPlaceInfo,
       userLocation,
       imagesUrls,
-      zoom,
       bbox,
-      heading,
+      headingRealtime,
+      zoomRealtime,
+      isCentered,
       mapRef,
       cameraRef,
       isLoadingLocation,
       isFetchingPlaces,
       isFetchingAllZones,
       onMapIdle,
+      onCameraChanged,
       onPress,
       setSelectedPlaceInfo,
       moveToUserLocation,
