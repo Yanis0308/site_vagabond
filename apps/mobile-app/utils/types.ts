@@ -22,3 +22,7 @@ export type ZoneStatType = Static<
 export type ZoneUserStatType = Static<
   typeof jsonSchemas.GetUserZoneStatsResponseSchema.properties.data
 >[0];
+
+export type BoundaryLevelEnumType = Static<
+  typeof jsonSchemas.BoundaryLevelEnum
+>;

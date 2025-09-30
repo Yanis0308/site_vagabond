@@ -127,6 +127,14 @@ export function generateTransformOutputFiles(
     district: { filePath: string };
     neighborhood: { filePath: string };
   };
+  boundariesPolygonsGeoJsonl: {
+    country: { filePath: string };
+    region: { filePath: string };
+    county: { filePath: string };
+    city: { filePath: string };
+    district: { filePath: string };
+    neighborhood: { filePath: string };
+  };
 } {
   const baseDir = "output";
   const timestamp = new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-");
@@ -173,6 +181,18 @@ export function generateTransformOutputFiles(
       city: { filePath: `${geojsonDir}/boundaries-city.jsonl` },
       district: { filePath: `${geojsonDir}/boundaries-district.jsonl` },
       neighborhood: { filePath: `${geojsonDir}/boundaries-neighborhood.jsonl` },
+    },
+    boundariesPolygonsGeoJsonl: {
+      country: { filePath: `${geojsonDir}/boundaries-polygons-country.jsonl` },
+      region: { filePath: `${geojsonDir}/boundaries-polygons-region.jsonl` },
+      county: { filePath: `${geojsonDir}/boundaries-polygons-county.jsonl` },
+      city: { filePath: `${geojsonDir}/boundaries-polygons-city.jsonl` },
+      district: {
+        filePath: `${geojsonDir}/boundaries-polygons-district.jsonl`,
+      },
+      neighborhood: {
+        filePath: `${geojsonDir}/boundaries-polygons-neighborhood.jsonl`,
+      },
     },
   };
 }

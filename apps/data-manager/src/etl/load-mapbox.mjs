@@ -55,7 +55,7 @@ function listAvailableTransformDirs() {
 }
 
 // Upload source to Mapbox
-async function uploadSource(level, filePath, username) {
+async function uploadSource(level, filePath, username, type = "points") {
   // Map level names to shorter IDs to respect 32 char limit
   const levelMap = {
     country: "co",
@@ -66,7 +66,8 @@ async function uploadSource(level, filePath, username) {
     neighborhood: "ne",
   };
 
-  const sourceId = `bounds-${levelMap[level]}-src-v1`;
+  const typePrefix = type === "polygons" ? "poly" : "bounds";
+  const sourceId = `${typePrefix}-${levelMap[level]}-src-v1`;
 
   console.log(`📤 Upload source: ${sourceId}`);
 
@@ -74,9 +75,11 @@ async function uploadSource(level, filePath, username) {
     await $`tilesets upload-source ${username} ${sourceId} ${filePath} --replace`.pipe(
       process.stdout,
     );
-    console.log(`✅ Source ${level.toUpperCase()} uploadée avec succès`);
+    console.log(
+      `✅ Source ${level.toUpperCase()} ${type} uploadée avec succès`,
+    );
   } catch (error) {
-    console.error(`❌ Erreur upload source ${level}:`, error.message);
+    console.error(`❌ Erreur upload source ${level} ${type}:`, error.message);
     process.exit(1);
   }
 }
@@ -149,23 +152,46 @@ async function main() {
     neighborhood: `${baseDir}/geojson/boundaries-neighborhood.jsonl`,
   };
 
+  const polygonGeoJsonFiles = {
+    country: `${baseDir}/geojson/boundaries-polygons-country.jsonl`,
+    region: `${baseDir}/geojson/boundaries-polygons-region.jsonl`,
+    county: `${baseDir}/geojson/boundaries-polygons-county.jsonl`,
+    city: `${baseDir}/geojson/boundaries-polygons-city.jsonl`,
+    district: `${baseDir}/geojson/boundaries-polygons-district.jsonl`,
+    neighborhood: `${baseDir}/geojson/boundaries-polygons-neighborhood.jsonl`,
+  };
+
   // Validate files exist
-  console.log("🔍 Validation des fichiers...");
+  console.log("🔍 Validation des fichiers points...");
   for (const [level, filePath] of Object.entries(geoJsonFiles)) {
     if (!fs.existsSync(filePath)) {
-      console.error(`❌ Fichier JSONL non trouvé: ${filePath}`);
+      console.error(`❌ Fichier JSONL points non trouvé: ${filePath}`);
       process.exit(1);
     }
     console.log(`✅ ${level}: ${filePath}`);
+  }
+
+  console.log("🔍 Validation des fichiers polygones...");
+  for (const [level, filePath] of Object.entries(polygonGeoJsonFiles)) {
+    if (!fs.existsSync(filePath)) {
+      console.error(`❌ Fichier JSONL polygones non trouvé: ${filePath}`);
+      process.exit(1);
+    }
+    console.log(`✅ ${level} polygons: ${filePath}`);
   }
 
   try {
     const startTime = Date.now();
 
     // 1. Upload sources for each level
-    console.log("\n=== UPLOAD DES SOURCES ===");
+    console.log("\n=== UPLOAD DES SOURCES POINTS ===");
     for (const [level, filePath] of Object.entries(geoJsonFiles)) {
-      await uploadSource(level, filePath, username);
+      await uploadSource(level, filePath, username, "points");
+    }
+
+    console.log("\n=== UPLOAD DES SOURCES POLYGONES ===");
+    for (const [level, filePath] of Object.entries(polygonGeoJsonFiles)) {
+      await uploadSource(level, filePath, username, "polygons");
     }
 
     // 2. Create and publish tileset (une seule fois)
@@ -178,7 +204,7 @@ async function main() {
 
     console.log("\n📊 Tileset créé:");
     console.log(`  • ${username}.boundaries-tileset-v1`);
-    console.log("\n📋 Sources uploadées:");
+    console.log("\n📋 Sources points uploadées:");
     Object.keys(geoJsonFiles).forEach((level) => {
       const levelMap = {
         country: "co",
@@ -189,6 +215,18 @@ async function main() {
         neighborhood: "ne",
       };
       console.log(`  • bounds-${levelMap[level]}-src-v1`);
+    });
+    console.log("\n📋 Sources polygones uploadées:");
+    Object.keys(polygonGeoJsonFiles).forEach((level) => {
+      const levelMap = {
+        country: "co",
+        region: "re",
+        county: "ct",
+        city: "ci",
+        district: "di",
+        neighborhood: "ne",
+      };
+      console.log(`  • poly-${levelMap[level]}-src-v1`);
     });
   } catch (error) {
     console.error("❌ Erreur lors de l'upload Mapbox:", error.message);

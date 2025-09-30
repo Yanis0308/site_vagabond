@@ -62,6 +62,7 @@ async function transformOnly(): Promise<void> {
       outputFiles.boundariesGeoJsonl,
       outputFiles.associations.filePath,
       outputFiles.hierarchies.filePath,
+      outputFiles.boundariesPolygonsGeoJsonl,
     );
 
     const totalTime = (Date.now() - startTime) / 1000;
@@ -76,12 +77,30 @@ async function transformOnly(): Promise<void> {
     logger.info(`- boundaries.jsonl`);
     logger.info(`- associations.jsonl`);
     logger.info(`- hierarchies.jsonl`);
-    logger.info(`- boundaries-country.jsonl (pour Mapbox Tileset)`);
-    logger.info(`- boundaries-region.jsonl (pour Mapbox Tileset)`);
-    logger.info(`- boundaries-county.jsonl (pour Mapbox Tileset)`);
-    logger.info(`- boundaries-city.jsonl (pour Mapbox Tileset)`);
-    logger.info(`- boundaries-district.jsonl (pour Mapbox Tileset)`);
-    logger.info(`- boundaries-neighborhood.jsonl (pour Mapbox Tileset)`);
+    logger.info(`- boundaries-country.jsonl (points pour Mapbox Tileset)`);
+    logger.info(`- boundaries-region.jsonl (points pour Mapbox Tileset)`);
+    logger.info(`- boundaries-county.jsonl (points pour Mapbox Tileset)`);
+    logger.info(`- boundaries-city.jsonl (points pour Mapbox Tileset)`);
+    logger.info(`- boundaries-district.jsonl (points pour Mapbox Tileset)`);
+    logger.info(`- boundaries-neighborhood.jsonl (points pour Mapbox Tileset)`);
+    logger.info(
+      `- boundaries-polygons-country.jsonl (polygones pour Mapbox Tileset)`,
+    );
+    logger.info(
+      `- boundaries-polygons-region.jsonl (polygones pour Mapbox Tileset)`,
+    );
+    logger.info(
+      `- boundaries-polygons-county.jsonl (polygones pour Mapbox Tileset)`,
+    );
+    logger.info(
+      `- boundaries-polygons-city.jsonl (polygones pour Mapbox Tileset)`,
+    );
+    logger.info(
+      `- boundaries-polygons-district.jsonl (polygones pour Mapbox Tileset)`,
+    );
+    logger.info(
+      `- boundaries-polygons-neighborhood.jsonl (polygones pour Mapbox Tileset)`,
+    );
     logger.info("=======================================");
     logger.info(
       `Pour charger les données en base, exécutez: pnpm run load --transform-dir ${outputFiles.transformDir.replace("output/", "")}`,

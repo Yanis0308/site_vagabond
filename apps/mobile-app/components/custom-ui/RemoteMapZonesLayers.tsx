@@ -1,8 +1,16 @@
-import { CircleLayer, SymbolLayer, VectorSource } from "@rnmapbox/maps";
-import React, { memo, type ReactElement } from "react";
+import {
+  CircleLayer,
+  LineLayer,
+  SymbolLayer,
+  VectorSource,
+} from "@rnmapbox/maps";
+import React, { memo, type ReactElement, useMemo } from "react";
 
 import { useUserZoneStats } from "@/hooks/queries/useZonesStats";
-import { type ZoneUserStatType } from "@/utils/types";
+import {
+  type BoundaryLevelEnumType,
+  type ZoneUserStatType,
+} from "@/utils/types";
 
 // Définition des couleurs pour les bulles par boundary level
 const boundaryColors = {
@@ -16,6 +24,7 @@ const boundaryColors = {
 
 interface RemoteMapZonesLayersProps {
   tilesetUrl: string;
+  showBoundaries?: boolean;
 }
 
 // Available data inside the tileset :
@@ -30,35 +39,125 @@ interface RemoteMapZonesLayersProps {
 // subzones_count
 // way_area
 
-const zoomLevels = {
-  COUNTRY: {
-    minZoomLevel: 0,
-    maxZoomLevel: 7,
-  },
-  REGION: {
-    minZoomLevel: 5,
-    maxZoomLevel: 10,
-  },
-  COUNTY: {
-    minZoomLevel: 7,
-    maxZoomLevel: 10,
-  },
-  CITY: {
-    minZoomLevel: 8,
-    maxZoomLevel: 10,
+// IMPORTANT: L'ordre des propriétés dans cet objet détermine l'ordre de rendu des couches.
+// Les premières propriétés sont rendues en arrière-plan, les dernières au premier plan.
+// Ordre actuel : NEIGHBORHOOD (fond) → DISTRICT → CITY → COUNTY → REGION → COUNTRY (premier plan)
+// Cela permet aux zones plus petites d'être visibles par-dessus les zones plus grandes.
+const layersInfos: Record<
+  BoundaryLevelEnumType,
+  {
+    textAndPoint: {
+      sourceLayerId: string;
+      circleId: string;
+      symbolLayerId: string;
+      minZoomLevel: number;
+      maxZoomLevel: number;
+    };
+    polygon: {
+      sourceLayerId: string;
+      polygonLayerId: string;
+      minZoomLevel: number;
+      maxZoomLevel: number;
+    };
+  }
+> = {
+  NEIGHBORHOOD: {
+    textAndPoint: {
+      sourceLayerId: "neighborhood-data-layer-v1",
+      circleId: "neighborhood-boundaries-circles",
+      symbolLayerId: "neighborhood-boundaries-labels",
+      minZoomLevel: 10,
+      maxZoomLevel: 18,
+    },
+    polygon: {
+      sourceLayerId: "neighborhood-polygon-layer-v1",
+      polygonLayerId: "neighborhood-boundaries-lines",
+      minZoomLevel: 10,
+      maxZoomLevel: 18,
+    },
   },
   DISTRICT: {
-    minZoomLevel: 9,
-    maxZoomLevel: 10,
+    textAndPoint: {
+      sourceLayerId: "district-data-layer-v1",
+      circleId: "district-boundaries-circles",
+      symbolLayerId: "district-boundaries-labels",
+      minZoomLevel: 10,
+      maxZoomLevel: 16,
+    },
+    polygon: {
+      sourceLayerId: "district-polygon-layer-v1",
+      polygonLayerId: "district-boundaries-lines",
+      minZoomLevel: 10,
+      maxZoomLevel: 16,
+    },
   },
-  NEIGHBORHOOD: {
-    minZoomLevel: 10,
-    maxZoomLevel: 16,
+  CITY: {
+    textAndPoint: {
+      sourceLayerId: "city-data-layer-v1",
+      circleId: "city-boundaries-circles",
+      symbolLayerId: "city-boundaries-labels",
+      minZoomLevel: 8,
+      maxZoomLevel: 16,
+    },
+    polygon: {
+      sourceLayerId: "city-polygon-layer-v1",
+      polygonLayerId: "city-boundaries-lines",
+      minZoomLevel: 8,
+      maxZoomLevel: 16,
+    },
   },
-} as const;
+  COUNTY: {
+    textAndPoint: {
+      sourceLayerId: "county-data-layer-v1",
+      circleId: "county-boundaries-circles",
+      symbolLayerId: "county-boundaries-labels",
+      minZoomLevel: 7,
+      maxZoomLevel: 10,
+    },
+    polygon: {
+      sourceLayerId: "county-polygon-layer-v1",
+      polygonLayerId: "county-boundaries-lines",
+      minZoomLevel: 7,
+      maxZoomLevel: 10,
+    },
+  },
+  REGION: {
+    textAndPoint: {
+      sourceLayerId: "region-data-layer-v1",
+      circleId: "region-boundaries-circles",
+      symbolLayerId: "region-boundaries-labels",
+      minZoomLevel: 5,
+      maxZoomLevel: 10,
+    },
+    polygon: {
+      sourceLayerId: "region-polygon-layer-v1",
+      polygonLayerId: "region-boundaries-lines",
+      minZoomLevel: 5,
+      maxZoomLevel: 10,
+    },
+  },
+  COUNTRY: {
+    textAndPoint: {
+      sourceLayerId: "country-data-layer-v1",
+      circleId: "country-boundaries-circles",
+      symbolLayerId: "country-boundaries-labels",
+      minZoomLevel: 0,
+      maxZoomLevel: 7,
+    },
+    polygon: {
+      sourceLayerId: "country-polygon-layer-v1",
+      polygonLayerId: "country-boundaries-lines",
+      minZoomLevel: 0,
+      maxZoomLevel: 7,
+    },
+  },
+};
 
 export const RemoteMapZonesLayers = memo(
-  ({ tilesetUrl }: RemoteMapZonesLayersProps): ReactElement => {
+  ({
+    tilesetUrl,
+    showBoundaries = true,
+  }: RemoteMapZonesLayersProps): ReactElement => {
     const { data: userZoneStats } = useUserZoneStats();
 
     const completionData = React.useMemo(() => {
@@ -97,6 +196,47 @@ export const RemoteMapZonesLayers = memo(
         circleStrokeOpacity: 1,
       };
     }, []);
+
+    // Style pour les contours polygonaux (LineLayer)
+    const lineStyle: Record<string, unknown> = React.useMemo(() => {
+      return {
+        lineColor: [
+          "case",
+          ["==", ["get", "boundary_level"], "COUNTRY"],
+          boundaryColors.COUNTRY,
+          ["==", ["get", "boundary_level"], "REGION"],
+          boundaryColors.REGION,
+          ["==", ["get", "boundary_level"], "COUNTY"],
+          boundaryColors.COUNTY,
+          ["==", ["get", "boundary_level"], "CITY"],
+          boundaryColors.CITY,
+          ["==", ["get", "boundary_level"], "DISTRICT"],
+          boundaryColors.DISTRICT,
+          ["==", ["get", "boundary_level"], "NEIGHBORHOOD"],
+          boundaryColors.NEIGHBORHOOD,
+          boundaryColors.CITY, // fallback
+        ],
+        lineWidth: showBoundaries
+          ? [
+              "case",
+              ["==", ["get", "boundary_level"], "COUNTRY"],
+              3, // Plus épais pour les pays
+              ["==", ["get", "boundary_level"], "REGION"],
+              2.5,
+              ["==", ["get", "boundary_level"], "COUNTY"],
+              2,
+              ["==", ["get", "boundary_level"], "CITY"],
+              1.5,
+              ["==", ["get", "boundary_level"], "DISTRICT"],
+              1.2,
+              ["==", ["get", "boundary_level"], "NEIGHBORHOOD"],
+              1,
+              1.5, // fallback
+            ]
+          : 0, // Invisible si showBoundaries est false
+        lineOpacity: 0.8,
+      };
+    }, [showBoundaries]);
 
     // Style pour les textes avec informations combinées
     const largeBoxTextStyle: Record<string, unknown> = React.useMemo(() => {
@@ -245,103 +385,54 @@ export const RemoteMapZonesLayers = memo(
       };
     }, [completionData]);
 
+    const allLayers = useMemo(() => {
+      const layers: ReactElement[] = [];
+
+      Object.values(layersInfos).forEach((layer, index) => {
+        // LineLayer d'abord (arrière-plan)
+        layers.push(
+          <LineLayer
+            key={`line-${index}`}
+            id={layer.polygon.polygonLayerId}
+            sourceLayerID={layer.polygon.sourceLayerId}
+            minZoomLevel={layer.polygon.minZoomLevel}
+            maxZoomLevel={layer.polygon.maxZoomLevel}
+            style={lineStyle}
+          />,
+        );
+
+        // CircleLayer ensuite
+        layers.push(
+          <CircleLayer
+            key={`circle-${index}`}
+            id={layer.textAndPoint.circleId}
+            sourceLayerID={layer.textAndPoint.sourceLayerId}
+            minZoomLevel={layer.textAndPoint.minZoomLevel}
+            maxZoomLevel={layer.textAndPoint.maxZoomLevel}
+            style={circleStyle}
+          />,
+        );
+
+        // SymbolLayer en dernier (premier plan)
+        layers.push(
+          <SymbolLayer
+            key={`symbol-${index}`}
+            id={layer.textAndPoint.symbolLayerId}
+            sourceLayerID={layer.textAndPoint.sourceLayerId}
+            minZoomLevel={layer.textAndPoint.minZoomLevel}
+            maxZoomLevel={layer.textAndPoint.maxZoomLevel}
+            style={largeBoxTextStyle}
+          />,
+        );
+      });
+
+      return layers;
+    }, [circleStyle, largeBoxTextStyle, lineStyle]);
+
     return (
       <VectorSource id="remote-boundaries-source" url={tilesetUrl}>
-        {/* Neighborhood Layers - zoom 10-16 (rendered first = lowest priority) */}
-        <CircleLayer
-          id="neighborhood-boundaries-circles"
-          sourceLayerID="neighborhood-data-layer-v1"
-          minZoomLevel={zoomLevels.NEIGHBORHOOD.minZoomLevel}
-          maxZoomLevel={zoomLevels.NEIGHBORHOOD.maxZoomLevel}
-          style={circleStyle}
-        />
-        <SymbolLayer
-          id="neighborhood-boundaries-labels"
-          sourceLayerID="neighborhood-data-layer-v1"
-          minZoomLevel={zoomLevels.NEIGHBORHOOD.minZoomLevel}
-          maxZoomLevel={zoomLevels.NEIGHBORHOOD.maxZoomLevel}
-          style={largeBoxTextStyle}
-        />
-
-        {/* District Layers - zoom 9-12 */}
-        <CircleLayer
-          id="district-boundaries-circles"
-          sourceLayerID="district-data-layer-v1"
-          minZoomLevel={zoomLevels.DISTRICT.minZoomLevel}
-          maxZoomLevel={zoomLevels.DISTRICT.maxZoomLevel}
-          style={circleStyle}
-        />
-        <SymbolLayer
-          id="district-boundaries-labels"
-          sourceLayerID="district-data-layer-v1"
-          minZoomLevel={zoomLevels.DISTRICT.minZoomLevel}
-          maxZoomLevel={zoomLevels.DISTRICT.maxZoomLevel}
-          style={largeBoxTextStyle}
-        />
-
-        {/* City Layers - zoom 8-11 */}
-        <CircleLayer
-          id="city-boundaries-circles"
-          sourceLayerID="city-data-layer-v1"
-          minZoomLevel={zoomLevels.CITY.minZoomLevel}
-          maxZoomLevel={zoomLevels.CITY.maxZoomLevel}
-          style={circleStyle}
-        />
-        <SymbolLayer
-          id="city-boundaries-labels"
-          sourceLayerID="city-data-layer-v1"
-          minZoomLevel={zoomLevels.CITY.minZoomLevel}
-          maxZoomLevel={zoomLevels.CITY.maxZoomLevel}
-          style={largeBoxTextStyle}
-        />
-
-        {/* County Layers - zoom 7-10 */}
-        <CircleLayer
-          id="county-boundaries-circles"
-          sourceLayerID="county-data-layer-v1"
-          minZoomLevel={zoomLevels.COUNTY.minZoomLevel}
-          maxZoomLevel={zoomLevels.COUNTY.maxZoomLevel}
-          style={circleStyle}
-        />
-        <SymbolLayer
-          id="county-boundaries-labels"
-          sourceLayerID="county-data-layer-v1"
-          minZoomLevel={zoomLevels.COUNTY.minZoomLevel}
-          maxZoomLevel={zoomLevels.COUNTY.maxZoomLevel}
-          style={largeBoxTextStyle}
-        />
-
-        {/* Region Layers - zoom 6-10 */}
-        <CircleLayer
-          id="region-boundaries-circles"
-          sourceLayerID="region-data-layer-v1"
-          minZoomLevel={zoomLevels.REGION.minZoomLevel}
-          maxZoomLevel={zoomLevels.REGION.maxZoomLevel}
-          style={circleStyle}
-        />
-        <SymbolLayer
-          id="region-boundaries-labels"
-          sourceLayerID="region-data-layer-v1"
-          minZoomLevel={zoomLevels.REGION.minZoomLevel}
-          maxZoomLevel={zoomLevels.REGION.maxZoomLevel}
-          style={largeBoxTextStyle}
-        />
-
-        {/* Country Layers - zoom 0-5 (rendered last = highest priority) */}
-        <CircleLayer
-          id="country-boundaries-circles"
-          sourceLayerID="country-data-layer-v1"
-          minZoomLevel={zoomLevels.COUNTRY.minZoomLevel}
-          maxZoomLevel={zoomLevels.COUNTRY.maxZoomLevel}
-          style={circleStyle}
-        />
-        <SymbolLayer
-          id="country-boundaries-labels"
-          sourceLayerID="country-data-layer-v1"
-          minZoomLevel={zoomLevels.COUNTRY.minZoomLevel}
-          maxZoomLevel={zoomLevels.COUNTRY.maxZoomLevel}
-          style={largeBoxTextStyle}
-        />
+        {/* Line Layers - Contours des zones (rendered first = background) */}
+        {allLayers}
       </VectorSource>
     );
   },

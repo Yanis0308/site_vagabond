@@ -30,6 +30,36 @@
       "source": "mapbox://tileset-source/glutomax/bounds-ne-src-v1",
       "minzoom": 9,
       "maxzoom": 10
+    },
+    "country-polygon-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/poly-co-src-v1",
+      "minzoom": 0,
+      "maxzoom": 10
+    },
+    "region-polygon-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/poly-re-src-v1",
+      "minzoom": 3,
+      "maxzoom": 10
+    },
+    "county-polygon-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/poly-ct-src-v1",
+      "minzoom": 3,
+      "maxzoom": 10
+    },
+    "city-polygon-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/poly-ci-src-v1",
+      "minzoom": 6,
+      "maxzoom": 10
+    },
+    "district-polygon-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/poly-di-src-v1",
+      "minzoom": 7,
+      "maxzoom": 10
+    },
+    "neighborhood-polygon-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/poly-ne-src-v1",
+      "minzoom": 9,
+      "maxzoom": 10
     }
   }
 }

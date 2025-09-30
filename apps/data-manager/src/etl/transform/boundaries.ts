@@ -1,5 +1,5 @@
 import { logger } from "@vagabond/shared-utils";
-import { type Feature, type Point } from "geojson";
+import { type Feature, type MultiPolygon, type Point } from "geojson";
 
 import { JsonlFileReader, JsonlFileWriter } from "../jsonl-utils";
 import {
@@ -31,6 +31,11 @@ type BoundaryGeoJSONFeature = Feature<
   Omit<BoundaryProperties, "raw_info">
 >;
 
+type BoundaryPolygonGeoJSONFeature = Feature<
+  MultiPolygon,
+  Omit<BoundaryProperties, "raw_info">
+>;
+
 // Fonctions utilitaires pour l'export GeoJSON
 function mapAdminLevelToBoundaryLevel(adminLevel: number): string {
   switch (adminLevel) {
@@ -48,6 +53,26 @@ function mapAdminLevelToBoundaryLevel(adminLevel: number): string {
       return "NEIGHBORHOOD";
     default:
       return "UNKNOWN";
+  }
+}
+
+// Fonction pour obtenir la tolérance de simplification selon le niveau
+function getSimplificationTolerance(boundaryLevel: string): number {
+  switch (boundaryLevel) {
+    case "COUNTRY":
+      return 0.01;
+    case "REGION":
+      return 0.005;
+    case "COUNTY":
+      return 0.001;
+    case "CITY":
+      return 0.0005;
+    case "DISTRICT":
+      return 0.0001;
+    case "NEIGHBORHOOD":
+      return 0.00005;
+    default:
+      return 0.001;
   }
 }
 
@@ -91,7 +116,7 @@ export async function processBoundaries(
   schema: string,
   countryCode: string,
   outputFilePath: string,
-  jsonlOutputPaths?: {
+  jsonlOutputPaths: {
     country: { filePath: string };
     region: { filePath: string };
     county: { filePath: string };
@@ -99,89 +124,116 @@ export async function processBoundaries(
     district: { filePath: string };
     neighborhood: { filePath: string };
   },
-  associationsFilePath?: string,
-  hierarchiesFilePath?: string,
+  associationsFilePath: string,
+  hierarchiesFilePath: string,
+  polygonOutputPaths: {
+    country: { filePath: string };
+    region: { filePath: string };
+    county: { filePath: string };
+    city: { filePath: string };
+    district: { filePath: string };
+    neighborhood: { filePath: string };
+  },
 ): Promise<void> {
   const writer = new JsonlFileWriter<JsonlBoundaryRecord>(outputFilePath);
 
   // Lire les associations POI-boundaries pour compter les POIs par boundary
   const poisCountGlobal = new Map<string, number>();
-  if (associationsFilePath !== null && associationsFilePath !== undefined) {
-    logger.info("Lecture des associations POI-boundaries...");
-    try {
-      const reader = new JsonlFileReader<JsonlAssociationRecord>(
-        associationsFilePath,
-      );
-      for await (const record of reader.read()) {
-        if (record.type === "association") {
-          const boundaryId = `${record.data.boundary_osm_type}-${record.data.boundary_osm_id}`;
-          const currentCount = poisCountGlobal.get(boundaryId) ?? 0;
-          poisCountGlobal.set(boundaryId, currentCount + 1);
-        }
+  logger.info("Lecture des associations POI-boundaries...");
+  try {
+    const reader = new JsonlFileReader<JsonlAssociationRecord>(
+      associationsFilePath,
+    );
+    for await (const record of reader.read()) {
+      if (record.type === "association") {
+        const boundaryId = `${record.data.boundary_osm_type}-${record.data.boundary_osm_id}`;
+        const currentCount = poisCountGlobal.get(boundaryId) ?? 0;
+        poisCountGlobal.set(boundaryId, currentCount + 1);
       }
-      await reader.close();
-      logger.info(
-        `Associations chargées: ${poisCountGlobal.size} boundaries avec POIs`,
-      );
-    } catch (error) {
-      logger.warn(
-        `Impossible de lire les associations: ${String(error)}. POIs counts seront à 0.`,
-      );
     }
+    await reader.close();
+    logger.info(
+      `Associations chargées: ${poisCountGlobal.size} boundaries avec POIs`,
+    );
+  } catch (error) {
+    logger.warn(
+      `Impossible de lire les associations: ${String(error)}. POIs counts seront à 0.`,
+    );
   }
 
   // Lire les hiérarchies pour compter les sous-zones par boundary parent
   const subzonesCountGlobal = new Map<string, number>();
-  if (hierarchiesFilePath !== null && hierarchiesFilePath !== undefined) {
-    logger.info("Lecture des hiérarchies pour compter les sous-zones...");
-    try {
-      const reader = new JsonlFileReader<JsonlHierarchyRecord>(
-        hierarchiesFilePath,
-      );
-      for await (const record of reader.read()) {
-        if (record.type === "hierarchy") {
-          const parentId = `${record.data.parent_osm_type}-${record.data.parent_osm_id}`;
-          const currentCount = subzonesCountGlobal.get(parentId) ?? 0;
-          subzonesCountGlobal.set(parentId, currentCount + 1);
-        }
+  logger.info("Lecture des hiérarchies pour compter les sous-zones...");
+  try {
+    const reader = new JsonlFileReader<JsonlHierarchyRecord>(
+      hierarchiesFilePath,
+    );
+    for await (const record of reader.read()) {
+      if (record.type === "hierarchy") {
+        const parentId = `${record.data.parent_osm_type}-${record.data.parent_osm_id}`;
+        const currentCount = subzonesCountGlobal.get(parentId) ?? 0;
+        subzonesCountGlobal.set(parentId, currentCount + 1);
       }
-      await reader.close();
-      logger.info(
-        `Hiérarchies chargées: ${subzonesCountGlobal.size} boundaries avec sous-zones`,
-      );
-    } catch (error) {
-      logger.warn(
-        `Impossible de lire les hiérarchies: ${String(error)}. Subzones counts seront à 0.`,
-      );
     }
+    await reader.close();
+    logger.info(
+      `Hiérarchies chargées: ${subzonesCountGlobal.size} boundaries avec sous-zones`,
+    );
+  } catch (error) {
+    logger.warn(
+      `Impossible de lire les hiérarchies: ${String(error)}. Subzones counts seront à 0.`,
+    );
   }
 
-  // Writers pour les fichiers JSONL par niveau si demandé
+  // Writers pour les fichiers JSONL par niveau
   const jsonlWriters: Record<
     string,
     JsonlFileWriter<BoundaryGeoJSONFeature>
-  > = {};
-
-  if (jsonlOutputPaths) {
-    jsonlWriters.COUNTRY = new JsonlFileWriter<BoundaryGeoJSONFeature>(
+  > = {
+    COUNTRY: new JsonlFileWriter<BoundaryGeoJSONFeature>(
       jsonlOutputPaths.country.filePath,
-    );
-    jsonlWriters.REGION = new JsonlFileWriter<BoundaryGeoJSONFeature>(
+    ),
+    REGION: new JsonlFileWriter<BoundaryGeoJSONFeature>(
       jsonlOutputPaths.region.filePath,
-    );
-    jsonlWriters.COUNTY = new JsonlFileWriter<BoundaryGeoJSONFeature>(
+    ),
+    COUNTY: new JsonlFileWriter<BoundaryGeoJSONFeature>(
       jsonlOutputPaths.county.filePath,
-    );
-    jsonlWriters.CITY = new JsonlFileWriter<BoundaryGeoJSONFeature>(
+    ),
+    CITY: new JsonlFileWriter<BoundaryGeoJSONFeature>(
       jsonlOutputPaths.city.filePath,
-    );
-    jsonlWriters.DISTRICT = new JsonlFileWriter<BoundaryGeoJSONFeature>(
+    ),
+    DISTRICT: new JsonlFileWriter<BoundaryGeoJSONFeature>(
       jsonlOutputPaths.district.filePath,
-    );
-    jsonlWriters.NEIGHBORHOOD = new JsonlFileWriter<BoundaryGeoJSONFeature>(
+    ),
+    NEIGHBORHOOD: new JsonlFileWriter<BoundaryGeoJSONFeature>(
       jsonlOutputPaths.neighborhood.filePath,
-    );
-  }
+    ),
+  };
+
+  // Writers pour les fichiers JSONL des polygones par niveau
+  const polygonWriters: Record<
+    string,
+    JsonlFileWriter<BoundaryPolygonGeoJSONFeature>
+  > = {
+    COUNTRY: new JsonlFileWriter<BoundaryPolygonGeoJSONFeature>(
+      polygonOutputPaths.country.filePath,
+    ),
+    REGION: new JsonlFileWriter<BoundaryPolygonGeoJSONFeature>(
+      polygonOutputPaths.region.filePath,
+    ),
+    COUNTY: new JsonlFileWriter<BoundaryPolygonGeoJSONFeature>(
+      polygonOutputPaths.county.filePath,
+    ),
+    CITY: new JsonlFileWriter<BoundaryPolygonGeoJSONFeature>(
+      polygonOutputPaths.city.filePath,
+    ),
+    DISTRICT: new JsonlFileWriter<BoundaryPolygonGeoJSONFeature>(
+      polygonOutputPaths.district.filePath,
+    ),
+    NEIGHBORHOOD: new JsonlFileWriter<BoundaryPolygonGeoJSONFeature>(
+      polygonOutputPaths.neighborhood.filePath,
+    ),
+  };
 
   logger.info("Diagnostic: comptage des boundaries...");
   const countResult = await knexInstance.raw<{
@@ -324,12 +376,12 @@ export async function processBoundaries(
         };
         await writer.write(record);
 
-        // Générer feature JSONL si demandé
+        // Générer feature JSONL
         const boundaryLevel = mapAdminLevelToBoundaryLevel(
           originalData.admin_level,
         );
         const levelWriter = jsonlWriters[boundaryLevel];
-        if (levelWriter) {
+        if (levelWriter !== null && levelWriter !== undefined) {
           const placeType = determinePlaceType(boundary);
           const importanceScore = calculateImportanceScore(boundary);
           const finalPopulation = determineFinalPopulation(boundary);
@@ -366,6 +418,71 @@ export async function processBoundaries(
 
           await levelWriter.write(jsonlFeature);
         }
+
+        // Générer feature polygonale JSONL
+        const polygonWriter = polygonWriters[boundaryLevel];
+        if (polygonWriter !== null && polygonWriter !== undefined) {
+          const placeType = determinePlaceType(boundary);
+          const importanceScore = calculateImportanceScore(boundary);
+          const finalPopulation = determineFinalPopulation(boundary);
+          const isCapital = determineIsCapital(boundary);
+          const computedId = `${boundary.osm_type}-${boundary.osm_id}`;
+          const wayArea = boundary.way_area;
+          const tolerance = getSimplificationTolerance(boundaryLevel);
+
+          // Extraire la géométrie simplifiée depuis la base de données
+          // Forcer la conversion en MultiPolygon pour assurer la compatibilité
+          const simplifiedGeometryResult = await knexInstance.raw<{
+            rows: Array<{ simplified_geom: unknown }>;
+          }>(`
+            SELECT ST_AsGeoJSON(
+              ST_Multi(
+                ST_SimplifyPreserveTopology(
+                  ST_Transform(geom, 4326), 
+                  ${tolerance}
+                )
+              )
+            ) as simplified_geom
+            FROM ${schema}.boundaries 
+            WHERE osm_type = '${boundary.osm_type}' AND osm_id = '${boundary.osm_id}'
+          `);
+
+          if (
+            simplifiedGeometryResult.rows.length > 0 &&
+            simplifiedGeometryResult.rows[0]?.simplified_geom !== null &&
+            simplifiedGeometryResult.rows[0]?.simplified_geom !== undefined
+          ) {
+            try {
+              const geometryData = JSON.parse(
+                simplifiedGeometryResult.rows[0].simplified_geom as string,
+              ) as MultiPolygon;
+
+              const polygonFeature: BoundaryPolygonGeoJSONFeature = {
+                type: "Feature",
+                properties: {
+                  id: computedId,
+                  name: boundary.name,
+                  boundary_level: boundaryLevel,
+                  place_type: placeType,
+                  population: finalPopulation,
+                  is_capital: isCapital,
+                  importance_score: importanceScore,
+                  way_area: wayArea,
+                  parent_id: null, // Sera mis à jour dans l'étape hierarchies
+                  pois_count: poisCountGlobal.get(computedId) ?? 0,
+                  subzones_count: subzonesCountGlobal.get(computedId) ?? 0,
+                },
+                geometry: geometryData,
+              };
+
+              await polygonWriter.write(polygonFeature);
+            } catch (error) {
+              logger.warn(
+                `Erreur parsing géométrie pour ${computedId}: ${String(error)}`,
+              );
+            }
+          }
+        }
       }
     };
 
@@ -378,15 +495,22 @@ export async function processBoundaries(
   }
 
   try {
-    // Fermer les writers JSONL si utilisés
-    if (Object.keys(jsonlWriters).length > 0) {
-      for (const [level, levelWriter] of Object.entries(jsonlWriters)) {
-        await levelWriter.close();
-        const featuresCount = levelWriter.getWrittenCount();
-        logger.info(
-          `Export JSONL ${level}: ${featuresCount} features exportées`,
-        );
-      }
+    // Fermer les writers JSONL points
+    for (const [level, levelWriter] of Object.entries(jsonlWriters)) {
+      await levelWriter.close();
+      const featuresCount = levelWriter.getWrittenCount();
+      logger.info(
+        `Export JSONL points ${level}: ${featuresCount} features exportées`,
+      );
+    }
+
+    // Fermer les writers polygonaux
+    for (const [level, polygonWriter] of Object.entries(polygonWriters)) {
+      await polygonWriter.close();
+      const featuresCount = polygonWriter.getWrittenCount();
+      logger.info(
+        `Export JSONL polygons ${level}: ${featuresCount} features exportées`,
+      );
     }
   } finally {
     await writer.close();
