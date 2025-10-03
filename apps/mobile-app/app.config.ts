@@ -1,98 +1,92 @@
 import { type ConfigContext, type ExpoConfig } from "expo/config";
+import { type DeepPartial } from "utility-types";
+import { z } from "zod";
 
-import { type ConfigType } from "./constants/Config";
+export const RuntimeConfigSchema = z.object({
+  apiBaseUrl: z.string().url(),
+  cdnUrl: z.string().url(),
+  appleSignInServiceId: z.string(),
+  appleSignInRedirectUrl: z.string().url(),
+  googleSignInWebClientId: z.string(),
+  publicMapboxToken: z.string(),
+  mapboxStyleUrl: z.string(),
+  mapboxTilesetUrl: z.string(),
+  vexoApiKey: z.string(),
+});
+
+const appConfigSchema = z.object({
+  appName: z.string(),
+  packageAndBundleIdentifier: z.string(),
+  googleServicesFiles: z.object({
+    ios: z.string(),
+    android: z.string(),
+  }),
+  privateMapboxToken: z.string(),
+  eas: z.object({
+    projectId: z.string(),
+    updatesUrl: z.string(),
+  }),
+  runtimeConfig: RuntimeConfigSchema,
+});
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- not a React component
 export default ({ config }: ConfigContext): ExpoConfig => {
-  const buildProfile = process.env.BUILD_PROFILE ?? "empty-build-profile";
-  const isDevelopmentBuild = buildProfile !== "production";
-
-  // eslint-disable-next-line no-console -- AppConfig debug logs
+  //eslint-disable-next-line no-console -- allow for logger function
   console.log(
-    "[AppConfig] buildProfile:",
-    buildProfile,
-    "| isDevelopmentBuild:",
-    isDevelopmentBuild,
+    `[AppConfig] buildProfile: ${process.env.BUILD_PROFILE ?? "empty"}`,
   );
 
-  const variantConfig: {
-    appName: string;
-    packageAndBundleIdentifier: string;
+  const loadedConfig: DeepPartial<z.infer<typeof appConfigSchema>> = {
+    appName: process.env.APP_NAME,
+    packageAndBundleIdentifier: process.env.PACKAGE_AND_BUNDLE_IDENTIFIER,
     googleServicesFiles: {
-      ios: string | undefined;
-      android: string | undefined;
-    };
-    privateMapboxToken: string | undefined;
-    runtimeConfig: ConfigType;
-  } =
-    // isDevelopmentBuild
-    // ?
-    {
-      appName: buildProfile === "development" ? "DEV Vagabond" : "TST Vagabond",
-      packageAndBundleIdentifier: "dev.com.vagabond.explore.tourism",
-      googleServicesFiles: {
-        ios: process.env.DEV_GOOGLE_SERVICES_PLIST,
-        android: process.env.DEV_GOOGLE_SERVICES_JSON,
-      },
-      privateMapboxToken: process.env.DEV_PRIVATE_MAPBOX_TOKEN,
-      runtimeConfig: {
-        apiBaseUrl:
-          buildProfile === "development"
-            ? process.env.DEV_EXPO_PUBLIC_API_URL
-            : // : process.env.PREVIEW_EXPO_PUBLIC_API_URL,
-              process.env.DEV_EXPO_PUBLIC_API_URL,
-        cdnUrl: process.env.DEV_EXPO_PUBLIC_CDN_URL,
-        appleSignInRedirectUrl:
-          process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
-        appleSignInServiceId:
-          process.env.DEV_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
-        googleSignInWebClientId:
-          process.env.DEV_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
-        publicMapboxToken: process.env.DEV_SEMI_PUBLIC_MAPBOX_TOKEN,
-        vexoApiKey: process.env.DEV_EXPO_PUBLIC_VEXO_API_KEY,
-        vexoApiKeyAdmin: process.env.DEV_EXPO_PUBLIC_VEXO_API_KEY_ADMIN,
-      },
-    };
-  // : // We have never tested this before
-  // {
-  //   appName: "Vagabond",
-  //   packageAndBundleIdentifier: "com.vagabond.explore.tourism",
-  //   googleServicesFiles: {
-  //     ios: process.env.PRD_GOOGLE_SERVICES_PLIST,
-  //     android: process.env.PRD_GOOGLE_SERVICES_JSON,
-  //   },
-  //   privateMapboxToken: process.env.PRD_PRIVATE_MAPBOX_TOKEN,
-  //   runtimeConfig: {
-  //     apiBaseUrl: process.env.PRD_EXPO_PUBLIC_API_URL,
-  //     cdnUrl: process.env.PRD_EXPO_PUBLIC_CDN_URL,
-  //     appleSignInRedirectUrl:
-  //       process.env.PRD_EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
-  //     appleSignInServiceId:
-  //       process.env.PRD_EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
-  //     googleSignInWebClientId:
-  //       process.env.PRD_EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
-  //     publicMapboxToken: process.env.PRD_PUBLIC_MAPBOX_TOKEN,
-  //     vexoApiKey: process.env.PRD_EXPO_PUBLIC_VELO_API_KEY,
-  //   },
-  // };
+      ios: process.env.GOOGLE_SERVICES_PLIST,
+      android: process.env.GOOGLE_SERVICES_JSON,
+    },
+    privateMapboxToken: process.env.PRIVATE_MAPBOX_TOKEN,
+    eas: {
+      projectId: process.env.EXPO_EAS_PROJECT_ID,
+      updatesUrl: process.env.EXPO_EAS_UPDATES_URL,
+    },
+    runtimeConfig: {
+      apiBaseUrl: process.env.EXPO_PUBLIC_API_URL,
+      cdnUrl: process.env.EXPO_PUBLIC_CDN_URL,
+      appleSignInRedirectUrl:
+        process.env.EXPO_PUBLIC_APPLE_SIGN_IN_REDIRECT_URL,
+      appleSignInServiceId: process.env.EXPO_PUBLIC_APPLE_SIGN_IN_SERVICE_ID,
+      googleSignInWebClientId:
+        process.env.EXPO_PUBLIC_GOOGLE_SIGN_IN_WEB_CLIENT_ID,
+      publicMapboxToken: process.env.EXPO_PUBLIC_MAPBOX_TOKEN,
+      vexoApiKey: process.env.EXPO_PUBLIC_VEXO_API_KEY,
+      mapboxStyleUrl: process.env.EXPO_PUBLIC_MAPBOX_STYLE_URL,
+      mapboxTilesetUrl: process.env.EXPO_PUBLIC_MAPBOX_TILESET_URL,
+    },
+  };
+
+  const parsedConfig = appConfigSchema.safeParse(loadedConfig);
+
+  if (!parsedConfig.success) {
+    throw new Error("Invalid config: " + parsedConfig.error.message);
+  }
+
   return {
     ...config,
     newArchEnabled: true,
-    name: variantConfig.appName, // For Expo Go and standalone app
+    name: parsedConfig.data.appName, // For Expo Go and standalone app
     slug: "mobile-app", // For Expo EAS project
     owner: "vagabond-app", // Expo account name
     version: "1.0.0",
     runtimeVersion: "1.0.0", // For Expo OTA updates
     updates: {
       fallbackToCacheTimeout: 30000,
-      url: process.env.EXPO_EAS_UPDATES_URL,
+      url: parsedConfig.data.eas.updatesUrl,
     },
     orientation: "portrait",
     icon: "./assets/images/full-icon.png",
     scheme: "vagabond-app", // URL Scheme to open the app, here vagabond://mylinkexample
     userInterfaceStyle: "light", // For light / dark mode
     ios: {
-      bundleIdentifier: variantConfig.packageAndBundleIdentifier,
+      bundleIdentifier: parsedConfig.data.packageAndBundleIdentifier,
       supportsTablet: true,
       // indicate to Expo to configure apple-sign-in in our Apple developer account
       // but after that we manage it with the non expo library @invertase/react-native-apple-authentication
@@ -100,7 +94,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       entitlements: {
         "com.apple.developer.applesignin": ["Default"],
       },
-      googleServicesFile: variantConfig.googleServicesFiles.ios,
+      googleServicesFile: parsedConfig.data.googleServicesFiles.ios,
       config: {
         usesNonExemptEncryption: false,
       },
@@ -116,8 +110,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
       ],
-      package: variantConfig.packageAndBundleIdentifier,
-      googleServicesFile: variantConfig.googleServicesFiles.android,
+      package: parsedConfig.data.packageAndBundleIdentifier,
+      googleServicesFile: parsedConfig.data.googleServicesFiles.android,
     },
     web: {
       bundler: "metro",
@@ -194,7 +188,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       [
         "@rnmapbox/maps",
         {
-          RNMapboxMapsDownloadToken: variantConfig.privateMapboxToken,
+          RNMapboxMapsDownloadToken: parsedConfig.data.privateMapboxToken,
           // Manually update the version when needed
           RNMapboxMapsVersion: "11.10.1",
         },
@@ -218,9 +212,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         origin: false,
       },
       eas: {
-        projectId: "1ab4c082-bc8a-41b0-826f-fc4d53216d2d",
+        projectId: parsedConfig.data.eas.projectId,
       },
-      ...variantConfig.runtimeConfig,
+      ...parsedConfig.data.runtimeConfig,
     },
   };
 };

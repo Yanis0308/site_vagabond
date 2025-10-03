@@ -48,7 +48,6 @@ export const createPoiExtensions = (
         | {
               id: number | null;
               poiId: string | null;
-              zoneId: string | null;
               userId: string | null;
               username: unknown | null | string;
               createdAt: unknown | null;
@@ -81,7 +80,6 @@ export const createPoiExtensions = (
           DISTINCT jsonb_build_object(
             'id', vp.id,
             'poiId', vp.poi_id,
-            'zoneId', pb.boundary_id,
             'userId', vp.user_id,
             'username', CASE 
               WHEN u.email IS NOT NULL AND POSITION('@' IN u.email) > 0 THEN 
@@ -98,7 +96,6 @@ export const createPoiExtensions = (
       LEFT JOIN poi_data pd ON p.id = pd.poi_id
       LEFT JOIN visited_pois vp ON p.id = vp.poi_id
       LEFT JOIN users u ON vp.user_id = u.user_id
-      LEFT JOIN poi_boundaries pb ON p.id = pb.poi_id
       WHERE ST_Within(p.coords::geometry, ST_GeomFromText(${polygon}, 4326))
       AND p.disabled = false
       GROUP BY p.id
@@ -130,7 +127,6 @@ export const createPoiExtensions = (
       visitedPois: Array<{
         id: number;
         poiId: string;
-        zoneId: string;
         userId: string;
         username: string;
         createdAt: string;

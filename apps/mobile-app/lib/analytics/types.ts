@@ -10,17 +10,12 @@ export interface AnalyticsUserContext {
   role?: "ADMIN" | "USER";
 }
 
-export interface AnalyticsAppContext {
-  environment: string;
-  version: string;
-}
-
 // Base interface that all analytics services must implement
 export interface IAnalyticsService {
   /**
    * Initialize the analytics service
    */
-  initialize(appContext: AnalyticsAppContext): Promise<void>;
+  initialize(): Promise<void> | void;
 
   /**
    * Set user context for the service

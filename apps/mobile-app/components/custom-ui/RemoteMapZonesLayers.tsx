@@ -1,9 +1,4 @@
-import {
-  CircleLayer,
-  LineLayer,
-  SymbolLayer,
-  VectorSource,
-} from "@rnmapbox/maps";
+import { LineLayer, SymbolLayer, VectorSource } from "@rnmapbox/maps";
 import React, { memo, type ReactElement, useMemo } from "react";
 
 import { useUserZoneStats } from "@/hooks/queries/useZonesStats";
@@ -171,31 +166,31 @@ export const RemoteMapZonesLayers = memo(
       );
     }, [userZoneStats]);
     // Style pour les cercles basé uniquement sur le boundary level
-    const circleStyle: Record<string, unknown> = React.useMemo(() => {
-      return {
-        circleRadius: 3,
-        circleColor: [
-          "case",
-          ["==", ["get", "boundary_level"], "COUNTRY"],
-          boundaryColors.COUNTRY,
-          ["==", ["get", "boundary_level"], "REGION"],
-          boundaryColors.REGION,
-          ["==", ["get", "boundary_level"], "COUNTY"],
-          boundaryColors.COUNTY,
-          ["==", ["get", "boundary_level"], "CITY"],
-          boundaryColors.CITY,
-          ["==", ["get", "boundary_level"], "DISTRICT"],
-          boundaryColors.DISTRICT,
-          ["==", ["get", "boundary_level"], "NEIGHBORHOOD"],
-          boundaryColors.NEIGHBORHOOD,
-          boundaryColors.CITY, // fallback
-        ],
-        circleStrokeWidth: 2,
-        circleStrokeColor: "#FFFFFF",
-        circleOpacity: 0.8,
-        circleStrokeOpacity: 1,
-      };
-    }, []);
+    // const circleStyle: Record<string, unknown> = React.useMemo(() => {
+    //   return {
+    //     circleRadius: 3,
+    //     circleColor: [
+    //       "case",
+    //       ["==", ["get", "boundary_level"], "COUNTRY"],
+    //       boundaryColors.COUNTRY,
+    //       ["==", ["get", "boundary_level"], "REGION"],
+    //       boundaryColors.REGION,
+    //       ["==", ["get", "boundary_level"], "COUNTY"],
+    //       boundaryColors.COUNTY,
+    //       ["==", ["get", "boundary_level"], "CITY"],
+    //       boundaryColors.CITY,
+    //       ["==", ["get", "boundary_level"], "DISTRICT"],
+    //       boundaryColors.DISTRICT,
+    //       ["==", ["get", "boundary_level"], "NEIGHBORHOOD"],
+    //       boundaryColors.NEIGHBORHOOD,
+    //       boundaryColors.CITY, // fallback
+    //     ],
+    //     circleStrokeWidth: 2,
+    //     circleStrokeColor: "#FFFFFF",
+    //     circleOpacity: 0.8,
+    //     circleStrokeOpacity: 1,
+    //   };
+    // }, []);
 
     // Style pour les contours polygonaux (LineLayer)
     const lineStyle: Record<string, unknown> = React.useMemo(() => {
@@ -240,61 +235,57 @@ export const RemoteMapZonesLayers = memo(
 
     // Style pour les textes avec informations combinées
     const largeBoxTextStyle: Record<string, unknown> = React.useMemo(() => {
-      if (completionData === undefined) {
-        return {
-          textField: "",
-        };
-      }
-
       // Construire l'expression conditionnelle pour textField avec les données de completion
       const textExpression: unknown[] = ["case"];
 
-      // Ajouter les conditions pour les zones avec des stats utilisateur
-      Object.entries(completionData).forEach(([zoneId, zone]) => {
-        // Construire le texte d'affichage : ligne 1 nom, ligne 2 zones, ligne 3 pois
-        let displayText = zone.name;
+      // Ajouter les conditions pour les zones avec des stats utilisateur (seulement si on a des données)
+      if (completionData !== undefined) {
+        Object.entries(completionData).forEach(([zoneId, zone]) => {
+          // Construire le texte d'affichage : ligne 1 nom, ligne 2 zones, ligne 3 pois
+          let displayText = zone.name;
 
-        // Ligne 2 : zones x/y et % zones
-        if (zone.total_subzones_count > 0) {
-          let zonesPercent = Math.ceil(
-            (zone.completed_subzones_count / zone.total_subzones_count) * 100,
-          );
-          // Minimum 1% si au moins une zone est complétée
-          if (zone.completed_subzones_count > 0 && zonesPercent === 0) {
-            zonesPercent = 1;
+          // Ligne 2 : zones x/y et % zones
+          if (zone.total_subzones_count > 0) {
+            let zonesPercent = Math.ceil(
+              (zone.completed_subzones_count / zone.total_subzones_count) * 100,
+            );
+            // Minimum 1% si au moins une zone est complétée
+            if (zone.completed_subzones_count > 0 && zonesPercent === 0) {
+              zonesPercent = 1;
+            }
+
+            if (zonesPercent > 0) {
+              displayText += `\n${zone.completed_subzones_count}/${zone.total_subzones_count} zones ${zonesPercent}%`;
+            } else {
+              displayText += `\n${zone.completed_subzones_count}/${zone.total_subzones_count} zones`;
+            }
           }
 
-          if (zonesPercent > 0) {
-            displayText += `\n${zone.completed_subzones_count}/${zone.total_subzones_count} zones ${zonesPercent}%`;
-          } else {
-            displayText += `\n${zone.completed_subzones_count}/${zone.total_subzones_count} zones`;
-          }
-        }
+          // Ligne 3 : pois x/y et % pois (seulement pour CITY, DISTRICT, NEIGHBORHOOD)
+          const shouldShowPoisStats = [
+            "CITY",
+            "DISTRICT",
+            "NEIGHBORHOOD",
+          ].includes(zone.boundary_level);
+          if (shouldShowPoisStats && zone.total_pois_count > 0) {
+            let poisPercent = Math.ceil(
+              (zone.validated_pois_count / zone.total_pois_count) * 100,
+            );
+            // Minimum 1% si au moins un poi est validé
+            if (zone.validated_pois_count > 0 && poisPercent === 0) {
+              poisPercent = 1;
+            }
 
-        // Ligne 3 : pois x/y et % pois (seulement pour CITY, DISTRICT, NEIGHBORHOOD)
-        const shouldShowPoisStats = [
-          "CITY",
-          "DISTRICT",
-          "NEIGHBORHOOD",
-        ].includes(zone.boundary_level);
-        if (shouldShowPoisStats && zone.total_pois_count > 0) {
-          let poisPercent = Math.ceil(
-            (zone.validated_pois_count / zone.total_pois_count) * 100,
-          );
-          // Minimum 1% si au moins un poi est validé
-          if (zone.validated_pois_count > 0 && poisPercent === 0) {
-            poisPercent = 1;
+            if (poisPercent > 0) {
+              displayText += `\n${zone.validated_pois_count}/${zone.total_pois_count} points ${poisPercent}%`;
+            } else {
+              displayText += `\n${zone.validated_pois_count}/${zone.total_pois_count} points`;
+            }
           }
 
-          if (poisPercent > 0) {
-            displayText += `\n${zone.validated_pois_count}/${zone.total_pois_count} points ${poisPercent}%`;
-          } else {
-            displayText += `\n${zone.validated_pois_count}/${zone.total_pois_count} points`;
-          }
-        }
-
-        textExpression.push(["==", ["get", "id"], zoneId], displayText);
-      });
+          textExpression.push(["==", ["get", "id"], zoneId], displayText);
+        });
+      }
 
       // Valeur par défaut pour les zones sans completion data - utiliser les données du layer
       const defaultTextExpression = [
@@ -402,7 +393,7 @@ export const RemoteMapZonesLayers = memo(
         );
 
         // CircleLayer ensuite
-        layers.push(
+        /*layers.push(
           <CircleLayer
             key={`circle-${index}`}
             id={layer.textAndPoint.circleId}
@@ -411,7 +402,7 @@ export const RemoteMapZonesLayers = memo(
             maxZoomLevel={layer.textAndPoint.maxZoomLevel}
             style={circleStyle}
           />,
-        );
+        );*/
 
         // SymbolLayer en dernier (premier plan)
         layers.push(
@@ -427,7 +418,7 @@ export const RemoteMapZonesLayers = memo(
       });
 
       return layers;
-    }, [circleStyle, largeBoxTextStyle, lineStyle]);
+    }, [largeBoxTextStyle, lineStyle]);
 
     return (
       <VectorSource id="remote-boundaries-source" url={tilesetUrl}>

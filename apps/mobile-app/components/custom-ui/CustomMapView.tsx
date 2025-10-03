@@ -6,19 +6,13 @@ import {
   MapView,
 } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
-import {
-  memo,
-  type ReactElement,
-  type RefObject,
-  useCallback,
-  useMemo,
-} from "react";
+import { memo, type ReactElement, type RefObject, useMemo } from "react";
 import { Platform } from "react-native";
 
 import { MapPOILayers } from "@/components/custom-ui/MapPOILayers";
+import { config } from "@/constants/Config";
 import { useMapImages } from "@/hooks/maps/useMapImages";
 import { type OnPressEvent } from "@/hooks/maps/useMapLogic";
-import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
 import { RemoteMapZonesLayers } from "./RemoteMapZonesLayers";
@@ -63,8 +57,7 @@ export const CustomMapView = memo(function CustomMapView({
     <MapView
       ref={mapRef}
       style={{ flex: 1 }}
-      //TODO: déplacer en .env
-      styleURL="mapbox://styles/glutomax/cm8affmx4003a01qsd3aj52bi" // add "/draft" to use the draft style
+      styleURL={config.mapboxStyleUrl}
       onMapIdle={onMapIdle}
       onCameraChanged={onCameraChanged}
       projection={"globe"}
@@ -88,7 +81,7 @@ export const CustomMapView = memo(function CustomMapView({
       />
 
       {/* Zones administratives */}
-      <RemoteMapZonesLayers tilesetUrl="mapbox://glutomax.boundaries-tileset-v1" />
+      <RemoteMapZonesLayers tilesetUrl={config.mapboxTilesetUrl} />
     </MapView>
   );
 });

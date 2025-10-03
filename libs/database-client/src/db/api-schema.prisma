@@ -123,9 +123,9 @@ model Boundary {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  name          String?                                     @map("name") @db.VarChar(1000)
-  boundaryLevel BoundaryLevelEnum                           @map("boundary_level")
-  rawInfo       Json                                        @map("raw_info")
+  name          String?           @map("name") @db.VarChar(1000)
+  boundaryLevel BoundaryLevelEnum @map("boundary_level")
+  rawInfo       Json              @map("raw_info")
 
   // Hierarchy relation
   parentId String? @map("parent_id") @db.VarChar(1000)
@@ -141,10 +141,7 @@ model Boundary {
   // Relations
   poiBoundaries PoiBoundary[]
 
-  // Self-referencing hierarchy
-  parent   Boundary?  @relation("BoundaryHierarchy", fields: [parentId], references: [id])
-  children Boundary[] @relation("BoundaryHierarchy")
-
+  // Indexes
   @@index([boundaryLevel], name: "boundary_level_index")
   @@index([parentId], name: "boundary_parent_index")
   @@index([displayPoint], name: "boundary_display_point_index", type: Gist)

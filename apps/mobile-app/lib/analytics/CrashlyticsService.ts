@@ -1,23 +1,12 @@
 import crashlytics from "@react-native-firebase/crashlytics";
 
-import type {
-  AnalyticsAppContext,
-  AnalyticsUserContext,
-  IAnalyticsService,
-} from "./types";
+import type { AnalyticsUserContext, IAnalyticsService } from "./types";
 
 export class CrashlyticsService implements IAnalyticsService {
   private isInitialized = false;
 
-  async initialize(appContext?: AnalyticsAppContext): Promise<void> {
-    if (appContext === undefined) return;
+  initialize(): void {
     try {
-      await Promise.all([
-        crashlytics().setAttribute("app_environment", appContext.environment),
-        crashlytics().setAttribute("app_version", appContext.version),
-        crashlytics().setAttribute("platform", "mobile"),
-      ]);
-
       crashlytics().log("App initialized with Crashlytics");
       this.isInitialized = true;
     } catch (error) {

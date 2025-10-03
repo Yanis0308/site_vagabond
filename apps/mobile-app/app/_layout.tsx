@@ -33,10 +33,7 @@ import { authenticatedUserAtom } from "@/stores/authenticatedUserAtom";
 import { logger } from "@/utils/logger";
 
 // Initialize unified analytics (includes both Crashlytics and Vexo)
-void UnifiedAnalyticsService.getInstance().initialize({
-  environment: config.isLocalDev ? "development" : "production",
-  version: "1.0.0", // TODO: Get from app.json or package.json
-});
+void UnifiedAnalyticsService.getInstance().initialize();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 void SplashScreen.preventAutoHideAsync();

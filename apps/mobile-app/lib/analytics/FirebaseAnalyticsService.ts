@@ -2,25 +2,14 @@ import analytics from "@react-native-firebase/analytics";
 
 import { logger } from "@/utils/logger";
 
-import type {
-  AnalyticsAppContext,
-  AnalyticsUserContext,
-  IAnalyticsService,
-} from "./types";
+import type { AnalyticsUserContext, IAnalyticsService } from "./types";
 
 export class FirebaseAnalyticsService implements IAnalyticsService {
   private isInitialized = false;
 
-  async initialize(appContext?: AnalyticsAppContext): Promise<void> {
-    if (appContext === undefined) return;
+  async initialize(): Promise<void> {
     try {
       await analytics().setAnalyticsCollectionEnabled(true);
-      await analytics().setDefaultEventParameters({
-        app_environment: appContext.environment,
-        app_version: appContext.version,
-        platform: "mobile",
-      });
-
       this.isInitialized = true;
       await analytics().logEvent("analytics_service_initialized", {
         service: "firebase_analytics",
