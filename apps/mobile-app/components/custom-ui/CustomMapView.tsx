@@ -4,18 +4,20 @@ import {
   LocationPuck,
   type MapState,
   MapView,
+  VectorSource,
 } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { memo, type ReactElement, type RefObject, useMemo } from "react";
 import { Platform } from "react-native";
 
+import { BoundaryLineLayer } from "@/components/custom-ui/BoundaryLineLayer";
+import { BoundarySymbolLayers } from "@/components/custom-ui/BoundarySymbolLayers";
 import { MapPOILayers } from "@/components/custom-ui/MapPOILayers";
 import { config } from "@/constants/Config";
 import { useMapImages } from "@/hooks/maps/useMapImages";
 import { type OnPressEvent } from "@/hooks/maps/useMapLogic";
+import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
-
-import { RemoteMapZonesLayers } from "./RemoteMapZonesLayers";
 
 // Types
 interface CustomMapViewProps {
@@ -40,7 +42,6 @@ export const CustomMapView = memo(function CustomMapView({
   enableCountryFeatureLogging = false,
 }: CustomMapViewProps): ReactElement {
   const images = useMapImages();
-  // const { data: zonesGeoJSON } = useZonesGeoJSON();
 
   const pulsing = useMemo(() => ({ isEnabled: false }), []);
   const scaleBarPosition = useMemo(() => ({ bottom: 100, right: 200 }), []);
@@ -52,6 +53,10 @@ export const CustomMapView = memo(function CustomMapView({
     }),
     [],
   );
+
+  const boundariesSourceId = "remote-boundaries-source";
+
+  logger("config.mapboxTilesetUrl", config.mapboxTilesetUrl);
 
   return (
     <MapView
@@ -74,14 +79,19 @@ export const CustomMapView = memo(function CustomMapView({
         pulsing={pulsing}
       />
       <Images images={images} />
+
+      {/* Vector source for boundaries */}
+      <VectorSource id={boundariesSourceId} url={config.mapboxTilesetUrl}>
+        {/* Boundary layers using the vector source */}
+        <BoundaryLineLayer sourceId={boundariesSourceId} />
+        <BoundarySymbolLayers sourceId={boundariesSourceId} />
+      </VectorSource>
+
       <MapPOILayers
         customShape={customShape}
         onPress={onPress}
         selectedPlace={selectedPlace}
       />
-
-      {/* Zones administratives */}
-      <RemoteMapZonesLayers tilesetUrl={config.mapboxTilesetUrl} />
     </MapView>
   );
 });

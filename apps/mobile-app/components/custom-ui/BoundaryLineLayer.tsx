@@ -1,0 +1,71 @@
+import { LineLayer } from "@rnmapbox/maps";
+import { memo, type ReactElement, useMemo } from "react";
+
+import { layersInfos } from "@/constants/MapLayersConfig";
+
+interface BoundaryLineLayerProps {
+  sourceId: string;
+}
+
+export const BoundaryLineLayer = memo(
+  ({ sourceId }: BoundaryLineLayerProps): ReactElement => {
+    // Style pour les contours polygonaux (LineLayer)
+    const boundaryLineStyle: Record<string, unknown> = useMemo(() => {
+      return {
+        lineColor: [
+          "case",
+          ["==", ["get", "boundary_level"], "COUNTRY"],
+          layersInfos.COUNTRY.color,
+          ["==", ["get", "boundary_level"], "REGION"],
+          layersInfos.REGION.color,
+          ["==", ["get", "boundary_level"], "COUNTY"],
+          layersInfos.COUNTY.color,
+          ["==", ["get", "boundary_level"], "CITY"],
+          layersInfos.CITY.color,
+          ["==", ["get", "boundary_level"], "DISTRICT"],
+          layersInfos.DISTRICT.color,
+          ["==", ["get", "boundary_level"], "NEIGHBORHOOD"],
+          layersInfos.NEIGHBORHOOD.color,
+          layersInfos.CITY.color, // fallback
+        ],
+        lineWidth: [
+          "case",
+          ["==", ["get", "boundary_level"], "COUNTRY"],
+          3, // Plus épais pour les pays
+          ["==", ["get", "boundary_level"], "REGION"],
+          1,
+          ["==", ["get", "boundary_level"], "COUNTY"],
+          1,
+          ["==", ["get", "boundary_level"], "CITY"],
+          1.5,
+          ["==", ["get", "boundary_level"], "DISTRICT"],
+          1.2,
+          ["==", ["get", "boundary_level"], "NEIGHBORHOOD"],
+          1,
+          1.5, // fallback
+        ],
+        lineOpacity: 0.8,
+      };
+    }, []);
+
+    const lineLayers = useMemo(() => {
+      return Object.values(layersInfos).map((layer) => {
+        return (
+          <LineLayer
+            key={layer.polygon.polygonLayerId}
+            id={layer.polygon.polygonLayerId}
+            sourceID={sourceId}
+            sourceLayerID={layer.polygon.sourceLayerId}
+            minZoomLevel={layer.polygon.minZoomLevel}
+            maxZoomLevel={layer.polygon.maxZoomLevel}
+            style={boundaryLineStyle}
+          />
+        );
+      });
+    }, [boundaryLineStyle, sourceId]);
+
+    return <>{lineLayers}</>;
+  },
+);
+
+BoundaryLineLayer.displayName = "BoundaryLineLayer";

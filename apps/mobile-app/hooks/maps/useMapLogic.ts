@@ -108,7 +108,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
     bbox,
     zoom,
   );
-  // const { data: allZonesData, isFetching: isFetchingAllZones } = useAllZones();
   const isFetchingAllZones = false;
   const allZonesData = useMemo(() => [], []);
 

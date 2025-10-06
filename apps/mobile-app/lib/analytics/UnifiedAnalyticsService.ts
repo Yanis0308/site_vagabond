@@ -1,10 +1,6 @@
 import { CrashlyticsService } from "./CrashlyticsService";
 import { FirebaseAnalyticsService } from "./FirebaseAnalyticsService";
-import type {
-  AnalyticsAppContext,
-  AnalyticsUserContext,
-  IAnalyticsService,
-} from "./types";
+import type { AnalyticsUserContext, IAnalyticsService } from "./types";
 import { VexoService } from "./VexoService";
 
 export class UnifiedAnalyticsService implements IAnalyticsService {

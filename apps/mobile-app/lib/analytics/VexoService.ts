@@ -14,7 +14,7 @@ export class VexoService implements IAnalyticsService {
   initialize(): Promise<void> {
     try {
       // Initialize Vexo with basic user API key by default
-      this.initializeVexoForRole({ isAdmin: false }); // false = user (not admin)
+      this.initializeVexoForRole(); // false = user (not admin)
       this.isInitialized = true;
       logger("Vexo service initialized successfully with user API key");
     } catch (error) {
@@ -33,7 +33,7 @@ export class VexoService implements IAnalyticsService {
 
       // Change Vexo API key only if role changed (user -> admin or admin -> user)
       if (wasAdmin !== this.isCurrentUserAdmin) {
-        this.initializeVexoForRole({ isAdmin: this.isCurrentUserAdmin });
+        this.initializeVexoForRole();
         logger(
           `Vexo API key changed to ${this.isCurrentUserAdmin ? "admin" : "user"} role`,
         );
@@ -71,7 +71,7 @@ export class VexoService implements IAnalyticsService {
       this.isCurrentUserAdmin = false;
 
       // Reset to basic user API key when user logs out
-      this.initializeVexoForRole({ isAdmin: false }); // false = user (not admin)
+      this.initializeVexoForRole(); // false = user (not admin)
       logger("Vexo user context cleared, reset to user API key");
     } catch (error) {
       logger("Failed to clear Vexo user context:", error);
@@ -129,13 +129,10 @@ export class VexoService implements IAnalyticsService {
   }
 
   // Vexo-specific private methods
-  private initializeVexoForRole({ isAdmin }: { isAdmin: boolean }): void {
-    const apiKey = isAdmin ? config.vexoApiKeyAdmin : config.vexoApiKey;
-    if (this.currentVexoApiKey !== apiKey) {
-      vexo(apiKey);
-      this.currentVexoApiKey = apiKey;
-      logger(`Vexo initialized with ${isAdmin ? "admin" : "user"} API key`);
-    }
+  private initializeVexoForRole(): void {
+    vexo(config.vexoApiKey);
+    this.currentVexoApiKey = config.vexoApiKey;
+    logger(`Vexo initialized with API key`);
   }
 
   private async trackUserRegistration(

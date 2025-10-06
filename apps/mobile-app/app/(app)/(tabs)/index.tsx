@@ -1,29 +1,22 @@
 import { router } from "expo-router";
 import { type ReactElement, useCallback } from "react";
-import { useTranslation } from "react-i18next";
 
 import { CustomMapView } from "@/components/custom-ui/CustomMapView";
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { MapButtons } from "@/components/custom-ui/MapButtons";
+import { MapDebugInfo } from "@/components/custom-ui/MapDebugInfo";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { PlaceDetailsSheet } from "@/components/place-details/PlaceDetailsSheet";
 import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { Spinner } from "@/components/ui/spinner";
-import { View } from "@/components/ui/view";
 import { useMapLogic } from "@/hooks/maps/useMapLogic";
-import { useUsersMe } from "@/hooks/queries/useUsersMe";
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- page file
 export default function MapsTab(): ReactElement {
-  const { t } = useTranslation("common");
-
-  const { data: userMe } = useUsersMe();
-
   // Utilisation du hook personnalisé pour toute la logique de la carte
   const {
     placesData,
-    allZonesData,
     customShape,
     selectedPlaceInfo,
     mapRef,
@@ -99,28 +92,10 @@ export default function MapsTab(): ReactElement {
           heading={headingRealtime}
         />
 
-        {userMe?.role === "ADMIN" && (
-          <View
-            style={{
-              position: "absolute",
-              top: 100,
-              left: 10,
-              padding: 5,
-              borderRadius: 5,
-              backgroundColor: "rgba(0, 0, 0, 0.6)",
-            }}
-          >
-            <CustomText className="text-white">
-              {t("zoom", { zoom: zoomRealtime })}
-            </CustomText>
-            <CustomText className="text-white">
-              {t("pois", { pois: placesData?.length ?? 0 })}
-            </CustomText>
-            <CustomText className="text-white">
-              {`Zones: ${allZonesData?.length ?? 0}`}
-            </CustomText>
-          </View>
-        )}
+        <MapDebugInfo
+          zoom={zoomRealtime ?? 0}
+          placesCount={placesData?.length ?? 0}
+        />
       </Box>
     </CustomScreenContainer>
   );

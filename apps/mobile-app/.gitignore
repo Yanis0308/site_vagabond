@@ -27,3 +27,7 @@ firebase/
 
 credentials.json
 credentials/
+
+.env.local
+.env.dev
+.env.prd
