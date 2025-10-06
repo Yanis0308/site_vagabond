@@ -23,12 +23,13 @@ import { type Place } from "./types";
 interface ReviewStepProps {
   place: Place;
   capturedImage: string;
-  imageKey: string;
+  imageKey: string | null;
   setReviewFormEnded: (value: boolean) => void;
+  isUploading: boolean;
 }
 
 export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
-  ({ place, capturedImage, imageKey, setReviewFormEnded }) => {
+  ({ place, capturedImage, imageKey, isUploading, setReviewFormEnded }) => {
     const { data: userLocation } = useUserLocation();
     const validatePlace = useValidatePlaceMutation();
     const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
@@ -76,7 +77,9 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
 
     useEffect(() => {
       register("imageKey");
-      setValue("imageKey", imageKey);
+      if (imageKey !== null) {
+        setValue("imageKey", imageKey);
+      }
     }, [register, setValue, imageKey]);
 
     useEffect(() => {
@@ -174,10 +177,17 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
         <Box className="mx-8 mb-12 flex flex-col items-center gap-6">
           <Controller control={control} name="rating" render={renderRating} />
           <Controller control={control} name="comment" render={renderComment} />
+          {isUploading && (
+            <Box className="flex flex-row items-center gap-2 rounded-lg bg-primary-100 px-4 py-3">
+              <CustomText className="text-sm text-primary-600">
+                {"📤 Envoi de la photo en cours..."}
+              </CustomText>
+            </Box>
+          )}
           <Button
             onPress={onSubmit}
             action="submit"
-            isDisabled={!isValid || isSubmitting}
+            isDisabled={!isValid || isSubmitting || isUploading}
           >
             <ButtonText>{"✨ Valider le lieu"}</ButtonText>
           </Button>

@@ -5,7 +5,6 @@ import { useSetAtom } from "jotai";
 import React, { useCallback, useRef, useState } from "react";
 import { Alert } from "react-native";
 
-import { useUploadFileMutation } from "@/hooks/mutations/useUploadFileMutation";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { cn } from "@/utils/cn";
 import { logger } from "@/utils/logger";
@@ -17,11 +16,11 @@ import { TakePhotoIcon } from "../icons/TakePhotoIcon";
 import { themeColors } from "../ui/gluestack-ui-provider/config";
 import { Pressable } from "../ui/pressable";
 import { View } from "../ui/view";
-import { type CameraPermission, type ImageInfo } from "./types";
+import { type CameraPermission } from "./types";
 
 interface PhotoStepProps {
   cameraPermission: CameraPermission | null;
-  onPhotoTaken: (imageUri: string, uploadedFileId: string) => void;
+  onPhotoTaken: (imageUri: string) => void;
 }
 
 export const PhotoStep: React.FC<PhotoStepProps> = React.memo(
@@ -34,25 +33,6 @@ export const PhotoStep: React.FC<PhotoStepProps> = React.memo(
       setIsSelfie((current) => !current);
     }, []);
 
-    const uploadFile = useUploadFileMutation();
-
-    const uploadImage = useCallback(
-      async (imageData: ImageInfo): Promise<string | null> => {
-        setDisplayingLoader(true);
-        try {
-          const fileInfo = await uploadFile.mutateAsync(imageData);
-          logger("uploadedFileId", fileInfo);
-          return fileInfo.key;
-        } catch (error) {
-          logger("Error uploading image:", error);
-          Alert.alert("Erreur", "Impossible d'envoyer la photo");
-          setDisplayingLoader(false);
-          return null;
-        }
-      },
-      [uploadFile, setDisplayingLoader],
-    );
-
     const takePicture = useCallback(async (): Promise<void> => {
       if (cameraRef.current === null) return;
 
@@ -64,21 +44,16 @@ export const PhotoStep: React.FC<PhotoStepProps> = React.memo(
           shutterSound: false,
         });
 
-        const imageData: ImageInfo = {
-          uri: photo.uri,
-          fileName: `photo_${Date.now()}.jpg`,
-          mimeType: "image/jpeg",
-        };
+        setDisplayingLoader(false);
 
-        const uploadedKey = await uploadImage(imageData);
-        if (uploadedKey !== null) {
-          onPhotoTaken(photo.uri, uploadedKey);
-        }
+        // Navigate immediately with the photo
+        onPhotoTaken(photo.uri);
       } catch (error) {
         logger("Error taking picture:", error);
         Alert.alert("Erreur", "Impossible de prendre la photo");
+        setDisplayingLoader(false);
       }
-    }, [cameraRef, uploadImage, onPhotoTaken, setDisplayingLoader]);
+    }, [cameraRef, onPhotoTaken, setDisplayingLoader]);
 
     const pickFromGallery = useCallback(async (): Promise<void> => {
       const { status } =
@@ -97,18 +72,11 @@ export const PhotoStep: React.FC<PhotoStepProps> = React.memo(
 
       if (!result.canceled && result.assets[0] !== undefined) {
         const asset = result.assets[0];
-        const imageData: ImageInfo = {
-          uri: asset.uri,
-          fileName: asset.fileName ?? `photo_${Date.now()}.jpg`,
-          mimeType: "image/jpeg",
-        };
 
-        const uploadedKey = await uploadImage(imageData);
-        if (uploadedKey !== null) {
-          onPhotoTaken(asset.uri, uploadedKey);
-        }
+        // Navigate immediately with the photo
+        onPhotoTaken(asset.uri);
       }
-    }, [uploadImage, onPhotoTaken]);
+    }, [onPhotoTaken]);
 
     const handleCenterButton = useCallback((): void => {
       void takePicture();

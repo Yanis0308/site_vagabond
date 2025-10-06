@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "fixme-typescript-check": "tsc --noEmit",
-    "fixme-lint-check": "eslint .",
+    "fixme-lint-check": "eslint . --max-warnings 0",
     "fixme-lint-fix": "eslint . --fix",
     "fixme-prettier-check": "prettier . --check",
     "fixme-prettier-fix": "prettier . --write",

@@ -7,7 +7,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuth } from "@react-native-firebase/auth";
 import Mapbox from "@rnmapbox/maps";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
-import { QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";

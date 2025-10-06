@@ -8,9 +8,12 @@ export type UploadFileParams = Pick<
   "uri" | "fileName" | "mimeType"
 >;
 
+export const UPLOAD_FILE_MUTATION_KEY = ["uploadFile"] as const;
+
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- not important
 export const useUploadFileMutation = () => {
   return useMutation({
+    mutationKey: UPLOAD_FILE_MUTATION_KEY,
     mutationFn: async (params: UploadFileParams) => {
       return await uploadFile(params);
     },

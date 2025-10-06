@@ -1,10 +1,12 @@
 import { useNavigation, usePreventRemove } from "@react-navigation/native";
+import { useIsMutating } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import React, {
   type ReactElement,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,6 +18,7 @@ import { CustomScreenContainer } from "@/components/navigation/CustomScreenConta
 import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { ReviewStep } from "@/components/validate-place";
+import { UPLOAD_FILE_MUTATION_KEY } from "@/hooks/mutations/useUploadFileMutation";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 
@@ -28,6 +31,10 @@ export default function ReviewForm(): ReactElement {
   const navigation = useNavigation();
   const router = useRouter();
   const [reviewFormEnded, setReviewFormEnded] = useState(false);
+  const isMutating = useIsMutating(
+    useMemo(() => ({ mutationKey: UPLOAD_FILE_MUTATION_KEY }), []),
+  );
+  const isUploading = isMutating > 0;
 
   useEffect(() => {
     if (reviewFormEnded) {
@@ -97,6 +104,7 @@ export default function ReviewForm(): ReactElement {
           place={place}
           capturedImage={currentPhoto.imageUri}
           imageKey={currentPhoto.fileId}
+          isUploading={isUploading}
           setReviewFormEnded={setReviewFormEnded}
         />
       </KeyboardAwareScrollView>

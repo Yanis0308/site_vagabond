@@ -203,6 +203,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           imageWidth: 190, // doc says 200 but it's not working https://github.com/expo/expo/issues/32515
         },
       ],
+      "react-native-compressor",
     ],
     experiments: {
       typedRoutes: true,
