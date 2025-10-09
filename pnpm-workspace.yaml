@@ -1,4 +1,29 @@
 packages:
-  - 'apps/*'
-  - 'libs/**'
-  
+  - "apps/*"
+  - "libs/**"
+
+catalog:
+  # Core utilities
+  dayjs: ^1.11.13
+  zod: ^3.23.8
+  ajv: ^8.12.0
+  ajv-formats: ^3.0.1
+  ajv-errors: ^3.0.0
+  ajv-keywords: ^5.1.0
+  "@sinclair/typebox": ^0.33.22
+
+  # Geospatial utilities
+  geojson: ^0.5.0
+  geolib: ^3.3.4
+  "@types/geojson": ^7946.0.14
+  "@types/geolib": ^2.0.3
+
+  # Build tools
+  typescript: ^5.6.2
+
+  # Code quality
+  eslint: ~8.57.0
+  prettier: ^3.3.3
+
+  # Node types
+  "@types/node": ^22.9.0

@@ -19,10 +19,10 @@
     }
   },
   "dependencies": {
-    "@sinclair/typebox": "^0.33.22",
-    "dayjs": "^1.11.13",
-    "geojson": "^0.5.0",
-    "geolib": "^3.3.4",
+    "@sinclair/typebox": "catalog:",
+    "dayjs": "catalog:",
+    "geojson": "catalog:",
+    "geolib": "catalog:",
     "zx": "^8.3.0"
   },
   "devDependencies": {
@@ -31,11 +31,11 @@
     "@prettier/plugin-lua": "^0.0.3",
     "@tanstack/eslint-plugin-query": "^5.66.1",
     "@ts-safeql/eslint-plugin": "^4.0.0",
-    "@types/geojson": "^7946.0.14",
-    "@types/geolib": "^2.0.3",
+    "@types/geojson": "catalog:",
+    "@types/geolib": "catalog:",
     "@typescript-eslint/parser": "^8.12.0",
     "concurrently": "^9.1.2",
-    "eslint": "~8.57.0",
+    "eslint": "catalog:",
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.6.3",
     "eslint-plugin-eslint-comments": "^3.2.0",
@@ -46,8 +46,8 @@
     "eslint-plugin-tailwindcss": "^3.17.5",
     "husky": "^9.1.6",
     "libpg-query": "^17.1.1",
-    "prettier": "^3.3.3",
-    "typescript": "^5.6.2",
+    "prettier": "catalog:",
+    "typescript": "catalog:",
     "typescript-eslint": "^8.15.0",
     "utility-types": "^3.11.0"
   }
