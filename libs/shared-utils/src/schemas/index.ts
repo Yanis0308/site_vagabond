@@ -1,3 +1,4 @@
+import * as leaderboard from "./api/leaderboard.js";
 import * as poi from "./api/poi.js";
 import * as response from "./api/response.js";
 import * as upload from "./api/upload.js";
@@ -24,4 +25,5 @@ export const jsonSchemas = {
   ...response,
   ...metadata,
   ...upload,
+  ...leaderboard,
 } as const;

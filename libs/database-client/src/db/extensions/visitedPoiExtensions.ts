@@ -40,6 +40,7 @@ export const createVisitedPoiExtensions = (
         rating: number;
         comment: string;
         image_key: string;
+        full_name: string | null;
         email: string | null;
         zone_id: string | null;
       }>
@@ -51,6 +52,7 @@ export const createVisitedPoiExtensions = (
         vp.rating,
         vp.comment,
         vp.image_key,
+        u.full_name,
         u.email,
         pb.boundary_id as zone_id
       FROM visited_pois vp

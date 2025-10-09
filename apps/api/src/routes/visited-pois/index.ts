@@ -2,7 +2,7 @@ import {
   type FastifyPluginCallbackTypebox,
   Type,
 } from "@fastify/type-provider-typebox";
-import { jsonSchemas } from "@vagabond/shared-utils";
+import { getUserDisplayName, jsonSchemas } from "@vagabond/shared-utils";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.post(
@@ -67,9 +67,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           if (poiData !== null) {
             const poiName =
               poiData.name.length > 0 ? poiData.name : "Lieu inconnu";
-            const username = request.user.email?.includes("@")
-              ? (request.user.email.split("@")[0] ?? "Utilisateur inconnu")
-              : "Utilisateur inconnu";
+            const username = getUserDisplayName(
+              request.user.db.fullName,
+              request.user.email,
+            );
 
             const imageUrl = `${fastify.config.cdnUrl}/${imageKey}`;
 
@@ -118,9 +119,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
       return await reply.status(200).send({
         data: visitedPoisWithBoundaries.map((visitedPoi) => {
-          const username = visitedPoi.email?.includes("@")
-            ? (visitedPoi.email.split("@")[0] ?? "John Doe")
-            : "John Doe";
+          const username = getUserDisplayName(
+            visitedPoi.full_name,
+            visitedPoi.email,
+          );
 
           return {
             id: visitedPoi.id,
