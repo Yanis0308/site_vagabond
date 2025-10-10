@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getWikipediaLink } from "@/http/wikipedia";
+import { getWikipediaLink } from "@/http/wikidata";
 
 interface UseWikipediaLinkProps {
   wikidataId: string | undefined;
@@ -34,7 +34,7 @@ export const useWikipediaLink = ({
       // Si aucun paramètre n'est fourni
       return null;
     },
-    staleTime: 1000 * 60 * 60 * 24, // 24 heures - les liens Wikipedia ne changent pas souvent
-    gcTime: 1000 * 60 * 60 * 24 * 7, // 7 jours en cache
+    staleTime: 1000 * 60 * 60 * 24 * 7, // 7 jours en cache - les liens Wikipedia ne changent pas souvent
+    gcTime: 1000 * 60 * 60 * 24 * 30, // 30 jours avant la suppression du cache inutilisé
   });
 };

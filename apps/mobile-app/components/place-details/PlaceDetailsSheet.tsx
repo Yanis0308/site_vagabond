@@ -244,7 +244,7 @@ export const PlaceDetailsSheet = memo(
       if (place?.data[0]?.rawInfo?.wikidata !== undefined) {
         sources.push(
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe
-          `https://hub.toolforge.org/${place.data[0]?.rawInfo?.wikidata}?p=image`,
+          `https://hub.toolforge.org/${place.data[0]?.rawInfo?.wikidata}?property=image&width=1000`,
         );
       }
 

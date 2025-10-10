@@ -1,25 +1,27 @@
+import { BlurView } from "expo-blur";
 import {
   // eslint-disable-next-line no-restricted-imports -- allowed here
   Image,
-  ImageBackground,
   type ImageContentFit,
   type ImageProps,
 } from "expo-image";
 import { cssInterop } from "nativewind";
-import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useMemo } from "react";
 import { View } from "react-native";
 
 import { Spinner } from "@/components/ui/spinner";
+import {
+  type ImageLoadAsyncSource,
+  useImageFromMultipleSources,
+} from "@/hooks/queries/useImageFromMultipleSources";
 import { cn } from "@/utils/cn";
 
 cssInterop(Image, { className: "style" });
 cssInterop(View, { className: "style" });
 
-type ImageSourceType = ImageProps["source"];
-
 interface CustomImageProps extends Omit<ImageProps, "source" | "contentFit"> {
-  source?: ImageSourceType;
-  sources?: ImageSourceType[];
+  source?: ImageLoadAsyncSource;
+  sources?: ImageLoadAsyncSource[];
   height: number | "full";
   width?: number | "full";
   contentFit: ImageContentFit | "autoWithBackground";
@@ -39,123 +41,123 @@ export const CustomImage = memo(
     containerClassName,
     ...props
   }: CustomImageProps) => {
-    const [currentSourceIndex, setCurrentSourceIndex] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
-    const [calculatedContentFit, setCalculatedContentFit] =
-      useState<ImageContentFit | null>(null);
-
-    // Determine the list of sources to try
     const allSources = useMemo(() => {
       return sources ?? (source !== undefined ? [source] : []);
     }, [sources, source]);
+
+    const { data: imageLoaded, isLoading: isImageLoading } =
+      useImageFromMultipleSources(allSources);
+
+    const optimalContentFit = useMemo(() => {
+      if (contentFit === "autoWithBackground") {
+        if (imageLoaded !== undefined && imageLoaded !== null) {
+          return imageLoaded.width >= imageLoaded.height ? "cover" : "contain";
+        }
+        return "contain";
+      }
+      return contentFit;
+    }, [contentFit, imageLoaded]);
 
     const imageStyle = {
       height: height === "full" ? "100%" : height,
       width: typeof width === "number" ? width : "100%",
     } as const;
 
-    // Déterminer le contentFit à utiliser
-    const optimalContentFit =
-      contentFit === "autoWithBackground"
-        ? (calculatedContentFit ?? "contain")
-        : contentFit;
+    const displayLoader = useMemo(() => {
+      return showLoader && isImageLoading;
+    }, [showLoader, isImageLoading]);
 
-    // Update current source when sources or source prop changes
-    useEffect(() => {
-      if (allSources.length > 0) {
-        setCurrentSourceIndex(0);
-        setIsLoading(true); // Start loading immediately when we have a source
-        // Reset le contentFit calculé quand on change de source
-        if (contentFit === "autoWithBackground") {
-          setCalculatedContentFit(null);
-        }
-      } else {
-        setCurrentSourceIndex(0);
-        setIsLoading(false);
-        setCalculatedContentFit(null);
-      }
-    }, [allSources, contentFit]);
-
-    const handleLoad = useCallback(
-      (event: { source?: { width: number; height: number } }) => {
-        setIsLoading(false);
-
-        // Si mode auto, calculer le contentFit optimal directement
-        if (
-          contentFit === "autoWithBackground" &&
-          event?.source !== undefined
-        ) {
-          const { width: imageWidth, height: imageHeight } = event.source;
-
-          // Si l'image est en paysage ou carrée (largeur >= hauteur), utiliser "cover"
-          // Si l'image est en portrait (hauteur > largeur), utiliser "contain"
-          const newContentFit = imageWidth >= imageHeight ? "cover" : "contain";
-          setCalculatedContentFit(newContentFit);
-        }
-      },
-      [contentFit],
-    );
-
-    const handleError = useCallback(() => {
-      setCurrentSourceIndex((prev) => {
-        const nextIndex = prev + 1;
-        if (nextIndex >= allSources.length) {
-          // No more sources to try
-          setIsLoading(false);
-          setCalculatedContentFit(null);
-        }
-        return nextIndex;
-      });
-    }, [allSources]);
-
-    // Only render if we have a valid source
-    if (currentSourceIndex >= allSources.length) {
-      return null;
-    }
-
-    return (
-      <View style={imageStyle} className={cn(containerClassName)}>
-        {/* Image always rendered to trigger loading events, but hidden during loading */}
-        <ImageBackground
-          source={allSources[currentSourceIndex]}
-          onLoad={handleLoad}
-          onError={handleError}
-          className={cn(
-            className,
-            "w-full h-full transition-opacity duration-300 ease-in-out",
-            {
-              "opacity-0": isLoading || contentFit !== "autoWithBackground",
-              "opacity-100": !isLoading && contentFit === "autoWithBackground",
-            },
-          )}
-          contentFit="cover"
-          blurRadius={50}
-          {...props}
+    // Render with background blur only for autoWithBackground mode
+    if (contentFit === "autoWithBackground") {
+      return (
+        <View
+          style={imageStyle}
+          className={cn(containerClassName, "overflow-hidden")}
         >
+          {/* Background image without blur */}
           <Image
-            source={allSources[currentSourceIndex]}
+            source={imageLoaded}
+            className={cn(
+              "absolute inset-0 size-full transition-opacity duration-300 ease-in-out rounded-lg",
+              {
+                "opacity-0": displayLoader,
+                "opacity-100": !displayLoader,
+              },
+            )}
+            contentFit="cover"
+            cachePolicy="memory-disk"
+            {...props}
+          />
+
+          {/* BlurView overlay for blur effect */}
+          <BlurView
+            intensity={80}
+            tint="default"
+            className="absolute inset-0 size-full"
+            style={{ overflow: "hidden" }}
+            experimentalBlurMethod="dimezisBlurView"
+          />
+
+          {/* Main image on top */}
+          <Image
+            source={imageLoaded}
             className={cn(
               className,
-              "w-full h-full transition-opacity duration-300 ease-in-out",
+              "size-full transition-opacity duration-300 ease-in-out",
               {
-                "opacity-0": showLoader && isLoading,
-                "opacity-100": !showLoader || !isLoading,
+                "opacity-0": displayLoader,
+                "opacity-100": !displayLoader,
               },
             )}
             contentFit={optimalContentFit}
             cachePolicy="memory-disk"
             {...props}
           />
-        </ImageBackground>
 
-        {/* Loader overlay when loading - positioned to fill the container */}
+          {/* Loader overlay when loading */}
+          {showLoader && (
+            <View
+              className={cn(
+                "absolute inset-0 flex items-center justify-center transition-opacity duration-300 ease-in-out",
+                {
+                  "opacity-100": displayLoader,
+                  "opacity-0 pointer-events-none": !displayLoader,
+                },
+              )}
+            >
+              <Spinner size="large" className="text-gray-600" />
+            </View>
+          )}
+        </View>
+      );
+    }
+
+    // Simple render for cover and contain modes
+    return (
+      <View style={imageStyle} className={cn(containerClassName)}>
+        <Image
+          source={imageLoaded}
+          className={cn(
+            className,
+            "size-full transition-opacity duration-300 ease-in-out",
+            {
+              "opacity-0": showLoader && displayLoader,
+              "opacity-100": !showLoader || !displayLoader,
+            },
+          )}
+          contentFit={optimalContentFit}
+          cachePolicy="memory-disk"
+          {...props}
+        />
+
+        {/* Loader overlay when loading */}
         {showLoader && (
           <View
             className={cn(
               "absolute inset-0 flex items-center justify-center transition-opacity duration-300 ease-in-out",
               {
-                "opacity-100": isLoading,
-                "opacity-0 pointer-events-none": !isLoading,
+                "opacity-100": displayLoader,
+                "opacity-0 pointer-events-none": !displayLoader,
               },
             )}
           >

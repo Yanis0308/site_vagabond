@@ -1,8 +1,8 @@
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useNavigation } from "expo-router";
-import { memo, type ReactNode, useEffect } from "react";
+import { memo, type ReactNode, useEffect, useMemo } from "react";
 import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { type Edge, SafeAreaView } from "react-native-safe-area-context";
 
 import { cn } from "@/utils/cn";
 
@@ -13,6 +13,7 @@ interface CustomScreenContainerProps {
   isLightScreen: boolean;
   bgColor: string;
   withHeader: boolean;
+  withTopSafeArea?: boolean;
   isTabScreen: boolean;
   className?: string;
 }
@@ -24,6 +25,7 @@ export const CustomScreenContainer = memo(
     isLightScreen,
     bgColor,
     withHeader,
+    withTopSafeArea = true,
     //isTabScreen,
   }: CustomScreenContainerProps): ReactNode => {
     const navigation = useNavigation();
@@ -42,19 +44,20 @@ export const CustomScreenContainer = memo(
       }
     }, [navigation, withHeader, bgColor, isLightScreen]);
 
+    const edges: Edge[] = useMemo(() => {
+      if (withHeader) {
+        return ["left", "right", "bottom"];
+      } else if (withTopSafeArea) {
+        return ["top", "left", "right", "bottom"];
+      }
+      return ["left", "right"];
+    }, [withHeader, withTopSafeArea]);
+
     return (
       <Box className="flex-1" style={{ backgroundColor: bgColor }}>
         <SafeAreaView
           className={cn("flex-1", className)}
-          edges={
-            withHeader
-              ? ["left", "right", "bottom"]
-              : [
-                  // "top",
-                  "left",
-                  "right",
-                ]
-          }
+          edges={edges}
           style={{
             backgroundColor: bgColor,
             //paddingBottom: isTabScreen ? TAB_BAR_HEIGHT + insets.bottom : 0,

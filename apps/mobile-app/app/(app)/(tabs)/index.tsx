@@ -44,6 +44,7 @@ export default function MapsTab(): ReactElement {
       bgColor="transparent"
       withHeader={false}
       isTabScreen={false}
+      withTopSafeArea={false}
     >
       <Box className="flex-1">
         <PlaceDetailsSheet

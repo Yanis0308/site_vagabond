@@ -96,6 +96,7 @@
     "clsx": "^2.1.1",
     "csv": "^6.3.10",
     "expo": "~53.0.19",
+    "expo-blur": "~14.1.5",
     "expo-build-properties": "~0.14.6",
     "expo-camera": "~16.1.8",
     "expo-constants": "~17.1.7",
