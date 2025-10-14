@@ -28,7 +28,6 @@ interface CustomMapViewProps {
   onMapIdle: (mapState: MapState) => void;
   onCameraChanged: (mapState: MapState) => void;
   onPress: (event: OnPressEvent) => void;
-  enableCountryFeatureLogging?: boolean;
 }
 
 export const CustomMapView = memo(function CustomMapView({
@@ -39,7 +38,6 @@ export const CustomMapView = memo(function CustomMapView({
   onMapIdle,
   onCameraChanged,
   onPress,
-  enableCountryFeatureLogging = false,
 }: CustomMapViewProps): ReactElement {
   const images = useMapImages();
 

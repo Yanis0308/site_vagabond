@@ -94,6 +94,7 @@ export const useImageLoader = (
 
   useEffect(
     () => {
+      // eslint-disable-next-line react-you-might-not-need-an-effect/no-pass-live-state-to-parent -- fix this later
       const newQueue = imgUrls.filter((url) => !allImagesLoaded.includes(url));
       loadingQueue.current = newQueue.map((url) => ({ url, retries: 0 }));
 

@@ -3,28 +3,20 @@ import "react-native-reanimated";
 import "../global.css";
 import "@/localization";
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { getAuth } from "@react-native-firebase/auth";
 import Mapbox from "@rnmapbox/maps";
-import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useAtom } from "jotai";
-import {
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { FullScreenLoader } from "@/components/validate-place/FullScreenLoader";
 import { config } from "@/constants/Config";
-import { queryClient } from "@/constants/QueryClient";
+import { PERSIST_OPTIONS, queryClient } from "@/constants/QueryClient";
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
 import { getMe } from "@/http/users";
 import { UnifiedAnalyticsService } from "@/lib/analytics/UnifiedAnalyticsService";
@@ -130,16 +122,6 @@ export default function RootLayout(): ReactElement | null {
       });
   }, []);
 
-  const persistOptions = useMemo(
-    () => ({
-      persister: createAsyncStoragePersister({
-        storage: AsyncStorage,
-      }),
-      maxAge: 1000 * 1, //  1 second
-    }),
-    [],
-  );
-
   if (initializing.userLoading) {
     logger("=== RootLayout return null");
     return null;
@@ -149,7 +131,7 @@ export default function RootLayout(): ReactElement | null {
     <GluestackUIProvider>
       <PersistQueryClientProvider
         client={queryClient}
-        persistOptions={persistOptions}
+        persistOptions={PERSIST_OPTIONS}
       >
         <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayoutRootView}>
           <KeyboardProvider>

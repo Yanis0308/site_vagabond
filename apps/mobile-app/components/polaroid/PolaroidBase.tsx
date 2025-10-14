@@ -1,6 +1,6 @@
-import { type ImageProps } from "expo-image";
 import { memo, useEffect, useState } from "react";
 
+import { type ImageLoadAsyncSource } from "@/hooks/queries/useImageFromMultipleSources";
 import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
 
@@ -8,7 +8,7 @@ import { CustomImage } from "../custom-ui/CustomImage";
 import { Box } from "../ui/box";
 
 interface PolaroidBaseProps {
-  imageUrl: ImageProps["source"];
+  imageUrl: ImageLoadAsyncSource;
   children: React.ReactNode;
   imageWithBorder: boolean;
   maintainAspectRatio: boolean;
@@ -27,6 +27,7 @@ export const PolaroidBase = memo(
   }: PolaroidBaseProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
+      // eslint-disable-next-line react-you-might-not-need-an-effect/no-initialize-state -- force re-render to trigger animation
       setIsLoaded(true);
     }, []);
 

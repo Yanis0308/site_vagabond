@@ -1,7 +1,7 @@
-import { type ImageProps } from "expo-image";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";
 
+import { type ImageLoadAsyncSource } from "@/hooks/queries/useImageFromMultipleSources";
 import { getPlainTextDate } from "@/utils/date";
 
 import { CustomText } from "../custom-ui/CustomText";
@@ -11,7 +11,7 @@ import { StarRating } from "../validate-place/StarRating";
 import { PolaroidBase } from "./PolaroidBase";
 
 interface PolaroidReviewProps {
-  imageUrl: ImageProps["source"];
+  imageUrl: ImageLoadAsyncSource;
   username: string;
   rating: number | undefined;
   dateString: string;

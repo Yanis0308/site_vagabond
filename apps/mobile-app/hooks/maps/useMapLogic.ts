@@ -6,22 +6,25 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
-import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 import { logger } from "@/utils/logger";
-import { type PoiType, type ZoneStatType } from "@/utils/types";
+import {
+  type PoiType,
+  type VisitedPoiType,
+  type ZoneStatType,
+} from "@/utils/types";
 
-const getPoiIsVisited = (poi: PoiType, userId: string | undefined): boolean => {
-  if (userId === undefined) {
+import { useValidatedPlaces } from "../queries/useValidatedPlaces";
+
+const getPoiIsVisited = (
+  validatedPlaces: VisitedPoiType[] | undefined,
+  poiId: string,
+): boolean => {
+  if (validatedPlaces === undefined) {
     return false;
   }
 
-  return (
-    poi.visitedPois.find(
-      ({ userId: visitedUserId }: { userId: string }) =>
-        visitedUserId === userId,
-    ) !== undefined
-  );
+  return validatedPlaces.some((visitedPoi) => visitedPoi.poiId === poiId);
 };
 
 const getPoiIconName = (poi: PoiType, isVisited: boolean): string | null => {
@@ -81,7 +84,7 @@ interface UseMapLogicReturn {
 }
 
 export const useMapLogic = (): UseMapLogicReturn => {
-  const user = useUsersMe();
+  const { data: validatedPlacesData } = useValidatedPlaces();
   const { data: userLocation, isLoading: isLoadingLocation } =
     useUserLocation();
 
@@ -167,7 +170,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
       type: "FeatureCollection" as const,
       features:
         placesData?.map((place, index) => {
-          const isVisited = getPoiIsVisited(place, user.data?.id);
+          const isVisited = getPoiIsVisited(validatedPlacesData, place.id);
           const iconName = getPoiIconName(place, isVisited);
 
           return {
@@ -190,7 +193,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
           };
         }) ?? [],
     };
-  }, [placesData, user.data?.id]);
+  }, [placesData, validatedPlacesData]);
 
   // Gestion des événements de la carte
   const onMapIdle = useCallback((mapState: MapState) => {

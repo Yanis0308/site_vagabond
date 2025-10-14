@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { type jsonSchemas } from "@vagabond/shared-utils";
 
 import { queryClient } from "@/constants/QueryClient";
+import { forceBboxCacheRefresh } from "@/hooks/queries/useBboxCacheUtils";
 import { validatePlace } from "@/http/validate-place";
 import { logger } from "@/utils/logger";
 
@@ -30,14 +31,14 @@ export const useValidatePlaceMutation = () => {
     },
     onSuccess: async () => {
       return await Promise.all([
-        // queryClient.invalidateQueries({
-        //   queryKey: ["validated-places"],
-        //   refetchType: "all",
-        // }),
+        queryClient.invalidateQueries({
+          queryKey: ["validated-places"],
+        }),
         queryClient.invalidateQueries({
           queryKey: ["places"],
-          refetchType: "active",
         }),
+        // Forcer le rafraîchissement du cache bbox pour actualiser les avis des places
+        forceBboxCacheRefresh(queryClient, "places"),
       ]);
     },
   });

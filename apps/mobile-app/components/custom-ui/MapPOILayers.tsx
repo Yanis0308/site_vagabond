@@ -102,7 +102,7 @@ export const MapPOILayers = memo(
               ],
             ],
           }}
-          minZoomLevel={12}
+          minZoomLevel={11}
         />
 
         {/* Couche pour les emojis sur tous les points */}
@@ -154,7 +154,7 @@ export const MapPOILayers = memo(
               ],
             ],
           }}
-          minZoomLevel={12}
+          minZoomLevel={11}
         />
 
         {/* Couche pour les noms des lieux - sans overlap */}
@@ -228,7 +228,7 @@ export const MapPOILayers = memo(
               ],
             ],
           }}
-          minZoomLevel={12} // Affiche les noms seulement à partir du zoom 12
+          minZoomLevel={11} // Affiche les noms seulement à partir du zoom 11
         />
       </ShapeSource>
     );
