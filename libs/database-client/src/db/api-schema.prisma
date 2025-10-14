@@ -99,10 +99,10 @@ model VisitedPoi {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  imageKey String                               @map("image_key") @db.VarChar(1000)
-  rating   Int                                  @map("rating")
-  comment  String                               @map("comment") @db.VarChar(10000)
-  coords   Unsupported("geometry(Point, 4326)") @map("coords")
+  imageKey String                                @map("image_key") @db.VarChar(1000)
+  rating   Int                                   @map("rating")
+  comment  String                                @map("comment") @db.VarChar(10000)
+  coords   Unsupported("geometry(Point, 4326)")? @map("coords")
 
   poiId String @map("poi_id") @db.VarChar(1000)
 
