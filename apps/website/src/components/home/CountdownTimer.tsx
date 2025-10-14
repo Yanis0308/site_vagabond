@@ -1,5 +1,5 @@
 import { logger } from "@vagabond/shared-utils";
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { CardWithEmoji } from "./CardWithEmoji";
 
@@ -25,11 +25,9 @@ interface CountdownTimerProps {
   };
 }
 
-const targetDate = new Date("2025-07-15T00:00:00");
+const targetDate = new Date("2026-01-31T00:00:00");
 
-export default function CountdownTimer({
-  labels,
-}: CountdownTimerProps): ReactNode {
+export default function CountdownTimer({ labels }: CountdownTimerProps) {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 

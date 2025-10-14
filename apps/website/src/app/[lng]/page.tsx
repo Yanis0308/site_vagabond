@@ -1,6 +1,7 @@
 "use client";
 
-import React, { type ReactNode } from "react";
+import { useParams } from "next/navigation";
+import React from "react";
 
 import { useTranslationClient } from "@/app/i18n/client";
 import {
@@ -10,15 +11,8 @@ import {
   WhatIsVagabond,
 } from "@/components/home";
 
-interface HomePageProps {
-  params: Promise<{
-    lng: string;
-  }>;
-}
-
-export default function HomePage({ params }: HomePageProps): ReactNode {
-  const resolvedParams = React.use(params);
-  const { lng } = resolvedParams;
+export default function HomePage() {
+  const { lng } = useParams<{ lng: string }>();
 
   const { t } = useTranslationClient(lng, ["home"]);
 

@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { type ReactNode } from "react";
 
 import { useTranslationClient } from "../app/i18n/client";
 
@@ -8,7 +7,7 @@ interface FooterProps {
   lng: string;
 }
 
-export default function Footer({ lng }: FooterProps): ReactNode {
+export default function Footer({ lng }: FooterProps) {
   const { t } = useTranslationClient(lng, []);
 
   return (

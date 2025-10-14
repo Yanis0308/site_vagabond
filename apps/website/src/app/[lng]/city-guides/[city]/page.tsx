@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { type ReactNode, useEffect, useState } from "react";
 import React from "react";
 
@@ -10,13 +10,6 @@ import { ShareContent } from "@/components/ShareContent";
 import { SharePopup } from "@/components/SharePopup";
 
 import { SUPPORTED_CITIES } from "../../quiz/recommend-city/data/cities";
-
-interface CityPageProps {
-  params: Promise<{
-    lng: string;
-    city: string;
-  }>;
-}
 
 const TitleAndInfo = ({
   title,
@@ -33,10 +26,8 @@ const TitleAndInfo = ({
   );
 };
 
-export default function CityPage({ params }: CityPageProps): ReactNode {
-  // Déballer la Promise params avec React.use()
-  const resolvedParams = React.use(params);
-  const { lng, city } = resolvedParams;
+export default function CityPage() {
+  const { lng, city } = useParams<{ lng: string; city: string }>();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

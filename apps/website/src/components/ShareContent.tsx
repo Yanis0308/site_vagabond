@@ -2,7 +2,7 @@
 import { logger } from "@vagabond/shared-utils";
 import Image from "next/image";
 import Link from "next/link";
-import { type ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useTranslationClient } from "@/app/i18n/client";
 import { getBaseUrl } from "@/utils/getBaseUrl";
@@ -23,7 +23,7 @@ export const ShareContent = ({
   onClose,
   showCloseButton = true,
   city,
-}: ShareContentProps): ReactNode => {
+}: ShareContentProps) => {
   const { t } = useTranslationClient(lng, ["cities-top-10"]);
 
   const shareImagePath = `/img/social-share/cities/${lng}/${city}.png`;

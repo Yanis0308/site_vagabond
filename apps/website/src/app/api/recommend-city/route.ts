@@ -65,24 +65,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     }
 
     // Créer un thread
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- use the responses api instead
     const thread = await openai.beta.threads.create();
 
     // Ajouter un message au thread
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- use the responses api instead
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",
       content: userContent,
     });
 
     // Exécuter l'assistant sur le thread
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- use the responses api instead
     const run = await openai.beta.threads.runs.create(thread.id, {
       assistant_id: ASSISTANT_ID,
     });
 
     // Attendre que l'exécution soit terminée
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- use the responses api instead
     let runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
 
     while (runStatus.status !== "completed") {
@@ -94,12 +90,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
       // Attendre 1 seconde avant de vérifier à nouveau
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      // eslint-disable-next-line @typescript-eslint/no-deprecated -- use the responses api instead
       runStatus = await openai.beta.threads.runs.retrieve(thread.id, run.id);
     }
 
     // Récupérer les messages du thread pour obtenir la réponse
-    // eslint-disable-next-line @typescript-eslint/no-deprecated -- use the responses api instead
     const messages = await openai.beta.threads.messages.list(thread.id);
 
     // Le dernier message de l'assistant contient la réponse

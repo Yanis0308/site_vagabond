@@ -1,5 +1,5 @@
 "use client";
-import { type ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 import { ShareContent } from "./ShareContent";
@@ -10,11 +10,7 @@ interface SharePopupProps {
   city: string;
 }
 
-export const SharePopup = ({
-  onClose,
-  lng,
-  city,
-}: SharePopupProps): ReactNode => {
+export const SharePopup = ({ onClose, lng, city }: SharePopupProps) => {
   useEffect(() => {
     document.body.classList.add("overflow-hidden");
 

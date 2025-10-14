@@ -12,7 +12,7 @@ interface HoneyOneEmailDevProps {
 export const HoneyOneEmailDev = ({
   citySlug,
   locale,
-}: HoneyOneEmailDevProps): ReactNode => {
+}: HoneyOneEmailDevProps) => {
   const { t } = useTranslationClient(locale, ["emails"]);
   const tForEmails = (key: string): string => t(key, { ns: "emails" });
   return <HoneyOneEmail translate={tForEmails} citySlug={citySlug} />;

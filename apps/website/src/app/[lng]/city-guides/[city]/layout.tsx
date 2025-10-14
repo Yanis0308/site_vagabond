@@ -1,5 +1,4 @@
 import { type Metadata } from "next";
-import { type ReactNode } from "react";
 
 import { useTranslationServer } from "@/app/i18n";
 import { getMetadata } from "@/app/metadata";
@@ -23,10 +22,6 @@ export const generateMetadata = async ({
   return mergedMetadata;
 };
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode;
-}): ReactNode {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children;
 }

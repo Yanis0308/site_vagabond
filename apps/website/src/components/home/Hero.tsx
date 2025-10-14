@@ -1,13 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { type ReactNode } from "react";
 
 interface HeroProps {
   lng: string;
   t: (key: string) => string;
 }
 
-export default function Hero({ lng, t }: HeroProps): ReactNode {
+export default function Hero({ lng, t }: HeroProps) {
   return (
     <div className="text-center">
       <div className="mb-12">

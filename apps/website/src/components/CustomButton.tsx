@@ -1,13 +1,12 @@
 "use client";
-import { type ReactNode } from "react";
 
 interface CustomButtonProps {
   onClick: () => void;
-  children: ReactNode;
+  children: React.ReactNode;
   variant?: "primary" | "secondary" | "outline";
   className?: string;
   ariaLabel?: string;
-  icon?: ReactNode;
+  icon?: React.ReactNode;
   hideOnMobile?: boolean;
   hideOnDesktop?: boolean;
   showTooltip?: boolean;
@@ -25,7 +24,7 @@ export const CustomButton = ({
   hideOnDesktop = false,
   showTooltip = false,
   tooltipText = "",
-}: CustomButtonProps): ReactNode => {
+}: CustomButtonProps) => {
   const baseClasses =
     "flex w-full items-center justify-center rounded-lg px-4 py-2 text-center";
 

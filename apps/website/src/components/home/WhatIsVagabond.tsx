@@ -1,5 +1,3 @@
-import { type ReactNode } from "react";
-
 import { CardWithEmoji } from "./CardWithEmoji";
 
 interface WhatIsVagabondProps {
@@ -16,7 +14,7 @@ interface WhatIsVagabondProps {
 export default function WhatIsVagabond({
   texts,
   compass,
-}: WhatIsVagabondProps): ReactNode {
+}: WhatIsVagabondProps) {
   return (
     <CardWithEmoji emoji={compass}>
       <h2 className="ml-12 pt-2 text-3xl font-bold text-primary">

@@ -2,9 +2,14 @@
 
 import { logger } from "@vagabond/shared-utils";
 import Image from "next/image";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useParams,
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
 import React from "react";
-import { type ReactElement, Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import useLocalStorageState from "use-local-storage-state";
 
 import { useTranslationClient } from "@/app/i18n/client";
@@ -23,11 +28,7 @@ const getOptions = (question: QuestionType): string[] => {
   return [...question.options];
 };
 
-interface HoneyOneProps {
-  params: Promise<{ lng: string }>;
-}
-
-function QuizContent({ lng }: { lng: string }): ReactElement {
+function QuizContent({ lng }: { lng: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -462,10 +463,9 @@ function QuizContent({ lng }: { lng: string }): ReactElement {
   );
 }
 
-export default function HoneyOne({ params }: HoneyOneProps): ReactElement {
+export default function HoneyOne() {
   // Résoudre la Promise params
-  const resolvedParams = React.use(params);
-  const { lng } = resolvedParams;
+  const { lng } = useParams<{ lng: string }>();
 
   return (
     <Suspense fallback={<div>Chargement...</div>}>

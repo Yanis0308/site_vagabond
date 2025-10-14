@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { dir } from "i18next";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import React, { type ReactNode } from "react";
+import React from "react";
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -39,12 +39,11 @@ interface RootLayoutProps {
   params: Promise<{ lng: string }>;
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params,
-}: RootLayoutProps): ReactNode {
-  const resolvedParams = React.use(params);
-  const { lng } = resolvedParams;
+}: RootLayoutProps) {
+  const { lng } = await params;
 
   // On utilise un ID statique pour le HTML afin d'assurer une consistance entre serveur et client
   return (

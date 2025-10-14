@@ -1,5 +1,3 @@
-import { type ReactNode } from "react";
-
 import { CardWithEmoji } from "./CardWithEmoji";
 
 interface AppFeaturesProps {
@@ -21,7 +19,7 @@ export default function AppFeatures({
   star,
   arrow,
   lock,
-}: AppFeaturesProps): ReactNode {
+}: AppFeaturesProps) {
   return (
     <CardWithEmoji emoji={star}>
       <h2 className="ml-12 pt-2 text-3xl font-bold text-primary">

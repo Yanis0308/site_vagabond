@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import React from "react";
 
@@ -9,16 +10,8 @@ import { FlagIconCustom } from "@/components/FlagIconCustom";
 
 import { SUPPORTED_CITIES } from "../quiz/recommend-city/data/cities";
 
-interface CitiesPageProps {
-  params: Promise<{ lng: string }>;
-}
-
-export default function CitiesPage({
-  params,
-}: CitiesPageProps): React.JSX.Element {
-  // Résoudre la Promise params
-  const resolvedParams = React.use(params);
-  const { lng } = resolvedParams;
+export default function CitiesPage() {
+  const { lng } = useParams<{ lng: string }>();
 
   const { t } = useTranslationClient(lng, ["common", "cities-top-10"]);
   const [searchTerm, setSearchTerm] = useState<string>("");
