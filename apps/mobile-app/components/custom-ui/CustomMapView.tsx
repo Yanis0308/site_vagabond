@@ -54,8 +54,6 @@ export const CustomMapView = memo(function CustomMapView({
 
   const boundariesSourceId = "remote-boundaries-source";
 
-  logger("config.mapboxTilesetUrl", config.mapboxTilesetUrl);
-
   return (
     <MapView
       ref={mapRef}

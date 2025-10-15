@@ -56,7 +56,7 @@ export default function HomeScreen(): ReactElement {
         <HStack className="gap-4">
           {/* Image */}
           <CustomImage
-            source={`${config.cdnUrl}/${place.imageKey}`}
+            sources={`${config.cdnUrl}/${place.imageKey}`}
             height={80}
             width={80}
             className="rounded-lg"

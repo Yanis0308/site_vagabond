@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { cn } from "@/utils/cn";
 import { getPlainTextDate } from "@/utils/date";
+import { localImages } from "@/utils/localImages";
 
 import { CustomImage } from "../custom-ui/CustomImage";
 import { CustomText } from "../custom-ui/CustomText";
@@ -37,8 +38,7 @@ export const PolaroidForm = memo(
           </Text>
         </Box>
         <CustomImage
-          //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
-          source={require("@/assets/images/emojis/animated/star-struck.webp")}
+          sources={localImages.starStruck}
           useAppleWebpCodec={false}
           height={60}
           width={60}

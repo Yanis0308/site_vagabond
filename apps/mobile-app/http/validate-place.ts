@@ -26,7 +26,5 @@ export const getValidatedPlaces = async (): Promise<VisitedPoiType[]> => {
     throw new Error("Invalid response");
   }
 
-  logger("validated places length:", rawResult.data.length);
-
   return rawResult.data;
 };

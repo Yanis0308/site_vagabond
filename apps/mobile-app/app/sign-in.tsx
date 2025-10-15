@@ -12,6 +12,7 @@ import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { VStack } from "@/components/ui/vstack";
 import { useAppleLoginMutation } from "@/hooks/mutations/useAppleLoginMutation";
 import { useGoogleLoginMutation } from "@/hooks/mutations/useGoogleLoginMutation";
+import { localImages } from "@/utils/localImages";
 import { logger } from "@/utils/logger";
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
@@ -49,8 +50,7 @@ export default function SignInScreen(): ReactElement {
   const googleIcon = useMemo(
     () => (
       <CustomImage
-        //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
-        source={require("../assets/images/google-logo.png")}
+        sources={localImages.googleLogo}
         alt="Google Logo"
         height={20}
         width={20}
@@ -64,8 +64,7 @@ export default function SignInScreen(): ReactElement {
   const appleIcon = useMemo(
     () => (
       <CustomImage
-        //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
-        source={require("../assets/images/apple-logo.png")}
+        sources={localImages.appleLogo}
         alt="Apple Logo"
         height={20}
         width={20}
@@ -119,8 +118,7 @@ export default function SignInScreen(): ReactElement {
       <Box className={"flex flex-1 items-center justify-center gap-4"}>
         <VStack className={"items-center gap-4"}>
           <CustomImage
-            //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
-            source={require("../assets/images/full-icon-with-text.png")}
+            sources={localImages.fullIconWithText}
             alt={"Vagabond App Logo"}
             height={125}
             width={1000} // to fill max height value

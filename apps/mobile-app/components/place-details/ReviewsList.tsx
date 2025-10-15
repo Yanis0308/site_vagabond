@@ -13,7 +13,6 @@ interface ReviewsListProps {
 }
 
 export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
-  logger(poi.visitedPois, "poi.visitedPois");
 
   const reviews = useMemo(() => {
     const items = poi.visitedPois.map((visitedPoi) => (

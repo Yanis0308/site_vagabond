@@ -20,8 +20,7 @@ cssInterop(Image, { className: "style" });
 cssInterop(View, { className: "style" });
 
 interface CustomImageProps extends Omit<ImageProps, "source" | "contentFit"> {
-  source?: ImageLoadAsyncSource;
-  sources?: ImageLoadAsyncSource[];
+  sources: ImageLoadAsyncSource | ImageLoadAsyncSource[];
   height: number | "full";
   width?: number | "full";
   contentFit: ImageContentFit | "autoWithBackground";
@@ -31,7 +30,6 @@ interface CustomImageProps extends Omit<ImageProps, "source" | "contentFit"> {
 
 export const CustomImage = memo(
   ({
-    source,
     sources,
     height,
     width,
@@ -42,15 +40,19 @@ export const CustomImage = memo(
     ...props
   }: CustomImageProps) => {
     const allSources = useMemo(() => {
-      return sources ?? (source !== undefined ? [source] : []);
-    }, [sources, source]);
+      return Array.isArray(sources) ? sources : [sources];
+    }, [sources]);
 
     const { data: imageLoaded, isLoading: isImageLoading } =
       useImageFromMultipleSources(allSources);
 
     const optimalContentFit = useMemo(() => {
       if (contentFit === "autoWithBackground") {
-        if (imageLoaded !== undefined && imageLoaded !== null) {
+        if (
+          imageLoaded !== undefined &&
+          imageLoaded !== null &&
+          typeof imageLoaded !== "number"
+        ) {
           return imageLoaded.width >= imageLoaded.height ? "cover" : "contain";
         }
         return "contain";

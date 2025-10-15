@@ -239,7 +239,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
           event.features[0].properties !== null
         ) {
           const properties = event.features[0].properties;
-          logger("Feature properties:", properties);
 
           // CLUSTERING DÉSACTIVÉ - pour réactiver, décommenter le code ci-dessous :
           // Vérifier si c'est un cluster
@@ -258,7 +257,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
           const poiData = properties.data as PoiType | undefined;
 
           if (poiData !== undefined) {
-            logger("event properties", poiData);
             setSelectedPlaceInfo(poiData);
           }
         }

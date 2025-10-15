@@ -48,7 +48,7 @@ export const PolaroidBase = memo(
           )}
         >
           <CustomImage
-            source={imageUrl}
+            sources={imageUrl}
             height="full"
             width="full"
             className={cn(

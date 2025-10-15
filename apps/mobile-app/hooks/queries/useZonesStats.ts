@@ -15,10 +15,7 @@ export const useUserZoneStats = (): {
     queryKey: ["user-zone-stats"],
     queryFn: async () => {
       logger("fetching all zones");
-      return await getUserZoneStats().then((data) => {
-        logger("user zone stats", data);
-        return data;
-      });
+      return await getUserZoneStats();
     },
   });
 

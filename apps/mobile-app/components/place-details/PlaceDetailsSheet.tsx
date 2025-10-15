@@ -32,6 +32,7 @@ import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { useWikipediaLink } from "@/hooks/queries/useWikipediaLink";
 import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
+import { localImages } from "@/utils/localImages";
 import { getOsmUrl } from "@/utils/openstreetmap";
 import { type PoiType } from "@/utils/types";
 
@@ -255,8 +256,7 @@ export const PlaceDetailsSheet = memo(
         sources.push(`${config.cdnUrl}/${lastVisitedPoiImageKey}`);
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument -- safe
-      sources.push(require("@/assets/images/content/no-photo-placeholder.png"));
+      sources.push(localImages.noPhotoPlaceholder);
 
       return sources;
     }, [place?.data, place?.visitedPois]);
@@ -297,8 +297,7 @@ export const PlaceDetailsSheet = memo(
     const googleIcon = useMemo(
       () => (
         <CustomImage
-          //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
-          source={require("@/assets/images/google-logo.png")}
+          sources={localImages.googleLogo}
           alt="Google Logo"
           height={24}
           width={24}
@@ -312,8 +311,7 @@ export const PlaceDetailsSheet = memo(
     const wikipediaIcon = useMemo(
       () => (
         <CustomImage
-          //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
-          source={require("@/assets/images/wikipedia-logo.png")}
+          sources={localImages.wikipediaLogo}
           alt="Wikipedia Logo"
           height={28}
           width={28}
@@ -347,8 +345,7 @@ export const PlaceDetailsSheet = memo(
                 className={cn("w-full rounded-2xl bg-background-50 p-2")}
               >
                 <CustomImage
-                  //eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- it's ok for loading assets
-                  source={require("@/assets/images/emojis/animated/star-struck.webp")}
+                  sources={localImages.starStruck}
                   useAppleWebpCodec={false}
                   height={60}
                   width={60}
