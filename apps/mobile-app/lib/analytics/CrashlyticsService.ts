@@ -1,4 +1,13 @@
-import crashlytics from "@react-native-firebase/crashlytics";
+import {
+  getCrashlytics,
+  isCrashlyticsCollectionEnabled,
+  log,
+  recordError,
+  setAttribute,
+  setAttributes,
+  setCrashlyticsCollectionEnabled,
+  setUserId,
+} from "@react-native-firebase/crashlytics";
 
 import type { AnalyticsUserContext, IAnalyticsService } from "./types";
 
@@ -7,10 +16,11 @@ export class CrashlyticsService implements IAnalyticsService {
 
   initialize(): void {
     try {
-      crashlytics().log("App initialized with Crashlytics");
+      log(getCrashlytics(), "App initialized with Crashlytics");
       this.isInitialized = true;
     } catch (error) {
-      crashlytics().recordError(
+      recordError(
+        getCrashlytics(),
         new Error(`Crashlytics initialization failed: ${String(error)}`),
       );
     }
@@ -21,7 +31,7 @@ export class CrashlyticsService implements IAnalyticsService {
 
     try {
       if (userContext.email !== undefined) {
-        await crashlytics().setUserId(userContext.email);
+        await setUserId(getCrashlytics(), userContext.email);
       }
 
       const attributes: Record<string, string> = {};
@@ -35,10 +45,11 @@ export class CrashlyticsService implements IAnalyticsService {
         attributes.user_role = userContext.role;
 
       if (Object.keys(attributes).length > 0) {
-        await crashlytics().setAttributes(attributes);
+        await setAttributes(getCrashlytics(), attributes);
       }
     } catch (error) {
-      crashlytics().recordError(
+      recordError(
+        getCrashlytics(),
         new Error(`Failed to set user context: ${String(error)}`),
       );
     }
@@ -48,15 +59,16 @@ export class CrashlyticsService implements IAnalyticsService {
     if (!this.isInitialized) return;
 
     try {
-      await crashlytics().setUserId("");
-      await crashlytics().setAttributes({
+      await setUserId(getCrashlytics(), "");
+      await setAttributes(getCrashlytics(), {
         display_name: "",
         sign_in_method: "",
         session_start_time: "",
         user_role: "",
       });
     } catch (error) {
-      crashlytics().recordError(
+      recordError(
+        getCrashlytics(),
         new Error(`Failed to clear user context: ${String(error)}`),
       );
     }
@@ -65,7 +77,7 @@ export class CrashlyticsService implements IAnalyticsService {
   async setAttributes(attributes: Record<string, string>): Promise<void> {
     if (!this.isInitialized) return;
     try {
-      await crashlytics().setAttributes(attributes);
+      await setAttributes(getCrashlytics(), attributes);
     } catch {
       // Silently fail if crashlytics fails
     }
@@ -74,7 +86,7 @@ export class CrashlyticsService implements IAnalyticsService {
   async setAttribute(key: string, value: string): Promise<void> {
     if (!this.isInitialized) return;
     try {
-      await crashlytics().setAttribute(key, value);
+      await setAttribute(getCrashlytics(), key, value);
     } catch {
       // Silently fail if crashlytics fails
     }
@@ -89,7 +101,7 @@ export class CrashlyticsService implements IAnalyticsService {
     if (eventData !== undefined) {
       logMessage += ` | Data: ${JSON.stringify(eventData)}`;
     }
-    crashlytics().log(logMessage);
+    log(getCrashlytics(), logMessage);
     return Promise.resolve();
   }
 
@@ -106,9 +118,9 @@ export class CrashlyticsService implements IAnalyticsService {
         if (context !== undefined) contextInfo.push(`Context: ${context}`);
         if (additionalData !== undefined)
           contextInfo.push(`Data: ${JSON.stringify(additionalData)}`);
-        crashlytics().log(`[ERROR_CONTEXT] ${contextInfo.join(" | ")}`);
+        log(getCrashlytics(), `[ERROR_CONTEXT] ${contextInfo.join(" | ")}`);
       }
-      crashlytics().recordError(error);
+      recordError(getCrashlytics(), error);
     } catch {
       // Silently fail if crashlytics fails
     }
@@ -121,12 +133,12 @@ export class CrashlyticsService implements IAnalyticsService {
 
   // Crashlytics-specific methods
   isCrashlyticsEnabled(): boolean {
-    return crashlytics().isCrashlyticsCollectionEnabled;
+    return isCrashlyticsCollectionEnabled(getCrashlytics());
   }
 
   async setCrashlyticsEnabled(enabled: boolean): Promise<void> {
     try {
-      await crashlytics().setCrashlyticsCollectionEnabled(enabled);
+      await setCrashlyticsCollectionEnabled(getCrashlytics(), enabled);
     } catch {
       // Silently fail if crashlytics fails
     }

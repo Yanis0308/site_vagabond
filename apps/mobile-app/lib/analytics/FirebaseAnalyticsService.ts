@@ -1,4 +1,12 @@
-import analytics from "@react-native-firebase/analytics";
+import {
+  getAnalytics,
+  logEvent,
+  setAnalyticsCollectionEnabled,
+  setDefaultEventParameters,
+  setSessionTimeoutDuration,
+  setUserId,
+  setUserProperties,
+} from "@react-native-firebase/analytics";
 
 import { logger } from "@/utils/logger";
 
@@ -9,9 +17,9 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
 
   async initialize(): Promise<void> {
     try {
-      await analytics().setAnalyticsCollectionEnabled(true);
+      await setAnalyticsCollectionEnabled(getAnalytics(), true);
       this.isInitialized = true;
-      await analytics().logEvent("analytics_service_initialized", {
+      await getAnalytics().logEvent("analytics_service_initialized", {
         service: "firebase_analytics",
       });
       logger("Firebase Analytics service initialized successfully");
@@ -25,7 +33,7 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
 
     try {
       if (userContext.userId !== undefined) {
-        await analytics().setUserId(userContext.userId);
+        await setUserId(getAnalytics(), userContext.userId);
       }
 
       const userProperties: Record<string, string> = {};
@@ -38,7 +46,7 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
       if (userContext.role !== undefined)
         userProperties.user_role = userContext.role;
 
-      await analytics().setUserProperties(userProperties);
+      await setUserProperties(getAnalytics(), userProperties);
 
       logger("Firebase Analytics user context set", {
         userId: userContext.userId,
@@ -53,8 +61,8 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
     if (!this.isInitialized) return;
 
     try {
-      await analytics().setUserId(null);
-      await analytics().setUserProperties({
+      await setUserId(getAnalytics(), null);
+      await setUserProperties(getAnalytics(), {
         display_name: null,
         sign_in_method: null,
         email: null,
@@ -62,7 +70,7 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
         user_role: null,
       });
 
-      await analytics().logEvent("user_signed_out");
+      await logEvent(getAnalytics(), "user_signed_out");
       logger("Firebase Analytics user context cleared");
     } catch (error) {
       logger("Failed to clear Firebase Analytics user context:", error);
@@ -73,7 +81,7 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
     if (!this.isInitialized) return;
 
     try {
-      await analytics().setDefaultEventParameters(attributes);
+      await setDefaultEventParameters(getAnalytics(), attributes);
       logger("Firebase Analytics default parameters set", attributes);
     } catch (error) {
       logger("Failed to set Firebase Analytics default parameters:", error);
@@ -91,7 +99,7 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
     if (!this.isInitialized) return;
 
     try {
-      await analytics().logEvent(eventName, eventData);
+      await logEvent(getAnalytics(), eventName, eventData);
       logger(`Firebase Analytics event logged: ${eventName}`, eventData);
     } catch (error) {
       logger("Failed to log Firebase Analytics event:", error);
@@ -118,7 +126,7 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
   // Firebase Analytics-specific methods
   async setAnalyticsCollectionEnabled(enabled: boolean): Promise<void> {
     try {
-      await analytics().setAnalyticsCollectionEnabled(enabled);
+      await setAnalyticsCollectionEnabled(getAnalytics(), enabled);
       logger(
         `Firebase Analytics collection ${enabled ? "enabled" : "disabled"}`,
       );
@@ -129,7 +137,7 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
 
   async setSessionTimeoutDuration(milliseconds: number): Promise<void> {
     try {
-      await analytics().setSessionTimeoutDuration(milliseconds);
+      await setSessionTimeoutDuration(getAnalytics(), milliseconds);
       logger(`Firebase Analytics session timeout set to ${milliseconds}ms`);
     } catch (error) {
       logger("Failed to set Firebase Analytics session timeout:", error);

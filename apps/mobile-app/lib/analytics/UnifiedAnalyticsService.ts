@@ -14,7 +14,7 @@ export class UnifiedAnalyticsService implements IAnalyticsService {
   private isInitialized = false;
 
   // All three analytics services
-  private services: IAnalyticsService[];
+  private services: [CrashlyticsService, FirebaseAnalyticsService, VexoService];
   private crashlyticsService: CrashlyticsService;
   private firebaseAnalyticsService: FirebaseAnalyticsService;
   private vexoService: VexoService;

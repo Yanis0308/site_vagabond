@@ -8,15 +8,13 @@ import type { AnalyticsUserContext, IAnalyticsService } from "./types";
 export class VexoService implements IAnalyticsService {
   private isInitialized = false;
   private currentUserContext: AnalyticsUserContext | null = null;
-  private currentVexoApiKey: string | null = null;
   private isCurrentUserAdmin = false;
 
   initialize(): Promise<void> {
     try {
-      // Initialize Vexo with basic user API key by default
-      this.initializeVexoForRole(); // false = user (not admin)
+      vexo(config.vexoApiKey);
       this.isInitialized = true;
-      logger("Vexo service initialized successfully with user API key");
+      logger("Vexo service initialized successfully with API key");
     } catch (error) {
       logger("Vexo initialization failed:", error);
     }
@@ -28,16 +26,6 @@ export class VexoService implements IAnalyticsService {
 
     try {
       this.currentUserContext = userContext;
-      const wasAdmin = this.isCurrentUserAdmin;
-      this.isCurrentUserAdmin = userContext.role === "ADMIN";
-
-      // Change Vexo API key only if role changed (user -> admin or admin -> user)
-      if (wasAdmin !== this.isCurrentUserAdmin) {
-        this.initializeVexoForRole();
-        logger(
-          `Vexo API key changed to ${this.isCurrentUserAdmin ? "admin" : "user"} role`,
-        );
-      }
 
       // Track authentication events
       const isNewUser = userContext.creationTime === userContext.lastSignInTime;
@@ -68,10 +56,7 @@ export class VexoService implements IAnalyticsService {
       await this.trackUserLogout(userId);
 
       this.currentUserContext = null;
-      this.isCurrentUserAdmin = false;
 
-      // Reset to basic user API key when user logs out
-      this.initializeVexoForRole(); // false = user (not admin)
       logger("Vexo user context cleared, reset to user API key");
     } catch (error) {
       logger("Failed to clear Vexo user context:", error);
@@ -128,13 +113,6 @@ export class VexoService implements IAnalyticsService {
     return this.isInitialized;
   }
 
-  // Vexo-specific private methods
-  private initializeVexoForRole(): void {
-    vexo(config.vexoApiKey);
-    this.currentVexoApiKey = config.vexoApiKey;
-    logger(`Vexo initialized with API key`);
-  }
-
   private async trackUserRegistration(
     provider: string,
     registrationTime: string | null,
@@ -151,10 +129,5 @@ export class VexoService implements IAnalyticsService {
     await this.logCustomEvent("user_logout", {
       user_id: userId,
     });
-  }
-
-  // Public method to get current user role for external use
-  getIsCurrentUserAdmin(): boolean {
-    return this.isCurrentUserAdmin;
   }
 }
