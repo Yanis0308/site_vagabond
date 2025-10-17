@@ -10,6 +10,5 @@ export const useUsersMe = () => {
     queryKey: ["users", "me"],
     queryFn: getMe,
     enabled: getAuth().currentUser !== null,
-    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };

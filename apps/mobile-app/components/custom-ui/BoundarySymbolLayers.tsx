@@ -9,6 +9,18 @@ interface BoundarySymbolLayersProps {
   sourceId: string;
 }
 
+// Fonction utilitaire pour obtenir le nom des sous-zones selon le type de zone parente
+const getSubZoneName = (boundaryLevel: string): string => {
+  const subZoneNames: Record<string, string> = {
+    COUNTRY: "régions",
+    REGION: "départements",
+    COUNTY: "villes",
+    CITY: "arrondissements",
+    DISTRICT: "quartiers",
+  };
+  return subZoneNames[boundaryLevel] || "zones";
+};
+
 export const BoundarySymbolLayers = memo(
   ({ sourceId }: BoundarySymbolLayersProps): ReactElement => {
     const { data: userZoneStats } = useUserZoneStats();
@@ -59,6 +71,22 @@ export const BoundarySymbolLayers = memo(
         textHaloWidth: 28,
       };
 
+      // Expression Mapbox pour choisir le nom des sous-zones selon le boundary_level
+      const subZoneNameExpression: unknown[] = [
+        "case",
+        ["==", ["get", "boundary_level"], "COUNTRY"],
+        "régions",
+        ["==", ["get", "boundary_level"], "REGION"],
+        "départements",
+        ["==", ["get", "boundary_level"], "COUNTY"],
+        "villes",
+        ["==", ["get", "boundary_level"], "CITY"],
+        "arrondissements",
+        ["==", ["get", "boundary_level"], "DISTRICT"],
+        "quartiers",
+        "zones", // fallback
+      ];
+
       const defaultTextExpression: unknown[] = [
         "case",
         // Si subzones_count > 0 et pois_count > 0 ET niveau autorisé pour POIs
@@ -77,7 +105,9 @@ export const BoundarySymbolLayers = memo(
           ["get", "name"],
           "\n0/",
           ["to-string", ["get", "subzones_count"]],
-          " zones\n0/",
+          " ",
+          subZoneNameExpression,
+          "\n0/",
           ["to-string", ["get", "pois_count"]],
           " lieux",
         ],
@@ -88,7 +118,8 @@ export const BoundarySymbolLayers = memo(
           ["get", "name"],
           "\n0/",
           ["to-string", ["get", "subzones_count"]],
-          " zones",
+          " ",
+          subZoneNameExpression,
         ],
         // Si seulement pois_count > 0 ET niveau autorisé pour POIs
         [
@@ -138,10 +169,11 @@ export const BoundarySymbolLayers = memo(
             zonesPercent = 1;
           }
 
+          const subZoneName = getSubZoneName(zone.boundary_level);
           if (zonesPercent > 0) {
-            displayText += `\n${zone.completed_subzones_count}/${zone.total_subzones_count} zones ${zonesPercent}%`;
+            displayText += `\n${zone.completed_subzones_count}/${zone.total_subzones_count} ${subZoneName} ${zonesPercent}%`;
           } else {
-            displayText += `\n${zone.completed_subzones_count}/${zone.total_subzones_count} zones`;
+            displayText += `\n${zone.completed_subzones_count}/${zone.total_subzones_count} ${subZoneName}`;
           }
         }
 

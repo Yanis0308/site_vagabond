@@ -73,7 +73,7 @@ export const Handle = memo(
           style={starRatingAnimatedStyle}
           className="absolute left-2 top-[-20px] z-10 rotate-[-4deg]"
         >
-          <StarRating rating={rating} size={15} />
+          {rating > 0 ? <StarRating rating={rating} size={15} /> : null}
         </Animated.View>
 
         <Pressable

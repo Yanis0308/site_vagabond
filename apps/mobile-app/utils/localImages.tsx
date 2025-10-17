@@ -6,6 +6,7 @@
   wikipediaLogo: require("@/assets/images/wikipedia-logo.png") as number,
   noPhotoPlaceholder:
     require("@/assets/images/content/no-photo-placeholder.png") as number,
+  weNeedYou: require("@/assets/images/content/we-need-you.png") as number,
   bearingImage: require("@/assets/images/bearing-icon.png") as number,
   checkIcon: require("@/assets/images/icons/check.png") as number,
   questionMarkIcon:

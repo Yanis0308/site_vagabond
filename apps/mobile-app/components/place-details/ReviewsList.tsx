@@ -1,50 +1,73 @@
-import { memo, useMemo } from "react";
-import { ScrollView } from "react-native-gesture-handler";
+import { FlashList } from "@shopify/flash-list";
+import { cssInterop } from "nativewind";
+import { memo, useCallback, useMemo } from "react";
 
 import { config } from "@/constants/Config";
-import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
-import WeNeedYou from "../../assets/images/content/we-need-you.png";
 import { PolaroidReview } from "../polaroid/PolaroidReview";
+import { localImages } from "@/utils/localImages";
+
+cssInterop(FlashList, { contentContainerClassName: "contentContainerStyle" });
 
 interface ReviewsListProps {
   poi: PoiType;
 }
 
-export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
+interface ReviewItem {
+  id: string;
+  imageUrl: string | number;
+  username: string;
+  rating: number;
+  createdAt: string;
+  comment: string;
+}
 
-  const reviews = useMemo(() => {
-    const items = poi.visitedPois.map((visitedPoi) => (
-      <PolaroidReview
-        key={visitedPoi.id}
-        imageUrl={`${config.cdnUrl}/${visitedPoi.imageKey}`}
-        username={visitedPoi.username}
-        rating={visitedPoi.rating}
-        dateString={visitedPoi.createdAt}
-        comment={visitedPoi.comment}
-      />
-    ));
-    items.push(
-      <PolaroidReview
-        key={"123"}
-        imageUrl={WeNeedYou}
-        username={"Jane Doe"}
-        rating={undefined}
-        dateString={new Date().toISOString()}
-        comment={`Ajoutez votre propre avis ✍🏻\nC'est très simple !\nIl suffit d'appuyer sur le bouton "Valider le lieu" ci-dessus ☝`}
-      />,
-    );
-    return items;
+export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
+  const reviewsData: ReviewItem[] = useMemo(() => {
+    return [
+      ...poi.visitedPois.map((visitedPoi) => ({
+        id: visitedPoi.id.toString(),
+        imageUrl: `${config.cdnUrl}/${visitedPoi.imageKey}`,
+        username: visitedPoi.username,
+        rating: visitedPoi.rating,
+        createdAt: visitedPoi.createdAt,
+        comment: visitedPoi.comment,
+      })),
+      {
+        id: "123",
+        imageUrl: localImages.weNeedYou,
+        username: "Jane Doe",
+        rating: 0,
+        createdAt: new Date().toISOString(),
+        comment: `Ajoutez votre propre avis ✍🏻\nC'est très simple !\nIl suffit d'appuyer sur le bouton "Valider le lieu" ci-dessus ☝`,
+      },
+    ];
   }, [poi.visitedPois]);
 
+  const renderItem = useCallback(
+    ({ item }: { item: ReviewItem }) => (
+      <PolaroidReview
+        imageUrl={item.imageUrl}
+        username={item.username}
+        rating={item.rating}
+        dateString={item.createdAt}
+        comment={item.comment}
+        className="mr-4"
+      />
+    ),
+    [],
+  );
+  const keyExtractor = useCallback((item: ReviewItem) => item.id, []);
+
   return (
-    <ScrollView
+    <FlashList
+      data={reviewsData}
       horizontal
-      contentContainerClassName="flex flex-row gap-8 px-8 py-4"
-    >
-      {reviews}
-    </ScrollView>
+      contentContainerClassName="px-8 py-4"
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+    />
   );
 });
 ReviewsList.displayName = "ReviewsList";

@@ -47,17 +47,21 @@ export const CustomImage = memo(
       useImageFromMultipleSources(allSources);
 
     const optimalContentFit = useMemo(() => {
-      if (contentFit === "autoWithBackground") {
-        if (
-          imageLoaded !== undefined &&
-          imageLoaded !== null &&
-          typeof imageLoaded !== "number"
-        ) {
-          return imageLoaded.width >= imageLoaded.height ? "cover" : "contain";
-        }
-        return "contain";
+      if (
+        contentFit !== "autoWithBackground" ||
+        imageLoaded === null ||
+        imageLoaded === undefined
+      ) {
+        return contentFit;
       }
-      return contentFit;
+
+      if (
+        typeof imageLoaded === "number" ||
+        imageLoaded.width >= imageLoaded.height
+      ) {
+        return "cover";
+      }
+      return "contain";
     }, [contentFit, imageLoaded]);
 
     const imageStyle = {

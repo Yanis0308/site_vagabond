@@ -1,8 +1,8 @@
 import { getAuth } from "@react-native-firebase/auth";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import { FlashList } from "@shopify/flash-list";
 import { type ReactElement, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FlatList } from "react-native";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { CustomText } from "@/components/custom-ui/CustomText";
@@ -136,7 +136,7 @@ export default function HomeScreen(): ReactElement {
               {t("validated_places")}
             </CustomText>
 
-            <FlatList
+            <FlashList
               data={sortedValidatedPlaces}
               renderItem={renderPlaceItem}
               keyExtractor={keyExtractor}

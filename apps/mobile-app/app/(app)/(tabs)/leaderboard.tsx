@@ -1,5 +1,5 @@
+import { FlashList } from "@shopify/flash-list";
 import React, { type ReactElement, useCallback, useState } from "react";
-import { FlatList } from "react-native";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { LeaderboardUserItem } from "@/components/custom-ui/LeaderboardUserItem";
@@ -79,7 +79,7 @@ export default function Leaderboard(): ReactElement {
               </Box>
             ) : leaderboardData?.users !== undefined &&
               leaderboardData.users.length > 0 ? (
-              <FlatList
+              <FlashList
                 data={leaderboardData.users}
                 keyExtractor={keyExtractor}
                 renderItem={renderItem}
