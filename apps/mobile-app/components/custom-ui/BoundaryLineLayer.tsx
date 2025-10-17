@@ -28,22 +28,7 @@ export const BoundaryLineLayer = memo(
           layersInfos.NEIGHBORHOOD.color,
           layersInfos.CITY.color, // fallback
         ],
-        lineWidth: [
-          "case",
-          ["==", ["get", "boundary_level"], "COUNTRY"],
-          3, // Plus épais pour les pays
-          ["==", ["get", "boundary_level"], "REGION"],
-          1,
-          ["==", ["get", "boundary_level"], "COUNTY"],
-          1,
-          ["==", ["get", "boundary_level"], "CITY"],
-          1.5,
-          ["==", ["get", "boundary_level"], "DISTRICT"],
-          1.2,
-          ["==", ["get", "boundary_level"], "NEIGHBORHOOD"],
-          1,
-          1.5, // fallback
-        ],
+        lineWidth: 1,
         lineOpacity: 0.8,
       };
     }, []);

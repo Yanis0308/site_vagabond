@@ -17,8 +17,9 @@ const getSubZoneName = (boundaryLevel: string): string => {
     COUNTY: "villes",
     CITY: "arrondissements",
     DISTRICT: "quartiers",
+    NEIGHBORHOOD: "quartiers",
   };
-  return subZoneNames[boundaryLevel] || "zones";
+  return subZoneNames[boundaryLevel] ?? "zones";
 };
 
 export const BoundarySymbolLayers = memo(
@@ -40,17 +41,15 @@ export const BoundarySymbolLayers = memo(
     // Style pour les textes avec informations combinées
     const textStyleWithCompletionData: Record<string, unknown> = useMemo(() => {
       const baseSymbolLayerStyle = {
-        textPadding: 12, // Plus de padding
-        textHaloBlur: 3, // Effet plus doux avec un halo plus large
+        // textPadding: 12, // Plus de padding
+        // textHaloBlur: 3, // Effet plus doux avec un halo plus large
         symbolPlacement: "point",
         textAllowOverlap: false,
-        textIgnorePlacement: false,
         symbolSortKey: ["-", ["get", "pois_count"]],
         textFont: ["literal", ["Open Sans Semibold", "Arial Unicode MS Bold"]],
         textSize: 12,
         textColor: "#FFFFFF",
         textAnchor: "center",
-        textOpacity: 1,
         // Couleur du gros encart selon le boundary level
         textHaloColor: [
           "case",
@@ -68,7 +67,7 @@ export const BoundarySymbolLayers = memo(
           layersInfos.NEIGHBORHOOD.color,
           layersInfos.CITY.color, // fallback
         ],
-        textHaloWidth: 28,
+        textHaloWidth: 2,
       };
 
       // Expression Mapbox pour choisir le nom des sous-zones selon le boundary_level

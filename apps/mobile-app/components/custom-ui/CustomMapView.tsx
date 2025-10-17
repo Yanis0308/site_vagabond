@@ -16,7 +16,6 @@ import { MapPOILayers } from "@/components/custom-ui/MapPOILayers";
 import { config } from "@/constants/Config";
 import { useMapImages } from "@/hooks/maps/useMapImages";
 import { type OnPressEvent } from "@/hooks/maps/useMapLogic";
-import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
 // Types
@@ -42,7 +41,6 @@ export const CustomMapView = memo(function CustomMapView({
   const images = useMapImages();
 
   const pulsing = useMemo(() => ({ isEnabled: false }), []);
-  const scaleBarPosition = useMemo(() => ({ bottom: 100, right: 200 }), []);
 
   const maxBounds = useMemo(
     () => ({
@@ -64,8 +62,6 @@ export const CustomMapView = memo(function CustomMapView({
       projection={"globe"}
       compassEnabled={false}
       compassFadeWhenNorth={true}
-      scaleBarEnabled={true}
-      scaleBarPosition={scaleBarPosition}
     >
       <Camera pitch={0} heading={0} ref={cameraRef} maxBounds={maxBounds} />
       <LocationPuck

@@ -82,13 +82,13 @@ export const layersInfos: Record<
     textAndPoint: {
       sourceLayerId: "county-data-layer-v1",
       symbolLayerId: "county-boundaries-labels",
-      minZoomLevel: 7,
+      minZoomLevel: 6,
       maxZoomLevel: 10,
     },
     polygon: {
       sourceLayerId: "county-polygon-layer-v1",
       polygonLayerId: "county-boundaries-lines",
-      minZoomLevel: 7,
+      minZoomLevel: 6,
       maxZoomLevel: 10,
     },
   },
@@ -97,13 +97,13 @@ export const layersInfos: Record<
     textAndPoint: {
       sourceLayerId: "region-data-layer-v1",
       symbolLayerId: "region-boundaries-labels",
-      minZoomLevel: 5,
+      minZoomLevel: 3,
       maxZoomLevel: 10,
     },
     polygon: {
       sourceLayerId: "region-polygon-layer-v1",
       polygonLayerId: "region-boundaries-lines",
-      minZoomLevel: 5,
+      minZoomLevel: 3,
       maxZoomLevel: 10,
     },
   },
