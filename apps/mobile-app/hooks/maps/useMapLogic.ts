@@ -68,7 +68,6 @@ interface UseMapLogicReturn {
   cameraRef: React.RefObject<CameraRef | null>;
 
   // Loading states
-  isLoadingLocation: boolean;
   isFetchingPlaces: boolean;
   isFetchingAllZones: boolean;
 
@@ -85,8 +84,8 @@ interface UseMapLogicReturn {
 
 export const useMapLogic = (): UseMapLogicReturn => {
   const { data: validatedPlacesData } = useValidatedPlaces();
-  const { data: userLocation, isLoading: isLoadingLocation } =
-    useUserLocation();
+  const userLocation = useUserLocation();
+  const [firstCenteringDone, setFirstCenteringDone] = useState(false);
 
   const [selectedPlaceInfo, setSelectedPlaceInfo] = useAtom(selectedPlaceAtom);
   const [bbox, setBbox] = useState<{
@@ -127,11 +126,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
   }, [placesData, selectedPlaceInfo, setSelectedPlaceInfo]);
 
   const moveToUserLocation = useCallback(() => {
-    if (
-      userLocation !== undefined &&
-      userLocation !== null &&
-      cameraRef.current !== null
-    ) {
+    if (userLocation !== null && cameraRef.current !== null) {
       cameraRef.current.setCamera({
         centerCoordinate: [userLocation.longitude, userLocation.latitude],
         zoomLevel: 14,
@@ -153,15 +148,12 @@ export const useMapLogic = (): UseMapLogicReturn => {
   }, []);
 
   // Centrer la caméra sur la position de l'utilisateur
-  useEffect(
-    () => {
-      if (!isLoadingLocation) {
-        moveToUserLocation();
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- OK
-    [isLoadingLocation],
-  );
+  useEffect(() => {
+    if (userLocation !== null && !firstCenteringDone) {
+      moveToUserLocation();
+      setFirstCenteringDone(true);
+    }
+  }, [userLocation, firstCenteringDone, moveToUserLocation]);
 
   // Données formatées pour la carte
   // TODO: déplacer ça ailleurs
@@ -303,7 +295,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
       cameraRef,
 
       // Loading states
-      isLoadingLocation,
       isFetchingPlaces,
       isFetchingAllZones,
 
@@ -330,7 +321,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
       isCentered,
       mapRef,
       cameraRef,
-      isLoadingLocation,
       isFetchingPlaces,
       isFetchingAllZones,
       onMapIdle,

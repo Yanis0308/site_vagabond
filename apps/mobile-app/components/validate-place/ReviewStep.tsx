@@ -30,7 +30,7 @@ interface ReviewStepProps {
 
 export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
   ({ place, capturedImage, imageKey, isUploading, setReviewFormEnded }) => {
-    const { data: userLocation } = useUserLocation();
+    const userLocation = useUserLocation();
     const validatePlace = useValidatePlaceMutation();
     const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
 
@@ -86,7 +86,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
       register("coords");
       setValue(
         "coords",
-        userLocation === undefined || userLocation === null
+        userLocation === null
           ? {
               latitude: 0,
               longitude: 0,

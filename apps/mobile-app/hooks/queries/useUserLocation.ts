@@ -1,49 +1,48 @@
-import { useQuery } from "@tanstack/react-query";
 import * as Location from "expo-location";
-import { Alert } from "react-native";
 
-import { logger } from "@/utils/logger";
+import { useEffect, useState } from "react";
 
 interface UserLocation {
   latitude: number;
   longitude: number;
 }
 
-const getUserLocation = async (): Promise<UserLocation | null> => {
-  let { status } = await Location.getForegroundPermissionsAsync();
-  if (status !== Location.PermissionStatus.GRANTED) {
-    status = (await Location.requestForegroundPermissionsAsync()).status;
-  }
+export const useUserLocation = () => {
+  const [location, setLocation] = useState<UserLocation | null>(null);
 
-  if (status !== Location.PermissionStatus.GRANTED) {
-    Alert.alert("Permission de géolocalisation refusée");
-    return null;
-  }
+  useEffect(() => {
+    let subscription: { remove: () => void } | null = null;
 
-  let position = await Location.getLastKnownPositionAsync({
-    maxAge: 1000 * 30, // 30s
-  });
+    const setupLocation = async () => {
+      let { status } = await Location.getForegroundPermissionsAsync();
+      if (status !== Location.PermissionStatus.GRANTED) {
+        status = (await Location.requestForegroundPermissionsAsync()).status;
+      }
 
-  position ??= await Location.getCurrentPositionAsync({
-    accuracy: Location.Accuracy.Balanced,
-  });
+      if (status === Location.PermissionStatus.GRANTED) {
+        subscription = await Location.watchPositionAsync(
+          {
+            accuracy: Location.Accuracy.BestForNavigation,
+            timeInterval: 1000 * 10, // 10s
+          },
+          (position) => {
+            setLocation({
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          },
+        );
+      }
+    };
 
-  const location = {
-    latitude: position.coords.latitude,
-    longitude: position.coords.longitude,
-  };
+    void setupLocation();
 
-  logger("Position utilisateur récupérée:", location);
+    return (): void => {
+      if (subscription !== null) {
+        subscription.remove();
+      }
+    };
+  }, []);
 
   return location;
-};
-
-//eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- OK for query
-export const useUserLocation = () => {
-  return useQuery<UserLocation | null>({
-    queryKey: ["userLocation"],
-    queryFn: getUserLocation,
-    staleTime: 1000 * 30, // 30s
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-  });
 };
