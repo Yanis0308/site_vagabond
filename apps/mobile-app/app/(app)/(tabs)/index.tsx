@@ -38,6 +38,12 @@ export default function MapsTab(): ReactElement {
     setSelectedPlaceInfo(null);
   }, [setSelectedPlaceInfo]);
 
+  const onPressLink = useCallback(() => {
+    router.push({
+      pathname: "/validate-place/take-photo",
+    });
+  }, []);
+
   return (
     <CustomScreenContainer
       isLightScreen={true}
@@ -49,12 +55,7 @@ export default function MapsTab(): ReactElement {
       <Box className="flex-1">
         <PlaceDetailsSheet
           place={selectedPlaceInfo}
-          // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- will fix later
-          onPressLink={(): void => {
-            router.push({
-              pathname: "/validate-place/take-photo",
-            });
-          }}
+          onPressLink={onPressLink}
           onClose={onBottomSheetClose}
         />
 

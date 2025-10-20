@@ -7,7 +7,6 @@ export interface AnalyticsUserContext {
   userId?: string;
   creationTime?: string;
   lastSignInTime?: string;
-  role?: "ADMIN" | "USER";
 }
 
 // Base interface that all analytics services must implement

@@ -1,0 +1,31 @@
+﻿import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import {
+  // eslint-disable-next-line no-restricted-imports -- we need to use the expo image component
+  Image,
+  type ImageRef,
+} from "expo-image";
+
+import { logger } from "@/utils/logger";
+
+export type ImageLoadAsyncSource = Parameters<typeof Image.loadAsync>[0];
+
+export const useImageFromMultipleSources = (
+  sources: ImageLoadAsyncSource[],
+): UseQueryResult<ImageRef | number | null> => {
+  return useQuery<ImageRef | number | null>({
+    queryKey: ["imageSources", sources],
+    queryFn: async () => {
+      for (const source of sources) {
+        try {
+          if (typeof source === "number") {
+            return source;
+          }
+          return await Image.loadAsync(source);
+        } catch (error) {
+          logger("Erreur lors du chargement de l'image:", error);
+        }
+      }
+      return null;
+    },
+  });
+};

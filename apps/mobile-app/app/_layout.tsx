@@ -67,36 +67,16 @@ export default function RootLayout(): ReactElement | null {
 
         // Prefetch user profile and set analytics context
         void (async (): Promise<void> => {
-          try {
-            const userProfile = await queryClient.fetchQuery({
-              queryKey: ["users", "me"],
-              queryFn: getMe,
-            });
-
-            // Set unified analytics user context with role (handles both Crashlytics and Vexo)
-            void UnifiedAnalyticsService.getInstance().setUserContext({
-              email: user.email ?? undefined,
-              displayName: user.displayName ?? undefined,
-              signInMethod,
-              sessionStartTime: new Date().toISOString(),
-              userId: user.uid,
-              creationTime: user.metadata.creationTime,
-              lastSignInTime: user.metadata.lastSignInTime,
-              role: userProfile.role,
-            });
-          } catch {
-            // Fallback: set analytics without role if API fails
-            void UnifiedAnalyticsService.getInstance().setUserContext({
-              email: user.email ?? undefined,
-              displayName: user.displayName ?? undefined,
-              signInMethod,
-              sessionStartTime: new Date().toISOString(),
-              userId: user.uid,
-              creationTime: user.metadata.creationTime,
-              lastSignInTime: user.metadata.lastSignInTime,
-              role: "USER", // default fallback
-            });
-          }
+          // Set unified analytics user context with role (handles both Crashlytics and Vexo)
+          void UnifiedAnalyticsService.getInstance().setUserContext({
+            email: user.email ?? undefined,
+            displayName: user.displayName ?? undefined,
+            signInMethod,
+            sessionStartTime: new Date().toISOString(),
+            userId: user.uid,
+            creationTime: user.metadata.creationTime,
+            lastSignInTime: user.metadata.lastSignInTime,
+          });
         })();
       } else {
         // User is signed out

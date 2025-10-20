@@ -41,8 +41,6 @@ export class CrashlyticsService implements IAnalyticsService {
         attributes.sign_in_method = userContext.signInMethod;
       if (userContext.sessionStartTime !== undefined)
         attributes.session_start_time = userContext.sessionStartTime;
-      if (userContext.role !== undefined)
-        attributes.user_role = userContext.role;
 
       if (Object.keys(attributes).length > 0) {
         await setAttributes(getCrashlytics(), attributes);

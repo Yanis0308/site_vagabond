@@ -1,5 +1,4 @@
 import * as Location from "expo-location";
-
 import { useEffect, useState } from "react";
 
 interface UserLocation {
@@ -7,13 +6,13 @@ interface UserLocation {
   longitude: number;
 }
 
-export const useUserLocation = () => {
+export const useUserLocation = (): UserLocation | null => {
   const [location, setLocation] = useState<UserLocation | null>(null);
 
   useEffect(() => {
     let subscription: { remove: () => void } | null = null;
 
-    const setupLocation = async () => {
+    const setupLocation = async (): Promise<void> => {
       let { status } = await Location.getForegroundPermissionsAsync();
       if (status !== Location.PermissionStatus.GRANTED) {
         status = (await Location.requestForegroundPermissionsAsync()).status;

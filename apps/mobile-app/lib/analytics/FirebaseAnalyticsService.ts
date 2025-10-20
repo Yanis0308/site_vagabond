@@ -43,8 +43,6 @@ export class FirebaseAnalyticsService implements IAnalyticsService {
         userProperties.sign_in_method = userContext.signInMethod;
       if (userContext.email !== undefined)
         userProperties.email = userContext.email;
-      if (userContext.role !== undefined)
-        userProperties.user_role = userContext.role;
 
       await setUserProperties(getAnalytics(), userProperties);
 

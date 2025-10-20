@@ -6,7 +6,7 @@ import { calculateBboxWithMinSize } from "@/utils/bbox";
 import { logger } from "@/utils/logger";
 import { type BoundingBoxType, type PoiType } from "@/utils/types";
 
-import { useBboxCacheData } from "./useBboxCacheUtils";
+import { useBboxCacheData, useMergeBboxCache } from "./useBboxCacheUtils";
 
 export const usePlaces = (
   viewBbox: BoundingBoxType | null,
@@ -31,13 +31,16 @@ export const usePlaces = (
     return calculateBboxWithMinSize(northEast, southWest, 10000);
   }, [viewBbox]);
 
-  // Utiliser le hook mutualisé pour rechercher des données dans le cache
-  const initialData = useBboxCacheData<PoiType[]>("places", viewBbox);
+  // Récupérer TOUTES les données du cache et vérifier si on a besoin de fetch
+  // IMPORTANT : On passe fetchBbox (zone étendue) et non viewBbox (zone visible)
+  const { allData, needsFetch } = useBboxCacheData<PoiType[]>(
+    "places",
+    viewBbox,
+  );
 
   const queryResult = useQuery({
     queryKey: ["places", fetchBbox],
-    enabled: initialData === undefined && zoom !== null && zoom >= 12,
-    initialData,
+    enabled: needsFetch && zoom !== null && zoom >= 11,
     queryFn: async () => {
       logger("fetching places for fetchBbox:", fetchBbox);
 
@@ -49,10 +52,57 @@ export const usePlaces = (
 
       return places;
     },
-    placeholderData: (previousData) => previousData,
     // Augmenter le staleTime car TanStack Query gère le cache automatiquement
     staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
-  return queryResult;
+  // Fusionner automatiquement les données UNIQUEMENT quand une nouvelle requête réussit
+  // Ne pas déclencher à chaque re-render où data existe déjà
+  useMergeBboxCache(
+    "places",
+    fetchBbox,
+    queryResult.isSuccess && queryResult.isFetching === false
+      ? queryResult.data
+      : undefined,
+  );
+
+  // Fusionner TOUTES les données : cache existant + nouvelles données de la requête
+  const finalData = useMemo(() => {
+    if (allData === undefined && queryResult.data === undefined) {
+      return undefined;
+    }
+
+    if (allData === undefined) {
+      return queryResult.data;
+    }
+
+    if (queryResult.data === undefined) {
+      return allData;
+    }
+
+    // Fusionner les deux et éliminer les doublons
+    const combined = [...allData, ...queryResult.data];
+    const uniqueData = Array.from(
+      new Map(combined.map((item) => [item.id, item])).values(),
+    );
+
+    return uniqueData;
+  }, [allData, queryResult.data]);
+
+  return useMemo(
+    () => ({
+      data: finalData,
+      isSuccess: queryResult.isSuccess,
+      isFetching: queryResult.isFetching,
+      isLoading: queryResult.isLoading,
+      error: queryResult.error,
+    }),
+    [
+      finalData,
+      queryResult.isSuccess,
+      queryResult.isFetching,
+      queryResult.isLoading,
+      queryResult.error,
+    ],
+  );
 };
