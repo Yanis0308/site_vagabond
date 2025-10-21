@@ -17,4 +17,13 @@ declare module "tailwind-variants/dist/config" {
     twMergeConfig?: any;
   }
   export type TVConfig = TWMConfig;
+  export const defaultConfig: TVConfig;
+}
+
+declare module "tailwind-variants" {
+  export const defaultConfig: {
+    twMerge?: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- ok
+    twMergeConfig?: any;
+  };
 }

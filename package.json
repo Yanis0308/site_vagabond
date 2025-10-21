@@ -11,9 +11,6 @@
     "mobile-app-dev": "pnpm --filter @vagabond/mobile-app run develop"
   },
   "pnpm": {
-    "overrides": {
-      "lightningcss": "~1.27.0"
-    },
     "patchedDependencies": {
       "@gluestack-ui/nativewind-utils": "patches/@gluestack-ui__nativewind-utils.patch"
     }

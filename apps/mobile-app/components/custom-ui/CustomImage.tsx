@@ -46,13 +46,14 @@ export const CustomImage = memo(
     const { data: imageLoaded, isLoading: isImageLoading } =
       useImageFromMultipleSources(allSources);
 
-    const optimalContentFit = useMemo(() => {
-      if (
-        contentFit !== "autoWithBackground" ||
-        imageLoaded === null ||
-        imageLoaded === undefined
-      ) {
+    const optimalContentFit = useMemo<ImageContentFit>(() => {
+      if (contentFit !== "autoWithBackground") {
         return contentFit;
+      }
+
+      // For autoWithBackground, fallback to cover if no image data
+      if (imageLoaded === null || imageLoaded === undefined) {
+        return "cover";
       }
 
       if (

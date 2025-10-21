@@ -27,7 +27,7 @@ export default fp(
           });
           fastify.log.info(`Slack message sent: ${message}`);
         } catch (error) {
-          fastify.log.error("Failed to send Slack message:", error);
+          fastify.log.error({ err: error }, "Failed to send Slack message:");
         }
       },
     };

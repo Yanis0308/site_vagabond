@@ -167,21 +167,17 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             "Allow $(PRODUCT_NAME) to access your Face ID biometric data.",
         },
       ],
-      [
-        "expo-dev-launcher",
-        {
-          launchMode: "most-recent",
-        },
-      ],
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
       "@react-native-firebase/auth",
       [
         "expo-build-properties",
         {
+          // https://github.com/invertase/react-native-firebase/issues/8657#issuecomment-3365508371
           ios: {
-            // For firebase auth
+            deploymentTarget: "15.1",
             useFrameworks: "static",
+            forceStaticLinking: ["RNFBApp"],
           },
         },
       ],

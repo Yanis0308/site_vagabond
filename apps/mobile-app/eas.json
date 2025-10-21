@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": ">= 12.3.0",
+    "version": ">= 16.24.1",
     "appVersionSource": "remote"
   },
   "build": {
@@ -62,7 +62,7 @@
   "submit": {
     "preview": {
       "android": {
-        "track": "internal"
+        "track": "alpha"
       }
     },
     "production": {

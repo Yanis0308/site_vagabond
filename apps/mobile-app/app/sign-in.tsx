@@ -1,7 +1,7 @@
 import * as WebBrowser from "expo-web-browser";
 import { type ReactElement, useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { PixelRatio, Platform } from "react-native";
+import { Platform } from "react-native";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { CustomText } from "@/components/custom-ui/CustomText";
@@ -13,7 +13,6 @@ import { VStack } from "@/components/ui/vstack";
 import { useAppleLoginMutation } from "@/hooks/mutations/useAppleLoginMutation";
 import { useGoogleLoginMutation } from "@/hooks/mutations/useGoogleLoginMutation";
 import { localImages } from "@/utils/localImages";
-import { logger } from "@/utils/logger";
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function SignInScreen(): ReactElement {
@@ -104,9 +103,6 @@ export default function SignInScreen(): ReactElement {
     ),
     [t, googleLogin, loginPending, googleIcon],
   );
-
-  logger("pixel ratio native", PixelRatio.get());
-  // logger("pixel ratio nativewind", pixelRatio(1));
 
   return (
     <CustomScreenContainer
