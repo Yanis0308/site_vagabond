@@ -3,10 +3,10 @@ import { cssInterop } from "nativewind";
 import { memo, useCallback, useMemo } from "react";
 
 import { config } from "@/constants/Config";
+import { localImages } from "@/utils/localImages";
 import { type PoiType } from "@/utils/types";
 
 import { PolaroidReview } from "../polaroid/PolaroidReview";
-import { localImages } from "@/utils/localImages";
 
 cssInterop(FlashList, { contentContainerClassName: "contentContainerStyle" });
 

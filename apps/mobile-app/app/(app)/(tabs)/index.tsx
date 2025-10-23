@@ -53,12 +53,6 @@ export default function MapsTab(): ReactElement {
       withTopSafeArea={false}
     >
       <Box className="flex-1">
-        <PlaceDetailsSheet
-          place={selectedPlaceInfo}
-          onPressLink={onPressLink}
-          onClose={onBottomSheetClose}
-        />
-
         {(isFetchingPlaces || isFetchingAllZones) && (
           <Box
             className="absolute inset-0 z-50 flex items-center justify-center"
@@ -97,6 +91,12 @@ export default function MapsTab(): ReactElement {
         <MapDebugInfo
           zoom={zoomRealtime ?? 0}
           placesCount={placesData?.length ?? 0}
+        />
+
+        <PlaceDetailsSheet
+          place={selectedPlaceInfo}
+          onPressLink={onPressLink}
+          onClose={onBottomSheetClose}
         />
       </Box>
     </CustomScreenContainer>

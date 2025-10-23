@@ -1,7 +1,6 @@
-import {
+import BottomSheet, {
+  BottomSheetFlashList,
   type BottomSheetHandleProps,
-  BottomSheetModal,
-  BottomSheetScrollView,
 } from "@gorhom/bottom-sheet";
 import React, {
   memo,
@@ -10,21 +9,17 @@ import React, {
   useEffect,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import { useTranslation } from "react-i18next";
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
-  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 
 import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
 import { Center } from "@/components/ui/center";
-import { useBottomSheetBack } from "@/hooks/other/useBottomSheetBack";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { useValidatedPlaces } from "@/hooks/queries/useValidatedPlaces";
@@ -53,23 +48,28 @@ interface PlaceDetailsSheetV2Props {
   onClose: () => void;
 }
 
-//TODO: utiliser le BottomSheet classique plutôt que la Modal pour éviter des Mount / Unmount ? La modal sert à en empiler plusieurs uniquement il me semble
-export const PlaceDetailsSheet = memo(
+type ListItemType =
+  | { type: "header"; data: PoiType }
+  | { type: "titleAndButton"; data: PoiType; isVisited: boolean }
+  | { type: "rating"; rating: number; count: number }
+  | { type: "reviews"; data: PoiType }
+  | { type: "externals"; data: PoiType }
+  | { type: "funFacts" }
+  | { type: "description"; text?: string }
+  | { type: "admin"; placeId: string; placeData: PoiType["data"][0] }
+  | { type: "spacer"; height: number };
+
+export const PlaceDetailsSheetClassic = memo(
   ({ place, onPressLink, onClose }: PlaceDetailsSheetV2Props): ReactElement => {
     const { t } = useTranslation("common");
     const DEFAULT_SNAP_POINT = 1;
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+    const bottomSheetRef = useRef<BottomSheet>(null);
 
     const user = useUsersMe();
     const { data: validatedPlaces } = useValidatedPlaces();
 
     const animatedIndex = useSharedValue(0);
     const insets = useSafeAreaCustom();
-    const [stickyHeaderIndices, setStickyHeaderIndices] = useState<number[]>(
-      [],
-    );
-
-    useBottomSheetBack(place !== null, bottomSheetModalRef, onClose);
 
     const isVisited = useMemo(() => {
       return place?.visitedPois.some((visitedPoi) =>
@@ -81,10 +81,9 @@ export const PlaceDetailsSheet = memo(
 
     useEffect(() => {
       if (place?.id !== undefined) {
-        bottomSheetModalRef.current?.present();
-        bottomSheetModalRef.current?.snapToIndex(DEFAULT_SNAP_POINT); // if already open, snap to the default snap point
+        bottomSheetRef.current?.snapToIndex(DEFAULT_SNAP_POINT);
       } else {
-        bottomSheetModalRef.current?.close();
+        bottomSheetRef.current?.close();
       }
     }, [place?.id]);
 
@@ -166,24 +165,143 @@ export const PlaceDetailsSheet = memo(
       [rating, onClose],
     );
 
-    // Reel time update of stickyHeaderIndices
-    useAnimatedReaction(
-      // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- useAnimatedReaction ne peut pas utiliser useCallback
-      () => {
-        const currentIndex = Math.round(animatedIndex.value);
-        return currentIndex === snapPoints.length - 1;
+    const listData = useMemo<ListItemType[]>(() => {
+      if (place === null) return [];
+
+      const items: ListItemType[] = [
+        { type: "header", data: place },
+        { type: "titleAndButton", data: place, isVisited: isVisited ?? false },
+        { type: "rating", rating, count: place.visitedPois.length },
+        { type: "reviews", data: place },
+        { type: "externals", data: place },
+        { type: "funFacts" },
+        { type: "description", text: place.data[0]?.description },
+      ];
+
+      const placeData = place.data[0];
+      if (
+        placeData !== null &&
+        placeData !== undefined &&
+        user.data?.role === "ADMIN"
+      ) {
+        items.push({
+          type: "admin",
+          placeId: place.id,
+          placeData,
+        });
+      }
+
+      items.push({ type: "spacer", height: insets.bottom + 50 });
+
+      return items;
+    }, [place, isVisited, rating, user.data?.role, insets.bottom]);
+
+    const renderItem = useCallback(
+      ({ item }: { item: ListItemType }) => {
+        switch (item.type) {
+          case "header":
+            return (
+              <Center className={"z-20 gap-5 px-6"}>
+                <Animated.View
+                  style={[imageBoxAnimatedStyle, shadowStyles.ratingBlock]}
+                  className={cn("w-full rounded-2xl bg-background-50 p-2")}
+                >
+                  <CustomImage
+                    sources={localImages.starStruck}
+                    useAppleWebpCodec={false}
+                    height={60}
+                    width={60}
+                    containerClassName="absolute -left-5 -top-3 z-10 rotate-[-16deg]"
+                    contentFit={"contain"}
+                    showLoader={false}
+                  />
+                  <PlaceImage place={item.data} />
+                </Animated.View>
+              </Center>
+            );
+
+          case "titleAndButton":
+            return (
+              <Animated.View
+                style={[contentAnimatedStyle, shadowStyles.contentLarge]}
+                className="bg-background-200 pb-2"
+              >
+                <CustomText
+                  type="placeTitle"
+                  className={"px-6 pt-4 text-plum-700"}
+                >
+                  {item.isVisited ? " ✅ " : ""}
+                  {t("place_details_sheet.title", {
+                    name: item.data.data[0]?.name,
+                  })}
+                </CustomText>
+
+                {item.isVisited ? null : (
+                  <Button
+                    onPress={onPressLink}
+                    action="submit"
+                    className="mx-6 mt-4"
+                  >
+                    <ButtonText>{"📸   Valider le lieu"}</ButtonText>
+                  </Button>
+                )}
+              </Animated.View>
+            );
+
+          case "rating":
+            return (
+              <StarRating
+                rating={item.rating}
+                size={18}
+                className={cn("mb-4 self-center mt-8")}
+                ratingCount={item.count}
+              />
+            );
+
+          case "reviews":
+            return <ReviewsList poi={item.data} />;
+
+          case "externals":
+            return <ExternalsButtonsSection place={item.data} />;
+
+          case "funFacts":
+            return <FunFactsSection className="px-6 pt-10" />;
+
+          case "description":
+            return (
+              <DescriptionSection className="px-6 pt-10" text={item.text} />
+            );
+
+          case "admin":
+            return (
+              <AdminInfoSection
+                placeId={item.placeId}
+                placeData={item.placeData}
+              />
+            );
+
+          case "spacer":
+            return <Box style={{ height: item.height }} />;
+
+          default:
+            return null;
+        }
       },
-      // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- useAnimatedReaction ne peut pas utiliser useCallback
-      (isAtLastIndex) => {
-        const newStickyIndices = isAtLastIndex ? [1] : [];
-        runOnJS(setStickyHeaderIndices)(newStickyIndices);
-      },
+      [imageBoxAnimatedStyle, contentAnimatedStyle, t, onPressLink],
     );
 
+    const keyExtractor = useCallback((item: ListItemType, index: number) => {
+      return `${item.type}-${index}`;
+    }, []);
+
+    const stickyHeaderIndices = useMemo(() => {
+      return [1];
+    }, []);
+
     return (
-      <BottomSheetModal
-        ref={bottomSheetModalRef}
-        index={DEFAULT_SNAP_POINT}
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
         snapPoints={snapPoints}
         animatedIndex={animatedIndex}
         enablePanDownToClose={false}
@@ -192,87 +310,15 @@ export const PlaceDetailsSheet = memo(
         handleComponent={handleComponent}
         bottomInset={TAB_BAR_HEIGHT}
       >
-        {place === null ? null : (
-          <BottomSheetScrollView
-            stickyHeaderIndices={stickyHeaderIndices}
-            key={place.id}
-          >
-            <Center className={"z-20 gap-5 px-6"}>
-              <Animated.View
-                style={[imageBoxAnimatedStyle, shadowStyles.ratingBlock]}
-                className={cn("w-full rounded-2xl bg-background-50 p-2")}
-              >
-                <CustomImage
-                  sources={localImages.starStruck}
-                  useAppleWebpCodec={false}
-                  height={60}
-                  width={60}
-                  containerClassName="absolute -left-5 -top-3 z-10 rotate-[-16deg]"
-                  contentFit={"contain"}
-                  showLoader={false}
-                />
-                <PlaceImage place={place} />
-              </Animated.View>
-            </Center>
-
-            <Animated.View
-              style={[contentAnimatedStyle, shadowStyles.contentLarge]}
-              className="bg-background-200 pb-2"
-            >
-              <CustomText
-                type="placeTitle"
-                className={"px-6 pt-4 text-plum-700"}
-              >
-                {isVisited ? " ✅ " : ""}
-                {t("place_details_sheet.title", {
-                  name: place.data[0]?.name,
-                })}
-              </CustomText>
-
-              {isVisited ? null : (
-                <Button
-                  onPress={onPressLink}
-                  action="submit"
-                  className="mx-6 mt-4"
-                >
-                  <ButtonText>{"📸   Valider le lieu"}</ButtonText>
-                </Button>
-              )}
-            </Animated.View>
-
-            <Box>
-              <StarRating
-                rating={rating}
-                size={18}
-                className={cn("mb-4 self-center mt-8")}
-                ratingCount={place.visitedPois.length}
-              />
-
-              <ReviewsList poi={place} />
-
-              <ExternalsButtonsSection place={place} />
-
-              <FunFactsSection className="px-6 pt-10" />
-
-              <DescriptionSection
-                className="px-6 pt-10"
-                text={place.data[0]?.description}
-              />
-
-              {place.data[0] !== undefined && user.data?.role === "ADMIN" ? (
-                <AdminInfoSection
-                  placeId={place.id}
-                  placeData={place.data[0]}
-                />
-              ) : null}
-            </Box>
-
-            <Box style={{ height: insets.bottom + 50 }} />
-          </BottomSheetScrollView>
-        )}
-      </BottomSheetModal>
+        <BottomSheetFlashList
+          data={listData}
+          renderItem={renderItem}
+          keyExtractor={keyExtractor}
+          stickyHeaderIndices={stickyHeaderIndices}
+        />
+      </BottomSheet>
     );
   },
 );
 
-PlaceDetailsSheet.displayName = "PlaceDetailsSheet";
+PlaceDetailsSheetClassic.displayName = "PlaceDetailsSheetClassic";
