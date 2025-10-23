@@ -1,6 +1,8 @@
 import * as turf from "@turf/turf";
 import { getBoundsOfDistance, getDistance, isPointInPolygon } from "geolib";
 
+import { logger } from "./logger";
+
 // Constantes pour le clustering
 export const CLUSTER_MAX_ZOOM = 14;
 
@@ -117,13 +119,13 @@ const geoPolygonToTurf = (polygon: GeoPolygon): GeoJSON.Feature => {
 const turfToGeoPolygon = (turfPolygon: GeoJSON.Feature): GeoPolygon[] => {
   const geometry = turfPolygon.geometry;
 
-  if (!geometry) {
+  if (geometry === undefined) {
     return [];
   }
 
   if (geometry.type === "Polygon") {
     const coords = geometry.coordinates[0];
-    if (!coords) {
+    if (coords === undefined) {
       return [];
     }
     return [
@@ -138,12 +140,12 @@ const turfToGeoPolygon = (turfPolygon: GeoJSON.Feature): GeoPolygon[] => {
   } else if (geometry.type === "MultiPolygon") {
     // MultiPolygon
     const coords = geometry.coordinates;
-    if (!coords || coords.length === 0) {
+    if (coords === undefined || coords.length === 0) {
       return [];
     }
     return coords
       .map((poly: number[][][]) => {
-        if (!poly?.[0]) {
+        if (poly?.[0] === undefined) {
           return [] as GeoPoint[];
         }
         return poly[0].map(
@@ -179,13 +181,13 @@ export const mergePolygons = (polygons: GeoPolygon[]): GeoPolygon[] => {
 
     // Fusionner progressivement
     let result = turfPolygons[0];
-    if (!result) {
+    if (result === undefined) {
       return polygons;
     }
 
     for (let i = 1; i < turfPolygons.length; i++) {
       const current = turfPolygons[i];
-      if (!current) {
+      if (current === undefined) {
         continue;
       }
 
@@ -195,23 +197,23 @@ export const mergePolygons = (polygons: GeoPolygon[]): GeoPolygon[] => {
           current,
         ]) as GeoJSON.FeatureCollection<GeoJSON.Polygon | GeoJSON.MultiPolygon>;
         const unionResult = turf.union(fc);
-        if (unionResult) {
+        if (unionResult !== undefined) {
           result = unionResult as GeoJSON.Feature;
         }
       } catch (e) {
         // Si la fusion échoue, continuer avec le résultat actuel
-        console.warn("Failed to merge polygon:", e);
+        logger("Failed to merge polygon:", e);
       }
     }
 
     // Convertir le résultat en GeoPolygon
-    if (result) {
+    if (result !== undefined) {
       return turfToGeoPolygon(result);
     }
     return polygons;
   } catch (error) {
     // En cas d'erreur, retourner tous les polygones séparément
-    console.error("Error merging polygons:", error);
+    logger("Error merging polygons:", error);
     return polygons;
   }
 };

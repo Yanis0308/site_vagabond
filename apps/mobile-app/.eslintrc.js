@@ -18,9 +18,10 @@ module.exports = {
     "components/ui/",
     "*.js",
     "expo-env.d.ts",
+    "dist/*",
   ],
 
-  plugins: ["@arthurgeron/react-usememo"],
+  plugins: ["@arthurgeron/react-usememo", "react-compiler"],
 
   rules: {
     "@arthurgeron/react-usememo/require-usememo": [

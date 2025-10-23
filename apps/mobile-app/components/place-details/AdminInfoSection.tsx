@@ -1,4 +1,4 @@
-﻿import { memo } from "react";
+import { memo } from "react";
 
 import { getOsmUrl } from "@/utils/openstreetmap";
 import { type PoiType } from "@/utils/types";

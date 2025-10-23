@@ -59,7 +59,7 @@ type ListItemType =
   | { type: "admin"; placeId: string; placeData: PoiType["data"][0] }
   | { type: "spacer"; height: number };
 
-export const PlaceDetailsSheetClassic = memo(
+export const PlaceDetailsSheet = memo(
   ({ place, onPressLink, onClose }: PlaceDetailsSheetV2Props): ReactElement => {
     const { t } = useTranslation("common");
     const DEFAULT_SNAP_POINT = 1;
@@ -321,4 +321,4 @@ export const PlaceDetailsSheetClassic = memo(
   },
 );
 
-PlaceDetailsSheetClassic.displayName = "PlaceDetailsSheetClassic";
+PlaceDetailsSheet.displayName = "PlaceDetailsSheet";

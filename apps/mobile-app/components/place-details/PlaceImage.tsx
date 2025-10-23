@@ -1,11 +1,11 @@
-﻿import { memo, useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { config } from "@/constants/Config";
 import { localImages } from "@/utils/localImages";
+import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
 import { CustomImage } from "../custom-ui/CustomImage";
-import { logger } from "@/utils/logger";
 
 export const PlaceImage = memo(({ place }: { place: PoiType }) => {
   // Prepare image sources in priority order: wikidata -> first visited poi -> placeholder
@@ -30,7 +30,7 @@ export const PlaceImage = memo(({ place }: { place: PoiType }) => {
     sources.push(localImages.noPhotoPlaceholder);
 
     return sources;
-  }, [place?.data, place?.visitedPois]);
+  }, [place]);
 
   logger("imageSources", JSON.stringify(imageSources, null, 2));
 

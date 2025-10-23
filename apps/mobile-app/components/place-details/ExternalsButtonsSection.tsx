@@ -1,4 +1,4 @@
-﻿import { memo, type ReactElement, useCallback, useMemo } from "react";
+import { memo, type ReactElement, useCallback, useMemo } from "react";
 import { Linking } from "react-native";
 
 import { useWikipediaLink } from "@/hooks/queries/useWikipediaLink";
@@ -117,7 +117,7 @@ export const ExternalsButtonsSection = memo(({ place }: { place: PoiType }) => {
           ? `https://www.google.com/search?q=${encodeURIComponent(googleQuery)}`
           : null,
     };
-  }, [place?.data, wikipediaLink]);
+  }, [place, wikipediaLink]);
 
   return (
     <Box className="mx-6 mb-2 mt-8">

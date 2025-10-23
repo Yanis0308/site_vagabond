@@ -85,7 +85,7 @@ interface UseMapLogicReturn {
 export const useMapLogic = (): UseMapLogicReturn => {
   const { data: validatedPlacesData } = useValidatedPlaces();
   const userLocation = useUserLocation();
-  const [firstCenteringDone, setFirstCenteringDone] = useState(false);
+  const firstCenteringDone = useRef(false);
 
   const [selectedPlaceInfo, setSelectedPlaceInfo] = useAtom(selectedPlaceAtom);
   const [bbox, setBbox] = useState<{
@@ -149,11 +149,11 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
   // Centrer la caméra sur la position de l'utilisateur
   useEffect(() => {
-    if (userLocation !== null && !firstCenteringDone) {
+    if (userLocation !== null && !firstCenteringDone.current) {
       moveToUserLocation();
-      setFirstCenteringDone(true);
+      firstCenteringDone.current = true;
     }
-  }, [userLocation, firstCenteringDone, moveToUserLocation]);
+  }, [userLocation, moveToUserLocation]);
 
   // Données formatées pour la carte
   // TODO: déplacer ça ailleurs

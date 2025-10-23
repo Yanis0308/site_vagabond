@@ -14,7 +14,6 @@ import type { VariantProps } from "@gluestack-ui/nativewind-utils";
 const useToast = createToastHook(Motion.View, AnimatePresence);
 const SCOPE = "TOAST";
 
-// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, Motion.View lacks it
 cssInterop(Motion.View, { className: "style" });
 
 const toastStyle = tva({

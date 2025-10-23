@@ -98,10 +98,11 @@ const radioLabelStyle = tva({
 type IRadioProps = Omit<React.ComponentProps<typeof UIRadio>, "context"> &
   VariantProps<typeof radioStyle>;
 const Radio = React.forwardRef<React.ElementRef<typeof UIRadio>, IRadioProps>(
-  ({ className, size = "md", ...props }, ref) => {
+  ({ className, size = "md", value = "", ...props }, ref) => {
     return (
       <UIRadio
         className={radioStyle({ class: className, size })}
+        value={value}
         {...props}
         ref={ref}
         context={{ size }}

@@ -19,11 +19,8 @@ const AnimatedPressable = createMotionAnimatedComponent(Pressable);
 const SCOPE = "MODAL";
 
 const UIModal = createModal({
-  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Root expectation
   Root: withStyleContext(View, SCOPE),
-  // @ts-expect-error gluestack-ui createMotionAnimatedComponent typing mismatch with expected ComponentType
   Backdrop: AnimatedPressable,
-  // @ts-expect-error gluestack-ui withStyleContext typing is incompatible with Content expectation
   Content: Motion.View,
   Body: ScrollView,
   CloseButton: Pressable,
@@ -32,9 +29,7 @@ const UIModal = createModal({
   AnimatePresence: AnimatePresence,
 });
 
-// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, createMotionAnimatedComponent lacks it
 cssInterop(AnimatedPressable, { className: "style" });
-// @ts-expect-error gluestack-ui cssInterop expects a ReactComponent with $$typeof, Motion.View lacks it
 cssInterop(Motion.View, { className: "style" });
 
 const modalStyle = tva({
@@ -109,7 +104,6 @@ const Modal = React.forwardRef<React.ElementRef<typeof UIModal>, IModalProps>(
     <UIModal
       ref={ref}
       {...props}
-      // @ts-expect-error gluestack-ui props typing does not include pointerEvents/className/context
       pointerEvents="box-none"
       className={modalStyle({ size, class: className })}
       context={{ size }}

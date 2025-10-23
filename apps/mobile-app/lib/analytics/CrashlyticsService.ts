@@ -1,6 +1,5 @@
 import {
   getCrashlytics,
-  isCrashlyticsCollectionEnabled,
   log,
   recordError,
   setAttribute,
@@ -130,10 +129,6 @@ export class CrashlyticsService implements IAnalyticsService {
   }
 
   // Crashlytics-specific methods
-  isCrashlyticsEnabled(): boolean {
-    return isCrashlyticsCollectionEnabled(getCrashlytics());
-  }
-
   async setCrashlyticsEnabled(enabled: boolean): Promise<void> {
     try {
       await setCrashlyticsCollectionEnabled(getCrashlytics(), enabled);

@@ -1,4 +1,4 @@
-﻿import { useQuery, type UseQueryResult } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import {
   // eslint-disable-next-line no-restricted-imports -- we need to use the expo image component
   Image,

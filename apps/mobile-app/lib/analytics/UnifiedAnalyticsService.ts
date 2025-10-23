@@ -34,9 +34,10 @@ export class UnifiedAnalyticsService implements IAnalyticsService {
 
   async initialize(): Promise<void> {
     try {
+      this.crashlyticsService.initialize();
+
       // Initialize all services in parallel
       await Promise.allSettled([
-        this.crashlyticsService.initialize(),
         this.firebaseAnalyticsService.initialize(),
         this.vexoService.initialize(),
       ]);

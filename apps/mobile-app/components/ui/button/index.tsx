@@ -299,6 +299,7 @@ const ButtonGroup = React.forwardRef<
       space = "md",
       isAttached = false,
       flexDirection = "column",
+      children,
       ...props
     },
     ref,
@@ -313,7 +314,9 @@ const ButtonGroup = React.forwardRef<
         })}
         {...props}
         ref={ref}
-      />
+      >
+        {children}
+      </UIButton.Group>
     );
   },
 );

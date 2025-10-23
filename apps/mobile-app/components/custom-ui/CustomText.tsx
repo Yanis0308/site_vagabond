@@ -17,7 +17,7 @@ const text = tva({
       tabBarTitle: "text-xs font-bold",
     },
   },
-});
+}) as (props?: { type?: string }) => string;
 export const CustomText = memo(
   ({
     children,

@@ -27,7 +27,7 @@ export const PolaroidBase = memo(
   }: PolaroidBaseProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
-      // eslint-disable-next-line react-you-might-not-need-an-effect/no-initialize-state -- force re-render to trigger animation
+      // eslint-disable-next-line react-you-might-not-need-an-effect/no-initialize-state, react-hooks/set-state-in-effect -- force re-render to trigger animation
       setIsLoaded(true);
     }, []);
 

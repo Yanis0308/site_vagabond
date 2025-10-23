@@ -92,6 +92,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           }
         } catch (error) {
           fastify.log.error(
+            { err: error },
             "Failed to send Slack notification for place validation:",
           );
         }

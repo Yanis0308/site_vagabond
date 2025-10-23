@@ -64,6 +64,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
     );
 
     // Watch rating value to conditionally show comment field
+    // eslint-disable-next-line react-hooks/incompatible-library -- forced to
     const ratingValue = watch("rating");
 
     // Auto focus comment field when rating is selected

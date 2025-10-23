@@ -1,4 +1,4 @@
-﻿export const localImages = {
+export const localImages = {
   starStruck:
     require("@/assets/images/emojis/animated/star-struck.webp") as number,
   googleLogo: require("@/assets/images/google-logo.png") as number,

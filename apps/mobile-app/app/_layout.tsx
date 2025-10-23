@@ -18,7 +18,6 @@ import { FullScreenLoader } from "@/components/validate-place/FullScreenLoader";
 import { config } from "@/constants/Config";
 import { PERSIST_OPTIONS, queryClient } from "@/constants/QueryClient";
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
-import { getMe } from "@/http/users";
 import { UnifiedAnalyticsService } from "@/lib/analytics/UnifiedAnalyticsService";
 import { authenticatedUserAtom } from "@/stores/authenticatedUserAtom";
 import { logger } from "@/utils/logger";
@@ -66,7 +65,7 @@ export default function RootLayout(): ReactElement | null {
         const signInMethod = user.providerData[0]?.providerId;
 
         // Prefetch user profile and set analytics context
-        void (async (): Promise<void> => {
+        void ((): void => {
           // Set unified analytics user context with role (handles both Crashlytics and Vexo)
           void UnifiedAnalyticsService.getInstance().setUserContext({
             email: user.email ?? undefined,

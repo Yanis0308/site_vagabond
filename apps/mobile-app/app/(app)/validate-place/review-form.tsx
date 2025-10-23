@@ -2,13 +2,7 @@ import { useNavigation, usePreventRemove } from "@react-navigation/native";
 import { useIsMutating } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import React, {
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { type ReactElement, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -30,24 +24,21 @@ export default function ReviewForm(): ReactElement {
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
   const navigation = useNavigation();
   const router = useRouter();
-  const [reviewFormEnded, setReviewFormEnded] = useState(false);
   const isMutating = useIsMutating(
     useMemo(() => ({ mutationKey: UPLOAD_FILE_MUTATION_KEY }), []),
   );
   const isUploading = isMutating > 0;
 
-  useEffect(() => {
-    if (reviewFormEnded) {
-      setCurrentPhoto(null);
-      // Small delay to ensure usePreventRemove is properly disabled
-      setTimeout(() => {
-        router.dismissAll();
-      }, 0);
-    }
-  }, [reviewFormEnded, router, setCurrentPhoto]);
+  const handleReviewFormEnd = useCallback(() => {
+    setCurrentPhoto(null);
+    // Small delay to ensure usePreventRemove is properly disabled
+    setTimeout(() => {
+      router.dismissAll();
+    }, 0);
+  }, [router, setCurrentPhoto]);
 
   usePreventRemove(
-    !reviewFormEnded,
+    currentPhoto !== null,
     useCallback(
       ({ data }) => {
         // Prompt the user before leaving the screen
@@ -105,7 +96,7 @@ export default function ReviewForm(): ReactElement {
           capturedImage={currentPhoto.imageUri}
           imageKey={currentPhoto.fileId}
           isUploading={isUploading}
-          setReviewFormEnded={setReviewFormEnded}
+          setReviewFormEnded={handleReviewFormEnd}
         />
       </KeyboardAwareScrollView>
     </CustomScreenContainer>
