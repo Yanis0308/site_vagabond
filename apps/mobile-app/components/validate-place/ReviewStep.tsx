@@ -146,7 +146,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
         >["render"]
       >[0]) => (
         <Box className="flex flex-row items-center gap-2 pt-8">
-          <CustomText type="rating" className="text-rust-600 w-[70px]">
+          <CustomText type="rating" className="w-[70px] text-rust-600">
             {"Notez votre expérience :"}
           </CustomText>
           <StarRating rating={value} onChange={onChange} />
@@ -189,8 +189,8 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
           <Controller control={control} name="rating" render={renderRating} />
           <Controller control={control} name="comment" render={renderComment} />
           {isUploading && (
-            <Box className="bg-primary-100 flex flex-row items-center gap-2 rounded-lg px-4 py-3">
-              <CustomText className="text-primary-600 text-sm">
+            <Box className="flex flex-row items-center gap-2 rounded-lg bg-primary-100 px-4 py-3">
+              <CustomText className="text-sm text-primary-600">
                 {"📤 Envoi de la photo en cours..."}
               </CustomText>
             </Box>

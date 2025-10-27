@@ -1,6 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 import { cssInterop } from "nativewind";
 import { memo, useCallback, useMemo } from "react";
+import { FlatList } from "react-native-gesture-handler";
 
 import { config } from "@/constants/Config";
 import { localImages } from "@/utils/localImages";
@@ -60,8 +61,10 @@ export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
   );
   const keyExtractor = useCallback((item: ReviewItem) => item.id, []);
 
+  // We use FlatList from react-native-gesture-handler because we are inside a BottomSheet
+  // and nested FlashList is not working properly in this case
   return (
-    <FlashList
+    <FlatList
       data={reviewsData}
       horizontal
       contentContainerClassName="px-8 py-4"
