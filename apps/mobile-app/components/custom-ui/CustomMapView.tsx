@@ -44,8 +44,8 @@ export const CustomMapView = memo(function CustomMapView({
 
   const maxBounds = useMemo(
     () => ({
-      ne: [12, 58], // Northeast corner (near Germany/Belgium border)
-      sw: [-6, 36], // Southwest corner (near Spain border)
+      ne: [21.62109, 57.32652], // Northeast corner (near Germany/Belgium border)
+      sw: [-13.88672, 35.46067], // Southwest corner (near Spain border)
     }),
     [],
   );
