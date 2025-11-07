@@ -74,7 +74,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
             const imageUrl = `${fastify.config.cdnUrl}/${imageKey}`;
 
-            await fastify.slack.sendMessage(
+            await fastify.slack.sendPoiValidationMessage(
               `🏆 *Nouveau lieu validé !*\n` +
                 `👤 *Utilisateur:* ${username} (${request.user.email})\n` +
                 `📍 *Lieu:* ${poiName}\n` +

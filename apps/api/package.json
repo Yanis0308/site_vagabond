@@ -36,7 +36,7 @@
     "@fastify/swagger": "^9.4.0",
     "@fastify/swagger-ui": "^5.1.0",
     "@fastify/type-provider-typebox": "^5.0.1",
-    "@slack/webhook": "^7.0.2",
+    "@slack/web-api": "^7.12.0",
     "@vagabond/database-client": "workspace:*",
     "@vagabond/shared-utils": "workspace:*",
     "close-with-grace": "^2.3.0",

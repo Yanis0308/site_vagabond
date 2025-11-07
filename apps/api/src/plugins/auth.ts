@@ -13,6 +13,8 @@ declare module "fastify" {
         oauthProviders: string[];
         lastLogin: Date;
         role: "ADMIN" | "USER";
+        createdAt: Date;
+        updatedAt: Date;
       };
     };
   }
@@ -72,8 +74,6 @@ export default fp(
           select: { id: true, oauthProviders: true },
         });
 
-        const isNewUser = existingUser === null;
-
         const dbUser = await fastify.prisma.user.upsert({
           where: { id: userId },
           create: {
@@ -101,6 +101,8 @@ export default fp(
             oauthProviders: true,
             lastLogin: true,
             role: true,
+            createdAt: true,
+            updatedAt: true,
           },
         });
 
@@ -108,26 +110,29 @@ export default fp(
         request.user = Object.assign(decodedToken, { db: dbUser });
 
         // Fire-and-forget Slack notification for new user
-        if (isNewUser) {
+        const isActuallyNewUser =
+          dbUser.createdAt.getTime() === dbUser.updatedAt.getTime();
+
+        if (isActuallyNewUser) {
           void (async (): Promise<void> => {
             try {
-              await fastify.slack.sendMessage(
-                `🎉 Nouvel utilisateur inscrit ! \n **Email:** ${currentUserInfo.email}\n**Nom:** ${currentUserInfo.fullName}\n**Provider:** ${currentUserInfo.oauthProviders.join(
-                  ", ",
-                )}\n**Date:** ${new Date().toLocaleString("fr-FR")}`,
+              await fastify.slack.sendSignupMessage(
+                `🎉 *Nouvel utilisateur inscrit !*\n` +
+                  `📧 *Email:* ${currentUserInfo.email}\n` +
+                  `👤 *Nom:* ${currentUserInfo.fullName}\n` +
+                  `🔑 *Provider:* ${currentUserInfo.oauthProviders.join(", ")}\n` +
+                  `📅 *Date:* ${new Date().toLocaleString("fr-FR")}`,
               );
               fastify.log.info(
                 `New user created: ${currentUserInfo.email} (${userId})`,
               );
             } catch (error) {
-              // eslint-disable-next-line no-console -- TODO: remove
-              console.error(error);
+              fastify.log.error(error);
             }
           })();
         }
       } catch (error) {
-        // eslint-disable-next-line no-console -- TODO: remove
-        console.error(error);
+        fastify.log.error(error);
         throw fastify.httpErrors.unauthorized("Non autorisé");
       }
     });

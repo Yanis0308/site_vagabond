@@ -1,10 +1,11 @@
-import { IncomingWebhook } from "@slack/webhook";
+import { WebClient } from "@slack/web-api";
 import fp from "fastify-plugin";
 
 declare module "fastify" {
   interface FastifyInstance {
     slack: {
-      sendMessage: (message: string) => Promise<void>;
+      sendSignupMessage: (message: string) => Promise<void>;
+      sendPoiValidationMessage: (message: string) => Promise<void>;
     };
   }
 }
@@ -12,24 +13,35 @@ declare module "fastify" {
 export default fp(
   (fastify) => {
     const slackConfig = fastify.config.slack;
-    const webhook = new IncomingWebhook(slackConfig.webhookUrl);
+    const client = new WebClient(slackConfig.botToken);
+    const channelSignups = slackConfig.channelSignups;
+    const channelPoiValidations = slackConfig.channelPoiValidations;
+
+    const sendMessage = async (
+      message: string,
+      channel: string,
+    ): Promise<void> => {
+      try {
+        await client.chat.postMessage({
+          text: message,
+          channel: channel,
+          username: "Vagabond API",
+          icon_emoji: ":robot_face:",
+        });
+        fastify.log.info(`Slack message sent to ${channel}: ${message}`);
+      } catch (err) {
+        fastify.log.error({ err }, "Failed to send Slack message:");
+      }
+    };
 
     const slackService: {
-      sendMessage: (message: string) => Promise<void>;
+      sendSignupMessage: (message: string) => Promise<void>;
+      sendPoiValidationMessage: (message: string) => Promise<void>;
     } = {
-      async sendMessage(message: string) {
-        try {
-          await webhook.send({
-            text: message,
-            channel: fastify.config.slack.channel,
-            username: "Vagabond API",
-            icon_emoji: ":robot_face:",
-          });
-          fastify.log.info(`Slack message sent: ${message}`);
-        } catch (error) {
-          fastify.log.error({ err: error }, "Failed to send Slack message:");
-        }
-      },
+      sendSignupMessage: (message: string) =>
+        sendMessage(message, channelSignups),
+      sendPoiValidationMessage: (message: string) =>
+        sendMessage(message, channelPoiValidations),
     };
 
     fastify.decorate("slack", slackService);

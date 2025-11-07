@@ -20,8 +20,9 @@ const RawConfigSchema = z.object({
   AWS_REGION: z.string(),
   S3_BUCKET_NAME: z.string(),
   CDN_URL: z.string(),
-  SLACK_WEBHOOK_URL: z.string(),
-  SLACK_CHANNEL: z.string(),
+  SLACK_BOT_AUTH_TOKEN: z.string(),
+  SLACK_CHANNEL_SIGNUPS: z.string(),
+  SLACK_CHANNEL_POI_VALIDATIONS: z.string(),
 });
 
 // Type d'inférence pour TypeScript
@@ -33,8 +34,9 @@ export interface Config {
     bucketName: string;
   };
   slack: {
-    webhookUrl: string;
-    channel: string;
+    botToken: string;
+    channelSignups: string;
+    channelPoiValidations: string;
   };
 }
 
@@ -67,7 +69,7 @@ export default fp(
         ).toString("utf-8"),
       );
 
-      const config = {
+      const config: Config = {
         isDev,
         firebaseAdminServiceAccountFilePath,
         cdnUrl: rawConfig.CDN_URL,
@@ -75,8 +77,9 @@ export default fp(
           bucketName: rawConfig.S3_BUCKET_NAME,
         },
         slack: {
-          webhookUrl: rawConfig.SLACK_WEBHOOK_URL,
-          channel: rawConfig.SLACK_CHANNEL,
+          botToken: rawConfig.SLACK_BOT_AUTH_TOKEN,
+          channelSignups: rawConfig.SLACK_CHANNEL_SIGNUPS,
+          channelPoiValidations: rawConfig.SLACK_CHANNEL_POI_VALIDATIONS,
         },
       };
 
