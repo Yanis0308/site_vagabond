@@ -34,15 +34,9 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
     const validatePlace = useValidatePlaceMutation();
     const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
 
-    const {
-      handleSubmit,
-      formState: { isSubmitting, isValid },
-      control,
-      setValue,
-      register,
-      watch,
-      setFocus,
-    } = useForm<Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema>>(
+    const { control, setValue, register, watch, setFocus, getValues } = useForm<
+      Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema>
+    >(
       useMemo(
         () => ({
           resolver: ajvResolver(
@@ -64,7 +58,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
     );
 
     // Watch rating value to conditionally show comment field
-    // eslint-disable-next-line react-hooks/incompatible-library -- forced to
+    // eslint-disable-next-line react-hooks/incompatible-library -- needed for dynamic UI updates
     const ratingValue = watch("rating");
 
     // Auto focus comment field when rating is selected
@@ -78,58 +72,73 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
 
     useEffect(() => {
       register("imageKey");
-      if (imageKey !== null) {
-        setValue("imageKey", imageKey);
+      if (imageKey !== null && imageKey !== "") {
+        setValue("imageKey", imageKey, { shouldValidate: true });
       }
     }, [register, setValue, imageKey]);
 
     useEffect(() => {
       register("coords");
-      setValue(
-        "coords",
-        userLocation === null
-          ? {
-              latitude: 0,
-              longitude: 0,
-            }
-          : {
-              latitude: userLocation.latitude,
-              longitude: userLocation.longitude,
-            },
-      );
+      if (userLocation !== null) {
+        setValue(
+          "coords",
+          {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          },
+          { shouldValidate: true },
+        );
+      }
     }, [register, setValue, userLocation]);
 
-    useEffect(() => {
-      setDisplayingLoader(isSubmitting);
-    }, [isSubmitting, setDisplayingLoader]);
+    const onSubmit = useCallback(async () => {
+      if (imageKey === null || imageKey === "" || userLocation === null) {
+        logger("=== FORM VALIDATION ERROR ===", {
+          imageKey,
+          userLocation,
+        });
+        return;
+      }
 
-    const onSubmit = useCallback(() => {
-      void handleSubmit(
-        async (
-          data: Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema>,
-        ) => {
-          try {
-            await validatePlace.mutateAsync({
-              placeId: place.id,
-              imageKey: data.imageKey,
-              rating: data.rating,
-              comment: data.comment,
-              coords: data.coords,
-            });
+      const formValues = getValues();
+      const currentRating = formValues.rating;
+      const currentComment = formValues.comment;
 
-            // Reset loader before closing the modal to prevent it from staying visible
-            setDisplayingLoader(false);
-            setReviewFormEnded(true);
-          } catch (error) {
-            // Important: ne pas re-throw l'erreur pour que handleSubmit puisse reset isSubmitting
-            logger("=== FORM ON SUBMIT ERROR ===", error);
-            // Reset loader on error too
-            setDisplayingLoader(false);
-          }
-        },
-      )();
+      if (
+        currentRating === undefined ||
+        currentRating === 0 ||
+        currentRating < 1
+      ) {
+        logger("=== INVALID RATING ===", currentRating);
+        return;
+      }
+
+      try {
+        setDisplayingLoader(true);
+        await validatePlace.mutateAsync({
+          placeId: place.id,
+          imageKey: imageKey,
+          rating: currentRating,
+          comment:
+            currentComment === undefined || currentComment === ""
+              ? ""
+              : currentComment,
+          coords: {
+            latitude: userLocation.latitude,
+            longitude: userLocation.longitude,
+          },
+        });
+
+        setDisplayingLoader(false);
+        setReviewFormEnded(true);
+      } catch (error) {
+        logger("=== FORM ON SUBMIT ERROR ===", error);
+        setDisplayingLoader(false);
+      }
     }, [
-      handleSubmit,
+      imageKey,
+      userLocation,
+      getValues,
       validatePlace,
       place.id,
       setReviewFormEnded,
@@ -145,8 +154,8 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
           "rating"
         >["render"]
       >[0]) => (
-        <Box className="flex flex-row items-center gap-2 pt-8">
-          <CustomText type="rating" className="w-[70px] text-rust-600">
+        <Box className="flex flex-col items-center gap-2 pt-8">
+          <CustomText type="rating" className="text-rust-600">
             {"Notez votre expérience :"}
           </CustomText>
           <StarRating rating={value} onChange={onChange} />
@@ -198,7 +207,13 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
           <Button
             onPress={onSubmit}
             action="submit"
-            isDisabled={!isValid || isSubmitting || isUploading}
+            isDisabled={
+              isUploading ||
+              imageKey === null ||
+              imageKey === "" ||
+              ratingValue === undefined ||
+              ratingValue < 1
+            }
           >
             <ButtonText>{"✨ Valider le lieu"}</ButtonText>
           </Button>
