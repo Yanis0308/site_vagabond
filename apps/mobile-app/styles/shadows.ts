@@ -6,9 +6,6 @@ import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
  * StyleSheet for shadows because Nativewind doesn't support box-shadow yet
  * https://github.com/nativewind/nativewind/discussions/1512
  */
-const tabBar = {
-  boxShadow: `0px 0px 12px 0px ${themeColors.shadow.polaroidBlock.hex}`,
-};
 
 export const shadowStyles = StyleSheet.create({
   // Button shadow
@@ -28,13 +25,5 @@ export const shadowStyles = StyleSheet.create({
   // Large content shadow
   contentLarge: {
     boxShadow: `0px 24px 24px 0px ${themeColors.background["200"].hex}`,
-  },
-
-  // Tab bar shadow
-  tabBar,
-
-  // Tab bar Map shadow
-  tabBarMap: {
-    boxShadow: `${tabBar.boxShadow}, 0px 0px 7.3px 7px ${themeColors.primary["300"].hex} inset`,
   },
 });

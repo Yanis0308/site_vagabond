@@ -10,7 +10,7 @@ const text = tva({
   variants: {
     type: {
       title: "text-2xl font-semibold leading-[133%]",
-      rating: "text-xs not-italic font-bold leading-[normal];",
+      rating: "text-xl not-italic font-bold leading-[normal];",
       username: "text-xs font-medium leading-[133%];",
       placeTitle: "text-2xl font-bold",
       ratingText: "text-base font-normal leading-[133%]",

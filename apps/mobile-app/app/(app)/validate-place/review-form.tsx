@@ -43,18 +43,18 @@ export default function ReviewForm(): ReactElement {
       ({ data }) => {
         // Prompt the user before leaving the screen
         Alert.alert(
-          "Discard changes?",
-          "You have unsaved changes. Discard them and leave the screen?",
+          "Refaire la photo ?",
+          "Vous n'avez pas encore envoyé votre photo. Souhaitez-vous revenir en arrière pour en prendre une nouvelle ?",
           [
             {
-              text: "Don't leave",
+              text: "Non",
               style: "cancel",
               onPress: (): void => {
                 // Do nothing
               },
             },
             {
-              text: "Discard",
+              text: "Oui",
               style: "destructive",
               onPress: (): void => {
                 setCurrentPhoto(null);

@@ -8,7 +8,6 @@ import { LeaderboardIcon } from "@/components/icons/LeaderboardIcon";
 import { MapIcon } from "@/components/icons/MapIcon";
 import { ProfileIcon } from "@/components/icons/ProfileIcon";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
-import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
 
 export const TAB_BAR_HEIGHT = 60;
@@ -30,14 +29,29 @@ export default function TabLayout(): ReactElement {
         style={{
           height: TAB_BAR_HEIGHT + insets.bottom,
           paddingBottom: insets.bottom,
-          ...shadowStyles.tabBar,
         }}
         className={cn(
-          "absolute bottom-0 flex w-full flex-row items-end justify-between rounded-[40px_40px_0px_0px]",
-          "border-t-2 border-l-2 border-r-2 border-secondary-300 bg-background-100 px-10",
-          "overflow-visible",
+          "absolute bottom-0 flex w-full flex-row items-end justify-between",
+          "border-t border-secondary-300 bg-background-100",
         )}
       >
+        {/* Map */}
+        <TabTrigger name="map" href="/" className="flex-1">
+          <View className="flex flex-1 flex-col items-center justify-center gap-2">
+            <View className="flex h-6 items-center justify-center">
+              <MapIcon size={30} active={isMapActive} />
+            </View>
+            <CustomText
+              className={cn(
+                isMapActive ? "text-primary-400" : "text-secondary-500",
+              )}
+              type="tabBarTitle"
+            >
+              {"Accueil"}
+            </CustomText>
+          </View>
+        </TabTrigger>
+
         {/* Leaderboard */}
         <TabTrigger name="leaderboard" href="/leaderboard" className="flex-1">
           <View className="flex flex-1 flex-col items-center justify-center gap-2">
@@ -50,33 +64,7 @@ export default function TabLayout(): ReactElement {
               )}
               type="tabBarTitle"
             >
-              {"Leaderboard"}
-            </CustomText>
-          </View>
-        </TabTrigger>
-
-        {/* Map */}
-        <TabTrigger name="map" href="/" className="flex-1">
-          <View className="flex flex-1 flex-col items-center justify-center gap-2">
-            <View
-              style={isMapActive ? shadowStyles.tabBarMap : shadowStyles.tabBar}
-              className={cn(
-                "mt-[-32px] flex size-16 items-center justify-center rounded-2xl border-2",
-                isMapActive
-                  ? "border-primary-700 bg-primary-400"
-                  : "border-secondary-300 bg-secondary-50",
-              )}
-            >
-              <MapIcon size={40} active={isMapActive} />
-            </View>
-
-            <CustomText
-              className={cn(
-                isMapActive ? "text-primary-400" : "text-secondary-500",
-              )}
-              type="tabBarTitle"
-            >
-              {"Carte"}
+              {"Classement"}
             </CustomText>
           </View>
         </TabTrigger>

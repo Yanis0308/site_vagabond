@@ -65,8 +65,6 @@ export class VexoService implements IAnalyticsService {
 
   setAttributes(attributes: Record<string, string>): Promise<void> {
     // Vexo doesn't support setting global attributes like other services
-    // We could store them and include in future events if needed
-    logger("Vexo attributes set (stored for future events)", attributes);
     return Promise.resolve();
   }
 
