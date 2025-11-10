@@ -59,3 +59,20 @@ Join our community of developers creating universal apps.
 
 - `pnpx expo-doctor@latest`
 - permet de détecter les erreurs de configuration (versions de react native, expo, etc)
+
+## OTA Updates
+
+Publish over-the-air updates using the custom script:
+
+```bash
+# Preview environment
+pnpm run create-update-preview -- --message "Your update message"
+
+# Production environment
+pnpm run create-update-prd -- --message "Your update message"
+```
+
+The script automatically:
+
+- Publishes the update to the specified channel
+- Sends a Slack notification with the status

@@ -19,6 +19,7 @@ module.exports = {
     "*.js",
     "expo-env.d.ts",
     "dist/*",
+    "*.mjs",
   ],
 
   plugins: ["@arthurgeron/react-usememo", "react-compiler"],

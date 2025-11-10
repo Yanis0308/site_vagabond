@@ -34,8 +34,8 @@
     "submit-ios-prd": "dotenvx run -f .env.prd -- eas submit --platform ios --profile production",
     "submit-android-preview": "dotenvx run -f .env.local -f .env.dev --overload -- eas submit --platform android --profile preview",
     "submit-android-prd": "dotenvx run -f .env.prd -- eas submit --platform android --profile production",
-    "create-update-preview": "dotenvx run -f .env.local -f .env.dev --overload -- eas update -m ota-update-empty-message --channel preview",
-    "create-update-prd": "dotenvx run -f .env.prd -- eas update -m ota-update-empty-message --channel production"
+    "create-update-preview": "dotenvx run -f .env.local -f .env.dev --overload -- zx create-update.mjs --environment preview --message",
+    "create-update-prd": "dotenvx run -f .env.prd -- zx create-update.mjs --environment production --message"
   },
   "dependencies": {
     "@expo/html-elements": "^0.4.2",
