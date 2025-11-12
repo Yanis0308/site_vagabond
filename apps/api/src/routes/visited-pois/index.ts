@@ -101,44 +101,6 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       return await response;
     },
   );
-
-  fastify.get(
-    "/",
-    {
-      schema: {
-        tags: ["visited-pois"],
-        security: [{ bearerAuth: [] }],
-        response: {
-          200: Type.Ref(jsonSchemas.GetVisitedPoisResponseSchema),
-        },
-      },
-    },
-    async function (request, reply) {
-      const visitedPoisWithBoundaries =
-        await fastify.prisma.visitedPoi.findManyWithZones(request.user.uid);
-
-      return await reply.status(200).send({
-        data: visitedPoisWithBoundaries.map((visitedPoi) => {
-          const username = getUserDisplayName(
-            visitedPoi.full_name,
-            visitedPoi.email,
-          );
-
-          return {
-            id: visitedPoi.id,
-            poiId: visitedPoi.poi_id,
-            userId: visitedPoi.user_id,
-            rating: visitedPoi.rating,
-            comment: visitedPoi.comment,
-            imageKey: visitedPoi.image_key,
-            username,
-            createdAt: visitedPoi.created_at.toISOString(),
-            zoneId: visitedPoi.zone_id ?? "",
-          };
-        }),
-      });
-    },
-  );
 };
 
 export default routes;

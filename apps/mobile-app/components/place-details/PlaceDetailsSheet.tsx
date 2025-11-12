@@ -22,7 +22,7 @@ import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
 import { Center } from "@/components/ui/center";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
-import { useValidatedPlaces } from "@/hooks/queries/useValidatedPlaces";
+import { useUserZoneStats } from "@/hooks/queries/useZonesStats";
 import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
 import { localImages } from "@/utils/localImages";
@@ -66,18 +66,21 @@ export const PlaceDetailsSheet = memo(
     const bottomSheetRef = useRef<BottomSheet>(null);
 
     const user = useUsersMe();
-    const { data: validatedPlaces } = useValidatedPlaces();
+    const { data: zonesData } = useUserZoneStats();
+    const visitedPoisByPoiIdMap = zonesData?.visitedPoisByPoiIdMap;
 
     const animatedIndex = useSharedValue(0);
     const insets = useSafeAreaCustom();
 
     const isVisited = useMemo(() => {
-      return place?.visitedPois.some((visitedPoi) =>
-        validatedPlaces?.some(
-          (validatedPlace) => validatedPlace.poiId === visitedPoi.poiId,
-        ),
+      if (place === null || visitedPoisByPoiIdMap === undefined) {
+        return false;
+      }
+
+      return place.visitedPois.some((visitedPoi) =>
+        visitedPoisByPoiIdMap.has(visitedPoi.poiId),
       );
-    }, [place, validatedPlaces]);
+    }, [place, visitedPoisByPoiIdMap]);
 
     useEffect(() => {
       if (place?.id !== undefined) {

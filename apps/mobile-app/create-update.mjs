@@ -15,7 +15,7 @@ if (!environment) {
   console.error(chalk.red("❌ Error: --environment est obligatoire"));
   console.log(
     chalk.yellow(
-      'Usage: zx publish-update.mjs --environment <preview|production> --message "votre message"',
+      'Usage: zx create-update.mjs --environment <preview|production> --message "votre message"',
     ),
   );
   process.exit(1);

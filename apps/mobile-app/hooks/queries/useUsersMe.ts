@@ -10,5 +10,6 @@ export const useUsersMe = () => {
     queryKey: ["users", "me"],
     queryFn: getMe,
     enabled: getAuth().currentUser !== null,
+    staleTime: 1000 * 60 * 1, // 1 minute - évite les refetches inutiles lors du scroll dans Profile
   });
 };

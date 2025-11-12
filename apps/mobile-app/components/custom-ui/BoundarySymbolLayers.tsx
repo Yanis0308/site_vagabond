@@ -24,7 +24,8 @@ const getSubZoneName = (boundaryLevel: string): string => {
 
 export const BoundarySymbolLayers = memo(
   ({ sourceId }: BoundarySymbolLayersProps): ReactElement => {
-    const { data: userZoneStats } = useUserZoneStats();
+    const { data: zonesData } = useUserZoneStats();
+    const userZoneStats = zonesData?.zonesStats;
 
     const completionData = useMemo(() => {
       return userZoneStats?.reduce<Record<string, ZoneUserStatType>>(

@@ -32,7 +32,7 @@ export const useValidatePlaceMutation = () => {
     onSuccess: async () => {
       return await Promise.all([
         queryClient.invalidateQueries({
-          queryKey: ["validated-places"],
+          queryKey: ["user-zone-stats"],
         }),
         queryClient.invalidateQueries({
           queryKey: ["places"],

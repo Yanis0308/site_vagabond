@@ -843,6 +843,9 @@ importers:
         specifier: ^6.3.1
         version: 6.17.1(typescript@5.9.3)
     devDependencies:
+      dotenv:
+        specifier: ^16.4.5
+        version: 16.6.1
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -18644,7 +18647,7 @@ snapshots:
 
   dotenv-expand@11.0.7:
     dependencies:
-      dotenv: 16.4.7
+      dotenv: 16.6.1
 
   dotenv@16.4.7: {}
 

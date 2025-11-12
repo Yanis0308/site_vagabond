@@ -6,25 +6,20 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
+import { useUserZoneStats } from "@/hooks/queries/useZonesStats";
 import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 import { logger } from "@/utils/logger";
 import {
+  type BriefVisitedPoiType,
   type PoiType,
-  type VisitedPoiType,
   type ZoneStatType,
 } from "@/utils/types";
 
-import { useValidatedPlaces } from "../queries/useValidatedPlaces";
-
 const getPoiIsVisited = (
-  validatedPlaces: VisitedPoiType[] | undefined,
+  visitedPoisByPoiIdMap: Map<string, BriefVisitedPoiType> | undefined,
   poiId: string,
 ): boolean => {
-  if (validatedPlaces === undefined) {
-    return false;
-  }
-
-  return validatedPlaces.some((visitedPoi) => visitedPoi.poiId === poiId);
+  return visitedPoisByPoiIdMap?.has(poiId) ?? false;
 };
 
 const getPoiIconName = (poi: PoiType, isVisited: boolean): string | null => {
@@ -83,7 +78,8 @@ interface UseMapLogicReturn {
 }
 
 export const useMapLogic = (): UseMapLogicReturn => {
-  const { data: validatedPlacesData } = useValidatedPlaces();
+  const { data: zonesData } = useUserZoneStats();
+  const visitedPoisByPoiIdMap = zonesData?.visitedPoisByPoiIdMap;
   const userLocation = useUserLocation();
   const firstCenteringDone = useRef(false);
 
@@ -162,7 +158,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
       type: "FeatureCollection" as const,
       features:
         placesData?.map((place, index) => {
-          const isVisited = getPoiIsVisited(validatedPlacesData, place.id);
+          const isVisited = getPoiIsVisited(visitedPoisByPoiIdMap, place.id);
           const iconName = getPoiIconName(place, isVisited);
 
           return {
@@ -185,7 +181,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
           };
         }) ?? [],
     };
-  }, [placesData, validatedPlacesData]);
+  }, [placesData, visitedPoisByPoiIdMap]);
 
   // Gestion des événements de la carte
   const onMapIdle = useCallback((mapState: MapState) => {

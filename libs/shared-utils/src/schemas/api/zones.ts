@@ -3,6 +3,7 @@ import { Type } from "@sinclair/typebox";
 import { BoundaryLevelEnum } from "../enums.js";
 import { CoordsSchema } from "../geo.js";
 import { ApiResponseSchema } from "../utils.js";
+import { BriefVisitedPoiSchema } from "./visited-poi.js";
 
 export const ZoneBaseSchema = Type.Object(
   {
@@ -37,6 +38,7 @@ export const ZoneUserStatSchema = Type.Object(
     boundary_level: Type.Ref(BoundaryLevelEnum),
     parent_id: Type.Union([Type.Null(), Type.String()]),
     validated_pois_count: Type.Number({ minimum: 0 }),
+    validated_pois: Type.Array(Type.Ref(BriefVisitedPoiSchema)),
     total_pois_count: Type.Number({ minimum: 0 }),
     total_subzones_count: Type.Number({ minimum: 0 }),
     completed_subzones_count: Type.Number({ minimum: 0 }),

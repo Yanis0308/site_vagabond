@@ -18,6 +18,19 @@ export const VisitedPoiSchema = Type.Object(
   { $id: "VisitedPoi" },
 );
 
+export const BriefVisitedPoiSchema = Type.Object(
+  {
+    id: Type.Number(),
+    poiId: Type.String(),
+    name: Type.Optional(Type.String()),
+    createdAt: Type.String(),
+    comment: Type.String(),
+    rating: Type.Number(),
+    imageKey: Type.String(),
+  },
+  { $id: "BriefVisitedPoi" },
+);
+
 export const CreateVisitedPoiRequestSchema = Type.Object(
   {
     imageKey: Type.String(),

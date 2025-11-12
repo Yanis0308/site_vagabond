@@ -67,7 +67,17 @@ export const createBoundaryExtensions = (
   },
 
   //eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- OK for extension
-  async findUserZoneStats(userId: string) {
+  async findUserZoneStats(
+    userId: string,
+    boundaryLevels: string[] = [
+      "COUNTRY",
+      "REGION",
+      "COUNTY",
+      "CITY",
+      "DISTRICT",
+      "NEIGHBORHOOD",
+    ],
+  ) {
     const userZoneStats = await prismaExtendedClient.$queryRaw<
       Array<{
         zone_id: string;
@@ -81,9 +91,11 @@ export const createBoundaryExtensions = (
           | "NEIGHBORHOOD";
         parent_id: string | null;
         validated_pois_count: string;
-        total_pois_count: unknown;
-        total_subzones_count: unknown;
-        completed_subzones_count: unknown;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- OK for extension
+        validated_pois: any;
+        total_pois_count: string;
+        total_subzones_count: string;
+        completed_subzones_count: string;
       }>
     >`
       WITH RECURSIVE 
@@ -102,6 +114,25 @@ export const createBoundaryExtensions = (
         FROM relevant_zones rz
         JOIN boundaries b ON rz.zone_id = b.id
         WHERE b.parent_id IS NOT NULL
+      ),
+      -- 2. Pré-agrégation des POIs par zone pour optimiser les comptages
+      zone_pois AS (
+        SELECT 
+          pb.boundary_id,
+          COUNT(DISTINCT pb.poi_id) as total_pois_count
+        FROM poi_boundaries pb
+        GROUP BY pb.boundary_id
+      ),
+      -- 3. Pré-agrégation des sous-zones par parent
+      zone_children AS (
+        SELECT 
+          b.parent_id,
+          COUNT(*) as total_subzones_count,
+          COUNT(rz.zone_id) as completed_subzones_count
+        FROM boundaries b
+        LEFT JOIN relevant_zones rz ON b.id = rz.zone_id
+        WHERE b.parent_id IS NOT NULL
+        GROUP BY b.parent_id
       )
       
       SELECT 
@@ -113,21 +144,35 @@ export const createBoundaryExtensions = (
         -- Compte des POIs validés par l'utilisateur dans cette zone spécifique
         COUNT(DISTINCT vp.poi_id) as validated_pois_count,
         
-        -- Nombre total de POIs dans cette zone spécifique
-        (SELECT COUNT(DISTINCT pb_total.poi_id) 
-         FROM poi_boundaries pb_total 
-         WHERE pb_total.boundary_id = b.id) as total_pois_count,
+        -- Récupération des détails complets des visited_pois (déjà en camelCase pour éviter le map)
+        -- Fastify sérialise automatiquement les Date en ISO string via JSON.stringify
+        -- jsonb_strip_nulls supprime les clés avec des valeurs null pour respecter le schéma TypeScript
+        -- qui attend Type.Optional(Type.String()) (undefined) plutôt que null
+        COALESCE(
+          jsonb_agg(
+            DISTINCT jsonb_strip_nulls(
+              jsonb_build_object(
+                'id', vp.id,
+                'poiId', vp.poi_id,
+                'name', pd.name,
+                'createdAt', vp.created_at,
+                'comment', vp.comment,
+                'rating', vp.rating,
+                'imageKey', vp.image_key
+              )
+            )
+          ) FILTER (WHERE vp.id IS NOT NULL),
+          '[]'::jsonb
+        )::json as validated_pois,
         
-        -- Nombre total de sous-zones (enfants directs)
-        (SELECT COUNT(*) 
-         FROM boundaries c 
-         WHERE c.parent_id = b.id) as total_subzones_count,
+        -- Nombre total de POIs dans cette zone spécifique (depuis la pré-agrégation)
+        COALESCE(zp.total_pois_count::text, '0') as total_pois_count,
         
-        -- Nombre de sous-zones complétées (enfants qui ont une activité)
-        (SELECT COUNT(*) 
-         FROM boundaries child
-         JOIN relevant_zones rz_child ON child.id = rz_child.zone_id
-         WHERE child.parent_id = b.id) as completed_subzones_count
+        -- Nombre total de sous-zones (enfants directs) depuis la pré-agrégation
+        COALESCE(zc.total_subzones_count::text, '0') as total_subzones_count,
+        
+        -- Nombre de sous-zones complétées (enfants qui ont une activité) depuis la pré-agrégation
+        COALESCE(zc.completed_subzones_count::text, '0') as completed_subzones_count
           
       FROM boundaries b
       -- On ne garde que les zones pertinentes (celles visitées ou leurs parents)
@@ -135,8 +180,21 @@ export const createBoundaryExtensions = (
       -- Jointures pour compter les POIs visités par l'utilisateur
       LEFT JOIN poi_boundaries pb ON b.id = pb.boundary_id
       LEFT JOIN visited_pois vp ON pb.poi_id = vp.poi_id AND vp.user_id = ${userId}
+      -- LEFT JOIN avec poi_data pour éviter la sous-requête corrélée
+      -- Utilisation de LATERAL JOIN pour sélectionner une seule entrée par poi_id (évite les doublons de langue)
+      LEFT JOIN LATERAL (
+        SELECT pd.name
+        FROM poi_data pd
+        WHERE pd.poi_id = vp.poi_id
+        ORDER BY pd.language DESC, pd.id
+        LIMIT 1
+      ) pd ON true
+      -- Jointures avec les CTEs pré-agrégés pour optimiser les comptages
+      LEFT JOIN zone_pois zp ON b.id = zp.boundary_id
+      LEFT JOIN zone_children zc ON b.id = zc.parent_id
+      WHERE b.boundary_level = ANY(${boundaryLevels}::"BoundaryLevelEnum"[])
       -- Group by pour éviter les doublons
-      GROUP BY b.id, b.name, b.boundary_level, b.parent_id
+      GROUP BY b.id, b.name, b.boundary_level, b.parent_id, zp.total_pois_count, zc.total_subzones_count, zc.completed_subzones_count
       -- Tri par niveau hiérarchique
       ORDER BY 
         CASE boundary_level
@@ -157,6 +215,13 @@ export const createBoundaryExtensions = (
       boundary_level: stat.boundary_level,
       parent_id: stat.parent_id,
       validated_pois_count: Number(stat.validated_pois_count),
+      // Ensure validated_pois is always an array, never null or undefined
+      validated_pois:
+        stat.validated_pois !== null &&
+        stat.validated_pois !== undefined &&
+        Array.isArray(stat.validated_pois)
+          ? stat.validated_pois
+          : [],
       total_pois_count: Number(stat.total_pois_count),
       total_subzones_count: Number(stat.total_subzones_count),
       completed_subzones_count: Number(stat.completed_subzones_count),

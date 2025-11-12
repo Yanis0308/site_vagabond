@@ -9,6 +9,10 @@ export type VisitedPoiType = Static<
   typeof jsonSchemas.GetVisitedPoisResponseSchema.properties.data
 >[0];
 
+export type BriefVisitedPoiType = Static<
+  typeof jsonSchemas.BriefVisitedPoiSchema
+>;
+
 export type BoundingBoxType = Static<typeof jsonSchemas.BoundingBoxSchema>;
 
 export type UsersMeType = Static<
