@@ -23,6 +23,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         data: {
           ...user,
           lastLogin: user.lastLogin.toISOString(),
+          createdAt: user.createdAt.toISOString(),
         },
       });
     },

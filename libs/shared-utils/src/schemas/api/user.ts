@@ -10,6 +10,7 @@ export const UserMeSchema = Type.Object(
     fullName: Nullable(Type.String()),
     oauthProviders: Type.Array(Type.String()),
     lastLogin: Type.String(),
+    createdAt: Type.String(),
     role: Type.Ref(RoleEnumSchema),
   },
   { $id: "UserMe" },
