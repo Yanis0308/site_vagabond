@@ -13,4 +13,5 @@ export const localImages = {
     require("@/assets/images/icons/question-mark.png") as number,
   fullIconWithText:
     require("@/assets/images/full-icon-with-text.png") as number,
+  appLogo: require("@/assets/images/full-icon.png") as number,
 } as const;

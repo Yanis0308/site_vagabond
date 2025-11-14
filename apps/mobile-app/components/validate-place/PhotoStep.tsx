@@ -3,7 +3,7 @@ import * as Device from "expo-device";
 import * as ImagePicker from "expo-image-picker";
 import { useSetAtom } from "jotai";
 import React, { useCallback, useRef, useState } from "react";
-import { Alert } from "react-native";
+import { Alert, Pressable } from "react-native";
 
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { cn } from "@/utils/cn";
@@ -14,7 +14,6 @@ import { GalleryIcon } from "../icons/GalleryIcon";
 import { SwitchCameraIcon } from "../icons/SwitchCameraIcon";
 import { TakePhotoIcon } from "../icons/TakePhotoIcon";
 import { themeColors } from "../ui/gluestack-ui-provider/config";
-import { Pressable } from "../ui/pressable";
 import { View } from "../ui/view";
 import { type CameraPermission } from "./types";
 

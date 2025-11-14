@@ -1,10 +1,6 @@
-/* eslint-env node */
-
-// Learn more https://docs.expo.io/guides/customizing-metro
 const { getDefaultConfig } = require("expo/metro-config");
 const { withNativeWind } = require("nativewind/metro");
 
-/** @type {import('expo/metro-config').MetroConfig} */
 const config = getDefaultConfig(__dirname);
 
 // Fix for  ERROR  TypeError: Cannot read property 'defineProperty' of undefined, js engine: hermes

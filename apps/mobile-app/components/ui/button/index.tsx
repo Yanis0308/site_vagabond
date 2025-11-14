@@ -1,15 +1,15 @@
 "use client";
 import React, { useCallback } from "react";
-import { createButton } from "@gluestack-ui/button";
-import { tva } from "@gluestack-ui/nativewind-utils/tva";
+import { createButton } from "@gluestack-ui/core/button/creator";
 import {
+  tva,
   withStyleContext,
   useStyleContext,
-} from "@gluestack-ui/nativewind-utils/withStyleContext";
+  type VariantProps,
+} from "@gluestack-ui/utils/nativewind-utils";
 import { cssInterop } from "nativewind";
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
-import type { VariantProps } from "@gluestack-ui/nativewind-utils";
-import { PrimitiveIcon, UIIcon } from "@gluestack-ui/icon";
+import { PrimitiveIcon, UIIcon } from "@gluestack-ui/core/icon/creator";
 import { type Href, useRouter } from "expo-router";
 
 import { shadowStyles } from "@/styles/shadows";
@@ -63,6 +63,7 @@ const buttonStyle = tva({
         "border-primary-700 bg-primary-400 disabled:border-background-600 disabled:bg-background-400",
       login: "border-black bg-white data-[active=true]:border-gray-400",
       link: "border-black bg-white data-[active=true]:border-gray-400",
+      text: "bg-transparent border-0 border-transparent p-0 h-auto rounded-none",
       mapAction:
         "rounded-full border-2 border-background-200 bg-background-100 p-2 data-[hover=true]:bg-background-200 data-[active=true]:bg-background-300",
     },
@@ -89,6 +90,7 @@ const buttonTextStyle = tva({
       login:
         "text-gray-700 disabled:text-gray-400 data-[active=true]:text-gray-400",
       link: "text-gray-700 disabled:text-gray-400 data-[active=true]:text-gray-400",
+      text: "text-gray-700 underline disabled:text-gray-400 data-[active=true]:text-gray-400",
       mapAction: "text-burntOrange-700",
     },
     size: {
@@ -116,6 +118,7 @@ const buttonIconStyle = tva({
       submit: "text-background-50",
       login: "text-gray-700",
       link: "text-gray-700",
+      text: "text-gray-700",
       mapAction: "text-burntOrange-700",
     },
   },
@@ -286,8 +289,14 @@ const ButtonIcon = React.forwardRef<
   );
 });
 
-type IButtonGroupProps = React.ComponentPropsWithoutRef<typeof UIButton.Group> &
-  VariantProps<typeof buttonGroupStyle>;
+type IButtonGroupProps = Omit<
+  React.ComponentPropsWithoutRef<typeof UIButton.Group>,
+  "className" | "children"
+> &
+  VariantProps<typeof buttonGroupStyle> & {
+    className?: string;
+    children?: React.ReactNode;
+  };
 
 const ButtonGroup = React.forwardRef<
   React.ElementRef<typeof UIButton.Group>,

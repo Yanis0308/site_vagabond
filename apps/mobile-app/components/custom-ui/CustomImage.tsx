@@ -4,10 +4,11 @@ import {
   Image,
   type ImageContentFit,
   type ImageProps,
+  useImage,
 } from "expo-image";
 import { cssInterop } from "nativewind";
 import { memo, useMemo } from "react";
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -15,6 +16,7 @@ import {
   useImageFromMultipleSources,
 } from "@/hooks/queries/useImageFromMultipleSources";
 import { cn } from "@/utils/cn";
+import { logger } from "@/utils/logger";
 
 cssInterop(Image, { className: "style" });
 cssInterop(View, { className: "style" });
@@ -39,12 +41,91 @@ export const CustomImage = memo(
     containerClassName,
     ...props
   }: CustomImageProps) => {
+    const { width: windowWidth } = useWindowDimensions();
+
     const allSources = useMemo(() => {
       return Array.isArray(sources) ? sources : [sources];
     }, [sources]);
 
-    const { data: imageLoaded, isLoading: isImageLoading } =
-      useImageFromMultipleSources(allSources);
+    // Generate recyclingKey automatically from sources
+    const recyclingKey = useMemo(() => {
+      return allSources
+        .map((src) => {
+          if (typeof src === "string") {
+            return src;
+          }
+          if (typeof src === "object" && src !== null) {
+            return JSON.stringify(src);
+          }
+          return String(src);
+        })
+        .join("-");
+    }, [allSources]);
+
+    // Calculate maxImageSize automatically based on image dimensions
+    const maxImageSize = useMemo(() => {
+      // If width is specified as a number, use it with a multiplier for retina displays
+      if (typeof width === "number") {
+        return Math.ceil(width * 2); // 2x for retina
+      }
+      // If height is specified as a number, estimate width based on common aspect ratios
+      if (typeof height === "number") {
+        // Assume common aspect ratios (16:9, 4:3, 1:1)
+        // Use the larger dimension * 2 for retina
+        return Math.ceil(height * 2);
+      }
+      // Default to window width
+      return windowWidth;
+    }, [width, height, windowWidth]);
+
+    const maxWidth = maxImageSize;
+
+    // Try to use useImage hook for string sources (first string source found)
+    const firstStringSource = useMemo(() => {
+      return allSources.find((source) => typeof source === "string");
+    }, [allSources]);
+
+    const useImageOptions = useMemo(
+      () => ({
+        maxWidth,
+        onError: (error: Error): void => {
+          logger("Loading failed:", firstStringSource, error.message);
+        },
+      }),
+      [maxWidth, firstStringSource],
+    );
+
+    const optimizedImageSource = useImage(
+      typeof firstStringSource === "string" ? firstStringSource : "",
+      useImageOptions,
+    );
+
+    // Fallback to useImageFromMultipleSources for non-string sources or if useImage didn't work
+    const useImageFromMultipleSourcesOptions = useMemo(
+      () => ({
+        maxImageSize,
+      }),
+      [maxImageSize],
+    );
+
+    const { data: fallbackImageLoaded, isLoading: isImageLoading } =
+      useImageFromMultipleSources(
+        allSources,
+        useImageFromMultipleSourcesOptions,
+      );
+
+    // Use optimized source if available, otherwise use fallback
+    const imageLoaded = useMemo(() => {
+      if (
+        optimizedImageSource !== null &&
+        optimizedImageSource !== undefined &&
+        typeof firstStringSource === "string" &&
+        firstStringSource !== ""
+      ) {
+        return optimizedImageSource;
+      }
+      return fallbackImageLoaded;
+    }, [optimizedImageSource, fallbackImageLoaded, firstStringSource]);
 
     const optimalContentFit = useMemo<ImageContentFit>(() => {
       if (contentFit !== "autoWithBackground") {
@@ -92,7 +173,8 @@ export const CustomImage = memo(
               },
             )}
             contentFit="cover"
-            cachePolicy="memory-disk"
+            cachePolicy={"disk"}
+            recyclingKey={recyclingKey}
             {...props}
           />
 
@@ -117,7 +199,8 @@ export const CustomImage = memo(
               },
             )}
             contentFit={optimalContentFit}
-            cachePolicy="memory-disk"
+            cachePolicy={"disk"}
+            recyclingKey={recyclingKey}
             {...props}
           />
 
@@ -153,7 +236,8 @@ export const CustomImage = memo(
             },
           )}
           contentFit={optimalContentFit}
-          cachePolicy="memory-disk"
+          cachePolicy={"disk"}
+          recyclingKey={recyclingKey}
           {...props}
         />
 

@@ -5,6 +5,13 @@
   "sign_out": "Se déconnecter",
   "validated_places": "Mes lieux validés",
   "no_validated_places": "Aucun lieu validé pour le moment",
+  "overall_progress": "Progression globale",
+  "regions_visited_progress": "{{visited}} régions visitées sur {{total}} en France",
+  "pois_abbreviation": "Lieux",
+  "last_place_visited_on": "Dernier lieu visité \"{{placeName}}\", le {{date}}",
+  "last_place_visited_on_no_name": "Dernier lieu visité le {{date}}",
+  "cities": "villes",
+  "departements": "départements",
   "auth": {
     "sign_in_with_apple": "Connexion avec Apple",
     "sign_in_with_google": "Connexion avec Google",

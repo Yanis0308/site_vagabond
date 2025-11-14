@@ -10,11 +10,6 @@
     "prettier-write": "prettier . --write",
     "mobile-app-dev": "pnpm --filter @vagabond/mobile-app run develop"
   },
-  "pnpm": {
-    "patchedDependencies": {
-      "@gluestack-ui/nativewind-utils": "patches/@gluestack-ui__nativewind-utils.patch"
-    }
-  },
   "dependencies": {
     "@sinclair/typebox": "catalog:",
     "dayjs": "catalog:",

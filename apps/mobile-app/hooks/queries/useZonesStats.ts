@@ -26,7 +26,11 @@ export const useUserZoneStats = (): {
   });
 
   const transformedData = useMemo(() => {
-    if (queryResult.data === undefined) {
+    if (
+      queryResult.data === undefined ||
+      queryResult.data === null ||
+      !Array.isArray(queryResult.data)
+    ) {
       return undefined;
     }
 
@@ -35,9 +39,11 @@ export const useUserZoneStats = (): {
 
     queryResult.data.forEach((zoneStat) => {
       // validated_pois is always an array (backend guarantees it in boundaryExtensions.ts)
-      zoneStat.validated_pois.forEach((poi: BriefVisitedPoiType) => {
-        visitedPoisByPoiIdMap.set(poi.poiId, poi);
-      });
+      if (Array.isArray(zoneStat.validated_pois)) {
+        zoneStat.validated_pois.forEach((poi: BriefVisitedPoiType) => {
+          visitedPoisByPoiIdMap.set(poi.poiId, poi);
+        });
+      }
     });
 
     return {

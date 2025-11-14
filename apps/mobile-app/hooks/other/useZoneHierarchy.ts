@@ -1,36 +1,14 @@
 import { useMemo } from "react";
 
-import type { BriefVisitedPoiType, ZoneUserStatType } from "@/utils/types";
+import type {
+  City,
+  CountryType,
+  Departement,
+  Region,
+} from "@/components/profile/utils";
+import type { ZoneUserStatType } from "@/utils/types";
 
-interface City {
-  name: string;
-  totalPoisCount: number;
-  validatedPoisCount: number;
-  pois: BriefVisitedPoiType[];
-}
-
-interface Departement {
-  name: string;
-  totalPoisCount: number;
-  validatedPoisCount: number;
-  cities: City[];
-}
-
-interface Region {
-  name: string;
-  totalPoisCount: number;
-  validatedPoisCount: number;
-  departements: Departement[];
-}
-
-interface Country {
-  name: string;
-  totalPoisCount: number;
-  validatedPoisCount: number;
-  regions: Region[];
-}
-
-function buildZonesHierarchy(data: ZoneUserStatType[]): Country[] {
+function buildZonesHierarchy(data: ZoneUserStatType[]): CountryType[] {
   const byParent = new Map<string | null, ZoneUserStatType[]>();
   for (const z of data) {
     const bucket = byParent.get(z.parent_id) ?? [];
@@ -53,6 +31,7 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): Country[] {
   // Helper functions to map specific zone types with proper type safety
   const mapToCity = (zone: ZoneUserStatType): City => {
     return {
+      zoneId: zone.zone_id,
       name: zone.name,
       totalPoisCount: zone.total_pois_count,
       validatedPoisCount: zone.validated_pois_count,
@@ -67,9 +46,12 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): Country[] {
       (child) => child.boundary_level === "CITY",
     );
     return {
+      zoneId: zone.zone_id,
       name: zone.name,
       totalPoisCount: zone.total_pois_count,
       validatedPoisCount: zone.validated_pois_count,
+      totalSubzonesCount: zone.total_subzones_count,
+      completedSubzonesCount: zone.completed_subzones_count,
       cities: cityChildren.map(mapToCity),
     };
   };
@@ -81,31 +63,36 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): Country[] {
       (child) => child.boundary_level === "COUNTY",
     );
     return {
+      zoneId: zone.zone_id,
       name: zone.name,
       totalPoisCount: zone.total_pois_count,
       validatedPoisCount: zone.validated_pois_count,
+      totalSubzonesCount: zone.total_subzones_count,
+      completedSubzonesCount: zone.completed_subzones_count,
       departements: countyChildren.map(mapToDepartement),
     };
   };
 
-  const mapToCountry = (zone: ZoneUserStatType): Country => {
+  const mapToCountry = (zone: ZoneUserStatType): CountryType => {
     const children = byParent.get(zone.zone_id) ?? [];
     // Filter children to only include REGION level zones
     const regionChildren = children.filter(
       (child) => child.boundary_level === "REGION",
     );
     return {
+      zoneId: zone.zone_id,
       name: zone.name,
       totalPoisCount: zone.total_pois_count,
       validatedPoisCount: zone.validated_pois_count,
       regions: regionChildren.map(mapToRegion),
+      totalSubzonesCount: zone.total_subzones_count,
     };
   };
 
   return roots.map(mapToCountry);
 }
 
-export const useZoneHierarchy = (data?: ZoneUserStatType[]): Country[] => {
+export const useZoneHierarchy = (data?: ZoneUserStatType[]): CountryType[] => {
   const zoneHierarchy = useMemo(() => {
     if (data !== undefined) {
       return buildZonesHierarchy(data);

@@ -9,11 +9,16 @@ import { logger } from "@/utils/logger";
 
 export type ImageLoadAsyncSource = Parameters<typeof Image.loadAsync>[0];
 
+interface UseImageFromMultipleSourcesOptions {
+  maxImageSize: number;
+}
+
 export const useImageFromMultipleSources = (
   sources: ImageLoadAsyncSource[],
+  options: UseImageFromMultipleSourcesOptions,
 ): UseQueryResult<ImageRef | number | null> => {
   return useQuery<ImageRef | number | null>({
-    queryKey: ["imageSources", sources],
+    queryKey: ["imageSources", sources, options.maxImageSize],
     queryFn: async () => {
       for (const source of sources) {
         try {

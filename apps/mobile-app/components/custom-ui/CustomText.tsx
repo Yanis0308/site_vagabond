@@ -1,4 +1,4 @@
-import { tva } from "@gluestack-ui/nativewind-utils/tva";
+import { tva } from "@gluestack-ui/utils/nativewind-utils";
 import { memo } from "react";
 
 import { cn } from "@/utils/cn";
