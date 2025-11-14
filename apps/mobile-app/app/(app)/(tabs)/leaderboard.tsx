@@ -1,42 +1,119 @@
-import { FlashList } from "@shopify/flash-list";
-import React, { type ReactElement, useCallback, useState } from "react";
+import React, {
+  type ReactElement,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
+import { useWindowDimensions } from "react-native";
+import { TabView } from "react-native-tab-view";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
-import { LeaderboardUserItem } from "@/components/custom-ui/LeaderboardUserItem";
+import {
+  LeaderboardHeader,
+  LeaderboardScene,
+  LeaderboardTabBar,
+} from "@/components/leaderboard";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { Box } from "@/components/ui/box";
-import { Button, ButtonText } from "@/components/ui/button";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
-import { HStack } from "@/components/ui/hstack";
-import { Spinner } from "@/components/ui/spinner";
 import { VStack } from "@/components/ui/vstack";
-import { useLeaderboard } from "@/hooks/queries/useLeaderboard";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
-import { type LeaderboardUser } from "@/http/leaderboard";
 
-type Period = "all-time" | "monthly";
+interface Route {
+  key: string;
+  title: string;
+}
 
 // eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function Leaderboard(): ReactElement {
-  const [selectedPeriod, setSelectedPeriod] = useState<Period>("all-time");
-  const { data: leaderboardData, isLoading } = useLeaderboard(selectedPeriod);
+  const layout = useWindowDimensions();
+  const [index, setIndex] = useState(0);
   const { data: currentUser } = useUsersMe();
 
-  const onPress = useCallback(() => setSelectedPeriod("all-time"), []);
-  const _onPress = useCallback(() => setSelectedPeriod("monthly"), []);
-  const keyExtractor = useCallback((item: LeaderboardUser) => item.userId, []);
+  const [routes] = useState<Route[]>([
+    { key: "all-time", title: "Global" },
+    { key: "monthly", title: "Mensuel" },
+  ]);
 
-  const renderItem = useCallback(
-    ({ item }: { item: LeaderboardUser }) => (
-      <LeaderboardUserItem
-        user={item}
-        isCurrentUser={item.userId === currentUser?.id}
-      />
-    ),
-    [currentUser?.id],
+  const renderScene = useCallback(
+    ({ route }: { route: Route }): ReactElement | null => {
+      if (route.key === "all-time" || route.key === "monthly") {
+        return (
+          <LeaderboardScene currentUser={currentUser} period={route.key} />
+        );
+      }
+      return null;
+    },
+    [currentUser],
   );
 
-  const ItemSeparatorComponent = useCallback(() => <Box className="h-2" />, []);
+  const renderTabBar = useCallback(
+    (props: Parameters<typeof LeaderboardTabBar>[0]) => (
+      <LeaderboardTabBar {...props} />
+    ),
+    [],
+  );
+
+  const initialLayout = useMemo(
+    () => ({ width: layout.width }),
+    [layout.width],
+  );
+
+  const navigationState = useMemo(() => ({ index, routes }), [index, routes]);
+
+  const currentPeriod = useMemo(
+    () => (index === 0 ? "all-time" : "monthly"),
+    [index],
+  );
+
+  const options = useMemo(
+    () => ({
+      "all-time": {
+        label: ({
+          focused,
+          labelText,
+        }: {
+          focused: boolean;
+          labelText?: string;
+        }): ReactElement => (
+          <CustomText
+            style={{
+              color: focused
+                ? themeColors.primary[500].hex
+                : themeColors.secondary[500].hex,
+              fontSize: 14,
+              fontWeight: "500",
+            }}
+          >
+            {labelText ?? "Global"}
+          </CustomText>
+        ),
+      },
+      monthly: {
+        label: ({
+          focused,
+          labelText,
+        }: {
+          focused: boolean;
+          labelText?: string;
+        }): ReactElement => (
+          <CustomText
+            style={{
+              color: focused
+                ? themeColors.primary[500].hex
+                : themeColors.secondary[500].hex,
+              fontSize: 14,
+              fontWeight: "500",
+            }}
+          >
+            {labelText ?? "Mensuel"}
+          </CustomText>
+        ),
+      },
+    }),
+    [],
+  );
+
   return (
     <CustomScreenContainer
       isLightScreen={true}
@@ -46,52 +123,19 @@ export default function Leaderboard(): ReactElement {
     >
       <Box className="flex size-full">
         <VStack className="flex size-full">
-          {/* Header avec titre */}
-          <Box className="px-4 py-6">
-            <CustomText className="text-center text-2xl font-bold text-primary-500">
-              {"Leaderboard"}
-            </CustomText>
-          </Box>
+          {/* Header avec stats */}
+          <LeaderboardHeader currentUser={currentUser} period={currentPeriod} />
 
-          {/* Onglets */}
-          <HStack className="gap-2 px-4 pb-4">
-            <Button
-              onPress={onPress}
-              action={selectedPeriod === "all-time" ? "primary" : "secondary"}
-              className="flex-1"
-            >
-              <ButtonText>{"Global"}</ButtonText>
-            </Button>
-            <Button
-              onPress={_onPress}
-              action={selectedPeriod === "monthly" ? "primary" : "secondary"}
-              className="flex-1"
-            >
-              <ButtonText>{"Mensuel"}</ButtonText>
-            </Button>
-          </HStack>
-
-          {/* Liste des utilisateurs */}
-          <Box className="flex-1 px-4">
-            {isLoading ? (
-              <Box className="flex-1 items-center justify-center">
-                <Spinner size="large" color={themeColors.primary[500].hex} />
-              </Box>
-            ) : leaderboardData?.users !== undefined &&
-              leaderboardData.users.length > 0 ? (
-              <FlashList
-                data={leaderboardData.users}
-                keyExtractor={keyExtractor}
-                renderItem={renderItem}
-                ItemSeparatorComponent={ItemSeparatorComponent}
-              />
-            ) : (
-              <Box className="flex-1 items-center justify-center">
-                <CustomText className="text-gray-500">
-                  {"Aucun utilisateur dans le classement"}
-                </CustomText>
-              </Box>
-            )}
+          {/* TabView */}
+          <Box className="flex-1">
+            <TabView
+              navigationState={navigationState}
+              renderScene={renderScene}
+              onIndexChange={setIndex}
+              initialLayout={initialLayout}
+              renderTabBar={renderTabBar}
+              options={options}
+            />
           </Box>
         </VStack>
       </Box>

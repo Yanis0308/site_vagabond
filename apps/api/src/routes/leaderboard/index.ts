@@ -37,12 +37,22 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           id: true,
           fullName: true,
           email: true,
+          createdAt: true,
           _count: {
             select: {
               visitedPois: {
                 where: visitedPoisWhere,
               },
             },
+          },
+          visitedPois: {
+            select: {
+              createdAt: true,
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+            take: 1,
           },
         },
         orderBy: {
@@ -59,6 +69,11 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           fullName: user.fullName,
           email: user.email,
           visitedPoisCount: user._count.visitedPois,
+          registrationDate: user.createdAt.toISOString(),
+          lastVisitedPoiDate:
+            user.visitedPois.length > 0
+              ? (user.visitedPois[0]?.createdAt?.toISOString() ?? null)
+              : null,
         }))
         .sort((a, b) => b.visitedPoisCount - a.visitedPoisCount)
         .map((user, index) => ({

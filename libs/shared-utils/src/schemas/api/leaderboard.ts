@@ -24,6 +24,8 @@ export const LeaderboardUserSchema = Type.Object(
     email: Nullable(Type.String()),
     visitedPoisCount: Type.Number(),
     rank: Type.Number(),
+    registrationDate: Type.String({ format: "date-time" }),
+    lastVisitedPoiDate: Nullable(Type.String({ format: "date-time" })),
   },
   { $id: "LeaderboardUser" },
 );

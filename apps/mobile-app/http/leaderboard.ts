@@ -11,6 +11,8 @@ export interface LeaderboardUser {
   email: string | null;
   visitedPoisCount: number;
   rank: number;
+  registrationDate: string;
+  lastVisitedPoiDate: string | null;
 }
 
 export interface LeaderboardResponse {

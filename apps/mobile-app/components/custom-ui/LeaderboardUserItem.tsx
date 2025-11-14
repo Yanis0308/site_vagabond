@@ -1,5 +1,6 @@
 import { getUserDisplayName } from "@vagabond/shared-utils";
 import React, { memo, type ReactElement } from "react";
+import { useTranslation } from "react-i18next";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
@@ -7,6 +8,7 @@ import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { type LeaderboardUser } from "@/http/leaderboard";
+import { getPlainTextDate } from "@/utils/date";
 
 interface LeaderboardUserItemProps {
   user: LeaderboardUser;
@@ -15,7 +17,21 @@ interface LeaderboardUserItemProps {
 
 export const LeaderboardUserItem = memo(
   ({ user, isCurrentUser }: LeaderboardUserItemProps): ReactElement => {
+    const { i18n } = useTranslation();
     const displayName = getUserDisplayName(user.fullName, user.email);
+
+    const registrationDate = getPlainTextDate({
+      locale: i18n.language,
+      date: new Date(user.registrationDate),
+    });
+
+    const lastVisitedPoiDate =
+      user.lastVisitedPoiDate !== null
+        ? getPlainTextDate({
+            locale: i18n.language,
+            date: new Date(user.lastVisitedPoiDate),
+          })
+        : null;
 
     const getRankColor = (rank: number): string => {
       if (rank === 1) return "text-yellow-500";
@@ -31,37 +47,52 @@ export const LeaderboardUserItem = memo(
       return null;
     };
 
+    const rankEmoji = getRankEmoji(user.rank);
+    const isWinner = rankEmoji !== null;
+
     return (
       <Box
-        className={`rounded-lg border bg-white p-4 shadow-sm ${
+        className={`rounded-lg border bg-white p-2 shadow-sm ${
           isCurrentUser
             ? "border-2 border-primary-500 bg-primary-50"
             : "border-gray-200"
         }`}
       >
-        <HStack className="items-center gap-4">
+        <HStack className="items-center gap-2">
           {/* Rank */}
-          <Box className="w-12 items-center">
+          <Box className="w-10 items-center">
             <CustomText
-              className={`text-2xl font-bold ${getRankColor(user.rank)}`}
+              className={`font-bold ${getRankColor(user.rank)} ${
+                isWinner ? "text-4xl" : "text-xl"
+              }`}
             >
-              {getRankEmoji(user.rank) ?? `#${user.rank}`}
+              {rankEmoji ?? `#${user.rank}`}
             </CustomText>
           </Box>
 
           {/* Avatar */}
-          <Avatar size="md" className="bg-primary-200">
+          <Avatar size="sm" className="bg-primary-200">
             <AvatarFallbackText>{displayName}</AvatarFallbackText>
           </Avatar>
 
           {/* User Info */}
-          <VStack className="flex-1">
-            <CustomText className="font-semibold text-gray-900">
+          <VStack className="flex-1 gap-0.5">
+            <CustomText className="text-sm font-semibold text-gray-900">
               {displayName}
             </CustomText>
-            <CustomText className="text-sm text-gray-600">
+            <CustomText className="text-xs text-gray-600">
               {`${user.visitedPoisCount} ${user.visitedPoisCount > 1 ? "lieux visités" : "lieu visité"}`}
             </CustomText>
+            <VStack className="gap-0">
+              <CustomText className="text-xs text-gray-500">
+                {`Inscrit le ${registrationDate}`}
+              </CustomText>
+              {lastVisitedPoiDate !== null && (
+                <CustomText className="text-xs text-gray-500">
+                  {`Dernier lieu visité le ${lastVisitedPoiDate}`}
+                </CustomText>
+              )}
+            </VStack>
           </VStack>
         </HStack>
       </Box>

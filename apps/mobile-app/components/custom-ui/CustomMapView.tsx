@@ -61,7 +61,7 @@ export const CustomMapView = memo(function CustomMapView({
       onCameraChanged={onCameraChanged}
       projection={"globe"}
       compassEnabled={false}
-      compassFadeWhenNorth={true}
+      scaleBarEnabled={false}
     >
       <Camera pitch={0} heading={0} ref={cameraRef} maxBounds={maxBounds} />
       <LocationPuck
