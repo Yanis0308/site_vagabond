@@ -25,6 +25,7 @@ cache/
 # IDE files
 .vscode/
 .idea/
+.claude/
 
 # Build and release
 **/builds-and-releases/

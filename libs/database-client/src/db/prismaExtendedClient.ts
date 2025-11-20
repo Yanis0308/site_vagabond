@@ -1,5 +1,6 @@
 import { createBoundaryExtensions } from "./extensions/boundaryExtensions.js";
 import { createPoiExtensions } from "./extensions/poiExtensions.js";
+import { createSearchExtensions } from "./extensions/searchExtensions.js";
 import { createVisitedPoiExtensions } from "./extensions/visitedPoiExtensions.js";
 import { PrismaClient } from "./generated/client/index.js";
 
@@ -29,6 +30,9 @@ export const getPrismaExtendedClient = (withQueryLog = false) => {
     },
   });
 
-  return prismaExtendedClient;
+  // Add search extension as a custom method
+  return Object.assign(prismaExtendedClient, {
+    search: createSearchExtensions(baseClient),
+  });
 };
 export type PrismaExtendedClient = ReturnType<typeof getPrismaExtendedClient>;

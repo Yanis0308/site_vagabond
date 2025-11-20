@@ -1,6 +1,7 @@
 import * as leaderboard from "./api/leaderboard.js";
 import * as poi from "./api/poi.js";
 import * as response from "./api/response.js";
+import * as search from "./api/search.js";
 import * as upload from "./api/upload.js";
 import * as user from "./api/user.js";
 import * as visitedPoi from "./api/visited-poi.js";
@@ -26,4 +27,5 @@ export const jsonSchemas = {
   ...metadata,
   ...upload,
   ...leaderboard,
+  ...search,
 } as const;
