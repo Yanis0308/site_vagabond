@@ -9,6 +9,8 @@ export default defineConfig({
     path: "src/db/migrations",
   },
   datasource: {
-    url: env("API_DATABASE_URL"),
+    // URL is optional at build time - we use adapter at runtime
+    // Only needed for Prisma CLI migrations
+    url: process.env.API_DATABASE_URL ? env("API_DATABASE_URL") : undefined,
   },
 }) satisfies PrismaConfig;
