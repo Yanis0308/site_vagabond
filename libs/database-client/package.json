@@ -16,11 +16,15 @@
     "postinstall": "pnpm run prisma-generate && pnpm run build"
   },
   "dependencies": {
-    "@prisma/client": "^6.3.1",
+    "@prisma/adapter-pg": "^7.0.0",
+    "@prisma/client": "^7.0.0",
     "@vagabond/shared-utils": "workspace:*",
-    "prisma": "^6.3.1"
+    "pg": "^8.13.1",
+    "prisma": "^7.0.0"
   },
   "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/pg": "^8.11.11",
     "dotenv": "^16.4.5",
     "typescript": "catalog:"
   }

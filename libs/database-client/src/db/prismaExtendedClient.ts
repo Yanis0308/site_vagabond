@@ -1,3 +1,6 @@
+import { PrismaPg } from "@prisma/adapter-pg";
+import pg from "pg";
+
 import { createBoundaryExtensions } from "./extensions/boundaryExtensions.js";
 import { createPoiExtensions } from "./extensions/poiExtensions.js";
 import { createSearchExtensions } from "./extensions/searchExtensions.js";
@@ -8,7 +11,16 @@ import { PrismaClient } from "./generated/client/index.js";
 export type { CustomPoiCreateInput } from "./types.js";
 
 const getBasePrismaClient = (withQueryLog = false): PrismaClient => {
+  const databaseUrl = process.env.API_DATABASE_URL;
+  if (databaseUrl === undefined) {
+    throw new Error("API_DATABASE_URL environment variable is required");
+  }
+
+  const pool = new pg.Pool({ connectionString: databaseUrl });
+  const adapter = new PrismaPg(pool);
+
   const prismaClient = new PrismaClient({
+    adapter,
     log: withQueryLog
       ? ["info", "warn", "error", "query"]
       : ["info", "warn", "error"],
