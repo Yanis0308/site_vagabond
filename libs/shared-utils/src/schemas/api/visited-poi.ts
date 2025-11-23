@@ -1,7 +1,7 @@
 import { Type } from "@sinclair/typebox";
 
 import { CoordsSchema } from "../geo.js";
-import { ApiResponseSchema } from "../utils.js";
+import { ApiResponseSchema, Nullable } from "../utils.js";
 
 export const VisitedPoiSchema = Type.Object(
   {
@@ -11,7 +11,7 @@ export const VisitedPoiSchema = Type.Object(
     userId: Type.String(),
     username: Type.String(),
     createdAt: Type.String(),
-    comment: Type.String(),
+    comment: Nullable(Type.String()),
     rating: Type.Number(),
     imageKey: Type.String(),
   },
@@ -24,7 +24,7 @@ export const BriefVisitedPoiSchema = Type.Object(
     poiId: Type.String(),
     name: Type.Optional(Type.String()),
     createdAt: Type.String(),
-    comment: Type.String(),
+    comment: Nullable(Type.String()),
     rating: Type.Number(),
     imageKey: Type.String(),
   },

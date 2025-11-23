@@ -1,6 +1,6 @@
 packages:
   - "apps/*"
-  - "libs/**"
+  - "libs/*"
 
 catalog:
   # Core utilities
@@ -11,6 +11,13 @@ catalog:
   ajv-errors: ^3.0.0
   ajv-keywords: ^5.1.0
   "@sinclair/typebox": ^0.33.22
+  dotenv: ^16.4.5
+
+  #Database
+  drizzle-orm: ^0.44.7
+  drizzle-kit: ^0.31.7
+  pg: ^8.13.1
+  "@types/pg": ^8.11.11
 
   # Geospatial utilities
   geojson: ^0.5.0

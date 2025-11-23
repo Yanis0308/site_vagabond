@@ -1,6 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
-import { ApiResponseSchema, Nullable } from "../utils.js";
+import { ApiResponseSchema, DateSchema, Nullable } from "../utils.js";
 
 export const LeaderboardPeriodEnumSchema = Type.Enum(
   {
@@ -24,8 +24,8 @@ export const LeaderboardUserSchema = Type.Object(
     email: Nullable(Type.String()),
     visitedPoisCount: Type.Number(),
     rank: Type.Number(),
-    registrationDate: Type.String({ format: "date-time" }),
-    lastVisitedPoiDate: Nullable(Type.String({ format: "date-time" })),
+    registrationDate: DateSchema,
+    lastVisitedPoiDate: Nullable(DateSchema),
   },
   { $id: "LeaderboardUser" },
 );

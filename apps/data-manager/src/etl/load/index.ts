@@ -1,4 +1,4 @@
-import { type PoiSourceEnum } from "@vagabond/database-client/dist/db/generated/client";
+import { schema } from "@vagabond/database-client";
 
 // Utility functions partagées
 export function getSourceId(item: {
@@ -8,7 +8,10 @@ export function getSourceId(item: {
   return `${item.osm_type}-${item.osm_id}`;
 }
 
-export function getDbId(source: PoiSourceEnum, sourceId: string): string {
+export function getDbId(
+  source: schema.PoiSourceEnum,
+  sourceId: string,
+): string {
   return `${source}-${sourceId}`;
 }
 

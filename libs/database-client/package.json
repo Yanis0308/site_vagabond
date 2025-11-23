@@ -6,26 +6,23 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "prisma-generate": "pnpm exec prisma generate --schema=src/db/api-schema.prisma",
-    "prisma-generate-watch": "pnpm exec prisma generate --schema=src/db/api-schema.prisma --watch",
-    "prisma-migrate-dev": "pnpm exec prisma migrate dev --schema=src/db/api-schema.prisma",
-    "build": "pnpm run clean && tsc && cp -r src/db/generated dist/db/generated",
+    "drizzle-generate": "drizzle-kit generate",
+    "build": "pnpm run clean && tsc && cp -r src/migrations dist/migrations",
     "watch": "pnpm run clean && tsc --watch",
     "clean": "rm -rf dist",
-    "develop": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Prisma\" -c \"yellow.bold,cyan.bold\" \"pnpm:watch\" \"pnpm:prisma-generate-watch\"",
-    "postinstall": "pnpm run prisma-generate && pnpm run build"
+    "develop": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Drizzle\" -c \"yellow.bold,cyan.bold\" \"pnpm:watch\" \"pnpm:drizzle-generate\"",
+    "postinstall": "pnpm run build"
   },
   "dependencies": {
-    "@prisma/adapter-pg": "^7.0.0",
-    "@prisma/client": "^7.0.0",
     "@vagabond/shared-utils": "workspace:*",
-    "pg": "^8.13.1",
-    "prisma": "^7.0.0"
+    "drizzle-orm": "^0.44.7",
+    "pg": "^8.13.1"
   },
   "devDependencies": {
-    "@types/node": "catalog:",
+    "@types/node": "^22.9.0",
     "@types/pg": "^8.11.11",
     "dotenv": "^16.4.5",
-    "typescript": "catalog:"
+    "drizzle-kit": "^0.31.7",
+    "typescript": "^5.9.2"
   }
 }

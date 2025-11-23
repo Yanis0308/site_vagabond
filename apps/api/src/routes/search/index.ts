@@ -20,7 +20,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     async function (request, reply) {
       const { q } = request.query;
 
-      const results = await fastify.prisma.search.searchPoisAndCities(q);
+      const results =
+        await fastify.dbRepositories.search.searchPoisAndCities(q);
 
       return await reply.status(200).send({ data: results });
     },

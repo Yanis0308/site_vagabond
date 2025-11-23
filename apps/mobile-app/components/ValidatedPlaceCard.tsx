@@ -54,7 +54,7 @@ export const ValidatedPlaceCard: FC<ValidatedPlaceCardProps> = memo(
               {new Date(visitedPoi.createdAt).toLocaleDateString("fr-FR")}
             </CustomText>
 
-            {visitedPoi.comment.length > 0 && (
+            {visitedPoi.comment !== null && (
               <CustomText className="mt-1 text-gray-800">
                 {visitedPoi.comment}
               </CustomText>

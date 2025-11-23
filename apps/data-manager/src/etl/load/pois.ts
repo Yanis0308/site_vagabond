@@ -1,30 +1,30 @@
-import { getPrismaExtendedClient } from "@vagabond/database-client";
 import {
-  LanguageEnum,
-  type PoiFilterLevelEnum,
-  PoiSourceEnum,
-  type Prisma,
-} from "@vagabond/database-client/dist/db/generated/client";
-import { type CustomPoiCreateInput } from "@vagabond/database-client/dist/db/prismaExtendedClient";
+  type CustomPoiCreateInput,
+  getDrizzleClient,
+  PoiRepository,
+  schema,
+} from "@vagabond/database-client";
 import { logger } from "@vagabond/shared-utils";
 
 import { JsonlFileReader } from "../jsonl-utils";
 import { type ExtractedPoiDatabaseRow, type JsonlPoiRecord } from "../types";
 import { getDbId, getSourceId } from "./index";
 
-function getFilterLevel(item: ExtractedPoiDatabaseRow): PoiFilterLevelEnum {
+function getFilterLevel(
+  item: ExtractedPoiDatabaseRow,
+): "UNKNOWN" | "STRICT" | "STANDARD" | "INTERMEDIATE" | "LAXIST" {
   // Map numeric filter levels to enum values
   switch (item.filter_level) {
     case 1:
-      return "STRICT" as PoiFilterLevelEnum;
+      return "STRICT";
     case 2:
-      return "STANDARD" as PoiFilterLevelEnum;
+      return "STANDARD";
     case 3:
-      return "INTERMEDIATE" as PoiFilterLevelEnum;
+      return "INTERMEDIATE";
     case 4:
-      return "LAXIST" as PoiFilterLevelEnum;
+      return "LAXIST";
     default:
-      return "UNKNOWN" as PoiFilterLevelEnum;
+      return "UNKNOWN";
   }
 }
 
@@ -32,18 +32,17 @@ function getFilterLevel(item: ExtractedPoiDatabaseRow): PoiFilterLevelEnum {
 export async function loadPoisAndPoiDatas(
   data: ExtractedPoiDatabaseRow[],
 ): Promise<void> {
-  const prismaExtendedClient = getPrismaExtendedClient();
-  await prismaExtendedClient.$connect();
+  const db = await getDrizzleClient();
 
   try {
     const poisToSave: CustomPoiCreateInput[] = [];
-    const poiDatasToSave: Prisma.PoiDataUncheckedCreateInput[] = [];
+    const poiDatasToSave: (typeof schema.poiData.$inferInsert)[] = [];
 
     for (const item of data) {
       const sourceId = getSourceId(item);
       poisToSave.push({
-        id: getDbId(PoiSourceEnum.OSM, sourceId),
-        source: PoiSourceEnum.OSM,
+        id: getDbId("OSM", sourceId),
+        source: "OSM",
         sourceId: sourceId,
         coords: {
           latitude: item.latitude,
@@ -57,18 +56,18 @@ export async function loadPoisAndPoiDatas(
         description: item.tags.description ?? "",
         rawInfo: item.tags,
         nbOfTags: Object.keys(item.tags).length,
-        source: PoiSourceEnum.OSM,
+        source: "OSM",
         sourceId: getSourceId(item),
-        language: LanguageEnum.FR,
-        poiId: getDbId(PoiSourceEnum.OSM, getSourceId(item)),
+        language: "FR",
+        poiId: getDbId("OSM", getSourceId(item)),
       });
     }
 
-    await prismaExtendedClient.poi.createManyCustom(poisToSave);
-    await prismaExtendedClient.poiData.createMany({
-      data: poiDatasToSave,
-      skipDuplicates: true,
-    });
+    await new PoiRepository(db).createManyCustom(poisToSave);
+    await db
+      .insert(schema.poiData)
+      .values(poiDatasToSave)
+      .onConflictDoNothing();
 
     logger.info(`Lot de ${data.length} lignes inséré avec succès`);
   } catch (error) {
@@ -77,15 +76,17 @@ export async function loadPoisAndPoiDatas(
     }
     throw error;
   } finally {
-    await prismaExtendedClient.$disconnect();
+    await db.close();
   }
 }
 
 // Nouvelle fonction pour lire depuis JSONL et charger
 export async function loadPoisFromJsonl(filePath: string): Promise<void> {
   const reader = new JsonlFileReader<JsonlPoiRecord>(filePath);
-  const prismaExtendedClient = getPrismaExtendedClient();
-  await prismaExtendedClient.$connect();
+  // We don't need to connect/disconnect here as loadPoisAndPoiDatas handles it per batch
+  // But creating a client per batch is inefficient.
+  // Refactoring to create client once.
+  const db = await getDrizzleClient();
 
   try {
     let batch: ExtractedPoiDatabaseRow[] = [];
@@ -103,7 +104,43 @@ export async function loadPoisFromJsonl(filePath: string): Promise<void> {
       batch.push(record.data);
 
       if (batch.length >= BATCH_SIZE) {
-        await loadPoisAndPoiDatas(batch);
+        // Inline logic to use same db instance
+        const poisToSave: CustomPoiCreateInput[] = [];
+        const poiDatasToSave: (typeof schema.poiData.$inferInsert)[] = [];
+
+        for (const item of batch) {
+          const sourceId = getSourceId(item);
+          poisToSave.push({
+            id: getDbId("OSM", sourceId),
+            source: "OSM",
+            sourceId: sourceId,
+            coords: {
+              latitude: item.latitude,
+              longitude: item.longitude,
+            },
+            filterLevel: getFilterLevel(item),
+          });
+
+          poiDatasToSave.push({
+            name: item.tags.name ?? "",
+            description: item.tags.description ?? "",
+            rawInfo: item.tags,
+            nbOfTags: Object.keys(item.tags).length,
+            source: "OSM",
+            sourceId: getSourceId(item),
+            language: "FR",
+            poiId: getDbId("OSM", getSourceId(item)),
+          });
+        }
+
+        await new PoiRepository(db).createManyCustom(poisToSave);
+        await db
+          .insert(schema.poiData)
+          .values(poiDatasToSave)
+          .onConflictDoNothing();
+
+        logger.info(`Lot de ${batch.length} lignes inséré avec succès`);
+
         totalProcessed += batch.length;
         batch = [];
 
@@ -115,7 +152,40 @@ export async function loadPoisFromJsonl(filePath: string): Promise<void> {
 
     // Traiter le dernier batch
     if (batch.length > 0) {
-      await loadPoisAndPoiDatas(batch);
+      const poisToSave: CustomPoiCreateInput[] = [];
+      const poiDatasToSave: (typeof schema.poiData.$inferInsert)[] = [];
+
+      for (const item of batch) {
+        const sourceId = getSourceId(item);
+        poisToSave.push({
+          id: getDbId("OSM", sourceId),
+          source: "OSM",
+          sourceId: sourceId,
+          coords: {
+            latitude: item.latitude,
+            longitude: item.longitude,
+          },
+          filterLevel: getFilterLevel(item),
+        });
+
+        poiDatasToSave.push({
+          name: item.tags.name ?? "",
+          description: item.tags.description ?? "",
+          rawInfo: item.tags,
+          nbOfTags: Object.keys(item.tags).length,
+          source: "OSM",
+          sourceId: getSourceId(item),
+          language: "FR",
+          poiId: getDbId("OSM", getSourceId(item)),
+        });
+      }
+
+      await new PoiRepository(db).createManyCustom(poisToSave);
+      await db
+        .insert(schema.poiData)
+        .values(poiDatasToSave)
+        .onConflictDoNothing();
+
       totalProcessed += batch.length;
     }
 
@@ -125,6 +195,6 @@ export async function loadPoisFromJsonl(filePath: string): Promise<void> {
     throw error;
   } finally {
     await reader.close();
-    await prismaExtendedClient.$disconnect();
+    await db.close();
   }
 }

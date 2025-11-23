@@ -13,13 +13,14 @@
   "dependencies": {
     "@vagabond/database-client": "workspace:*",
     "@vagabond/shared-utils": "workspace:*",
+    "drizzle-orm": "catalog:",
     "knex": "^3.1.0",
     "ndjson": "^2.0.0",
-    "pg": "^8.13.1",
+    "pg": "catalog:",
     "pg-query-stream": "^4.7.1"
   },
   "devDependencies": {
     "@types/ndjson": "^2.0.4",
-    "@types/pg": "^8.11.11"
+    "@types/pg": "catalog:"
   }
 }

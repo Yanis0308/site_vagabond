@@ -18,26 +18,4 @@ module.exports = {
   plugins: SAFEQL_DATABASE_URL ? ["@ts-safeql/eslint-plugin"] : [],
 
   ignorePatterns: ["node_modules/", "*.js", "*.mjs"],
-
-  rules: {
-    ...(SAFEQL_DATABASE_URL
-      ? {
-          "@ts-safeql/check-sql": [
-            "error",
-            {
-              connections: {
-                databaseUrl: SAFEQL_DATABASE_URL,
-                targets: [
-                  // This makes `prisma.$queryRaw` and `prisma.$executeRaw` commands linted
-                  {
-                    tag: "+(prisma|prismaExtendedClient).+($queryRaw|$executeRaw)",
-                    transform: "Array<{type}>",
-                  },
-                ],
-              },
-            },
-          ],
-        }
-      : {}),
-  },
 };

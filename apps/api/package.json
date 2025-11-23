@@ -17,10 +17,9 @@
     "clean": "rimraf dist",
     "prebuild": "pnpm run clean",
     "test": "pnpm run build && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts",
-    "start": "pnpm run prisma-migrate-deploy && node dist/server.js",
+    "start": "node dist/server.js",
     "build": "tsc",
-    "develop": "NODE_ENV=development tsc-watch --onSuccess 'node ./dist/server.js'",
-    "prisma-migrate-deploy": "pnpx prisma migrate deploy --schema=node_modules/@vagabond/database-client/src/db/api-schema.prisma"
+    "develop": "NODE_ENV=development tsc-watch --onSuccess 'node ./dist/server.js'"
   },
   "keywords": [],
   "author": "",

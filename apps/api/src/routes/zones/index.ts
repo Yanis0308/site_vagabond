@@ -17,11 +17,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      // Get user zone statistics using the extended client method
-      // The validated_pois are already included in the SQL query
-      const userZoneStats = await fastify.prisma.boundary.findUserZoneStats(
-        request.user.uid,
-      );
+      const userZoneStats =
+        await fastify.dbRepositories.boundary.findUserZoneStats(
+          request.user.uid,
+        );
 
       return await reply.status(200).send({
         data: userZoneStats,

@@ -7,7 +7,6 @@
     "module": "NodeNext",
     "target": "ES2022",
     "esModuleInterop": true,
-    // to prevent Prisma runtime errors with undefined values https://www.prisma.io/docs/orm/prisma-client/special-fields-and-types/null-and-undefined
     "exactOptionalPropertyTypes": true
   },
   "include": ["src/**/*.ts"],

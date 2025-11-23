@@ -25,3 +25,7 @@ export const Nullable = <T extends TSchema>(T: T): TUnion<[T, TNull]> => {
   // type Nullable<T> = T | null
   return Type.Union([T, Type.Null()]);
 };
+
+export const DateSchema = Type.Transform(Type.String({ format: "date-time" }))
+  .Decode((value) => new Date(value))
+  .Encode((value) => value.toISOString());

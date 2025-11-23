@@ -1,5 +1,5 @@
-import { getPrismaExtendedClient } from "@vagabond/database-client";
-import { PoiSourceEnum } from "@vagabond/database-client/dist/db/generated/client";
+import { getDrizzleClient, schema } from "@vagabond/database-client";
+import { eq } from "drizzle-orm";
 import { logger } from "@vagabond/shared-utils";
 
 import { JsonlFileReader } from "../jsonl-utils";
@@ -10,30 +10,29 @@ import { getDbId, getSourceId } from "./index";
 export async function updateBoundaryParents(
   data: BoundaryHierarchyRow[],
 ): Promise<void> {
-  const prismaExtendedClient = getPrismaExtendedClient();
-  await prismaExtendedClient.$connect();
+  const db = await getDrizzleClient();
 
   try {
     for (const item of data) {
       const childId = getDbId(
-        PoiSourceEnum.OSM,
+        "OSM",
         getSourceId({
           osm_type: item.child_osm_type,
           osm_id: item.child_osm_id,
         }),
       );
       const parentId = getDbId(
-        PoiSourceEnum.OSM,
+        "OSM",
         getSourceId({
           osm_type: item.parent_osm_type,
           osm_id: item.parent_osm_id,
         }),
       );
 
-      await prismaExtendedClient.boundary.update({
-        where: { id: childId },
-        data: { parentId: parentId },
-      });
+      await db
+        .update(schema.boundaries)
+        .set({ parentId: parentId })
+        .where(eq(schema.boundaries.id, childId));
     }
 
     logger.info(
@@ -48,7 +47,7 @@ export async function updateBoundaryParents(
     }
     throw error;
   } finally {
-    await prismaExtendedClient.$disconnect();
+    await db.close();
   }
 }
 
@@ -57,8 +56,7 @@ export async function loadHierarchiesFromJsonl(
   filePath: string,
 ): Promise<void> {
   const reader = new JsonlFileReader<JsonlHierarchyRecord>(filePath);
-  const prismaExtendedClient = getPrismaExtendedClient();
-  await prismaExtendedClient.$connect();
+  const db = await getDrizzleClient();
 
   try {
     let batch: BoundaryHierarchyRow[] = [];
@@ -76,7 +74,32 @@ export async function loadHierarchiesFromJsonl(
       batch.push(record.data);
 
       if (batch.length >= BATCH_SIZE) {
-        await updateBoundaryParents(batch);
+        // Inline logic to use same db instance
+        for (const item of batch) {
+          const childId = getDbId(
+            "OSM",
+            getSourceId({
+              osm_type: item.child_osm_type,
+              osm_id: item.child_osm_id,
+            }),
+          );
+          const parentId = getDbId(
+            "OSM",
+            getSourceId({
+              osm_type: item.parent_osm_type,
+              osm_id: item.parent_osm_id,
+            }),
+          );
+
+          await db
+            .update(schema.boundaries)
+            .set({ parentId: parentId })
+            .where(eq(schema.boundaries.id, childId));
+        }
+        logger.info(
+          `${batch.length} relations parent-enfant mises à jour avec succès`,
+        );
+
         totalProcessed += batch.length;
         batch = [];
 
@@ -88,7 +111,30 @@ export async function loadHierarchiesFromJsonl(
 
     // Traiter le dernier batch
     if (batch.length > 0) {
-      await updateBoundaryParents(batch);
+      for (const item of batch) {
+        const childId = getDbId(
+          "OSM",
+          getSourceId({
+            osm_type: item.child_osm_type,
+            osm_id: item.child_osm_id,
+          }),
+        );
+        const parentId = getDbId(
+          "OSM",
+          getSourceId({
+            osm_type: item.parent_osm_type,
+            osm_id: item.parent_osm_id,
+          }),
+        );
+
+        await db
+          .update(schema.boundaries)
+          .set({ parentId: parentId })
+          .where(eq(schema.boundaries.id, childId));
+      }
+      logger.info(
+        `${batch.length} relations parent-enfant mises à jour avec succès`,
+      );
       totalProcessed += batch.length;
     }
 
@@ -103,6 +149,6 @@ export async function loadHierarchiesFromJsonl(
     throw error;
   } finally {
     await reader.close();
-    await prismaExtendedClient.$disconnect();
+    await db.close();
   }
 }

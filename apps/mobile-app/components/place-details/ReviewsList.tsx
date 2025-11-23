@@ -21,7 +21,7 @@ interface ReviewItem {
   username: string;
   rating: number;
   createdAt: string;
-  comment: string;
+  comment: string | null;
 }
 
 export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
@@ -53,7 +53,7 @@ export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
         username={item.username}
         rating={item.rating}
         dateString={item.createdAt}
-        comment={item.comment}
+        comment={item.comment ?? ""}
         className="mr-4"
       />
     ),

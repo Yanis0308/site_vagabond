@@ -1,4 +1,4 @@
-import { BoundaryLevelEnum } from "@vagabond/database-client/dist/db/generated/client";
+import { BoundaryLevelEnum } from "@vagabond/database-client";
 
 /**
  * Configuration for mapping OpenStreetMap admin_level values to BoundaryLevelEnum

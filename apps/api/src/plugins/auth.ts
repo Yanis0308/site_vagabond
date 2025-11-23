@@ -7,10 +7,10 @@ declare module "fastify" {
   interface FastifyRequest {
     user: auth.DecodedIdToken & {
       db: {
-        id: string;
+        userId: string;
         email: string | null;
         fullName: string | null;
-        oauthProviders: string[];
+        oauthProviders: string[] | null;
         lastLogin: Date;
         role: "ADMIN" | "USER";
         createdAt: Date;
@@ -68,50 +68,17 @@ export default fp(
           lastLogin: new Date(),
         };
 
-        // Ensure user exists and get the fresh DB record (awaited)
-        const existingUser = await fastify.prisma.user.findUnique({
-          where: { id: userId },
-          select: { id: true, oauthProviders: true },
-        });
-
-        const dbUser = await fastify.prisma.user.upsert({
-          where: { id: userId },
-          create: {
-            id: userId,
-            ...currentUserInfo,
-          },
-          update: {
-            ...currentUserInfo,
-            oauthProviders: {
-              set:
-                existingUser !== null
-                  ? Array.from(
-                      new Set([
-                        ...existingUser.oauthProviders,
-                        ...currentUserInfo.oauthProviders,
-                      ]),
-                    )
-                  : currentUserInfo.oauthProviders,
-            },
-          },
-          select: {
-            id: true,
-            email: true,
-            fullName: true,
-            oauthProviders: true,
-            lastLogin: true,
-            role: true,
-            createdAt: true,
-            updatedAt: true,
-          },
-        });
+        // Ensure user exists and get the fresh DB record
+        const dbUser = await fastify.dbRepositories.user.upsertUser(
+          userId,
+          currentUserInfo,
+        );
 
         // Attach DB user to request.user
         request.user = Object.assign(decodedToken, { db: dbUser });
 
         // Fire-and-forget Slack notification for new user
-        const isActuallyNewUser =
-          dbUser.createdAt.getTime() === dbUser.updatedAt.getTime();
+        const isActuallyNewUser = dbUser.createdAt === dbUser.updatedAt;
 
         if (isActuallyNewUser) {
           void (async (): Promise<void> => {
@@ -139,6 +106,6 @@ export default fp(
   },
   {
     name: "auth",
-    dependencies: ["sensible", "firebase-admin", "fastify-prisma", "slack"],
+    dependencies: ["sensible", "firebase-admin", "fastify-drizzle", "slack"],
   },
 );

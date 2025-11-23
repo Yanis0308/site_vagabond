@@ -18,9 +18,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const poisWithData = await fastify.prisma.poi.findInBoundingBoxWithData(
-        request.query,
-      );
+      const poisWithData =
+        await fastify.dbRepositories.poi.findInBoundingBoxWithData(
+          request.query,
+        );
 
       return await reply.status(200).send({ data: poisWithData });
     },

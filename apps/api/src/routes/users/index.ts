@@ -22,8 +22,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       return await reply.status(200).send({
         data: {
           ...user,
+          id: user.userId,
           lastLogin: user.lastLogin.toISOString(),
           createdAt: user.createdAt.toISOString(),
+          oauthProviders: user.oauthProviders ?? [],
         },
       });
     },

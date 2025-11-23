@@ -25,17 +25,13 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       const { poiId } = request.params;
       const { imageKey, rating, comment, coords } = request.body;
 
-      const visitedPoi = await fastify.prisma.visitedPoi.findFirst({
-        where: {
+      const visitedPoi =
+        await fastify.dbRepositories.visitedPoi.findByPoiAndUser(
           poiId,
-          userId: request.user.uid,
-        },
-        select: {
-          id: true,
-        },
-      });
+          request.user.uid,
+        );
 
-      if (visitedPoi !== null) {
+      if (visitedPoi !== undefined) {
         return await reply.status(409).send({
           error: {
             type: "RESOURCE_ALREADY_EXISTS",
@@ -44,7 +40,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         });
       }
 
-      await fastify.prisma.visitedPoi.createCustom({
+      await fastify.dbRepositories.visitedPoi.createCustom({
         poiId,
         imageKey,
         rating,
@@ -59,14 +55,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       // Envoyer notification Slack en arrière-plan (sans await)
       void (async (): Promise<void> => {
         try {
-          const poiData = await fastify.prisma.poiData.findFirst({
-            where: { poiId },
-            select: { name: true },
-          });
+          const poiName = await fastify.dbRepositories.poi.findPoiName(poiId);
 
-          if (poiData !== null) {
-            const poiName =
-              poiData.name.length > 0 ? poiData.name : "Lieu inconnu";
+          if (poiName !== undefined) {
+            const displayName = poiName.length > 0 ? poiName : "Lieu inconnu";
             const username = getUserDisplayName(
               request.user.db.fullName,
               request.user.email,
@@ -77,7 +69,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             await fastify.slack.sendPoiValidationMessage(
               `🏆 *Nouveau lieu validé !*\n` +
                 `👤 *Utilisateur:* ${username} (${request.user.email})\n` +
-                `📍 *Lieu:* ${poiName}\n` +
+                `📍 *Lieu:* ${displayName}\n` +
                 `⭐ *Note:* ${rating}/5\n` +
                 `💬 *Commentaire:* ${
                   comment.length > 0 ? comment : "Aucun commentaire"
@@ -87,7 +79,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             );
 
             fastify.log.info(
-              `Place validated: ${poiName} by ${username} (${request.user.uid})`,
+              `Place validated: ${displayName} by ${username} (${request.user.uid})`,
             );
           }
         } catch (error) {

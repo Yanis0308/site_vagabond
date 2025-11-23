@@ -1,7 +1,7 @@
 import { Type } from "@sinclair/typebox";
 
 import { RoleEnumSchema } from "../enums.js";
-import { ApiResponseSchema, Nullable } from "../utils.js";
+import { ApiResponseSchema, DateSchema, Nullable } from "../utils.js";
 
 export const UserMeSchema = Type.Object(
   {
@@ -9,8 +9,8 @@ export const UserMeSchema = Type.Object(
     email: Nullable(Type.String()),
     fullName: Nullable(Type.String()),
     oauthProviders: Type.Array(Type.String()),
-    lastLogin: Type.String(),
-    createdAt: Type.String(),
+    lastLogin: DateSchema,
+    createdAt: DateSchema,
     role: Type.Ref(RoleEnumSchema),
   },
   { $id: "UserMe" },

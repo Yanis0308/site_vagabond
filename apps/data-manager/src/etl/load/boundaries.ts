@@ -1,5 +1,5 @@
-import { getPrismaExtendedClient } from "@vagabond/database-client";
-import { PoiSourceEnum } from "@vagabond/database-client/dist/db/generated/client";
+import { getDrizzleClient, schema } from "@vagabond/database-client";
+import { sql } from "drizzle-orm";
 import { logger } from "@vagabond/shared-utils";
 
 import { getBoundaryLevel } from "../boundary-mapping-config";
@@ -33,13 +33,12 @@ export async function loadBoundariesConsolidated(
   data: ConsolidatedBoundaryRow[],
   countryCode = "DEFAULT",
 ): Promise<void> {
-  const prismaExtendedClient = getPrismaExtendedClient();
-  await prismaExtendedClient.$connect();
+  const db = await getDrizzleClient();
 
   try {
     for (const item of data) {
       const computedId = getDbId(
-        PoiSourceEnum.OSM,
+        "OSM",
         getSourceId({
           osm_type: item.osm_type,
           osm_id: item.osm_id,
@@ -74,12 +73,10 @@ export async function loadBoundariesConsolidated(
         typeof item.admin_centre_latitude === "number"
       ) {
         // Utiliser les données de l'admin_centre
-        const pointResult = await prismaExtendedClient.$queryRaw<
-          [{ point: string }]
-        >`
-          SELECT ST_AsGeoJSON(ST_SetSRID(ST_MakePoint(${item.admin_centre_longitude}, ${item.admin_centre_latitude}), 4326)) as point
-        `;
-        displayPoint = pointResult[0]?.point ?? null;
+        const pointResult = await db.execute<{ point: string }>(
+          sql`SELECT ST_AsGeoJSON(ST_SetSRID(ST_MakePoint(${item.admin_centre_longitude}, ${item.admin_centre_latitude}), 4326)) as point`,
+        );
+        displayPoint = pointResult.rows[0]?.point ?? null;
         population = item.admin_centre_population ?? null;
         isCapital = item.admin_centre_is_capital ?? false;
         importanceScore = item.admin_centre_importance_score ?? 0.5;
@@ -89,12 +86,10 @@ export async function loadBoundariesConsolidated(
         );
       } else {
         // Pas d'admin_centre, utiliser le centroïde calculé dans l'étape Transform
-        const pointResult = await prismaExtendedClient.$queryRaw<
-          [{ point: string }]
-        >`
-          SELECT ST_AsGeoJSON(ST_SetSRID(ST_MakePoint(${item.display_point_lon}, ${item.display_point_lat}), 4326)) as point
-        `;
-        displayPoint = pointResult[0]?.point ?? null;
+        const pointResult = await db.execute<{ point: string }>(
+          sql`SELECT ST_AsGeoJSON(ST_SetSRID(ST_MakePoint(${item.display_point_lon}, ${item.display_point_lat}), 4326)) as point`,
+        );
+        displayPoint = pointResult.rows[0]?.point ?? null;
 
         // Importance par défaut basée sur l'admin_level
         importanceScore =
@@ -133,37 +128,38 @@ export async function loadBoundariesConsolidated(
       // S'assurer que les valeurs non-nullables ont des valeurs par défaut
       const finalPopulation = population ?? 0;
 
-      // Insérer dans la table boundaries avec toutes les données consolidées
-      await prismaExtendedClient.$executeRaw`
-        INSERT INTO public.boundaries (
-          id, name, boundary_level, raw_info, display_point, place_type, 
-          population, is_capital, importance_score, way_area, created_at, updated_at
-        ) VALUES (
-          ${computedId},
-          ${item.name},
-          ${boundaryLevelEnum}::"BoundaryLevelEnum",
-          ${JSON.stringify(item.tags)}::jsonb,
-          ST_GeomFromGeoJSON(${displayPoint}),
-          ${placeType},
-          ${finalPopulation},
-          ${isCapital},
-          ${importanceScore},
-          ${wayArea},
-          NOW(),
-          NOW()
-        )
-        ON CONFLICT (id) DO UPDATE SET
-          name = EXCLUDED.name,
-          boundary_level = EXCLUDED.boundary_level,
-          raw_info = EXCLUDED.raw_info,
-          display_point = EXCLUDED.display_point,
-          place_type = EXCLUDED.place_type,
-          population = EXCLUDED.population,
-          is_capital = EXCLUDED.is_capital,
-          importance_score = EXCLUDED.importance_score,
-          way_area = EXCLUDED.way_area,
-          updated_at = NOW()
-      `;
+      if (displayPoint) {
+        // Insérer dans la table boundaries avec toutes les données consolidées
+        await db
+          .insert(schema.boundaries)
+          .values({
+            id: computedId,
+            name: item.name,
+            boundaryLevel: boundaryLevelEnum,
+            rawInfo: item.tags,
+            displayPoint: sql`ST_GeomFromGeoJSON(${displayPoint})`,
+            placeType: placeType,
+            population: finalPopulation,
+            isCapital: isCapital,
+            importanceScore: importanceScore,
+            wayArea: wayArea,
+          })
+          .onConflictDoUpdate({
+            target: schema.boundaries.id,
+            set: {
+              name: item.name,
+              boundaryLevel: boundaryLevelEnum,
+              rawInfo: item.tags,
+              displayPoint: sql`ST_GeomFromGeoJSON(${displayPoint})`,
+              placeType: placeType,
+              population: finalPopulation,
+              isCapital: isCapital,
+              importanceScore: importanceScore,
+              wayArea: wayArea,
+              updatedAt: new Date(),
+            },
+          });
+      }
     }
 
     logger.info(`Lot de ${data.length} boundaries inséré avec succès`);
@@ -173,15 +169,14 @@ export async function loadBoundariesConsolidated(
     }
     throw error;
   } finally {
-    await prismaExtendedClient.$disconnect();
+    await db.close();
   }
 }
 
 // Nouvelle fonction pour lire depuis JSONL et charger
 export async function loadBoundariesFromJsonl(filePath: string): Promise<void> {
   const reader = new JsonlFileReader<JsonlBoundaryRecord>(filePath);
-  const prismaExtendedClient = getPrismaExtendedClient();
-  await prismaExtendedClient.$connect();
+  const db = await getDrizzleClient();
 
   try {
     let batch: Array<{ data: ConsolidatedBoundaryRow; countryCode: string }> =
@@ -262,6 +257,6 @@ export async function loadBoundariesFromJsonl(filePath: string): Promise<void> {
     throw error;
   } finally {
     await reader.close();
-    await prismaExtendedClient.$disconnect();
+    await db.close();
   }
 }

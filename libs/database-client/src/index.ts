@@ -1,1 +1,9 @@
-export { getPrismaExtendedClient } from "./db/prismaExtendedClient.js";
+export { getDrizzleClient } from "./drizzleClient.js";
+export * from "./repositories/boundary.repository.js";
+export * from "./repositories/poi.repository.js";
+export * from "./repositories/search.repository.js";
+export * from "./repositories/user.repository.js";
+export * from "./repositories/visited-poi.repository.js";
+export * as schema from "./schema.js";
+export * from "./types.js";
+export * from "drizzle-orm";
