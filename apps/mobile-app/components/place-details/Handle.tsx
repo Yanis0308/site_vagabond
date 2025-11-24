@@ -78,9 +78,9 @@ export const Handle = memo(
 
         <Pressable
           onPress={onClose}
-          className="absolute right-1 top-[-15px] z-10 rounded-full border border-secondary-400 bg-background-300 p-2"
+          className="absolute right-2 top-2 z-10 rounded-full bg-background-400 p-1"
         >
-          <CloseIcon size={16} color={themeColors.burntOrange["500"].hex} />
+          <CloseIcon size={22} color={themeColors.burntOrange["500"].hex} />
         </Pressable>
       </Animated.View>
     );

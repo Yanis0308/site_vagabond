@@ -1,4 +1,5 @@
 import BottomSheet, {
+  type BottomSheetBackdropProps,
   BottomSheetFlashList,
   type BottomSheetHandleProps,
 } from "@gorhom/bottom-sheet";
@@ -46,6 +47,7 @@ interface PlaceDetailsSheetV2Props {
   place: PoiType | null;
   onPressLink: () => void;
   onClose: () => void;
+  onSheetChange?: (index: number) => void;
 }
 
 type ListItemType =
@@ -59,8 +61,45 @@ type ListItemType =
   | { type: "admin"; placeId: string; placeData: PoiType["data"][0] }
   | { type: "spacer"; height: number };
 
+const SheetBackdrop = ({
+  animatedIndex,
+  style,
+}: BottomSheetBackdropProps): ReactElement => {
+  const backdropAnimatedStyle = useAnimatedStyle(
+    // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- mandatory for animation
+    () => {
+      const opacity = interpolate(
+        animatedIndex.value,
+        [0, 1, 2],
+        [0, 0, 0.3],
+        Extrapolation.CLAMP,
+      );
+
+      return { opacity };
+    },
+  );
+
+  return (
+    <Animated.View
+      style={[
+        style,
+        backdropAnimatedStyle,
+        {
+          backgroundColor: "black",
+        },
+      ]}
+      pointerEvents="none"
+    />
+  );
+};
+
 export const PlaceDetailsSheet = memo(
-  ({ place, onPressLink, onClose }: PlaceDetailsSheetV2Props): ReactElement => {
+  ({
+    place,
+    onPressLink,
+    onClose,
+    onSheetChange,
+  }: PlaceDetailsSheetV2Props): ReactElement => {
     const { t } = useTranslation("common");
     const DEFAULT_SNAP_POINT = 1;
     const bottomSheetRef = useRef<BottomSheet>(null);
@@ -69,7 +108,7 @@ export const PlaceDetailsSheet = memo(
     const { data: zonesData } = useUserZoneStats();
     const visitedPoisByPoiIdMap = zonesData?.visitedPoisByPoiIdMap;
 
-    const animatedIndex = useSharedValue(0);
+    const bottomSheetAnimatedIndex = useSharedValue(0);
     const insets = useSafeAreaCustom();
 
     const isVisited = useMemo(() => {
@@ -90,7 +129,7 @@ export const PlaceDetailsSheet = memo(
       }
     }, [place?.id]);
 
-    const snapPoints = useMemo(() => ["15%", "60%", "90%"], []);
+    const snapPoints = useMemo(() => ["15%", "60%", "100%"], []);
 
     const backgroundStyle = useMemo(
       () => ({
@@ -106,19 +145,19 @@ export const PlaceDetailsSheet = memo(
       // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- mandatory for animation
       () => {
         const opacity = interpolate(
-          animatedIndex.value,
+          bottomSheetAnimatedIndex.value,
           [0, 1],
           [0, 1],
           Extrapolation.CLAMP,
         );
         const translateY = interpolate(
-          animatedIndex.value,
+          bottomSheetAnimatedIndex.value,
           [0, 1],
           [-50, 0],
           Extrapolation.CLAMP,
         );
         const marginTop = interpolate(
-          animatedIndex.value,
+          bottomSheetAnimatedIndex.value,
           [0, 1],
           [-16, 16],
           Extrapolation.CLAMP,
@@ -135,7 +174,7 @@ export const PlaceDetailsSheet = memo(
       // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- safe for testing
       () => {
         const translateY = interpolate(
-          animatedIndex.value,
+          bottomSheetAnimatedIndex.value,
           [0, 1],
           [-260, 0], // Remonte pour combler l'espace de l'image
           Extrapolation.CLAMP,
@@ -306,12 +345,15 @@ export const PlaceDetailsSheet = memo(
         ref={bottomSheetRef}
         index={-1}
         snapPoints={snapPoints}
-        animatedIndex={animatedIndex}
+        animatedIndex={bottomSheetAnimatedIndex}
         enablePanDownToClose={false}
         enableDynamicSizing={false}
         backgroundStyle={backgroundStyle}
         handleComponent={handleComponent}
+        backdropComponent={SheetBackdrop}
         bottomInset={TAB_BAR_HEIGHT}
+        onChange={onSheetChange}
+        topInset={insets.top}
       >
         <BottomSheetFlashList
           data={listData}

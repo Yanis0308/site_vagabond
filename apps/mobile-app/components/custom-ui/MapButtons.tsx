@@ -2,6 +2,7 @@ import React, { memo, useMemo } from "react";
 import { View } from "react-native";
 
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
+import { cn } from "@/utils/cn";
 
 import { MapActionButton } from "./MapActionButton";
 
@@ -51,16 +52,26 @@ export const MapButtons = memo(
 
     return (
       <View
-        className="absolute inset-y-0 right-4 mb-40 flex flex-col items-center justify-between gap-4"
+        className="absolute right-4 flex flex-col items-center justify-between"
         style={{
-          paddingTop: safeAreaInsets.top + 100,
-          paddingBottom: 200,
+          bottom: safeAreaInsets.bottomWithTabBar + 250,
         }}
       >
-        <MapActionButton action={compassAction} />
+        {/* Compass and Locate buttons grouped together at the top */}
+        <View className="flex flex-col items-center gap-4">
+          <View
+            className={cn(
+              "transition-opacity duration-300 ease-in-out",
+              heading !== 0 ? "opacity-100" : "opacity-0",
+            )}
+            pointerEvents={heading !== 0 ? "auto" : "none"}
+          >
+            <MapActionButton action={compassAction} />
+          </View>
+          <MapActionButton action={locateAction} />
+        </View>
 
-        <MapActionButton action={locateAction} />
-
+        {/* Filter button at the bottom */}
         {onFilterPress !== undefined && (
           <MapActionButton action={filterAction} />
         )}
