@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from "react";
-import { View } from "react-native";
+import { useWindowDimensions, View } from "react-native";
 
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { cn } from "@/utils/cn";
@@ -23,6 +23,9 @@ export const MapButtons = memo(
     heading = 0,
   }: MapButtonsProps) => {
     const safeAreaInsets = useSafeAreaCustom();
+    const { height: displayHeight } = useWindowDimensions();
+    const bottomMargin =
+      Math.ceil(displayHeight / 4) + safeAreaInsets.bottomWithTabBar;
 
     const compassAction = useMemo(
       () => ({
@@ -54,7 +57,7 @@ export const MapButtons = memo(
       <View
         className="absolute right-4 flex flex-col items-center justify-between"
         style={{
-          bottom: safeAreaInsets.bottomWithTabBar + 250,
+          bottom: bottomMargin,
         }}
       >
         {/* Compass and Locate buttons grouped together at the top */}
