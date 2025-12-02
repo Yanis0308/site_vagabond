@@ -19,11 +19,11 @@ export class SearchRepository {
   async searchPoisAndCities(query: string): Promise<SearchResult[]> {
     const poiQuery = this.db
       .select({
-        type: sql<string>`'POI'`,
+        type: sql<string>`'POI'`.as("type"),
         id: pois.id,
         name: poiData.name,
-        latitude: sql<number>`ST_Y(${pois.coords}::geometry)`,
-        longitude: sql<number>`ST_X(${pois.coords}::geometry)`,
+        latitude: sql<number>`ST_Y(${pois.coords}::geometry)`.as("latitude"),
+        longitude: sql<number>`ST_X(${pois.coords}::geometry)`.as("longitude"),
         cityName: sql<string>`(
               SELECT city_b.name
               FROM ${poiBoundaries} pb2
@@ -31,9 +31,12 @@ export class SearchRepository {
               WHERE pb2.poi_id = ${pois.id}
                 AND city_b.boundary_level = 'CITY'
               LIMIT 1
-            )`,
-        departmentName: sql<string | null>`NULL`,
-        relevance_score: sql<number>`POSITION(normalize_search_text(${query}) IN normalize_search_text(${poiData.name}))`,
+            )`.as("cityName"),
+        departmentName: sql<string | null>`NULL`.as("departmentName"),
+        relevance_score:
+          sql<number>`POSITION(normalize_search_text(${query}) IN normalize_search_text(${poiData.name}))`.as(
+            "relevance_score",
+          ),
       })
       .from(pois)
       .innerJoin(poiData, eq(pois.id, poiData.poiId))
@@ -42,21 +45,29 @@ export class SearchRepository {
           sql`normalize_search_text(${poiData.name}) LIKE '%' || normalize_search_text(${query}) || '%'`,
           eq(pois.disabled, false),
         ),
-      )
-      .limit(20);
+      );
 
     const deptBoundary = alias(boundaries, "dept_boundary");
 
     const cityQuery = this.db
       .select({
-        type: sql<string>`'CITY'`,
+        type: sql<string>`'CITY'`.as("type"),
         id: boundaries.id,
-        name: sql<string>`COALESCE(${boundaries.name}, '')`,
-        latitude: sql<number>`ST_Y(${boundaries.displayPoint}::geometry)`,
-        longitude: sql<number>`ST_X(${boundaries.displayPoint}::geometry)`,
-        cityName: sql<string>`NULL`,
-        departmentName: sql<string | null>`${deptBoundary.name}`,
-        relevance_score: sql<number>`POSITION(normalize_search_text(${query}) IN normalize_search_text(${boundaries.name}))`,
+        name: sql<string>`COALESCE(${boundaries.name}, '')`.as("name"),
+        latitude: sql<number>`ST_Y(${boundaries.displayPoint}::geometry)`.as(
+          "latitude",
+        ),
+        longitude: sql<number>`ST_X(${boundaries.displayPoint}::geometry)`.as(
+          "longitude",
+        ),
+        cityName: sql<string>`NULL`.as("cityName"),
+        departmentName: sql<string | null>`${deptBoundary.name}`.as(
+          "departmentName",
+        ),
+        relevance_score:
+          sql<number>`POSITION(normalize_search_text(${query}) IN normalize_search_text(${boundaries.name}))`.as(
+            "relevance_score",
+          ),
       })
       .from(boundaries)
       .leftJoin(
@@ -72,13 +83,17 @@ export class SearchRepository {
           eq(boundaries.boundaryLevel, "CITY"),
         ),
       )
-      .limit(20);
+      .limit(10); // 10 cities result max then get POIs
 
-    const results = await unionAll(poiQuery, cityQuery)
+    const union = unionAll(poiQuery, cityQuery).as("union_result");
+
+    const results = await this.db
+      .select()
+      .from(union)
       .orderBy(
-        sql`CASE WHEN type = 'CITY' THEN 0 ELSE 1 END`,
-        sql`relevance_score ASC`,
-        sql`name ASC`,
+        sql`CASE WHEN ${union.type} = 'CITY' THEN 0 ELSE 1 END`,
+        sql`${union.relevance_score} ASC`,
+        sql`${union.name} ASC`,
       )
       .limit(20);
 
