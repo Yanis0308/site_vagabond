@@ -22,22 +22,9 @@ module.exports = {
     "*.mjs",
   ],
 
-  plugins: ["@arthurgeron/react-usememo", "react-compiler"],
+  plugins: ["react-compiler"],
 
   rules: {
-    "@arthurgeron/react-usememo/require-usememo": [
-      "error",
-      {
-        strict: false,
-        checkHookReturnObject: true,
-        fix: { addImports: true },
-        checkHookCalls: true,
-        ignoredHookCallsNames: { useStateManagement: false },
-        ignoredPropNames: ["style"],
-      },
-    ],
-    "@arthurgeron/react-usememo/require-memo": "error",
-    // "@arthurgeron/react-usememo/require-usememo-children": "error",
     "no-restricted-imports": [
       "error",
       {

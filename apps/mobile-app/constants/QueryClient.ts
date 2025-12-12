@@ -8,11 +8,11 @@ import { logger } from "@/utils/logger";
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      //staleTime: Infinity, // Let default stale time, it's background fetching
+      //staleTime: Infinity, // Let default stale time of 0 seconds, it's background fetching
       gcTime: 1000 * 60 * 60 * 24 * 30, // 30 jours avant la suppression du cache inutilisé
       throwOnError: (error: Error): boolean => {
         logger("query error", error);
-        alert(error.message);
+        //alert(error.message);
         return false;
       },
     },

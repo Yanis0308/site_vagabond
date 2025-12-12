@@ -1,4 +1,3 @@
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useNavigation } from "expo-router";
 import { memo, type ReactNode, useEffect, useMemo } from "react";
 import { View } from "react-native";
@@ -63,12 +62,10 @@ export const CustomScreenContainer = memo(
             //paddingBottom: isTabScreen ? TAB_BAR_HEIGHT + insets.bottom : 0,
           }}
         >
-          <BottomSheetModalProvider>
-            {/* <StatusBar hidden={true} /> */}
-            <View className={"flex-1"} style={{ backgroundColor: bgColor }}>
-              {children}
-            </View>
-          </BottomSheetModalProvider>
+          {/* <StatusBar hidden={true} /> */}
+          <View className={"flex-1"} style={{ backgroundColor: bgColor }}>
+            {children}
+          </View>
         </SafeAreaView>
       </Box>
     );

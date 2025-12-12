@@ -27,7 +27,6 @@ type ProfileSection =
   | { type: "validatedPlaces"; data: CountryType[] }
   | { type: "signOut" };
 
-// eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function ProfileScreen(): ReactElement {
   const { data: zonesData } = useUserZoneStats();
   const zoneHierarchy = useZoneHierarchy(zonesData?.zonesStats);

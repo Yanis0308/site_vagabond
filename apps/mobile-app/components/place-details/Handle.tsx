@@ -20,21 +20,18 @@ interface HandleProps extends BottomSheetHandleProps {
 
 export const Handle = memo(
   ({ animatedIndex, rating, onClose }: HandleProps) => {
-    const starRatingAnimatedStyle = useAnimatedStyle(
-      // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- mandatory for animation
-      () => {
-        const opacity = interpolate(
-          animatedIndex.value,
-          [0, 1, 2],
-          [1, 1, 0],
-          Extrapolation.CLAMP,
-        );
+    const starRatingAnimatedStyle = useAnimatedStyle(() => {
+      const opacity = interpolate(
+        animatedIndex.value,
+        [0, 1, 2],
+        [1, 1, 0],
+        Extrapolation.CLAMP,
+      );
 
-        return {
-          opacity,
-        };
-      },
-    );
+      return {
+        opacity,
+      };
+    });
 
     const containerStyle = useMemo(
       () => [
@@ -79,6 +76,7 @@ export const Handle = memo(
         <Pressable
           onPress={onClose}
           className="absolute right-2 top-2 z-10 rounded-full bg-background-400 p-1"
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
           <CloseIcon size={22} color={themeColors.burntOrange["500"].hex} />
         </Pressable>

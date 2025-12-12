@@ -26,4 +26,9 @@ export const shadowStyles = StyleSheet.create({
   contentLarge: {
     boxShadow: `0px 24px 24px 0px ${themeColors.background["200"].hex}`,
   },
+
+  // Search header and map buttons shadow
+  onMapComponent: {
+    boxShadow: `0px 2px 4px 0px rgba(0, 0, 0, 0.1)`,
+  },
 });

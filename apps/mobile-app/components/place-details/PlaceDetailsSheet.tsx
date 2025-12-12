@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import Animated, {
   Extrapolation,
   interpolate,
+  type SharedValue,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
@@ -48,6 +49,7 @@ interface PlaceDetailsSheetV2Props {
   onPressLink: () => void;
   onClose: () => void;
   onSheetChange?: (index: number) => void;
+  animatedIndex?: SharedValue<number>;
 }
 
 type ListItemType =
@@ -65,19 +67,16 @@ const SheetBackdrop = ({
   animatedIndex,
   style,
 }: BottomSheetBackdropProps): ReactElement => {
-  const backdropAnimatedStyle = useAnimatedStyle(
-    // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- mandatory for animation
-    () => {
-      const opacity = interpolate(
-        animatedIndex.value,
-        [0, 1, 2],
-        [0, 0, 0.3],
-        Extrapolation.CLAMP,
-      );
+  const backdropAnimatedStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      animatedIndex.value,
+      [0, 1, 2],
+      [0, 0, 0.3],
+      Extrapolation.CLAMP,
+    );
 
-      return { opacity };
-    },
-  );
+    return { opacity };
+  });
 
   return (
     <Animated.View
@@ -99,6 +98,7 @@ export const PlaceDetailsSheet = memo(
     onPressLink,
     onClose,
     onSheetChange,
+    animatedIndex,
   }: PlaceDetailsSheetV2Props): ReactElement => {
     const { t } = useTranslation("common");
     const DEFAULT_SNAP_POINT = 1;
@@ -108,7 +108,8 @@ export const PlaceDetailsSheet = memo(
     const { data: zonesData } = useUserZoneStats();
     const visitedPoisByPoiIdMap = zonesData?.visitedPoisByPoiIdMap;
 
-    const bottomSheetAnimatedIndex = useSharedValue(0);
+    const internalAnimatedIndex = useSharedValue(-1);
+    const bottomSheetAnimatedIndex = animatedIndex ?? internalAnimatedIndex;
     const insets = useSafeAreaCustom();
 
     const isVisited = useMemo(() => {
@@ -141,49 +142,43 @@ export const PlaceDetailsSheet = memo(
       [],
     );
 
-    const imageBoxAnimatedStyle = useAnimatedStyle(
-      // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- mandatory for animation
-      () => {
-        const opacity = interpolate(
-          bottomSheetAnimatedIndex.value,
-          [0, 1],
-          [0, 1],
-          Extrapolation.CLAMP,
-        );
-        const translateY = interpolate(
-          bottomSheetAnimatedIndex.value,
-          [0, 1],
-          [-50, 0],
-          Extrapolation.CLAMP,
-        );
-        const marginTop = interpolate(
-          bottomSheetAnimatedIndex.value,
-          [0, 1],
-          [-16, 16],
-          Extrapolation.CLAMP,
-        );
-        return {
-          opacity,
-          transform: [{ rotate: "2deg" }, { translateY }],
-          marginTop,
-        };
-      },
-    );
+    const imageBoxAnimatedStyle = useAnimatedStyle(() => {
+      const opacity = interpolate(
+        bottomSheetAnimatedIndex.value,
+        [0, 1],
+        [0, 1],
+        Extrapolation.CLAMP,
+      );
+      const translateY = interpolate(
+        bottomSheetAnimatedIndex.value,
+        [0, 1],
+        [-50, 0],
+        Extrapolation.CLAMP,
+      );
+      const marginTop = interpolate(
+        bottomSheetAnimatedIndex.value,
+        [0, 1],
+        [-16, 16],
+        Extrapolation.CLAMP,
+      );
+      return {
+        opacity,
+        transform: [{ rotate: "2deg" }, { translateY }],
+        marginTop,
+      };
+    });
 
-    const contentAnimatedStyle = useAnimatedStyle(
-      // eslint-disable-next-line @arthurgeron/react-usememo/require-usememo -- safe for testing
-      () => {
-        const translateY = interpolate(
-          bottomSheetAnimatedIndex.value,
-          [0, 1],
-          [-260, 0], // Remonte pour combler l'espace de l'image
-          Extrapolation.CLAMP,
-        );
-        return {
-          transform: [{ translateY }],
-        };
-      },
-    );
+    const contentAnimatedStyle = useAnimatedStyle(() => {
+      const translateY = interpolate(
+        bottomSheetAnimatedIndex.value,
+        [0, 1],
+        [-260, 0], // Remonte pour combler l'espace de l'image
+        Extrapolation.CLAMP,
+      );
+      return {
+        transform: [{ translateY }],
+      };
+    });
 
     const rating = useMemo(() => {
       return Math.round(

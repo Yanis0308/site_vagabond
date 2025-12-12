@@ -8,6 +8,13 @@
       "when": 1763728405394,
       "tag": "0000_dashing_groot",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1764953350614,
+      "tag": "0001_fix_normalize_search_text",
+      "breakpoints": true
     }
   ]
 }

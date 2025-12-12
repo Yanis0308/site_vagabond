@@ -5,7 +5,6 @@ import { type PropsWithChildren, type ReactElement } from "react";
  * This file is web-only and used to configure the root HTML for every web page during static rendering.
  * The contents of this function only run in Node.js environments and do not have access to the DOM or browser APIs.
  */
-//eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- html file so it's ok
 export default function Root({ children }: PropsWithChildren): ReactElement {
   return (
     <html lang="en">

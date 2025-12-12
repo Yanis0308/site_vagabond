@@ -24,7 +24,6 @@ interface Route {
   title: string;
 }
 
-// eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function Leaderboard(): ReactElement {
   const layout = useWindowDimensions();
   const [index, setIndex] = useState(0);

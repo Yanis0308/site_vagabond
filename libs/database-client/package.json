@@ -15,14 +15,14 @@
   },
   "dependencies": {
     "@vagabond/shared-utils": "workspace:*",
-    "drizzle-orm": "^0.44.7",
+    "drizzle-orm": "^0.45.0",
     "pg": "^8.13.1"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",
     "@types/pg": "^8.11.11",
     "dotenv": "^16.4.5",
-    "drizzle-kit": "^0.31.7",
+    "drizzle-kit": "^0.31.8",
     "typescript": "^5.9.2"
   }
 }

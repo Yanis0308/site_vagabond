@@ -29,7 +29,6 @@ const appConfigSchema = z.object({
   runtimeConfig: RuntimeConfigSchema,
 });
 
-// eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- not a React component
 export default ({ config }: ConfigContext): ExpoConfig => {
   //eslint-disable-next-line no-console -- allow for logger function
   console.log(
@@ -140,14 +139,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         {
           photosPermission:
             "The app accesses your photos to let you share them with your friends.",
-        },
-      ],
-      [
-        "expo-media-library",
-        {
-          photosPermission: "Allow $(PRODUCT_NAME) to access your photos.",
-          savePhotosPermission: "Allow $(PRODUCT_NAME) to save photos.",
-          isAccessMediaLocationEnabled: true,
         },
       ],
       [

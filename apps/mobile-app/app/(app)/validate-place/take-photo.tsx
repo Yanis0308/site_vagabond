@@ -1,6 +1,6 @@
 import { useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import React, { type ReactElement, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
@@ -10,14 +10,14 @@ import { CustomScreenContainer } from "@/components/navigation/CustomScreenConta
 import { Box } from "@/components/ui/box";
 import { PhotoStep } from "@/components/validate-place";
 import { useUploadFileMutation } from "@/hooks/mutations/useUploadFileMutation";
+import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
-import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 import { compressImage } from "@/utils/imageCompressor";
 import { logger } from "@/utils/logger";
 
 const PlaceDetails = React.memo((): ReactElement => {
   const { t } = useTranslation("common");
-  const place = useAtomValue(selectedPlaceAtom);
+  const { selectedPlace } = usePlaceSelection();
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const router = useRouter();
@@ -70,7 +70,7 @@ const PlaceDetails = React.memo((): ReactElement => {
     })();
   }, [cameraPermission, requestCameraPermission]);
 
-  if (place === null) {
+  if (selectedPlace === null) {
     return (
       <Box className="flex-1 items-center justify-center">
         <CustomText className="text-lg text-gray-600">

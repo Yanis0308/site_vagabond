@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useSetAtom } from "jotai";
+import { useEffect, useMemo } from "react";
 
+import { placesAtom } from "@/hooks/other/usePlaceSelection";
 import { getPlaces } from "@/http/places";
 import { calculateBboxWithMinSize } from "@/utils/bbox";
 import { logger } from "@/utils/logger";
@@ -88,6 +90,13 @@ export const usePlaces = (
 
     return uniqueData;
   }, [allData, queryResult.data]);
+
+  const setPlaces = useSetAtom(placesAtom);
+
+  // Mettre à jour l'atom automatiquement quand les données changent
+  useEffect(() => {
+    setPlaces({ data: finalData, isFetching: queryResult.isFetching });
+  }, [finalData, queryResult.isFetching, setPlaces]);
 
   return useMemo(
     () => ({

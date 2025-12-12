@@ -3,9 +3,13 @@ const { withNativeWind } = require("nativewind/metro");
 
 const config = getDefaultConfig(__dirname);
 
-// Fix for  ERROR  TypeError: Cannot read property 'defineProperty' of undefined, js engine: hermes
-// https://github.com/expo/expo/discussions/35444
-config.resolver.unstable_enablePackageExports = false;
+// Use require condition to avoid ESM/CJS issues that can cause defineProperty errors
+config.resolver.unstable_conditionNames = [
+  "require",
+  "node",
+  "default",
+  "react-native",
+];
 
 module.exports = withNativeWind(config, {
   input: "./global.css",

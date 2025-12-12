@@ -13,6 +13,29 @@ interface SearchResult {
   departmentName?: string;
 }
 
+/**
+ * Calculates the relevance score for search results.
+ * Returns a SQL expression that computes:
+ * - 0: Exact match (highest priority)
+ * - 1: Starts with query (high priority)
+ * - 1000+: Contains query (lower priority, based on position and length)
+ */
+const calculateRelevanceScore = (
+  nameColumn: unknown,
+  query: string,
+): ReturnType<typeof sql<number>> => {
+  return sql<number>`(
+    CASE 
+      -- Exact match: highest priority (score 0)
+      WHEN normalize_search_text(${nameColumn}) = normalize_search_text(${query}) THEN 0
+      -- Starts with query: high priority (score 1)
+      WHEN normalize_search_text(${nameColumn}) LIKE normalize_search_text(${query}) || '%' THEN 1
+      -- Contains query: lower priority, score based on position and length
+      ELSE 1000 + POSITION(normalize_search_text(${query}) IN normalize_search_text(${nameColumn})) + LENGTH(${nameColumn}) / 10
+    END
+  )`;
+};
+
 export class SearchRepository {
   constructor(private readonly db: DrizzleClient) {}
 
@@ -33,10 +56,9 @@ export class SearchRepository {
               LIMIT 1
             )`.as("cityName"),
         departmentName: sql<string | null>`NULL`.as("departmentName"),
-        relevance_score:
-          sql<number>`POSITION(normalize_search_text(${query}) IN normalize_search_text(${poiData.name}))`.as(
-            "relevance_score",
-          ),
+        relevance_score: calculateRelevanceScore(poiData.name, query).as(
+          "relevance_score",
+        ),
       })
       .from(pois)
       .innerJoin(poiData, eq(pois.id, poiData.poiId))
@@ -45,7 +67,12 @@ export class SearchRepository {
           sql`normalize_search_text(${poiData.name}) LIKE '%' || normalize_search_text(${query}) || '%'`,
           eq(pois.disabled, false),
         ),
-      );
+      )
+      .orderBy(
+        sql`${calculateRelevanceScore(poiData.name, query)} ASC`,
+        sql`${poiData.name} ASC`,
+      )
+      .limit(10); // 10 POIs result max then get cities
 
     const deptBoundary = alias(boundaries, "dept_boundary");
 
@@ -64,10 +91,9 @@ export class SearchRepository {
         departmentName: sql<string | null>`${deptBoundary.name}`.as(
           "departmentName",
         ),
-        relevance_score:
-          sql<number>`POSITION(normalize_search_text(${query}) IN normalize_search_text(${boundaries.name}))`.as(
-            "relevance_score",
-          ),
+        relevance_score: calculateRelevanceScore(boundaries.name, query).as(
+          "relevance_score",
+        ),
       })
       .from(boundaries)
       .leftJoin(
@@ -83,6 +109,10 @@ export class SearchRepository {
           eq(boundaries.boundaryLevel, "CITY"),
         ),
       )
+      .orderBy(
+        sql`${calculateRelevanceScore(boundaries.name, query)} ASC`,
+        sql`${boundaries.name} ASC`,
+      )
       .limit(10); // 10 cities result max then get POIs
 
     const union = unionAll(poiQuery, cityQuery).as("union_result");
@@ -91,11 +121,10 @@ export class SearchRepository {
       .select()
       .from(union)
       .orderBy(
-        sql`CASE WHEN ${union.type} = 'CITY' THEN 0 ELSE 1 END`,
         sql`${union.relevance_score} ASC`,
+        sql`CASE WHEN ${union.type} = 'CITY' THEN 0 ELSE 1 END`,
         sql`${union.name} ASC`,
-      )
-      .limit(20);
+      );
 
     return results
       .filter(

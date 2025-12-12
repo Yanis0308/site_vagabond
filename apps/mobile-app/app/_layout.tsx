@@ -28,7 +28,6 @@ void UnifiedAnalyticsService.getInstance().initialize();
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 void SplashScreen.preventAutoHideAsync();
 
-//eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function RootLayout(): ReactElement | null {
   // void Location.enableNetworkProviderAsync();
   const pathname = usePathname();

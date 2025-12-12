@@ -13,13 +13,12 @@ import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { ReviewStep } from "@/components/validate-place";
 import { UPLOAD_FILE_MUTATION_KEY } from "@/hooks/mutations/useUploadFileMutation";
+import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
-import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 
-// eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- page file
 export default function ReviewForm(): ReactElement {
   const { t } = useTranslation("common");
-  const place = useAtomValue(selectedPlaceAtom);
+  const { selectedPlace } = usePlaceSelection();
   const currentPhoto = useAtomValue(currentPhotoAtom);
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
   const navigation = useNavigation();
@@ -68,7 +67,7 @@ export default function ReviewForm(): ReactElement {
     ),
   );
 
-  if (place === null || currentPhoto === null) {
+  if (selectedPlace === null || currentPhoto === null) {
     return (
       <Box className="flex-1 items-center justify-center p-4">
         <CustomText className="text-lg text-gray-600">
@@ -92,7 +91,7 @@ export default function ReviewForm(): ReactElement {
         disableScrollOnKeyboardHide
       >
         <ReviewStep
-          place={place}
+          place={selectedPlace}
           capturedImage={currentPhoto.imageUri}
           imageKey={currentPhoto.fileId}
           isUploading={isUploading}

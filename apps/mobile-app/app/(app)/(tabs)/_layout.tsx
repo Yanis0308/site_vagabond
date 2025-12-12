@@ -12,7 +12,6 @@ import { cn } from "@/utils/cn";
 
 export const TAB_BAR_HEIGHT = 60;
 
-//eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- screen file so it's ok
 export default function TabLayout(): ReactElement {
   const pathname = usePathname();
   const insets = useSafeAreaCustom();

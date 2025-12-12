@@ -14,7 +14,6 @@ import { useAppleLoginMutation } from "@/hooks/mutations/useAppleLoginMutation";
 import { useGoogleLoginMutation } from "@/hooks/mutations/useGoogleLoginMutation";
 import { localImages } from "@/utils/localImages";
 
-// eslint-disable-next-line @arthurgeron/react-usememo/require-memo -- tab file so it's ok
 export default function SignInScreen(): ReactElement {
   const { t } = useTranslation("common");
   const { isPending: googleLoginPending, mutate: googleLoginMutate } =

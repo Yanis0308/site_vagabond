@@ -1,13 +1,12 @@
 import { type MapState, type MapView } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { getDistance } from "geolib";
-import { useAtom } from "jotai";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
+import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
 import { useUserZoneStats } from "@/hooks/queries/useZonesStats";
-import { selectedPlaceAtom } from "@/stores/selectedPlaceAtom";
 import { logger } from "@/utils/logger";
 import {
   type BriefVisitedPoiType,
@@ -43,7 +42,6 @@ interface UseMapLogicReturn {
   placesData: PoiType[] | undefined;
   allZonesData: ZoneStatType[] | undefined;
   customShape: GeoJSON.FeatureCollection;
-  selectedPlaceInfo: PoiType | null;
   userLocation: { latitude: number; longitude: number } | undefined | null;
   imagesUrls: string[];
   bbox: {
@@ -72,9 +70,12 @@ interface UseMapLogicReturn {
   onPress: (event: OnPressEvent) => void;
 
   // Actions
-  setSelectedPlaceInfo: (place: PoiType | null) => void;
   moveToUserLocation: () => void;
   resetMapOrientation: () => void;
+  moveToPlace: (
+    coordinates: { latitude: number; longitude: number },
+    isPoi?: boolean,
+  ) => void;
 }
 
 export const useMapLogic = (): UseMapLogicReturn => {
@@ -83,7 +84,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
   const userLocation = useUserLocation();
   const firstCenteringDone = useRef(false);
 
-  const [selectedPlaceInfo, setSelectedPlaceInfo] = useAtom(selectedPlaceAtom);
   const [bbox, setBbox] = useState<{
     minLat: number;
     maxLat: number;
@@ -102,24 +102,17 @@ export const useMapLogic = (): UseMapLogicReturn => {
   const mapRef = useRef<MapView>(null);
   const cameraRef = useRef<CameraRef>(null);
 
+  // Récupérer les données des places (l'atom est mis à jour automatiquement)
   const { data: placesData, isFetching: isFetchingPlaces } = usePlaces(
     bbox,
     zoom,
   );
-  const isFetchingAllZones = false;
-  const allZonesData = useMemo(() => [], []);
 
-  // Mettre à jour le lieu sélectionné quand les données changent pour que le composant PlaceDetailsSheet se mette à jour avec les nouveaux avis etc
-  useEffect(() => {
-    if (selectedPlaceInfo !== null && placesData !== undefined) {
-      const updatedPlace = placesData.find(
-        (place) => place.id === selectedPlaceInfo.id,
-      );
-      if (updatedPlace !== undefined) {
-        setSelectedPlaceInfo(updatedPlace);
-      }
-    }
-  }, [placesData, selectedPlaceInfo, setSelectedPlaceInfo]);
+  // Hook unifié pour gérer la sélection de lieu
+  const { setSelectedPlace } = usePlaceSelection();
+
+  const isFetchingAllZones = false;
+  const allZonesData: ZoneStatType[] = [];
 
   const moveToUserLocation = useCallback(() => {
     if (userLocation !== null && cameraRef.current !== null) {
@@ -133,7 +126,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
     }
   }, [userLocation]);
 
-  const resetMapOrientation = useCallback(() => {
+  const resetMapOrientation = (): void => {
     if (cameraRef.current !== null) {
       cameraRef.current.setCamera({
         heading: 0,
@@ -141,7 +134,37 @@ export const useMapLogic = (): UseMapLogicReturn => {
         animationDuration: 1000,
       });
     }
-  }, []);
+  };
+
+  const moveToPlace = (
+    coordinates: { latitude: number; longitude: number },
+    isPoi = false,
+  ): void => {
+    if (cameraRef.current === null) {
+      logger("cameraRef.current is null, cannot move to place");
+      return;
+    }
+
+    // Apply north offset for POI to keep it visible above the bottom sheet
+    // The bottom sheet occupies 60% of the screen height, so we shift the camera
+    // latitude north by approximately to keep the POI visible
+    const latitudeOffset = isPoi ? -0.005 : 0;
+    const adjustedLatitude = coordinates.latitude + latitudeOffset;
+
+    // For cities, zoom to the threshold where points appear (zoom >= 11)
+    // For POIs, use a closer zoom level (14)
+    const zoomLevel = isPoi ? 14 : 11.5;
+
+    setTimeout(() => {
+      cameraRef.current?.setCamera({
+        centerCoordinate: [coordinates.longitude, adjustedLatitude],
+        zoomLevel,
+        heading: 0,
+        animationMode: "flyTo",
+        animationDuration: 1000,
+      });
+    }, 100);
+  };
 
   // Centrer la caméra sur la position de l'utilisateur
   useEffect(() => {
@@ -153,38 +176,36 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
   // Données formatées pour la carte
   // TODO: déplacer ça ailleurs
-  const customShape = useMemo(() => {
-    return {
-      type: "FeatureCollection" as const,
-      features:
-        placesData?.map((place, index) => {
-          const isVisited = getPoiIsVisited(visitedPoisByPoiIdMap, place.id);
-          const iconName = getPoiIconName(place, isVisited);
+  const customShape = {
+    type: "FeatureCollection" as const,
+    features:
+      placesData?.map((place, index) => {
+        const isVisited = getPoiIsVisited(visitedPoisByPoiIdMap, place.id);
+        const iconName = getPoiIconName(place, isVisited);
 
-          return {
-            type: "Feature" as const,
-            properties: {
-              id: place.id.toString(),
-              baseId: index.toString(),
-              name: place.data[0]?.name ?? "",
-              data: place,
-              imageUrl: `https://picsum.photos/seed/${place.id}/20/20`,
-              isVisited: isVisited,
-              iconName: iconName,
-              // Filter level pour l'affichage différencié
-              filterLevel: place.data[0]?.filterLevel ?? "UNKNOWN",
-            },
-            geometry: {
-              type: "Point" as const,
-              coordinates: [place.coords.longitude, place.coords.latitude],
-            },
-          };
-        }) ?? [],
-    };
-  }, [placesData, visitedPoisByPoiIdMap]);
+        return {
+          type: "Feature" as const,
+          properties: {
+            id: place.id.toString(),
+            baseId: index.toString(),
+            name: place.data[0]?.name ?? "",
+            data: place,
+            imageUrl: `https://picsum.photos/seed/${place.id}/20/20`,
+            isVisited: isVisited,
+            iconName: iconName,
+            // Filter level pour l'affichage différencié
+            filterLevel: place.data[0]?.filterLevel ?? "UNKNOWN",
+          },
+          geometry: {
+            type: "Point" as const,
+            coordinates: [place.coords.longitude, place.coords.latitude],
+          },
+        };
+      }) ?? [],
+  };
 
   // Gestion des événements de la carte
-  const onMapIdle = useCallback((mapState: MapState) => {
+  const onMapIdle = (mapState: MapState): void => {
     setZoom(mapState.properties.zoom);
     const { ne: northEast, sw: southWest } = mapState.properties.bounds;
     setBbox({
@@ -193,138 +214,103 @@ export const useMapLogic = (): UseMapLogicReturn => {
       minLng: southWest[0] ?? 0,
       maxLng: northEast[0] ?? 0,
     });
-  }, []);
+  };
 
-  const onCameraChanged = useCallback(
-    (mapState: MapState) => {
-      const { center, heading } = mapState.properties;
-      setHeadingRealtime(heading);
-      setZoomRealtime(mapState.properties.zoom);
-      if (userLocation !== null && userLocation !== undefined) {
-        const distance = getDistance(
-          { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
-          {
-            latitude: userLocation.latitude,
-            longitude: userLocation.longitude,
-          },
-        );
-        setIsCentered(distance < 20); // 20 meters of tolerance
-      }
-    },
-    [userLocation],
-  );
+  const onCameraChanged = (mapState: MapState): void => {
+    const { center, heading } = mapState.properties;
+    setHeadingRealtime(heading);
+    setZoomRealtime(mapState.properties.zoom);
+    if (userLocation !== null && userLocation !== undefined) {
+      const distance = getDistance(
+        { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
+        {
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
+        },
+      );
+      setIsCentered(distance < 20); // 20 meters of tolerance
+    }
+  };
 
-  const onPress = useCallback(
-    (event: OnPressEvent) => {
-      logger("onPress");
+  const onPress = (event: OnPressEvent): void => {
+    logger("onPress");
 
-      try {
-        if (
-          Array.isArray(event.features) &&
-          event.features.length > 0 &&
-          event.features[0]?.properties !== undefined &&
-          typeof event.features[0].properties === "object" &&
-          event.features[0].properties !== null
-        ) {
-          const properties = event.features[0].properties;
+    try {
+      if (
+        Array.isArray(event.features) &&
+        event.features.length > 0 &&
+        event.features[0]?.properties !== undefined &&
+        typeof event.features[0].properties === "object" &&
+        event.features[0].properties !== null
+      ) {
+        const properties = event.features[0].properties;
 
-          // CLUSTERING DÉSACTIVÉ - pour réactiver, décommenter le code ci-dessous :
-          // Vérifier si c'est un cluster
-          // if (properties.cluster === true) {
-          //   const clusterId = properties.cluster_id as number;
-          //   logger("Cluster sélectionné", clusterId);
-          //   logger("Point count:", properties.point_count);
-          //
-          //   // Zoom sur le cluster
-          //   void mapRef.current?.getZoom().then((currentZoom) => {
-          //     cameraRef.current?.moveTo(properties.coordinates as Position);
-          //   });
-          //   return;
-          // }
+        // CLUSTERING DÉSACTIVÉ - pour réactiver, décommenter le code ci-dessous :
+        // Vérifier si c'est un cluster
+        // if (properties.cluster === true) {
+        //   const clusterId = properties.cluster_id as number;
+        //   logger("Cluster sélectionné", clusterId);
+        //   logger("Point count:", properties.point_count);
+        //
+        //   // Zoom sur le cluster
+        //   void mapRef.current?.getZoom().then((currentZoom) => {
+        //     cameraRef.current?.moveTo(properties.coordinates as Position);
+        //   });
+        //   return;
+        // }
 
-          const poiData = properties.data as PoiType | undefined;
+        const poiData = properties.data as PoiType | undefined;
 
-          if (poiData !== undefined) {
-            setSelectedPlaceInfo(poiData);
-          }
+        if (poiData !== undefined) {
+          setSelectedPlace(poiData);
         }
-      } catch (error) {
-        logger("Erreur lors du traitement de l'événement onPress:", error);
       }
-    },
-    [setSelectedPlaceInfo],
-  );
+    } catch (error) {
+      logger("Erreur lors du traitement de l'événement onPress:", error);
+    }
+  };
 
   // URLs des images pour le chargement
-  const imagesUrls = useMemo(() => {
-    // CLUSTERING DÉSACTIVÉ - toujours charger les images
-    // Avec clustering activé, utiliser cette logique :
-    // if (zoom === null || zoom < CLUSTER_MAX_ZOOM) {
-    //   return [];
-    // }
+  // CLUSTERING DÉSACTIVÉ - toujours charger les images
+  // Avec clustering activé, utiliser cette logique :
+  // if (zoom === null || zoom < CLUSTER_MAX_ZOOM) {
+  //   return [];
+  // }
+  const imagesUrls =
+    placesData?.map(
+      (place) => `https://picsum.photos/seed/${place.id}/20/20`,
+    ) ?? [];
 
-    return (
-      placesData?.map(
-        (place) => `https://picsum.photos/seed/${place.id}/20/20`,
-      ) ?? []
-    );
-  }, [placesData]); // Avec clustering: }, [placesData, zoom]);
+  return {
+    // Data
+    placesData,
+    allZonesData,
+    customShape,
+    userLocation,
+    imagesUrls,
+    bbox,
 
-  return useMemo(
-    () => ({
-      // Data
-      placesData,
-      allZonesData,
-      customShape,
-      selectedPlaceInfo,
-      userLocation,
-      imagesUrls,
-      bbox,
+    // Realtime states
+    headingRealtime,
+    zoomRealtime,
+    isCentered,
 
-      // Realtime states
-      headingRealtime,
-      zoomRealtime,
-      isCentered,
+    // Refs
+    mapRef,
+    cameraRef,
 
-      // Refs
-      mapRef,
-      cameraRef,
+    // Loading states
+    isFetchingPlaces,
+    isFetchingAllZones,
 
-      // Loading states
-      isFetchingPlaces,
-      isFetchingAllZones,
+    // Event handlers
+    onMapIdle,
+    onCameraChanged,
+    onPress,
 
-      // Event handlers
-      onMapIdle,
-      onCameraChanged,
-      onPress,
-
-      // Actions
-      setSelectedPlaceInfo,
-      moveToUserLocation,
-      resetMapOrientation,
-    }),
-    [
-      placesData,
-      allZonesData,
-      customShape,
-      selectedPlaceInfo,
-      userLocation,
-      imagesUrls,
-      bbox,
-      headingRealtime,
-      zoomRealtime,
-      isCentered,
-      mapRef,
-      cameraRef,
-      isFetchingPlaces,
-      isFetchingAllZones,
-      onMapIdle,
-      onCameraChanged,
-      onPress,
-      setSelectedPlaceInfo,
-      moveToUserLocation,
-      resetMapOrientation,
-    ],
-  );
+    // Actions
+    moveToUserLocation,
+    resetMapOrientation,
+    moveToPlace,
+  };
 };

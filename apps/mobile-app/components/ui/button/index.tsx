@@ -43,6 +43,7 @@ cssInterop(PrimitiveIcon, {
 const BUTTON_SHADOWS = {
   link: shadowStyles.ratingBlock,
   submit: shadowStyles.buttonSubmit,
+  mapAction: shadowStyles.onMapComponent,
 } as const;
 
 // Helper pour obtenir le shadow selon l'action et l'état

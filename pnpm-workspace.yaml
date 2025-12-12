@@ -14,8 +14,8 @@ catalog:
   dotenv: ^16.4.5
 
   #Database
-  drizzle-orm: ^0.44.7
-  drizzle-kit: ^0.31.7
+  drizzle-orm: ^0.45.0
+  drizzle-kit: ^0.31.8
   pg: ^8.13.1
   "@types/pg": ^8.11.11
 
