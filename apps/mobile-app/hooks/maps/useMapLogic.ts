@@ -102,6 +102,45 @@ export const useMapLogic = (): UseMapLogicReturn => {
   const mapRef = useRef<MapView>(null);
   const cameraRef = useRef<CameraRef>(null);
 
+  // Refs pour stocker les valeurs précédentes et éviter les mises à jour inutiles
+  const previousBboxRef = useRef<{
+    minLat: number;
+    maxLat: number;
+    minLng: number;
+    maxLng: number;
+  } | null>(null);
+  const previousZoomRef = useRef<number | null>(null);
+
+  // Tolérance pour les comparaisons de bbox (en degrés, ~100m)
+  const BBOX_TOLERANCE = 0.0001;
+
+  // Fonction helper pour comparer deux bbox avec tolérance
+  const bboxHasChanged = (
+    newBbox: {
+      minLat: number;
+      maxLat: number;
+      minLng: number;
+      maxLng: number;
+    },
+    previousBbox: {
+      minLat: number;
+      maxLat: number;
+      minLng: number;
+      maxLng: number;
+    } | null,
+  ): boolean => {
+    if (previousBbox === null) {
+      return true;
+    }
+
+    return (
+      Math.abs(newBbox.minLat - previousBbox.minLat) > BBOX_TOLERANCE ||
+      Math.abs(newBbox.maxLat - previousBbox.maxLat) > BBOX_TOLERANCE ||
+      Math.abs(newBbox.minLng - previousBbox.minLng) > BBOX_TOLERANCE ||
+      Math.abs(newBbox.maxLng - previousBbox.maxLng) > BBOX_TOLERANCE
+    );
+  };
+
   // Récupérer les données des places (l'atom est mis à jour automatiquement)
   const { data: placesData, isFetching: isFetchingPlaces } = usePlaces(
     bbox,
@@ -206,14 +245,33 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
   // Gestion des événements de la carte
   const onMapIdle = (mapState: MapState): void => {
-    setZoom(mapState.properties.zoom);
+    const newZoom = mapState.properties.zoom;
     const { ne: northEast, sw: southWest } = mapState.properties.bounds;
-    setBbox({
+    const newBbox = {
       minLat: southWest[1] ?? 0,
       maxLat: northEast[1] ?? 0,
       minLng: southWest[0] ?? 0,
       maxLng: northEast[0] ?? 0,
-    });
+    };
+
+    // Vérifier si le zoom a changé (tolérance de 0.01 pour éviter les micro-changements)
+    const zoomChanged =
+      previousZoomRef.current === null ||
+      Math.abs(newZoom - previousZoomRef.current) > 0.01;
+
+    // Vérifier si le bbox a changé (avec tolérance)
+    const bboxChanged = bboxHasChanged(newBbox, previousBboxRef.current);
+
+    // Ne mettre à jour l'état que si les valeurs ont réellement changé
+    if (zoomChanged) {
+      previousZoomRef.current = newZoom;
+      setZoom(newZoom);
+    }
+
+    if (bboxChanged) {
+      previousBboxRef.current = newBbox;
+      setBbox(newBbox);
+    }
   };
 
   const onCameraChanged = (mapState: MapState): void => {
