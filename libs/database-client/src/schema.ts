@@ -56,8 +56,25 @@ export const visitedPoiStatus = pgEnum("VisitedPoiStatus", [
 ]);
 export type VisitedPoiStatus = (typeof visitedPoiStatus.enumValues)[number];
 
-const created_at = timestamp().defaultNow().notNull();
-const updated_at = timestamp()
+export const processingStatusEnum = pgEnum("ProcessingStatusEnum", [
+  "pending",
+  "success",
+  "error",
+]);
+export type ProcessingStatusEnum =
+  (typeof processingStatusEnum.enumValues)[number];
+
+export const processingTypeEnum = pgEnum("ProcessingTypeEnum", [
+  "scraper-maps",
+  "scraper-web",
+  "llm",
+]);
+export type ProcessingTypeEnum = (typeof processingTypeEnum.enumValues)[number];
+
+const created_at = timestamp("created_at", { precision: 3 })
+  .defaultNow()
+  .notNull();
+const updated_at = timestamp("updated_at", { precision: 3 })
   .defaultNow()
   .notNull()
   .$onUpdate(() => new Date());
@@ -133,7 +150,7 @@ export const users = pgTable("users", {
   email: varchar({ length: 1000 }),
   fullName: varchar("full_name", { length: 1000 }),
   oauthProviders: varchar("oauth_providers", { length: 1000 }).array(),
-  lastLogin: timestamp().defaultNow().notNull(),
+  lastLogin: timestamp("last_login", { precision: 3 }).defaultNow().notNull(),
   role: roleEnum().default("USER").notNull(),
 });
 
@@ -240,6 +257,18 @@ export const poiBoundaries = pgTable(
       .onDelete("cascade"),
   ],
 );
+
+export const processingResults = pgTable("processing_results", {
+  id: serial().primaryKey().notNull(),
+  targetId: varchar("target_id", { length: 1000 }).notNull(),
+  status: processingStatusEnum().notNull(),
+  input: jsonb().notNull(),
+  output: jsonb(),
+  createdAt: created_at,
+  updatedAt: updated_at,
+  batchId: varchar("batch_id", { length: 1000 }),
+  type: processingTypeEnum().notNull(),
+});
 
 export const visitedPoisRelations = relations(visitedPois, ({ one }) => ({
   user: one(users, {

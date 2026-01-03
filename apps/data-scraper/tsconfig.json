@@ -1,0 +1,15 @@
+{
+  "extends": ["../../tsconfig.base.json", "fastify-tsconfig"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "sourceMap": true,
+    "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "esModuleInterop": true,
+    "exactOptionalPropertyTypes": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["test/**/*.ts", "test/**/*.js"]
+}

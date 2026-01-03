@@ -16,7 +16,7 @@
     "prettier-check": "prettier . --check",
     "clean": "rimraf dist",
     "prebuild": "pnpm run clean",
-    "test": "pnpm run build && tsc -p test/tsconfig.json && FASTIFY_AUTOLOAD_TYPESCRIPT=1 node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts",
+    "test": "pnpm run build && tsc -p test/tsconfig.json && node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts",
     "start": "node dist/server.js",
     "build": "tsc",
     "develop": "NODE_ENV=development tsc-watch --onSuccess 'node ./dist/server.js'"
@@ -26,7 +26,6 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.812.0",
     "@aws-sdk/lib-storage": "^3.815.0",
-    "@fastify/autoload": "^6.0.0",
     "@fastify/compress": "^8.1.0",
     "@fastify/cors": "^10.0.1",
     "@fastify/helmet": "^12.0.1",
@@ -36,6 +35,7 @@
     "@fastify/swagger-ui": "^5.1.0",
     "@fastify/type-provider-typebox": "^5.0.1",
     "@slack/web-api": "^7.12.0",
+    "@vagabond/api-utils": "workspace:*",
     "@vagabond/database-client": "workspace:*",
     "@vagabond/shared-utils": "workspace:*",
     "close-with-grace": "^2.3.0",

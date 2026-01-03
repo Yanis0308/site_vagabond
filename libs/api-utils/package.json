@@ -1,0 +1,27 @@
+{
+  "name": "@vagabond/api-utils",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "pnpm run clean && tsc",
+    "watch": "pnpm run clean && tsc --watch",
+    "clean": "rm -rf dist",
+    "postinstall": "pnpm run build"
+  },
+  "dependencies": {
+    "@fastify/compress": "^8.1.0",
+    "@fastify/sensible": "^6.0.0",
+    "@vagabond/database-client": "workspace:*",
+    "@vagabond/shared-utils": "workspace:*",
+    "fastify": "^5.0.0",
+    "fastify-plugin": "^5.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

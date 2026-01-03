@@ -25,3 +25,4 @@ COPY --from=build /prod/api /prod/api
 WORKDIR /prod/api
 EXPOSE 3000
 CMD ["pnpm", "start"]
+

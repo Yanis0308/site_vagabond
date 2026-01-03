@@ -3,15 +3,15 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'vagabond-api'
+app = 'vagabond-data-scraper-dev'
 primary_region = 'cdg'
 
 [build]
   dockerfile = "Dockerfile"
-  build-target = "api"
+  build-target = "data-scraper"
 
 [http_service]
-  internal_port = 3000
+  internal_port = 3234
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true

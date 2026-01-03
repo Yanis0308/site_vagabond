@@ -7,6 +7,7 @@ export default fp(
     Object.values(jsonSchemas).forEach((schema) => {
       try {
         fastify.log.info(`Adding schema: '${schema.$id}'`);
+
         fastify.addSchema(schema);
       } catch (error) {
         fastify.log.error(

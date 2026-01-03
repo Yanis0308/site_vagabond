@@ -171,4 +171,36 @@ export class PoiRepository {
     });
     return result?.name;
   }
+
+  async findByIdWithNameAndCoords(poiId: string): Promise<{
+    poiId: string;
+    latitude: number;
+    longitude: number;
+    name: string;
+  } | null> {
+    const result = await this.db
+      .select({
+        poiId: pois.id,
+        latitude: sql<number>`ST_Y(${pois.coords}::geometry)`.as("latitude"),
+        longitude: sql<number>`ST_X(${pois.coords}::geometry)`.as("longitude"),
+        name: poiData.name,
+      })
+      .from(pois)
+      .innerJoin(poiData, eq(pois.id, poiData.poiId))
+      .where(eq(pois.id, poiId))
+      .limit(1);
+
+    const resultPoi = result[0];
+
+    if (resultPoi?.name === undefined) {
+      return null;
+    }
+
+    return {
+      poiId: resultPoi.poiId,
+      latitude: resultPoi.latitude,
+      longitude: resultPoi.longitude,
+      name: resultPoi.name,
+    };
+  }
 }

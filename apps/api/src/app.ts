@@ -1,39 +1,77 @@
-import AutoLoad, { type AutoloadPluginOptions } from "@fastify/autoload";
+import {
+  addSchemasPlugin,
+  compressPlugin,
+  databasePlugin,
+  sensiblePlugin,
+} from "@vagabond/api-utils";
 import { type FastifyPluginAsync } from "fastify";
-import * as path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// Plugins
+import authPlugin from "./plugins/auth.js";
+import configPlugin from "./plugins/config.js";
+import firebasePlugin from "./plugins/firebase.js";
+import multipartPlugin from "./plugins/multipart.js";
+import s3Plugin from "./plugins/s3.js";
+import securityPlugin from "./plugins/security.js";
+import slackPlugin from "./plugins/slack.js";
+import swaggerPlugin from "./plugins/swagger.js";
+// Routes
+import leaderboardRoute from "./routes/leaderboard/index.js";
+import poisRoute from "./routes/pois/index.js";
+import searchRoute from "./routes/search/index.js";
+import uploadRoute from "./routes/upload/index.js";
+import usersRoute from "./routes/users/index.js";
+import visitedPoisRoute from "./routes/visited-pois/index.js";
+import zonesRoute from "./routes/zones/index.js";
 
-export type AppOptions = {
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type -- AppOptions is a placeholder for future options
+export interface AppOptions {
   // Place your custom options for app below here.
-} & Partial<AutoloadPluginOptions>;
+}
 
 // Pass --options via CLI arguments in command to enable these options.
 const options: AppOptions = {};
 
 const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
-  // Place here your custom code!
+  // Register plugins in order
+  // 1. Config first (needed by other plugins)
+  await fastify.register(configPlugin, opts);
 
-  // Do not touch the following lines
+  // 2. Add schemas (needed by routes)
+  await fastify.register(addSchemasPlugin, opts);
 
-  // This loads all plugins defined in plugins
-  // those should be support plugins that are reused
-  // through your application
-  await fastify.register(AutoLoad, {
-    dir: path.join(__dirname, "plugins"),
-    options: opts,
-    forceESM: true,
-  });
+  // 3. Security (helmet, cors)
+  await fastify.register(securityPlugin, opts);
 
-  // This loads all plugins defined in routes
-  // define your routes in one of these
-  await fastify.register(AutoLoad, {
-    dir: path.join(__dirname, "routes"),
-    options: { ...opts, prefix: "api" },
-    forceESM: true,
-  });
+  // 4. Swagger (documentation)
+  await fastify.register(swaggerPlugin, opts);
+
+  // 5. Firebase (for auth)
+  await fastify.register(firebasePlugin, opts);
+
+  // 6. Database (repositories)
+  await fastify.register(databasePlugin, opts);
+
+  // 7. Utility plugins
+  await fastify.register(compressPlugin, opts);
+  await fastify.register(sensiblePlugin, opts);
+
+  // 8. Other plugins
+  await fastify.register(multipartPlugin, opts);
+  await fastify.register(s3Plugin, opts);
+  await fastify.register(slackPlugin, opts);
+
+  // 9. Auth (must be after firebase and database)
+  await fastify.register(authPlugin, opts);
+
+  // 10. Routes
+  await fastify.register(leaderboardRoute, { prefix: "api" });
+  await fastify.register(poisRoute, { prefix: "api" });
+  await fastify.register(searchRoute, { prefix: "api" });
+  await fastify.register(uploadRoute, { prefix: "api" });
+  await fastify.register(usersRoute, { prefix: "api" });
+  await fastify.register(visitedPoisRoute, { prefix: "api" });
+  await fastify.register(zonesRoute, { prefix: "api" });
 };
 
 export default app;

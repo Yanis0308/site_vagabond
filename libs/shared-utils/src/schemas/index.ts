@@ -1,6 +1,7 @@
 import * as leaderboard from "./api/leaderboard.js";
 import * as poi from "./api/poi.js";
 import * as response from "./api/response.js";
+import * as scrape from "./api/scrape.js";
 import * as search from "./api/search.js";
 import * as upload from "./api/upload.js";
 import * as user from "./api/user.js";
@@ -28,4 +29,5 @@ export const jsonSchemas = {
   ...upload,
   ...leaderboard,
   ...search,
+  ...scrape,
 } as const;

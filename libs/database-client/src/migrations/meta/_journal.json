@@ -15,6 +15,13 @@
       "when": 1764953350614,
       "tag": "0001_fix_normalize_search_text",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1767459848499,
+      "tag": "0002_red_amazoness",
+      "breakpoints": true
     }
   ]
 }
