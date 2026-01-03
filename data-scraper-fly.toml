@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for vagagond-poc on 2025-02-12T14:25:56+01:00
+# fly.toml app configuration file generated for vagabond-data-scraper-dev on 2026-01-03T23:50:44+01:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -7,8 +7,9 @@ app = 'vagabond-data-scraper-dev'
 primary_region = 'cdg'
 
 [build]
-  dockerfile = "Dockerfile"
-  build-target = "data-scraper"
+  dockerfile = 'apps/data-scraper/Dockerfile'
+  build-context = '.'
+  build-target = 'data-scraper'
 
 [http_service]
   internal_port = 3234
@@ -22,3 +23,4 @@ primary_region = 'cdg'
   memory = '1gb'
   cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 1024

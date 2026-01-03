@@ -7,8 +7,9 @@ app = 'vagabond-api-dev'
 primary_region = 'cdg'
 
 [build]
-  dockerfile = "Dockerfile"
-  build-target = "api"
+  dockerfile = 'apps/api/Dockerfile'
+  build-context = '.'
+  build-target = 'api'
 
 [http_service]
   internal_port = 3000
