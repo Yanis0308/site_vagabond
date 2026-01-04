@@ -85,7 +85,13 @@ class PuppeteerSingleton {
 
     this.browser = await puppeteer.launch({
       headless: options.headless,
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--disable-software-rasterizer",
+      ],
     });
 
     this.lastLaunchedAt = Date.now();

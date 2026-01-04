@@ -41,7 +41,7 @@ export default fp(
       const config: Config = {
         isDev,
         port: 3234,
-        headlessMode: isDev && rawConfig.HEADLESS_MODE === "true",
+        headlessMode: !isDev || rawConfig.HEADLESS_MODE !== "false",
         databaseUrl: rawConfig.API_DATABASE_URL,
         basicAuthUser: rawConfig.BASIC_AUTH_USER,
         basicAuthPassword: rawConfig.BASIC_AUTH_PASSWORD,
