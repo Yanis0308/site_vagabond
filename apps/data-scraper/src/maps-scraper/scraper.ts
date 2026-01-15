@@ -99,15 +99,13 @@ export async function scrapeGoogleMapsWithPage(
 
     // For each link, extract data
     logUtils.step("4", "4", `Processing ${placeLinks.length} places...`);
-    for (let i = 0; i < placeLinks.length; i++) {
-      const link = placeLinks[i];
-      if (link === undefined) continue;
-
+    const link = placeLinks[0];
+    if (link !== undefined) {
       logUtils.separator("-", 60);
       logUtils.log(
         prefix,
         emoji,
-        `Processing place ${i + 1}/${placeLinks.length}: ${link}`,
+        `Processing place 1/${placeLinks.length}: ${link}`,
       );
 
       try {
@@ -118,24 +116,26 @@ export async function scrapeGoogleMapsWithPage(
           logUtils.success(
             prefix,
             emoji,
-            `Successfully extracted place ${i + 1}/${placeLinks.length}`,
+            `Successfully extracted place 1/${placeLinks.length}`,
           );
         } else {
           rejectedCount++;
           logUtils.warn(
             prefix,
             emoji,
-            `Place ${i + 1}/${placeLinks.length} rejected: validation failed`,
+            `Place 1/${placeLinks.length} rejected: validation failed`,
           );
         }
       } catch (error) {
         logUtils.error(
           prefix,
           emoji,
-          `Error scraping place ${i + 1}/${placeLinks.length} (${link})`,
+          `Error scraping place 1/${placeLinks.length} (${link})`,
           error,
         );
       }
+    } else {
+      logUtils.warn(prefix, emoji, "No place links found");
     }
   }
 
