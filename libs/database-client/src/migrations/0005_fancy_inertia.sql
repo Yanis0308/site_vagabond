@@ -1,0 +1,1 @@
+ALTER TABLE "processing_results" ADD COLUMN "duration" integer;

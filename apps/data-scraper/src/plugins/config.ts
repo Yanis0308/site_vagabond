@@ -7,7 +7,6 @@ export const isDev = process.env.NODE_ENV === "development";
 // Définition du schéma de configuration
 const RawConfigSchema = z.object({
   HEADLESS_MODE: z.string().optional(),
-  API_DATABASE_URL: z.string(),
   BASIC_AUTH_USER: z.string(),
   BASIC_AUTH_PASSWORD: z.string(),
 });
@@ -17,7 +16,6 @@ export interface Config {
   isDev: boolean;
   port: number;
   headlessMode: boolean;
-  databaseUrl: string;
   basicAuthUser: string;
   basicAuthPassword: string;
 }
@@ -42,7 +40,6 @@ export default fp(
         isDev,
         port: 3234,
         headlessMode: !isDev || rawConfig.HEADLESS_MODE !== "false",
-        databaseUrl: rawConfig.API_DATABASE_URL,
         basicAuthUser: rawConfig.BASIC_AUTH_USER,
         basicAuthPassword: rawConfig.BASIC_AUTH_PASSWORD,
       };

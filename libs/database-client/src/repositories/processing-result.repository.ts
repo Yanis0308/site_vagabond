@@ -14,11 +14,16 @@ export interface CreateProcessingResultInput {
   output?: Record<string, unknown> | null;
   batchId?: string | null;
   type: ProcessingTypeEnum;
+  distance?: number | null;
+  isValid?: boolean | null;
 }
 
 export interface UpdateProcessingResultInput {
   status?: ProcessingStatusEnum;
   output?: Record<string, unknown> | null;
+  duration?: number | null;
+  distance?: number | null;
+  isValid?: boolean | null;
 }
 
 export class ProcessingResultRepository {
@@ -36,6 +41,8 @@ export class ProcessingResultRepository {
         output: data.output ?? null,
         batchId: data.batchId ?? null,
         type: data.type,
+        distance: data.distance ?? null,
+        isValid: data.isValid ?? null,
       })
       .returning({ id: processingResults.id });
 
@@ -48,6 +55,9 @@ export class ProcessingResultRepository {
       .set({
         status: data.status,
         output: data.output ?? null,
+        duration: data.duration ?? null,
+        distance: data.distance ?? null,
+        isValid: data.isValid ?? null,
       })
       .where(eq(processingResults.id, id));
   }

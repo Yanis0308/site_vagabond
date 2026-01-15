@@ -1,22 +1,36 @@
 import type { Page } from "puppeteer";
 
+import {
+  extractValidatedPlaceData,
+  validateAppInitializationState,
+} from "../validators/appStateValidator.js";
+
 interface WindowWithAppState extends Window {
-  APP_INITIALIZATION_STATE?: unknown[];
+  APP_INITIALIZATION_STATE?: unknown;
 }
 
 /**
  * Wait for APP_INITIALIZATION_STATE to be available in the DOM
  * This is better than a hard wait as it waits for actual data availability
+ * Uses the validator to check if the state is valid
  */
 async function waitForAppState(page: Page, timeout = 1500): Promise<void> {
   const startTime = Date.now();
   while (Date.now() - startTime < timeout) {
     try {
       const hasData = await page.evaluate(() => {
+        // Type assertion needed to access custom window property in browser context
         const win = window as WindowWithAppState;
-        return (
+        if (
           typeof window !== "undefined" &&
-          win.APP_INITIALIZATION_STATE?.[3] !== undefined
+          win.APP_INITIALIZATION_STATE === undefined
+        ) {
+          return false;
+        }
+        // Basic check: is it an array with at least 4 elements?
+        const state = win.APP_INITIALIZATION_STATE;
+        return (
+          Array.isArray(state) && state.length >= 4 && state[3] !== undefined
         );
       });
       if (hasData) {
@@ -33,18 +47,20 @@ async function waitForAppState(page: Page, timeout = 1500): Promise<void> {
 /**
  * Extract place data from APP_INITIALIZATION_STATE
  * Retrieves the full APP_INITIALIZATION_STATE from the browser and extracts data in TypeScript
+ * Uses generateValidator to validate the structure instead of manual if checks
  */
 export async function extractPlaceData(
   page: Page,
   maxRetries = 30,
 ): Promise<string | null> {
-  let appState: unknown[] | null = null;
+  let appState: unknown = null;
 
   // Retry logic: data may take time to load
   for (let i = 0; i < maxRetries; i++) {
     try {
       // Retrieve the full APP_INITIALIZATION_STATE from the browser
       appState = await page.evaluate(() => {
+        // Type assertion needed to access custom window property in browser context
         const win = window as WindowWithAppState;
         if (
           typeof window !== "undefined" &&
@@ -55,7 +71,8 @@ export async function extractPlaceData(
         return null;
       });
 
-      if (appState?.[3] !== undefined) {
+      // Use validator instead of manual check
+      if (validateAppInitializationState(appState)) {
         break;
       }
     } catch (error) {
@@ -72,48 +89,17 @@ export async function extractPlaceData(
     await waitForAppState(page, 5000);
   }
 
-  if (appState?.[3] === undefined) {
-    throw new Error("APP_INITIALIZATION_STATE data not found after retries");
+  // Validate and extract place data using TypeBox validation
+  const result = extractValidatedPlaceData(appState);
+
+  if (!result.success) {
+    // Log the full appState structure for debugging (truncated)
+    const appStatePreview = JSON.stringify(appState).substring(0, 500);
+    const errorMessage = `${result.error}. AppState preview: ${appStatePreview}...`;
+    throw new Error(errorMessage);
   }
 
-  // Extract data in TypeScript code (not in browser)
-  const appStateData = appState[3];
-  if (
-    appStateData === null ||
-    appStateData === undefined ||
-    typeof appStateData !== "object"
-  ) {
-    throw new Error("APP_INITIALIZATION_STATE[3] is invalid");
-  }
-
-  const keys = Object.keys(appStateData);
-
-  if (keys.length === 0) {
-    throw new Error("APP_INITIALIZATION_STATE[3] is empty");
-  }
-
-  const key = keys[0];
-  if (key === null || key === undefined) {
-    throw new Error("No key found in APP_INITIALIZATION_STATE[3]");
-  }
-
-  const placeDataEntry = appStateData[key as keyof typeof appStateData];
-  if (
-    !placeDataEntry ||
-    typeof placeDataEntry !== "object" ||
-    !Array.isArray(placeDataEntry)
-  ) {
-    throw new Error(
-      `Place data not found at APP_INITIALIZATION_STATE[3][${key}][6]`,
-    );
-  }
-
-  const placeData = placeDataEntry[6];
-  if (placeData === null || placeData === undefined) {
-    throw new Error(
-      `Place data not found at APP_INITIALIZATION_STATE[3][${key}][6]`,
-    );
-  }
+  const placeData = result.data;
 
   // Convert to string if necessary
   const jsonString =

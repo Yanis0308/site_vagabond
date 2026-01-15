@@ -1,4 +1,4 @@
-import { Static } from "@sinclair/typebox";
+import { Static } from "typebox";
 import { jsonSchemas } from "@vagabond/shared-utils";
 
 export type PoiType = Static<

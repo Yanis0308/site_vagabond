@@ -1,18 +1,14 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from "typebox";
 
 import { ApiResponseSchema, DateSchema, Nullable } from "../utils.js";
 
-export const LeaderboardPeriodEnumSchema = Type.Enum(
-  {
-    ALL_TIME: "all-time",
-    MONTHLY: "monthly",
-  },
-  { $id: "LeaderboardPeriodEnum" },
-);
+export const LeaderboardPeriodEnumSchema = Type.Enum(["all-time", "monthly"], {
+  $id: "LeaderboardPeriodEnum",
+});
 
 export const LeaderboardQuerySchema = Type.Object(
   {
-    period: Type.Ref(LeaderboardPeriodEnumSchema),
+    period: LeaderboardPeriodEnumSchema,
   },
   { $id: "LeaderboardQuery" },
 );
@@ -32,8 +28,8 @@ export const LeaderboardUserSchema = Type.Object(
 
 export const LeaderboardResponseSchema = ApiResponseSchema(
   Type.Object({
-    users: Type.Array(Type.Ref(LeaderboardUserSchema)),
-    period: Type.Ref(LeaderboardPeriodEnumSchema),
+    users: Type.Array(LeaderboardUserSchema),
+    period: LeaderboardPeriodEnumSchema,
   }),
   "LeaderboardResponse",
 );

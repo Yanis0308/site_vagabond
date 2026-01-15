@@ -1,3 +1,4 @@
+import type { GoogleMapsPlaceStrict } from "@vagabond/shared-utils";
 import type { Page } from "puppeteer";
 
 import { navigateToPlacePageAndExtract } from "./handlers/extraction.js";
@@ -6,7 +7,6 @@ import {
   extractPlaceLinks,
   navigateToSearchPage,
 } from "./handlers/navigation.js";
-import type { PlaceEntry } from "./types/PlaceEntry.js";
 import { logUtils } from "./utils/logging.js";
 import { buildSearchURL } from "./utils/url.js";
 
@@ -15,7 +15,7 @@ import { buildSearchURL } from "./utils/url.js";
  * @param page Existing Puppeteer page to reuse
  * @param query Search query
  * @param options Scraping options
- * @returns List of extracted places
+ * @returns List of extracted and validated places (invalid places are rejected)
  */
 export async function scrapeGoogleMapsWithPage(
   page: Page,
@@ -26,7 +26,7 @@ export async function scrapeGoogleMapsWithPage(
     geoCoordinates?: string;
     zoom?: number;
   } = {},
-): Promise<PlaceEntry[]> {
+): Promise<GoogleMapsPlaceStrict | null> {
   const prefix = "SCRAPE";
   const emoji = "🚀";
 
@@ -66,7 +66,8 @@ export async function scrapeGoogleMapsWithPage(
     isSinglePlace = await checkForSinglePlace(page);
   }
 
-  const placeEntries: PlaceEntry[] = [];
+  let place: GoogleMapsPlaceStrict | null = null;
+  let rejectedCount = 0;
 
   if (isSinglePlace) {
     logUtils.step(
@@ -81,8 +82,14 @@ export async function scrapeGoogleMapsWithPage(
       currentURL,
       langCode,
     );
-    placeEntries.push(entry);
-    logUtils.success(prefix, emoji, "Successfully extracted 1 place");
+
+    if (entry !== null) {
+      place = entry;
+      logUtils.success(prefix, emoji, "Successfully extracted 1 place");
+    } else {
+      rejectedCount++;
+      logUtils.warn(prefix, emoji, "Place rejected: validation failed");
+    }
   } else {
     logUtils.step("3", "4", "Extracting Place links from results page...");
     // Extract Place links (first page only)
@@ -105,17 +112,22 @@ export async function scrapeGoogleMapsWithPage(
 
       try {
         const entry = await navigateToPlacePageAndExtract(page, link, langCode);
-        placeEntries.push(entry);
-        logUtils.success(
-          prefix,
-          emoji,
-          `Successfully extracted place ${i + 1}/${placeLinks.length}`,
-        );
 
-        // Wait a bit between requests
-        // if (i < placeLinks.length - 1) {
-        //   await wait(1000);
-        // }
+        if (entry !== null) {
+          place = entry;
+          logUtils.success(
+            prefix,
+            emoji,
+            `Successfully extracted place ${i + 1}/${placeLinks.length}`,
+          );
+        } else {
+          rejectedCount++;
+          logUtils.warn(
+            prefix,
+            emoji,
+            `Place ${i + 1}/${placeLinks.length} rejected: validation failed`,
+          );
+        }
       } catch (error) {
         logUtils.error(
           prefix,
@@ -131,10 +143,10 @@ export async function scrapeGoogleMapsWithPage(
   logUtils.success(
     prefix,
     emoji,
-    `Scraping completed! Extracted ${placeEntries.length} place(s)`,
+    `Scraping completed! Extracted ${place !== null ? 1 : 0} valid place(s)${rejectedCount > 0 ? `, ${rejectedCount} rejected` : ""}`,
   );
   logUtils.separator("=", 60);
   logUtils.log(prefix, emoji, "");
 
-  return placeEntries;
+  return place;
 }

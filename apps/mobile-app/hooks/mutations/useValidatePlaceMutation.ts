@@ -1,6 +1,6 @@
-import { type Static } from "@sinclair/typebox";
 import { useMutation } from "@tanstack/react-query";
 import { type jsonSchemas } from "@vagabond/shared-utils";
+import { type Static } from "typebox";
 
 import { queryClient } from "@/constants/QueryClient";
 import { forceBboxCacheRefresh } from "@/hooks/queries/useBboxCacheUtils";

@@ -1,5 +1,5 @@
-import type { Static } from "@sinclair/typebox";
-import type { jsonSchemas } from "@vagabond/shared-utils";
+import { type jsonSchemas } from "@vagabond/shared-utils";
+import { type Static } from "typebox";
 
 import { apiClient } from "@/http/api-client";
 import { logger } from "@/utils/logger";

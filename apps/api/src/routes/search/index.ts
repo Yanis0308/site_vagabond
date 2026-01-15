@@ -1,7 +1,4 @@
-import {
-  type FastifyPluginCallbackTypebox,
-  Type,
-} from "@fastify/type-provider-typebox";
+import { type FastifyPluginCallbackTypebox } from "@fastify/type-provider-typebox";
 import { jsonSchemas } from "@vagabond/shared-utils";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
@@ -11,9 +8,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       schema: {
         tags: ["search"],
         security: [{ bearerAuth: [] }],
-        querystring: Type.Ref(jsonSchemas.SearchQuerySchema),
+        querystring: jsonSchemas.SearchQuerySchema,
         response: {
-          200: Type.Ref(jsonSchemas.SearchResponseSchema),
+          200: jsonSchemas.SearchResponseSchema,
         },
       },
     },

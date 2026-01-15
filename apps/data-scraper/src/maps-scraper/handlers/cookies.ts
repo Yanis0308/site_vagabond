@@ -147,6 +147,16 @@ export async function clickRejectCookiesIfRequired(
           );
           // Check if button is visible
           const isVisible = await page.evaluate((el) => {
+            // Type guard to check if element is an HTMLElement
+            if (
+              el === undefined ||
+              typeof el !== "object" ||
+              !("offsetWidth" in el) ||
+              !("offsetHeight" in el)
+            ) {
+              return false;
+            }
+            // Type assertion is safe here because of the type guard above
             const element = el as HTMLElement;
             return (
               element.offsetWidth > 0 &&
@@ -263,6 +273,16 @@ export async function clickRejectCookiesIfRequired(
       if (cookieButton !== null) {
         // Check if button is visible
         const isVisible = await page.evaluate((el) => {
+          // Type guard to check if element is an HTMLElement
+          if (
+            el === undefined ||
+            typeof el !== "object" ||
+            !("offsetWidth" in el) ||
+            !("offsetHeight" in el)
+          ) {
+            return false;
+          }
+          // Type assertion is safe here because of the type guard above
           const element = el as HTMLElement;
           return (
             element.offsetWidth > 0 &&

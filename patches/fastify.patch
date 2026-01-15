@@ -1,0 +1,14 @@
+diff --git a/lib/schemas.js b/lib/schemas.js
+index 02524c311e65a0963ccd61931626d527faf0c66e..dedf5a8d91611f4f2176b9fa22d40bbb25212062 100644
+--- a/lib/schemas.js
++++ b/lib/schemas.js
+@@ -30,7 +30,8 @@ Schemas.prototype.add = function (inputSchema) {
+   }
+ 
+   if (this.store[id]) {
+-    throw new FST_ERR_SCH_ALREADY_PRESENT(id)
++    console.log(`[CUSTOM VAGABOND PATCH] schema with id "${id}" already present - inside add function of fastify`);
++    //throw new FST_ERR_SCH_ALREADY_PRESENT(id)
+   }
+ 
+   this.store[id] = schema

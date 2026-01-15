@@ -68,6 +68,8 @@ export const processingTypeEnum = pgEnum("ProcessingTypeEnum", [
   "scraper-maps",
   "scraper-web",
   "llm",
+  "wikidata",
+  "wikipedia",
 ]);
 export type ProcessingTypeEnum = (typeof processingTypeEnum.enumValues)[number];
 
@@ -268,7 +270,60 @@ export const processingResults = pgTable("processing_results", {
   updatedAt: updated_at,
   batchId: varchar("batch_id", { length: 1000 }),
   type: processingTypeEnum().notNull(),
+  version: integer().default(1).notNull(),
+  duration: integer(),
+  distance: integer(),
+  isValid: boolean("is_valid"),
 });
+
+export const poiEnriched = pgTable(
+  "poi_enriched",
+  {
+    id: serial().primaryKey().notNull(),
+    poiId: varchar("poi_id", { length: 1000 }).notNull(),
+    name: varchar({ length: 1000 }),
+    description: varchar({ length: 10000 }),
+    source: varchar({ length: 100 }).notNull(),
+    version: integer().default(1).notNull(),
+    createdAt: created_at,
+    updatedAt: updated_at,
+  },
+  (table) => [
+    uniqueIndex("poi_enriched_poi_id_key").using(
+      "btree",
+      table.poiId.asc().nullsLast().op("text_ops"),
+    ),
+    foreignKey({
+      columns: [table.poiId],
+      foreignColumns: [pois.id],
+      name: "poi_enriched_poi_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("no action"),
+  ],
+);
+
+export const poiFunFacts = pgTable(
+  "poi_fun_facts",
+  {
+    id: serial().primaryKey().notNull(),
+    poiEnrichedId: integer("poi_enriched_id").notNull(),
+    content: varchar({ length: 10000 }).notNull(),
+    order: integer().notNull(),
+    version: integer().default(1).notNull(),
+    createdAt: created_at,
+    updatedAt: updated_at,
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.poiEnrichedId],
+      foreignColumns: [poiEnriched.id],
+      name: "poi_fun_facts_poi_enriched_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+  ],
+);
 
 export const visitedPoisRelations = relations(visitedPois, ({ one }) => ({
   user: one(users, {
@@ -298,4 +353,19 @@ export const poisRelations = relations(pois, ({ many }) => ({
 
 export const boundariesRelations = relations(boundaries, ({ many }) => ({
   poiBoundaries: many(poiBoundaries),
+}));
+
+export const poiEnrichedRelations = relations(poiEnriched, ({ one, many }) => ({
+  poi: one(pois, {
+    fields: [poiEnriched.poiId],
+    references: [pois.id],
+  }),
+  funFacts: many(poiFunFacts),
+}));
+
+export const poiFunFactsRelations = relations(poiFunFacts, ({ one }) => ({
+  poiEnriched: one(poiEnriched, {
+    fields: [poiFunFacts.poiEnrichedId],
+    references: [poiEnriched.id],
+  }),
 }));

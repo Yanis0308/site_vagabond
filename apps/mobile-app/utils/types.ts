@@ -1,5 +1,5 @@
-import { type Static } from "@sinclair/typebox";
 import { type jsonSchemas } from "@vagabond/shared-utils";
+import { type Static } from "typebox";
 
 export type PoiType = Static<
   typeof jsonSchemas.GetPoisResponseSchema.properties.data

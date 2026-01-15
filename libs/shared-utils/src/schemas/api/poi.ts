@@ -1,7 +1,10 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from "typebox";
 
-import { PoiDataSourceEnumSchema, PoiFilterLevelEnumSchema } from "../enums.js";
-import { LanguageEnumSchema } from "../enums.js";
+import {
+  LanguageEnumSchema,
+  PoiDataSourceEnumSchema,
+  PoiFilterLevelEnumSchema,
+} from "../enums.js";
 import { CoordsSchema } from "../geo.js";
 import { ApiResponseSchema } from "../utils.js";
 import { VisitedPoiSchema } from "./visited-poi.js";
@@ -15,10 +18,10 @@ export const PoiDataSchema = Type.Object(
         "Place centrale historique de Lille avec son emblématique Vieille Bourse",
       ],
     }),
-    filterLevel: Type.Ref(PoiFilterLevelEnumSchema),
+    filterLevel: PoiFilterLevelEnumSchema,
     rawInfo: Type.Any(),
-    language: Type.Ref(LanguageEnumSchema),
-    dataSource: Type.Ref(PoiDataSourceEnumSchema),
+    language: LanguageEnumSchema,
+    dataSource: PoiDataSourceEnumSchema,
     createdAt: Type.String({ format: "date-time" }),
     updatedAt: Type.String({ format: "date-time" }),
   },
@@ -28,14 +31,16 @@ export const PoiDataSchema = Type.Object(
 export const POISchema = Type.Object(
   {
     id: Type.String(),
-    coords: Type.Ref(CoordsSchema),
-    data: Type.Array(Type.Ref(PoiDataSchema)),
-    visitedPois: Type.Array(Type.Ref(VisitedPoiSchema)),
+    coords: CoordsSchema,
+    data: Type.Array(PoiDataSchema),
+    visitedPois: Type.Array(VisitedPoiSchema),
   },
-  { $id: "POI" },
+  {
+    $id: "Poi",
+  },
 );
 
 export const GetPoisResponseSchema = ApiResponseSchema(
-  Type.Array(Type.Ref(POISchema)),
+  Type.Array(POISchema),
   "GetPoisResponse",
 );

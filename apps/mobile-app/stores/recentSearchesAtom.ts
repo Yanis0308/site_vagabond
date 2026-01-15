@@ -1,18 +1,22 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { type Static, Type } from "@sinclair/typebox";
-import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
+import {
+  generateValidator,
+  type jsonSchemas,
+  SearchResultSchema,
+} from "@vagabond/shared-utils";
 import { useAtom, useSetAtom } from "jotai";
 import {
   atomWithStorage,
   createJSONStorage,
   unstable_withStorageValidator as withStorageValidator,
 } from "jotai/utils";
+import { type Static, Type } from "typebox";
 
 import { logger } from "@/utils/logger";
 
 // TypeBox schema for RecentSearch
 const RecentSearchSchema = Type.Object({
-  result: Type.Ref(jsonSchemas.SearchResultSchema),
+  result: SearchResultSchema,
   timestamp: Type.Number(),
 });
 

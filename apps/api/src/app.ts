@@ -17,6 +17,7 @@ import slackPlugin from "./plugins/slack.js";
 import swaggerPlugin from "./plugins/swagger.js";
 // Routes
 import leaderboardRoute from "./routes/leaderboard/index.js";
+import poisIdRoute from "./routes/pois/[id].js";
 import poisRoute from "./routes/pois/index.js";
 import searchRoute from "./routes/search/index.js";
 import uploadRoute from "./routes/upload/index.js";
@@ -65,13 +66,14 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   await fastify.register(authPlugin, opts);
 
   // 10. Routes
-  await fastify.register(leaderboardRoute, { prefix: "api" });
-  await fastify.register(poisRoute, { prefix: "api" });
-  await fastify.register(searchRoute, { prefix: "api" });
-  await fastify.register(uploadRoute, { prefix: "api" });
-  await fastify.register(usersRoute, { prefix: "api" });
-  await fastify.register(visitedPoisRoute, { prefix: "api" });
-  await fastify.register(zonesRoute, { prefix: "api" });
+  await fastify.register(leaderboardRoute, { prefix: "api/leaderboard" });
+  await fastify.register(poisRoute, { prefix: "api/pois" });
+  await fastify.register(poisIdRoute, { prefix: "api/pois" });
+  await fastify.register(searchRoute, { prefix: "api/search" });
+  await fastify.register(uploadRoute, { prefix: "api/upload" });
+  await fastify.register(usersRoute, { prefix: "api/users" });
+  await fastify.register(visitedPoisRoute, { prefix: "api/visited-pois" });
+  await fastify.register(zonesRoute, { prefix: "api/zones" });
 };
 
 export default app;

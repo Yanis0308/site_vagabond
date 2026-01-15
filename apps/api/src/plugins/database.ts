@@ -1,6 +1,7 @@
 import {
   BoundaryRepository,
   getDrizzleClient,
+  PoiEnrichedRepository,
   PoiRepository,
   ProcessingResultRepository,
   SearchRepository,
@@ -12,6 +13,7 @@ import fp from "fastify-plugin";
 
 export interface DbRepositories {
   poi: PoiRepository;
+  poiEnriched: PoiEnrichedRepository;
   boundary: BoundaryRepository;
   search: SearchRepository;
   user: UserRepository;
@@ -34,6 +36,7 @@ export default fp(
 
       const repositories: DbRepositories = {
         poi: new PoiRepository(db),
+        poiEnriched: new PoiEnrichedRepository(db),
         boundary: new BoundaryRepository(db),
         search: new SearchRepository(db),
         user: new UserRepository(db),

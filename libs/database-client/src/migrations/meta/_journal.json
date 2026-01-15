@@ -22,6 +22,34 @@
       "when": 1767459848499,
       "tag": "0002_red_amazoness",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1767640397792,
+      "tag": "0003_milky_molecule_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1767880497595,
+      "tag": "0004_skinny_hemingway",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1767948671821,
+      "tag": "0005_fancy_inertia",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1767975466673,
+      "tag": "0007_public_ma_gnuci",
+      "breakpoints": true
     }
   ]
 }

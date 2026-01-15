@@ -12,21 +12,5 @@ services:
     ports:
       - "3234:3234"
     environment:
-      # URL de la base de données : utilise le nom du service Docker 'db' au lieu de localhost
-      # Le nom 'db' correspond au service PostgreSQL dans apps/api/dev/docker-compose.yml
-      API_DATABASE_URL: "postgresql://user:password@db:5432/vagabond"
       BASIC_AUTH_USER: "user"
       BASIC_AUTH_PASSWORD: "password"
-    # Rejoint le réseau externe partagé pour accéder à la base de données
-    networks:
-      - backend
-
-networks:
-  # Réseau externe partagé avec le docker-compose de l'API
-  # IMPORTANT: Ce réseau est créé automatiquement quand vous lancez le docker-compose de l'API
-  # (apps/api/dev/docker-compose.yml). Assurez-vous de lancer l'API avant le data-scraper.
-  # Le nom du réseau suit le format: {project_name}_{network_name}
-  # Avec le projet "new-vagabond-api" et le réseau "backend", le nom complet est "new-vagabond-api_backend"
-  backend:
-    external: true
-    name: new-vagabond-api_backend

@@ -1,4 +1,4 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from "typebox";
 
 import { CoordsSchema } from "../geo.js";
 import { ApiResponseSchema, Nullable } from "../utils.js";
@@ -36,12 +36,12 @@ export const CreateVisitedPoiRequestSchema = Type.Object(
     imageKey: Type.String(),
     rating: Type.Number({ minimum: 1, maximum: 5 }),
     comment: Type.String(),
-    coords: Type.Ref(CoordsSchema),
+    coords: CoordsSchema,
   },
-  { $id: "CreateVisitedPoiRequestData" },
+  { $id: "CreateVisitedPoiRequest" },
 );
 
 export const GetVisitedPoisResponseSchema = ApiResponseSchema(
-  Type.Array(Type.Ref(VisitedPoiSchema)),
+  Type.Array(VisitedPoiSchema),
   "GetVisitedPoisResponse",
 );

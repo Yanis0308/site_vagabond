@@ -1,4 +1,4 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from "typebox";
 
 export const LanguageEnumSchema = Type.Union(
   [Type.Literal("EN"), Type.Literal("FR")],
@@ -20,7 +20,11 @@ export const VisitedPoiStatusEnumSchema = Type.Union(
 );
 
 export const ErrorEnumSchema = Type.Union(
-  [Type.Literal("RESOURCE_ALREADY_EXISTS")],
+  [
+    Type.Literal("RESOURCE_ALREADY_EXISTS"),
+    Type.Literal("NOT_FOUND"),
+    Type.Literal("INTERNAL_SERVER_ERROR"),
+  ],
   { $id: "ErrorEnum" },
 );
 

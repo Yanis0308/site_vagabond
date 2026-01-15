@@ -1,8 +1,8 @@
+import type { GoogleMapsPlaceStrict } from "@vagabond/shared-utils";
 import type { Page } from "puppeteer";
 
 import { extractPlaceData } from "../extractors/placeExtractor.js";
 import { parsePlaceData } from "../parsers/placeData.js";
-import type { PlaceEntry } from "../types/PlaceEntry.js";
 import { logUtils } from "../utils/logging.js";
 import {
   clickRejectCookiesIfRequired,
@@ -11,11 +11,12 @@ import {
 
 /**
  * Extract place data from current page (without navigation)
+ * Returns null if place data fails validation
  */
 export async function extractPlaceFromCurrentPage(
   page: Page,
   placeURL: string,
-): Promise<PlaceEntry> {
+): Promise<GoogleMapsPlaceStrict | null> {
   const prefix = "EXTRACT";
   const emoji = "📄";
 
@@ -126,6 +127,17 @@ export async function extractPlaceFromCurrentPage(
   }
   logUtils.success(prefix, emoji, "JSON data extracted, parsing...");
   const entry = parsePlaceData(rawData);
+
+  // Return null if validation failed (place will be rejected)
+  if (entry === null) {
+    logUtils.warn(
+      prefix,
+      emoji,
+      `Place rejected: validation failed for ${placeURL}`,
+    );
+    return null;
+  }
+
   entry.link = placeURL;
   logUtils.success(
     prefix,
@@ -138,12 +150,13 @@ export async function extractPlaceFromCurrentPage(
 
 /**
  * Navigate to Place page and extract data
+ * Returns null if place data fails validation
  */
 export async function navigateToPlacePageAndExtract(
   page: Page,
   placeURL: string,
   langCode: string,
-): Promise<PlaceEntry> {
+): Promise<GoogleMapsPlaceStrict | null> {
   const prefix = "NAVIGATE PLACE";
   const emoji = "🔗";
 

@@ -1,4 +1,4 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from "typebox";
 
 import { CoordsSchema } from "../geo.js";
 import { ApiResponseSchema } from "../utils.js";
@@ -17,7 +17,7 @@ export const SearchResultSchema = Type.Object(
     }),
     id: Type.String({ examples: ["OSM-N1234567890"] }),
     name: Type.String({ examples: ["Grand Place"] }),
-    coordinates: Type.Ref(CoordsSchema),
+    coordinates: CoordsSchema,
     cityName: Type.Optional(Type.String({ examples: ["Lille"] })),
     departmentName: Type.Optional(Type.String({ examples: ["Nord"] })),
   },
@@ -25,7 +25,6 @@ export const SearchResultSchema = Type.Object(
 );
 
 export const SearchResponseSchema = ApiResponseSchema(
-  Type.Array(Type.Ref(SearchResultSchema)),
+  Type.Array(SearchResultSchema),
   "SearchResponse",
 );
-

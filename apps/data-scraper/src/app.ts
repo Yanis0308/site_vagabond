@@ -1,7 +1,6 @@
 import {
   addSchemasPlugin,
   compressPlugin,
-  databasePlugin,
   sensiblePlugin,
 } from "@vagabond/api-utils";
 import { type FastifyPluginAsync } from "fastify";
@@ -27,7 +26,6 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   // Register common plugins from api-utils
   await fastify.register(compressPlugin);
   await fastify.register(sensiblePlugin);
-  await fastify.register(databasePlugin);
 
   // Register routes
   await fastify.register(scrapeRoute, { prefix: "api" });

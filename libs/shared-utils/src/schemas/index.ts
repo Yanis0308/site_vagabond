@@ -1,5 +1,8 @@
+import * as googleMapsPlace from "./api/google-maps-place.js";
 import * as leaderboard from "./api/leaderboard.js";
 import * as poi from "./api/poi.js";
+import { PoiCategoryTypesSchema } from "./api/poi-categories.js";
+import * as poiEnriched from "./api/poi-enriched.js";
 import * as response from "./api/response.js";
 import * as scrape from "./api/scrape.js";
 import * as search from "./api/search.js";
@@ -13,13 +16,18 @@ import * as etl from "./etl.js";
 import * as geo from "./geo.js";
 import * as metadata from "./metadata.js";
 import * as primitive from "./primitive.js";
+import * as llmProcessors from "./processors/llm.js";
+import * as appState from "./app-state.js";
 
 export const jsonSchemas = {
   ...enums,
   ...error,
   ...etl,
   ...geo,
+  ...googleMapsPlace,
   ...poi,
+  PoiCategoryTypesSchema,
+  ...poiEnriched,
   ...visitedPoi,
   ...user,
   ...zones,
@@ -30,4 +38,6 @@ export const jsonSchemas = {
   ...leaderboard,
   ...search,
   ...scrape,
+  ...llmProcessors,
+  ...appState,
 } as const;

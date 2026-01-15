@@ -1,5 +1,5 @@
-import { type Static } from "@sinclair/typebox";
 import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
+import { type Static } from "typebox";
 
 import { type UploadFileParams } from "@/hooks/mutations/useUploadFileMutation";
 import { apiClient } from "@/http/api-client";

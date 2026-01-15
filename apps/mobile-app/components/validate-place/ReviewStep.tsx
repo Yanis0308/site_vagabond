@@ -1,11 +1,11 @@
 import { ajvResolver } from "@hookform/resolvers/ajv";
-import { type Static } from "@sinclair/typebox";
 import { jsonSchemas } from "@vagabond/shared-utils";
 import { type JSONSchemaType } from "ajv";
 import { useSetAtom } from "jotai";
 import React, { useCallback, useEffect, useMemo } from "react";
 import { Controller, type ControllerProps, useForm } from "react-hook-form";
 import { View } from "react-native";
+import { type Static } from "typebox";
 
 import { StarRating } from "@/components/validate-place/StarRating";
 import { useValidatePlaceMutation } from "@/hooks/mutations/useValidatePlaceMutation";

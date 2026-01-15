@@ -1,8 +1,16 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
-import { poiData, pois, users, visitedPois } from "../schema.js";
+import {
+  boundaries,
+  poiBoundaries,
+  poiData,
+  pois,
+  users,
+  visitedPois,
+} from "../schema.js";
 import type { CustomPoiCreateInput } from "../types.js";
+import { poiDataSourceEnum } from "../schema.js";
 
 interface PoiWithData {
   id: string;
@@ -177,6 +185,7 @@ export class PoiRepository {
     latitude: number;
     longitude: number;
     name: string;
+    cityName: string | null;
   } | null> {
     const result = await this.db
       .select({
@@ -184,6 +193,14 @@ export class PoiRepository {
         latitude: sql<number>`ST_Y(${pois.coords}::geometry)`.as("latitude"),
         longitude: sql<number>`ST_X(${pois.coords}::geometry)`.as("longitude"),
         name: poiData.name,
+        cityName: sql<string | null>`(
+          SELECT city_b.name
+          FROM ${poiBoundaries} pb2
+          INNER JOIN ${boundaries} city_b ON pb2.boundary_id = city_b.id
+          WHERE pb2.poi_id = ${pois.id}
+            AND city_b.boundary_level = 'CITY'
+          LIMIT 1
+        )`.as("cityName"),
       })
       .from(pois)
       .innerJoin(poiData, eq(pois.id, poiData.poiId))
@@ -201,6 +218,23 @@ export class PoiRepository {
       latitude: resultPoi.latitude,
       longitude: resultPoi.longitude,
       name: resultPoi.name,
+      cityName: resultPoi.cityName ?? null,
     };
+  }
+
+  async findOsmTagsByPoiId(poiId: string): Promise<Record<string, unknown> | null> {
+    const result = await this.db.query.poiData.findFirst({
+      where: and(
+        eq(poiData.poiId, poiId),
+        eq(poiData.source, "OSM" as const),
+      ),
+      columns: { rawInfo: true },
+    });
+
+    if (result?.rawInfo === undefined || result.rawInfo === null) {
+      return null;
+    }
+
+    return result.rawInfo as Record<string, unknown>;
   }
 }

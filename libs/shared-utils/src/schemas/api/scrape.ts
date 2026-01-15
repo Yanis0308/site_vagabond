@@ -1,5 +1,9 @@
-import { Type } from "@sinclair/typebox";
+import { Type } from "typebox";
 
+import { GoogleMapsPlaceStrictSchema } from "./google-maps-place.js";
+import { Nullable } from "../utils.js";
+
+// Schema for API route (used by api/src/routes/scrape)
 export const ScrapeQuerySchema = Type.Object(
   {
     poiId: Type.String({ examples: ["OSM-N1234567890"] }),
@@ -8,33 +12,24 @@ export const ScrapeQuerySchema = Type.Object(
   { $id: "ScrapeQuery" },
 );
 
-export const ScrapeResponseSchema = Type.Object(
+// Schema for data-scraper service (internal API)
+export const ScrapeDataScraperQuerySchema = Type.Object(
   {
-    id: Type.Number(),
-    targetId: Type.String(),
-    status: Type.Union([
-      Type.Literal("pending"),
-      Type.Literal("success"),
-      Type.Literal("error"),
-    ]),
-    input: Type.Object({
-      poiId: Type.String(),
-      query: Type.String(),
-      geoCoordinates: Type.String(),
-      zoom: Type.Number(),
-      langCode: Type.String(),
-    }),
-    output: Type.Union([
-      Type.Object({
-        content: Type.Record(Type.String(), Type.Any()),
-      }),
-      Type.Object({
-        error: Type.String(),
-      }),
-      Type.Null(),
-    ]),
-    batchId: Type.Union([Type.String(), Type.Null()]),
-    type: Type.Literal("scraper-maps"),
+    query: Type.String({ examples: ["Restaurant"] }),
+    geoCoordinates: Type.String({ examples: ["50.6292,3.0573"] }),
+    zoom: Type.Optional(Type.Number({ default: 15, examples: [15] })),
+    langCode: Type.Optional(Type.String({ default: "fr", examples: ["fr"] })),
   },
-  { $id: "ScrapeResponse" },
+  { $id: "ScrapeDataScraperQuery" },
+);
+
+// Response schema for data-scraper service
+// Uses the strict GoogleMapsPlaceStrictSchema for validated place
+export const ScrapeDataScraperResponseSchema = Type.Object(
+  {
+    success: Type.Boolean(),
+    place: Nullable(GoogleMapsPlaceStrictSchema),
+    error: Type.Optional(Type.String()),
+  },
+  { $id: "ScrapeDataScraperResponse" },
 );

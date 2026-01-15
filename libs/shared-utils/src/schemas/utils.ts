@@ -1,24 +1,23 @@
-import { type TNull, type TSchema, type TUnion } from "@sinclair/typebox";
-import { type TObject } from "@sinclair/typebox";
-import { type TRef } from "@sinclair/typebox";
-import { type TOptional } from "@sinclair/typebox";
-import { Type } from "@sinclair/typebox";
+import { type TNull, type TSchema, type TUnion } from "typebox";
+import { type TObject } from "typebox";
+import { type TOptional } from "typebox";
+import { Type } from "typebox";
 
 import { MetadataSchema } from "./metadata.js";
 
 export const ApiResponseSchema = <T extends TSchema>(
   dataSchema: T,
-  schemaId: string,
+  id: string,
 ): TObject<{
   data: T;
-  metadata: TOptional<TRef<typeof MetadataSchema>>;
+  metadata: TOptional<typeof MetadataSchema>;
 }> =>
   Type.Object(
     {
       data: dataSchema,
-      metadata: Type.Optional(Type.Ref(MetadataSchema)),
+      metadata: Type.Optional(MetadataSchema),
     },
-    { $id: schemaId },
+    { $id: id },
   );
 
 export const Nullable = <T extends TSchema>(T: T): TUnion<[T, TNull]> => {
@@ -26,6 +25,8 @@ export const Nullable = <T extends TSchema>(T: T): TUnion<[T, TNull]> => {
   return Type.Union([T, Type.Null()]);
 };
 
-export const DateSchema = Type.Transform(Type.String({ format: "date-time" }))
+export const DateSchema = Type.Codec(
+  Type.String({ format: "date-time", $id: "VagabondDate" }),
+)
   .Decode((value) => new Date(value))
   .Encode((value) => value.toISOString());

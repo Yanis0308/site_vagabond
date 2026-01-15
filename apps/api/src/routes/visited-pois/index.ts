@@ -14,10 +14,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         params: Type.Object({
           poiId: Type.String(),
         }),
-        body: Type.Ref(jsonSchemas.CreateVisitedPoiRequestSchema),
+        body: jsonSchemas.CreateVisitedPoiRequestSchema,
         response: {
-          200: Type.Ref(jsonSchemas.EmptyResponseSchema),
-          409: Type.Ref(jsonSchemas.ErrorResponseSchema),
+          200: jsonSchemas.EmptyResponseSchema,
+          409: jsonSchemas.ErrorResponseSchema,
         },
       },
     },

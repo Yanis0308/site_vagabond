@@ -11,10 +11,10 @@
     "mobile-app-dev": "pnpm --filter @vagabond/mobile-app run develop"
   },
   "dependencies": {
-    "@sinclair/typebox": "catalog:",
     "dayjs": "catalog:",
     "geojson": "catalog:",
     "geolib": "catalog:",
+    "typebox": "catalog:",
     "zx": "^8.3.0"
   },
   "devDependencies": {
@@ -46,7 +46,14 @@
   },
   "pnpm": {
     "overrides": {
-      "@gluestack-ui/linear-gradient>expo-linear-gradient": "~15.0.7"
+      "@gluestack-ui/linear-gradient>expo-linear-gradient": "~15.0.7",
+      "@vagabond/shared-utils>ajv": "catalog:",
+      "@vagabond/shared-utils>dotenv": "catalog:",
+      "@vagabond/mobile-app>ajv": "catalog:"
+    },
+    "patchedDependencies": {
+      "ajv@8.17.1": "patches/ajv@8.17.1.patch",
+      "fastify": "patches/fastify.patch"
     }
   }
 }

@@ -14,9 +14,8 @@
   },
   "dependencies": {
     "@fastify/basic-auth": "^6.2.0",
-    "@fastify/type-provider-typebox": "^5.2.0",
+    "@fastify/type-provider-typebox": "^6.1.0",
     "@vagabond/api-utils": "workspace:*",
-    "@vagabond/database-client": "workspace:*",
     "@vagabond/shared-utils": "workspace:*",
     "close-with-grace": "^2.3.0",
     "dotenv": "^16.4.5",

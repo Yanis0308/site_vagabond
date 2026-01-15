@@ -1,4 +1,19 @@
 /**
+ * Type guards for runtime type checking
+ */
+function isString(value: unknown): value is string {
+  return typeof value === "string";
+}
+
+function isNumber(value: unknown): value is number {
+  return typeof value === "number" && !isNaN(value);
+}
+
+function isArray(value: unknown): value is unknown[] {
+  return Array.isArray(value);
+}
+
+/**
  * Navigate through nested JSON structures using index paths
  */
 export function getNthElement(
@@ -6,26 +21,62 @@ export function getNthElement(
   path: number | number[],
   defaultValue: unknown,
 ): unknown {
-  if (!Array.isArray(arr)) {
+  if (!isArray(arr)) {
     return defaultValue;
   }
 
   const indexes = Array.isArray(path) ? path : [path];
-  let current: unknown[] = arr;
+  let current: unknown = arr;
 
   for (const index of indexes) {
     if (
-      !Array.isArray(current) ||
+      !isArray(current) ||
       index >= current.length ||
       current[index] === null ||
       current[index] === undefined
     ) {
       return defaultValue;
     }
-    current = current[index] as unknown[];
+    current = current[index];
   }
 
   return current;
+}
+
+/**
+ * Get string value from nested path, with type safety
+ */
+export function getNthString(
+  arr: unknown[],
+  path: number | number[],
+  defaultValue: string,
+): string {
+  const value = getNthElement(arr, path, defaultValue);
+  return isString(value) ? value : defaultValue;
+}
+
+/**
+ * Get number value from nested path, with type safety
+ */
+export function getNthNumber(
+  arr: unknown[],
+  path: number | number[],
+  defaultValue: number,
+): number {
+  const value = getNthElement(arr, path, defaultValue);
+  return isNumber(value) ? value : defaultValue;
+}
+
+/**
+ * Get array value from nested path, with type safety
+ */
+export function getNthArray(
+  arr: unknown[],
+  path: number | number[],
+  defaultValue: unknown[],
+): unknown[] {
+  const value = getNthElement(arr, path, defaultValue);
+  return isArray(value) ? value : defaultValue;
 }
 
 /**
@@ -50,7 +101,8 @@ export function extractActualURL(googleURL: string): string {
 export function decodeURL(url: string): string {
   // URLs may be encoded with quotes
   try {
-    return JSON.parse(`"${url.replace(/"/g, '\\"')}"`) as string;
+    const decoded: unknown = JSON.parse(`"${url.replace(/"/g, '\\"')}"`);
+    return isString(decoded) ? decoded : url;
   } catch {
     return url;
   }

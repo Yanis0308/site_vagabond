@@ -1,0 +1,38 @@
+diff --git a/dist/compile/resolve.js b/dist/compile/resolve.js
+index f12f968dc07d94a435186b32108551f4d429f23a..cf783d282eb59b80d6b86c70bbdbbef7e342c165 100644
+--- a/dist/compile/resolve.js
++++ b/dist/compile/resolve.js
+@@ -115,7 +115,8 @@ function getSchemaRefs(schema, baseId) {
+             const _resolve = this.opts.uriResolver.resolve;
+             ref = normalizeId(innerBaseId ? _resolve(innerBaseId, ref) : ref);
+             if (schemaRefs.has(ref))
+-                throw ambiguos(ref);
++                this.logger.warn(`[CUSTOM VAGABOND PATCH]reference "${ref}" resolves to more than one schema - inside getSchemaRefs function`);
++                //throw ambiguos(ref);
+             schemaRefs.add(ref);
+             let schOrRef = this.refs[ref];
+             if (typeof schOrRef == "string")
+@@ -145,7 +146,8 @@ function getSchemaRefs(schema, baseId) {
+     return localRefs;
+     function checkAmbiguosRef(sch1, sch2, ref) {
+         if (sch2 !== undefined && !equal(sch1, sch2))
+-            throw ambiguos(ref);
++            this.logger.warn(`[CUSTOM VAGABOND PATCH]reference "${ref}" resolves to more than one schema - inside checkAmbiguosRef function`);
++            //throw ambiguos(ref);
+     }
+     function ambiguos(ref) {
+         return new Error(`reference "${ref}" resolves to more than one schema`);
+diff --git a/dist/core.js b/dist/core.js
+index 7e30c83af91b622a2740478f5624531660c4ed83..09bd4aa87fa8784ab950ecccf68e83691bb02645 100644
+--- a/dist/core.js
++++ b/dist/core.js
+@@ -463,7 +463,8 @@ class Ajv {
+     }
+     _checkUnique(id) {
+         if (this.schemas[id] || this.refs[id]) {
+-            throw new Error(`schema with key or id "${id}" already exists`);
++            this.logger.warn(`[CUSTOM VAGABOND PATCH] schema with key or id "${id}" already exists - inside _addSchema function`);
++            //throw new Error(`schema with key or id "${id}" already exists`);
+         }
+     }
+     _compileSchemaEnv(sch) {
