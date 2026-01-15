@@ -1,93 +1,92 @@
+import { generateValidator, jsonSchemas, logger } from "@vagabond/shared-utils";
+import { type PoiEnrichedData } from "@vagabond/shared-utils/dist/schemas/processors/llm.js";
 import { eq } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
-import { poiEnriched, poiFunFacts } from "../schema.js";
+import { poiEnriched } from "../schema.js";
 
 export interface CreatePoiEnrichedInput {
   poiId: string;
-  name?: string | null;
-  description?: string | null;
+  enrichedData: PoiEnrichedData;
   source: string;
-  funFacts?: Array<{ content: string; order: number }>;
 }
 
-export interface PoiEnrichedWithFunFacts {
+export interface PoiEnrichedWithData {
   id: number;
   poiId: string;
-  name: string | null;
-  description: string | null;
   source: string;
   version: number;
+  enrichedData: PoiEnrichedData;
   createdAt: Date;
   updatedAt: Date;
-  funFacts: Array<{
-    id: number;
-    content: string;
-    order: number;
-    version: number;
-    createdAt: Date;
-    updatedAt: Date;
-  }>;
 }
 
 export class PoiEnrichedRepository {
+  private readonly validateEnrichedData = generateValidator(
+    jsonSchemas.PoiEnrichedSchema,
+  );
+
   constructor(private readonly db: DrizzleClient) {}
 
-  async findByPoiId(
-    poiId: string,
-  ): Promise<PoiEnrichedWithFunFacts | undefined> {
+  async findByPoiId(poiId: string): Promise<PoiEnrichedWithData | undefined> {
     const enriched = await this.db.query.poiEnriched.findFirst({
       where: eq(poiEnriched.poiId, poiId),
-      with: {
-        funFacts: {
-          orderBy: (facts, { asc }) => [asc(facts.order)],
-        },
-      },
     });
 
     if (enriched === undefined) {
       return undefined;
     }
 
+    const enrichedData: unknown | PoiEnrichedData = enriched.enrichedData;
+
+    // Validate the JSON against PoiEnrichedSchema
+    const isValid = this.validateEnrichedData(enrichedData);
+
+    if (!isValid) {
+      // Log validation errors but don't expose them to the user
+      logger.error(
+        `Invalid enriched data for POI ${poiId}:`,
+        JSON.stringify(enriched.enrichedData, null, 2),
+      );
+      return undefined;
+    }
+
     return {
       id: enriched.id,
       poiId: enriched.poiId,
-      name: enriched.name,
-      description: enriched.description,
       source: enriched.source,
       version: enriched.version,
+      enrichedData: enrichedData,
       createdAt: enriched.createdAt,
       updatedAt: enriched.updatedAt,
-      funFacts: enriched.funFacts.map((fact) => ({
-        id: fact.id,
-        content: fact.content,
-        order: fact.order,
-        version: fact.version,
-        createdAt: fact.createdAt,
-        updatedAt: fact.updatedAt,
-      })),
     };
   }
 
   async upsert(
     data: CreatePoiEnrichedInput,
-  ): Promise<PoiEnrichedWithFunFacts | undefined> {
+  ): Promise<PoiEnrichedWithData | undefined> {
+    // Validate the enriched data before storing
+    const isValid = this.validateEnrichedData(data.enrichedData);
+
+    if (!isValid) {
+      throw new Error(
+        `Invalid enriched data for POI ${data.poiId}: data does not match PoiEnrichedSchema`,
+      );
+    }
+
     // Use upsert to handle existing records
     const [enriched] = await this.db
       .insert(poiEnriched)
       .values({
         poiId: data.poiId,
-        name: data.name ?? null,
-        description: data.description ?? null,
         source: data.source,
+        enrichedData: data.enrichedData,
       })
       .onConflictDoUpdate({
         target: poiEnriched.poiId,
         set: {
-          name: data.name ?? null,
-          description: data.description ?? null,
           source: data.source,
-          updatedAt: new Date(),
+          enrichedData: data.enrichedData,
         },
       })
       .returning();
@@ -96,23 +95,7 @@ export class PoiEnrichedRepository {
       return undefined;
     }
 
-    // Delete existing fun facts before inserting new ones
-    await this.db
-      .delete(poiFunFacts)
-      .where(eq(poiFunFacts.poiEnrichedId, enriched.id));
-
-    // Insert fun facts if provided
-    if (data.funFacts !== undefined && data.funFacts.length > 0) {
-      await this.db.insert(poiFunFacts).values(
-        data.funFacts.map((fact) => ({
-          poiEnrichedId: enriched.id,
-          content: fact.content,
-          order: fact.order,
-        })),
-      );
-    }
-
-    // Fetch the complete record with fun facts
+    // Fetch the complete record
     return await this.findByPoiId(data.poiId);
   }
 }

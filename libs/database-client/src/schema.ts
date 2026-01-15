@@ -281,10 +281,9 @@ export const poiEnriched = pgTable(
   {
     id: serial().primaryKey().notNull(),
     poiId: varchar("poi_id", { length: 1000 }).notNull(),
-    name: varchar({ length: 1000 }),
-    description: varchar({ length: 10000 }),
     source: varchar({ length: 100 }).notNull(),
     version: integer().default(1).notNull(),
+    enrichedData: jsonb("enriched_data"),
     createdAt: created_at,
     updatedAt: updated_at,
   },
@@ -300,28 +299,6 @@ export const poiEnriched = pgTable(
     })
       .onUpdate("cascade")
       .onDelete("no action"),
-  ],
-);
-
-export const poiFunFacts = pgTable(
-  "poi_fun_facts",
-  {
-    id: serial().primaryKey().notNull(),
-    poiEnrichedId: integer("poi_enriched_id").notNull(),
-    content: varchar({ length: 10000 }).notNull(),
-    order: integer().notNull(),
-    version: integer().default(1).notNull(),
-    createdAt: created_at,
-    updatedAt: updated_at,
-  },
-  (table) => [
-    foreignKey({
-      columns: [table.poiEnrichedId],
-      foreignColumns: [poiEnriched.id],
-      name: "poi_fun_facts_poi_enriched_id_fkey",
-    })
-      .onUpdate("cascade")
-      .onDelete("cascade"),
   ],
 );
 
@@ -355,17 +332,9 @@ export const boundariesRelations = relations(boundaries, ({ many }) => ({
   poiBoundaries: many(poiBoundaries),
 }));
 
-export const poiEnrichedRelations = relations(poiEnriched, ({ one, many }) => ({
+export const poiEnrichedRelations = relations(poiEnriched, ({ one }) => ({
   poi: one(pois, {
     fields: [poiEnriched.poiId],
     references: [pois.id],
-  }),
-  funFacts: many(poiFunFacts),
-}));
-
-export const poiFunFactsRelations = relations(poiFunFacts, ({ one }) => ({
-  poiEnriched: one(poiEnriched, {
-    fields: [poiFunFacts.poiEnrichedId],
-    references: [poiEnriched.id],
   }),
 }));

@@ -5,7 +5,6 @@ import type { FastifyInstance } from "fastify";
 import { getDistance } from "geolib";
 import type { Static } from "typebox";
 
-import { mapFunFactsToDbFormat } from "../utils/poi-enrichment.utils.js";
 import { normalizeSearchText } from "../utils/text.js";
 import type { GoogleMapsScrapeResponse } from "./http/data-scraper-client.js";
 import type { JinaScrapeResponse } from "./http/jina-client.js";
@@ -41,13 +40,6 @@ interface ProcessingResults {
   jinaResult: ProcessResult<JinaScrapeResponse> | undefined;
   wikidataResult?: ProcessResult<WikimediaResponse> | undefined;
   wikipediaResult?: ProcessResult<WikimediaResponse> | undefined;
-}
-
-interface EnrichmentResult {
-  name: string;
-  description: string | null;
-  funFacts: Array<{ content: string; order: number }>;
-  source: "llm" | "scraper-maps";
 }
 
 /**
@@ -286,20 +278,6 @@ export class PoiEnrichmentService {
     }
 
     return geminiResponse.data;
-  }
-
-  /**
-   * Create enrichment result from enriched data
-   */
-  mapEnrichedDataToResult(enrichedData: EnrichedPoiData): EnrichmentResult {
-    const funFacts = mapFunFactsToDbFormat(enrichedData.funFacts);
-
-    return {
-      name: enrichedData.name,
-      description: enrichedData.description ?? null,
-      funFacts,
-      source: "llm",
-    };
   }
 
   /**

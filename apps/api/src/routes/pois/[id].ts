@@ -6,6 +6,7 @@ import {
   type GoogleMapsPlaceStrict,
   jsonSchemas,
 } from "@vagabond/shared-utils";
+import { type Static } from "typebox";
 
 import { PoiEnrichmentService } from "../../services/poi-enrichment.service.js";
 
@@ -38,22 +39,12 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         if (existingEnriched !== undefined) {
           return await reply.status(200).send({
             data: {
+              ...existingEnriched.enrichedData,
               id: existingEnriched.id,
               poiId: existingEnriched.poiId,
-              name: existingEnriched.name,
-              description: existingEnriched.description,
-              source: existingEnriched.source,
               version: existingEnriched.version,
               createdAt: existingEnriched.createdAt.toISOString(),
               updatedAt: existingEnriched.updatedAt.toISOString(),
-              funFacts: existingEnriched.funFacts.map((fact) => ({
-                id: fact.id,
-                content: fact.content,
-                order: fact.order,
-                version: fact.version,
-                createdAt: fact.createdAt.toISOString(),
-                updatedAt: fact.updatedAt.toISOString(),
-              })),
             },
           });
         }
@@ -127,15 +118,11 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         };
 
         // 10. Process Gemini LLM enrichment
-        let enrichmentResult: {
-          name: string;
-          description: string | null;
-          funFacts: Array<{ content: string; order: number }>;
-          source: "llm" | "scraper-maps";
-        } | null = null;
+        let enrichedData: Static<typeof jsonSchemas.PoiEnrichedSchema> | null =
+          null;
 
         try {
-          const enrichedData = await enrichmentService.processGeminiEnrichment(
+          enrichedData = await enrichmentService.processGeminiEnrichment(
             poiId,
             {
               name: poi.name,
@@ -146,9 +133,6 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             rawData,
             osmTags,
           );
-
-          enrichmentResult =
-            enrichmentService.mapEnrichedDataToResult(enrichedData);
         } catch (error) {
           const errorMessage =
             error instanceof Error ? error.message : String(error);
@@ -168,7 +152,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         }
 
         // 11. Create enriched entry
-        if (enrichmentResult === null) {
+        if (enrichedData === null) {
           return await reply.status(500).send({
             error: {
               type: "INTERNAL_SERVER_ERROR",
@@ -179,10 +163,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
         const enriched = await fastify.dbRepositories.poiEnriched.upsert({
           poiId,
-          name: enrichmentResult.name,
-          description: enrichmentResult.description,
-          source: enrichmentResult.source,
-          funFacts: enrichmentResult.funFacts,
+          enrichedData,
+          source: "llm",
         });
 
         if (enriched === undefined) {
@@ -195,33 +177,15 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         }
 
         // 12. Return enriched data
+
         return await reply.status(200).send({
           data: {
+            ...enriched.enrichedData,
             id: enriched.id,
             poiId: enriched.poiId,
-            name: enriched.name,
-            description: enriched.description,
-            source: enriched.source,
             version: enriched.version,
             createdAt: enriched.createdAt.toISOString(),
             updatedAt: enriched.updatedAt.toISOString(),
-            funFacts: enriched.funFacts.map(
-              (fact: {
-                id: number;
-                content: string;
-                order: number;
-                version: number;
-                createdAt: Date;
-                updatedAt: Date;
-              }) => ({
-                id: fact.id,
-                content: fact.content,
-                order: fact.order,
-                version: fact.version,
-                createdAt: fact.createdAt.toISOString(),
-                updatedAt: fact.updatedAt.toISOString(),
-              }),
-            ),
           },
         });
       } catch (error) {

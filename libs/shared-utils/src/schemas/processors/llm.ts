@@ -1,4 +1,4 @@
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 
 import { PoiCategoryTypesSchema } from "../api/poi-categories.js";
 import { CoordsSchema } from "../geo.js";
@@ -69,7 +69,6 @@ export const PoiEnrichedAddressSchema = Type.Object(
     country: Type.Optional(
       Type.String({ maxLength: 100, description: "Country name" }),
     ),
-    //TODO: why ?
     fullAddress: Type.Optional(
       Type.String({
         maxLength: 1000,
@@ -467,3 +466,5 @@ export const PoiEnrichedSchema = Type.Object(
     $id: "PoiEnriched",
   },
 );
+
+export type PoiEnrichedData = Static<typeof PoiEnrichedSchema>;

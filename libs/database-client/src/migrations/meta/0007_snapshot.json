@@ -1,6 +1,6 @@
 {
-  "id": "dcde6c3d-8e90-4d36-a5ca-a7f8af8c83a8",
-  "prevId": "73ab0d6e-92f6-47ed-b43b-011339875490",
+  "id": "de31126a-7ac2-45e2-84d2-b010c3439c26",
+  "prevId": "dcde6c3d-8e90-4d36-a5ca-a7f8af8c83a8",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -441,18 +441,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "name": {
-          "name": "name",
-          "type": "varchar(1000)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar(10000)",
-          "primaryKey": false,
-          "notNull": false
-        },
         "source": {
           "name": "source",
           "type": "varchar(100)",
@@ -465,6 +453,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": 1
+        },
+        "enriched_data": {
+          "name": "enriched_data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -507,74 +501,6 @@
           "columnsFrom": ["poi_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
-          "onUpdate": "cascade"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.poi_fun_facts": {
-      "name": "poi_fun_facts",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "poi_enriched_id": {
-          "name": "poi_enriched_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "content": {
-          "name": "content",
-          "type": "varchar(10000)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "order": {
-          "name": "order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "version": {
-          "name": "version",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 1
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp (3)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp (3)",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "poi_fun_facts_poi_enriched_id_fkey": {
-          "name": "poi_fun_facts_poi_enriched_id_fkey",
-          "tableFrom": "poi_fun_facts",
-          "tableTo": "poi_enriched",
-          "columnsFrom": ["poi_enriched_id"],
-          "columnsTo": ["id"],
-          "onDelete": "cascade",
           "onUpdate": "cascade"
         }
       },
