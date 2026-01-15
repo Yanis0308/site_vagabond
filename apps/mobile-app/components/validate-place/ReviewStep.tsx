@@ -104,11 +104,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
       const currentRating = formValues.rating;
       const currentComment = formValues.comment;
 
-      if (
-        currentRating === undefined ||
-        currentRating === 0 ||
-        currentRating < 1
-      ) {
+      if (currentRating === 0 || currentRating < 1) {
         logger("=== INVALID RATING ===", currentRating);
         return;
       }
@@ -119,10 +115,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
           placeId: place.id,
           imageKey: imageKey,
           rating: currentRating,
-          comment:
-            currentComment === undefined || currentComment === ""
-              ? ""
-              : currentComment,
+          comment: currentComment,
           coords: {
             latitude: userLocation.latitude,
             longitude: userLocation.longitude,
@@ -211,7 +204,6 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
               isUploading ||
               imageKey === null ||
               imageKey === "" ||
-              ratingValue === undefined ||
               ratingValue < 1
             }
           >

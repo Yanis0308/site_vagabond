@@ -244,26 +244,18 @@
         "poi_boundaries_poi_id_fkey": {
           "name": "poi_boundaries_poi_id_fkey",
           "tableFrom": "poi_boundaries",
-          "columnsFrom": [
-            "poi_id"
-          ],
+          "columnsFrom": ["poi_id"],
           "tableTo": "pois",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "cascade",
           "onDelete": "cascade"
         },
         "poi_boundaries_boundary_id_fkey": {
           "name": "poi_boundaries_boundary_id_fkey",
           "tableFrom": "poi_boundaries",
-          "columnsFrom": [
-            "boundary_id"
-          ],
+          "columnsFrom": ["boundary_id"],
           "tableTo": "boundaries",
-          "columnsTo": [
-            "id"
-          ],
+          "columnsTo": ["id"],
           "onUpdate": "cascade",
           "onDelete": "cascade"
         }
@@ -702,13 +694,9 @@
         "visited_pois_user_id_fkey": {
           "name": "visited_pois_user_id_fkey",
           "tableFrom": "visited_pois",
-          "columnsFrom": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
           "tableTo": "users",
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsTo": ["user_id"],
           "onUpdate": "cascade",
           "onDelete": "restrict"
         }
@@ -736,53 +724,32 @@
     "public.LanguageEnum": {
       "name": "LanguageEnum",
       "schema": "public",
-      "values": [
-        "EN",
-        "FR"
-      ]
+      "values": ["EN", "FR"]
     },
     "public.PoiDataSourceEnum": {
       "name": "PoiDataSourceEnum",
       "schema": "public",
-      "values": [
-        "OSM",
-        "AI",
-        "CUSTOM"
-      ]
+      "values": ["OSM", "AI", "CUSTOM"]
     },
     "public.PoiFilterLevelEnum": {
       "name": "PoiFilterLevelEnum",
       "schema": "public",
-      "values": [
-        "UNKNOWN",
-        "STRICT",
-        "STANDARD",
-        "INTERMEDIATE",
-        "LAXIST"
-      ]
+      "values": ["UNKNOWN", "STRICT", "STANDARD", "INTERMEDIATE", "LAXIST"]
     },
     "public.PoiSourceEnum": {
       "name": "PoiSourceEnum",
       "schema": "public",
-      "values": [
-        "OSM"
-      ]
+      "values": ["OSM"]
     },
     "public.RoleEnum": {
       "name": "RoleEnum",
       "schema": "public",
-      "values": [
-        "ADMIN",
-        "USER"
-      ]
+      "values": ["ADMIN", "USER"]
     },
     "public.VisitedPoiStatus": {
       "name": "VisitedPoiStatus",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "CONFIRMED"
-      ]
+      "values": ["PENDING", "CONFIRMED"]
     }
   },
   "schemas": {},

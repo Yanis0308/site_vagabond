@@ -50,13 +50,11 @@ class MapService {
       return;
     }
 
-    if (this.moveToPlace !== null) {
-      this.moveToPlace(
-        this.pendingMove.location,
-        this.pendingMove.isPoi ?? false,
-      );
-      this.pendingMove = null;
-    }
+    this.moveToPlace(
+      this.pendingMove.location,
+      this.pendingMove.isPoi ?? false,
+    );
+    this.pendingMove = null;
   }
   clearMoveToPlace(): void {
     this.moveToPlace = null;

@@ -1,7 +1,7 @@
 import { Type } from "typebox";
 
-import { GoogleMapsPlaceStrictSchema } from "./google-maps-place.js";
 import { Nullable } from "../utils.js";
+import { GoogleMapsPlaceStrictSchema } from "./google-maps-place.js";
 
 // Schema for API route (used by api/src/routes/scrape)
 export const ScrapeQuerySchema = Type.Object(

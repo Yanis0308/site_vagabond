@@ -207,7 +207,7 @@ export const PlaceDetailsSheet = memo(
 
       const items: ListItemType[] = [
         { type: "header", data: place },
-        { type: "titleAndButton", data: place, isVisited: isVisited ?? false },
+        { type: "titleAndButton", data: place, isVisited: isVisited },
         { type: "rating", rating, count: place.visitedPois.length },
         { type: "reviews", data: place },
         { type: "externals", data: place },
@@ -216,11 +216,7 @@ export const PlaceDetailsSheet = memo(
       ];
 
       const placeData = place.data[0];
-      if (
-        placeData !== null &&
-        placeData !== undefined &&
-        user.data?.role === "ADMIN"
-      ) {
+      if (placeData !== undefined && user.data?.role === "ADMIN") {
         items.push({
           type: "admin",
           placeId: place.id,

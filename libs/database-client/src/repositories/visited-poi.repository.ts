@@ -1,6 +1,6 @@
-import { type Static } from "typebox";
 import { type jsonSchemas } from "@vagabond/shared-utils";
 import { and, eq } from "drizzle-orm";
+import { type Static } from "typebox";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import { visitedPois } from "../schema.js";

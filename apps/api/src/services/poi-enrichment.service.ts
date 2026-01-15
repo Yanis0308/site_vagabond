@@ -250,9 +250,7 @@ export class PoiEnrichmentService {
       const errorDetails = {
         message: errorMessage,
         success: geminiResult.success,
-        hasData:
-          geminiResult.scrapeResponse !== null &&
-          geminiResult.scrapeResponse !== undefined,
+        hasData: geminiResult.scrapeResponse !== undefined,
       };
 
       this.fastify.log.error(
@@ -285,11 +283,6 @@ export class PoiEnrichmentService {
       );
 
       throw new Error(`Gemini LLM enrichment failed: ${errorMessage}`);
-    }
-
-    // At this point, we know data is defined
-    if (geminiResponse.data === undefined) {
-      throw new Error("Gemini LLM enrichment failed: data is undefined");
     }
 
     return geminiResponse.data;

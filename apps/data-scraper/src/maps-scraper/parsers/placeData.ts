@@ -115,8 +115,8 @@ export function getPopularTimes(
     const times: Record<number, number> = {};
     for (const t of timesI) {
       if (!Array.isArray(t) || t.length < 2) continue;
-      const hour = Math.floor(Number(t[0]) ?? 0);
-      const value = Math.floor(Number(t[1]) ?? 0);
+      const hour = Math.floor(Number(t[0]));
+      const value = Math.floor(Number(t[1]));
       times[hour] = value;
     }
 

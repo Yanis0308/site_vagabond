@@ -54,7 +54,7 @@ export const CustomImage = memo(
           if (typeof src === "string") {
             return src;
           }
-          if (typeof src === "object" && src !== null) {
+          if (typeof src === "object") {
             return JSON.stringify(src);
           }
           return String(src);
@@ -118,7 +118,6 @@ export const CustomImage = memo(
     const imageLoaded = useMemo(() => {
       if (
         optimizedImageSource !== null &&
-        optimizedImageSource !== undefined &&
         typeof firstStringSource === "string" &&
         firstStringSource !== ""
       ) {

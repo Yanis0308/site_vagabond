@@ -135,10 +135,7 @@ export const SearchHeader = forwardRef<SearchHeaderRef, SearchHeaderProps>(
               <InputIcon as={ArrowLeft} />
             </Pressable>
           ) : (
-            <InputSlot
-              className="pl-3"
-              pointerEvents={editable ? "auto" : "none"}
-            >
+            <InputSlot className="pl-3" pointerEvents="auto">
               <InputIcon as={Search} />
             </InputSlot>
           )}

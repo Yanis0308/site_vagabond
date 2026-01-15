@@ -29,7 +29,7 @@ export async function checkForNoResults(page: Page): Promise<boolean> {
       }
 
       // Check for common "no results" text patterns (multiple languages)
-      const bodyText = document.body.textContent ?? "";
+      const bodyText = document.body.textContent;
       const noResultsPatterns = [
         "impossible de trouver", // French - primary pattern from Google Maps
         "aucun résultat", // French
@@ -170,7 +170,6 @@ export async function navigateToSearchPage(
         await page.waitForFunction(
           () => {
             return (
-              document.body !== undefined &&
               document.readyState === "complete" &&
               document.querySelector("body") !== null
             );
@@ -211,7 +210,6 @@ export async function navigateToSearchPage(
         await page.waitForFunction(
           () => {
             return (
-              document.body !== undefined &&
               document.readyState === "complete" &&
               document.querySelector("body") !== null
             );
@@ -244,7 +242,6 @@ export async function navigateToSearchPage(
         await page.waitForFunction(
           () => {
             return (
-              document.body !== undefined &&
               document.readyState === "complete" &&
               document.querySelector("body") !== null
             );
@@ -403,7 +400,6 @@ export async function checkForSinglePlace(page: Page): Promise<boolean> {
           await page.waitForFunction(
             () => {
               return (
-                document.body !== undefined &&
                 document.readyState === "complete" &&
                 window.location.href.includes("/maps/place/")
               );
@@ -496,10 +492,6 @@ export async function extractPlaceLinks(
     if (maxResults !== undefined && links.length >= maxResults) {
       logUtils.log(prefix, emoji, `Reached maxResults limit (${maxResults})`);
       break;
-    }
-
-    if (element === null) {
-      continue;
     }
 
     const href = await element.evaluate((el) => el.getAttribute("href"));

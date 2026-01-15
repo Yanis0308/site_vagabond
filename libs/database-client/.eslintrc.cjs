@@ -17,5 +17,11 @@ module.exports = {
 
   plugins: SAFEQL_DATABASE_URL ? ["@ts-safeql/eslint-plugin"] : [],
 
-  ignorePatterns: ["node_modules/", "*.js", "*.mjs"],
+  ignorePatterns: [
+    "node_modules/",
+    "dist/",
+    "drizzle.config.ts",
+    "*.js",
+    "*.mjs",
+  ],
 };

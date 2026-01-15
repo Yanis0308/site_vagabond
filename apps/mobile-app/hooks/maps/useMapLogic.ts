@@ -278,7 +278,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
     const { center, heading } = mapState.properties;
     setHeadingRealtime(heading);
     setZoomRealtime(mapState.properties.zoom);
-    if (userLocation !== null && userLocation !== undefined) {
+    if (userLocation !== null) {
       const distance = getDistance(
         { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
         {

@@ -13,15 +13,15 @@ export const PlaceImage = memo(({ place }: { place: PoiType }) => {
     const sources: (string | number)[] = [];
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe
-    if (place?.data[0]?.rawInfo?.wikidata !== undefined) {
+    if (place.data[0]?.rawInfo?.wikidata !== undefined) {
       sources.push(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe
-        `https://hub.toolforge.org/${place.data[0]?.rawInfo?.wikidata}?property=image&width=1000`,
+        `https://hub.toolforge.org/${place.data[0].rawInfo.wikidata}?property=image&width=1000`,
       );
     }
 
     const lastVisitedPoiImageKey =
-      place?.visitedPois[place.visitedPois.length - 1]?.imageKey;
+      place.visitedPois[place.visitedPois.length - 1]?.imageKey;
 
     if (lastVisitedPoiImageKey !== undefined) {
       sources.push(`${config.cdnUrl}/${lastVisitedPoiImageKey}`);

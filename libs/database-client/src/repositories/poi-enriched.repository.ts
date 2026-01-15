@@ -45,7 +45,7 @@ export class PoiEnrichedRepository {
       },
     });
 
-    if (!enriched) {
+    if (enriched === undefined) {
       return undefined;
     }
 
@@ -92,7 +92,7 @@ export class PoiEnrichedRepository {
       })
       .returning();
 
-    if (!enriched) {
+    if (enriched === undefined) {
       return undefined;
     }
 
@@ -102,7 +102,7 @@ export class PoiEnrichedRepository {
       .where(eq(poiFunFacts.poiEnrichedId, enriched.id));
 
     // Insert fun facts if provided
-    if (data.funFacts && data.funFacts.length > 0) {
+    if (data.funFacts !== undefined && data.funFacts.length > 0) {
       await this.db.insert(poiFunFacts).values(
         data.funFacts.map((fact) => ({
           poiEnrichedId: enriched.id,

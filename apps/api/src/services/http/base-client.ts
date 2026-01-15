@@ -11,18 +11,17 @@ export function createBaseClient(fastify: FastifyInstance): KyInstance {
       beforeError: [
         async (error): Promise<HTTPError<unknown>> => {
           const { response } = error;
-          if (response !== undefined) {
-            const body = await response.text();
-            fastify.log.error(
-              {
-                status: response.status,
-                statusText: response.statusText,
-                url: response.url,
-                body,
-              },
-              "HTTP request failed",
-            );
-          }
+          const body = await response.text();
+          fastify.log.error(
+            {
+              status: response.status,
+              statusText: response.statusText,
+              url: response.url,
+              body,
+            },
+            "HTTP request failed",
+          );
+
           return error;
         },
       ],

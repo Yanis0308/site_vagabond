@@ -83,7 +83,7 @@ export function getNthArray(
  * Extract actual URL from Google redirect URL
  */
 export function extractActualURL(googleURL: string): string {
-  if (!googleURL?.startsWith("/url?q=")) {
+  if (!googleURL.startsWith("/url?q=")) {
     return googleURL;
   }
 

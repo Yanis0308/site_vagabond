@@ -53,7 +53,7 @@ export const SearchResultsList = (
     );
   }
 
-  if ((data === undefined || data.length === 0) && !isLoading) {
+  if (data === undefined || data.length === 0) {
     return (
       <View className="flex-1 items-center bg-background-100">
         <CustomText className="py-4 text-center text-secondary-500">

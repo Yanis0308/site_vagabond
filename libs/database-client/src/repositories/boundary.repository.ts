@@ -5,7 +5,6 @@ import { type DrizzleClient } from "../drizzleClient.js";
 import {
   boundaries,
   type BoundaryLevelEnum,
-  type boundaryLevelEnum,
   poiBoundaries,
   poiData,
   visitedPois,

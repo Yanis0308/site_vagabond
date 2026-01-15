@@ -126,36 +126,21 @@ export class SearchRepository {
         sql`${union.name} ASC`,
       );
 
-    return results
-      .filter(
-        (result) =>
-          result.name !== null &&
-          result.latitude !== null &&
-          result.longitude !== null,
-      )
-      .map((result) => {
-        const baseResult: SearchResult = {
-          type: result.type as "POI" | "CITY",
-          id: result.id,
-          name: result.name ?? "",
-          coordinates: {
-            latitude: Number(result.latitude),
-            longitude: Number(result.longitude),
-          },
-        };
+    return results.map((result) => {
+      const baseResult: SearchResult = {
+        type: result.type as "POI" | "CITY",
+        id: result.id,
+        name: result.name,
+        coordinates: {
+          latitude: Number(result.latitude),
+          longitude: Number(result.longitude),
+        },
+      };
 
-        if (result.cityName !== null && result.cityName !== undefined) {
-          baseResult.cityName = result.cityName;
-        }
+      baseResult.cityName = result.cityName;
+      baseResult.departmentName = result.departmentName ?? "";
 
-        if (
-          result.departmentName !== null &&
-          result.departmentName !== undefined
-        ) {
-          baseResult.departmentName = result.departmentName;
-        }
-
-        return baseResult;
-      });
+      return baseResult;
+    });
   }
 }

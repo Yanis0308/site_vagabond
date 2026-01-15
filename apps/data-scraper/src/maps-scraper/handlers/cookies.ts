@@ -85,7 +85,6 @@ export async function clickRejectCookiesIfRequired(
               return true; // Already redirected
             }
             return (
-              document.body !== undefined &&
               document.readyState === "complete" &&
               document.querySelector("body") !== null
             );
@@ -149,7 +148,6 @@ export async function clickRejectCookiesIfRequired(
           const isVisible = await page.evaluate((el) => {
             // Type guard to check if element is an HTMLElement
             if (
-              el === undefined ||
               typeof el !== "object" ||
               !("offsetWidth" in el) ||
               !("offsetHeight" in el)
@@ -275,7 +273,6 @@ export async function clickRejectCookiesIfRequired(
         const isVisible = await page.evaluate((el) => {
           // Type guard to check if element is an HTMLElement
           if (
-            el === undefined ||
             typeof el !== "object" ||
             !("offsetWidth" in el) ||
             !("offsetHeight" in el)

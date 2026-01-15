@@ -35,7 +35,7 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): CountryType[] {
       name: zone.name,
       totalPoisCount: zone.total_pois_count,
       validatedPoisCount: zone.validated_pois_count,
-      pois: zone.validated_pois ?? [],
+      pois: zone.validated_pois,
     };
   };
 

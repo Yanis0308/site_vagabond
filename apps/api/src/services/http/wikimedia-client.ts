@@ -146,7 +146,7 @@ function simplifyWikidataEntity(
         const mainClaim = propClaims[0] as {
           mainsnak?: { datavalue?: { value?: unknown } };
         };
-        const claimValue = mainClaim?.mainsnak?.datavalue?.value;
+        const claimValue = mainClaim.mainsnak?.datavalue?.value;
         if (claimValue !== undefined) {
           simplifiedClaims[propId] = claimValue;
         }
@@ -232,7 +232,7 @@ function parseInfoboxes(
 
     for (const template of templates) {
       // Check if template is an infobox (can start with "Infobox", "Infoboîte", etc.)
-      const templateNameStr = String(template.name ?? "").toLowerCase();
+      const templateNameStr = String(template.name).toLowerCase();
       if (
         templateNameStr.startsWith("infobox") ||
         templateNameStr.startsWith("infoboîte") ||
@@ -241,15 +241,15 @@ function parseInfoboxes(
         // Extract parameters as key-value pairs
         const params: Record<string, unknown> = {};
         for (const param of template.parameters) {
-          const paramName = String(param.name ?? "").trim();
-          const paramValue = String(param.value ?? "").trim();
+          const paramName = String(param.name).trim();
+          const paramValue = String(param.value).trim();
           if (paramName !== "") {
             params[paramName] = paramValue;
           }
         }
 
         // Use template name as key (preserve original case)
-        const templateNameKey = String(template.name ?? "");
+        const templateNameKey = String(template.name);
         if (templateNameKey !== "") {
           infoboxes[templateNameKey] = params;
         }
@@ -293,7 +293,7 @@ async function fetchWikipediaSummary(
       "wikipedia",
     );
 
-    const pages = (response.query?.pages as Record<string, unknown>) ?? {};
+    const pages = response.query?.pages as Record<string, unknown>;
     const pageIds = Object.keys(pages);
 
     if (pageIds.length === 0) {

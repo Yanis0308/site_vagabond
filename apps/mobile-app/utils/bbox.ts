@@ -119,10 +119,6 @@ const geoPolygonToTurf = (polygon: GeoPolygon): GeoJSON.Feature => {
 const turfToGeoPolygon = (turfPolygon: GeoJSON.Feature): GeoPolygon[] => {
   const geometry = turfPolygon.geometry;
 
-  if (geometry === undefined) {
-    return [];
-  }
-
   if (geometry.type === "Polygon") {
     const coords = geometry.coordinates[0];
     if (coords === undefined) {
@@ -140,12 +136,12 @@ const turfToGeoPolygon = (turfPolygon: GeoJSON.Feature): GeoPolygon[] => {
   } else if (geometry.type === "MultiPolygon") {
     // MultiPolygon
     const coords = geometry.coordinates;
-    if (coords === undefined || coords.length === 0) {
+    if (coords.length === 0) {
       return [];
     }
     return coords
       .map((poly: number[][][]) => {
-        if (poly?.[0] === undefined) {
+        if (poly[0] === undefined) {
           return [] as GeoPoint[];
         }
         return poly[0].map(
@@ -197,9 +193,7 @@ export const mergePolygons = (polygons: GeoPolygon[]): GeoPolygon[] => {
           current,
         ]) as GeoJSON.FeatureCollection<GeoJSON.Polygon | GeoJSON.MultiPolygon>;
         const unionResult = turf.union(fc);
-        if (unionResult !== undefined) {
-          result = unionResult as GeoJSON.Feature;
-        }
+        result = unionResult as GeoJSON.Feature;
       } catch (e) {
         // Si la fusion échoue, continuer avec le résultat actuel
         logger("Failed to merge polygon:", e);
@@ -207,10 +201,7 @@ export const mergePolygons = (polygons: GeoPolygon[]): GeoPolygon[] => {
     }
 
     // Convertir le résultat en GeoPolygon
-    if (result !== undefined) {
-      return turfToGeoPolygon(result);
-    }
-    return polygons;
+    return turfToGeoPolygon(result);
   } catch (error) {
     // En cas d'erreur, retourner tous les polygones séparément
     logger("Error merging polygons:", error);

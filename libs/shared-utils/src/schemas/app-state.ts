@@ -1,4 +1,4 @@
-import { Type, type Static } from "typebox";
+import { type Static, Type } from "typebox";
 
 /**
  * Schema for APP_INITIALIZATION_STATE structure

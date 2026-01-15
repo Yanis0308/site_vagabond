@@ -2,7 +2,7 @@
 
 module.exports = {
   extends: [
-    // create infinite eslint check, so for new we use recommended-type-checked and strict
+    // create infinite eslint check, so for now we use recommended-type-checked and strict
     // "plugin:@typescript-eslint/strict-type-checked",
     "plugin:@typescript-eslint/recommended-type-checked",
     "plugin:@typescript-eslint/strict",
@@ -61,5 +61,6 @@ module.exports = {
     // ],
     "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
     "@typescript-eslint/no-redundant-type-constituents": "off",
+    "@typescript-eslint/no-unnecessary-condition": "error",
   },
 };

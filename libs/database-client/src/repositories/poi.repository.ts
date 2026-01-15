@@ -10,7 +10,6 @@ import {
   visitedPois,
 } from "../schema.js";
 import type { CustomPoiCreateInput } from "../types.js";
-import { poiDataSourceEnum } from "../schema.js";
 
 interface PoiWithData {
   id: string;
@@ -138,8 +137,8 @@ export class PoiRepository {
 
     return result.map((row) => ({
       ...row,
-      data: row.data || [],
-      visitedPois: row.visitedPois || [],
+      data: row.data,
+      visitedPois: row.visitedPois,
     }));
   }
 
@@ -156,12 +155,12 @@ export class PoiRepository {
       source: item.source as "OSM", // Cast if needed or ensure type match
       sourceId: item.sourceId,
       coords: sql`ST_GeomFromText('POINT(${item.coords.longitude} ${item.coords.latitude})', 4326)`,
-      filterLevel: item.filterLevel as any,
+      filterLevel: item.filterLevel,
     }));
 
     return await this.db
       .insert(pois)
-      .values(values as any) // 'as any' because coords is a custom type and we are passing sql``
+      .values(values)
       .onConflictDoNothing({ target: [pois.source, pois.sourceId] });
   }
 
@@ -222,12 +221,11 @@ export class PoiRepository {
     };
   }
 
-  async findOsmTagsByPoiId(poiId: string): Promise<Record<string, unknown> | null> {
+  async findOsmTagsByPoiId(
+    poiId: string,
+  ): Promise<Record<string, unknown> | null> {
     const result = await this.db.query.poiData.findFirst({
-      where: and(
-        eq(poiData.poiId, poiId),
-        eq(poiData.source, "OSM" as const),
-      ),
+      where: and(eq(poiData.poiId, poiId), eq(poiData.source, "OSM" as const)),
       columns: { rawInfo: true },
     });
 

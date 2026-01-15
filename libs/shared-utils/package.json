@@ -6,6 +6,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "typescript-check": "tsc --noEmit",
+    "lint-check": "eslint . --max-warnings 0",
+    "prettier-check": "prettier . --check",
     "build": "pnpm run clean && tsc",
     "clean": "rm -rf dist",
     "develop": "pnpm run clean && tsc --watch",

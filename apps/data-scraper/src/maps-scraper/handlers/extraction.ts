@@ -106,7 +106,6 @@ export async function extractPlaceFromCurrentPage(
       await page.waitForFunction(
         () => {
           return (
-            document.body !== undefined &&
             document.readyState === "complete" &&
             document.querySelector("body") !== null
           );

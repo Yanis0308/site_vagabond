@@ -26,11 +26,7 @@ export const useUserZoneStats = (): {
   });
 
   const transformedData = useMemo(() => {
-    if (
-      queryResult.data === undefined ||
-      queryResult.data === null ||
-      !Array.isArray(queryResult.data)
-    ) {
+    if (queryResult.data === undefined || !Array.isArray(queryResult.data)) {
       return undefined;
     }
 

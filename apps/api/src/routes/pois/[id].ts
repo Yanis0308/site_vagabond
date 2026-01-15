@@ -35,8 +35,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         const existingEnriched =
           await fastify.dbRepositories.poiEnriched.findByPoiId(poiId);
 
-        // Temporary disabled for testing
-        if (existingEnriched !== null && existingEnriched !== undefined) {
+        if (existingEnriched !== undefined) {
           return await reply.status(200).send({
             data: {
               id: existingEnriched.id,
@@ -186,7 +185,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           funFacts: enrichmentResult.funFacts,
         });
 
-        if (enriched === null || enriched === undefined) {
+        if (enriched === undefined) {
           return await reply.status(500).send({
             error: {
               type: "INTERNAL_SERVER_ERROR",

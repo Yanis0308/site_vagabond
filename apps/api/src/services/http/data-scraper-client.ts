@@ -89,7 +89,7 @@ export async function scrapeGoogleMaps(
 
     // Validate the place if it exists
     let validatedPlace: GoogleMapsPlaceStrict | null = null;
-    if (validatedResult.place !== null && validatedResult.place !== undefined) {
+    if (validatedResult.place !== null) {
       if (validateGoogleMapsPlace(validatedResult.place)) {
         validatedPlace = validatedResult.place;
       } else {

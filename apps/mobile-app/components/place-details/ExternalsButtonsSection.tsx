@@ -86,9 +86,9 @@ export const ExternalsButtonsSection = memo(({ place }: { place: PoiType }) => {
   const wikipediaParams = useMemo(
     () => ({
       //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
-      wikidataId: place?.data[0]?.rawInfo?.wikidata as string | undefined,
+      wikidataId: place.data[0]?.rawInfo?.wikidata as string | undefined,
       //eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe for testing
-      wikipediaId: place?.data[0]?.rawInfo?.wikipedia as string | undefined,
+      wikipediaId: place.data[0]?.rawInfo?.wikipedia as string | undefined,
     }),
     [place],
   );
@@ -97,7 +97,7 @@ export const ExternalsButtonsSection = memo(({ place }: { place: PoiType }) => {
 
   // Prepare social links
   const socialLinks = useMemo(() => {
-    if (place?.data[0] === null || place?.data[0] === undefined) {
+    if (place.data[0] === undefined) {
       return { wikipediaUrl: null, googleSearchUrl: null };
     }
 
@@ -105,9 +105,7 @@ export const ExternalsButtonsSection = memo(({ place }: { place: PoiType }) => {
 
     // Construire la recherche Google avec nom et position GPS
     let googleQuery = "";
-    if (placeName !== undefined && placeName !== "") {
-      googleQuery = placeName;
-    }
+    googleQuery = placeName;
 
     return {
       // Utiliser le lien Wikipedia dynamique du hook ou null

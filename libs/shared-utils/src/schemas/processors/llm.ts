@@ -1,7 +1,7 @@
 import { Type } from "typebox";
 
-import { CoordsSchema } from "../geo.js";
 import { PoiCategoryTypesSchema } from "../api/poi-categories.js";
+import { CoordsSchema } from "../geo.js";
 
 // Gemini dont support string regex pattern and need "type: string" for enum field
 
@@ -462,7 +462,7 @@ export const PoiEnrichedSchema = Type.Object(
     reservationRequired: Type.Optional(
       PoiEnrichedReservationRequiredFieldSchema,
     ),
-  }, 
+  },
   {
     $id: "PoiEnriched",
   },

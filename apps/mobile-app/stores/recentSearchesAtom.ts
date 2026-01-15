@@ -42,12 +42,7 @@ const validateRecentSearchesRecord = generateValidator(
 
 // Helper function to convert Record to sorted array
 const recordToSortedArray = (record: RecentSearchesRecord): RecentSearch[] => {
-  return Object.values(record)
-    .filter(
-      (item): item is RecentSearch =>
-        item?.result?.id !== null && item?.result?.id !== undefined,
-    )
-    .sort((a, b) => b.timestamp - a.timestamp);
+  return Object.values(record).sort((a, b) => b.timestamp - a.timestamp);
 };
 
 // Storage with validation using withStorageValidator - it's return default value if validation fails
@@ -81,7 +76,7 @@ export const useRecentSearches = (): {
 
   // Resolve promise if needed and convert to sorted array
   const recentSearchesRecordResolved =
-    recentSearchesRecord instanceof Promise ? {} : (recentSearchesRecord ?? {});
+    recentSearchesRecord instanceof Promise ? {} : recentSearchesRecord;
   const recentSearches = recordToSortedArray(recentSearchesRecordResolved);
 
   const addRecentSearch = async (result: SearchResultType): Promise<void> => {

@@ -29,12 +29,7 @@ export class WikimediaOAuthService {
    */
   isConfigured(fastify: FastifyInstance): boolean {
     const config = fastify.config.wikimedia.oauth2;
-    return (
-      config.clientId !== undefined &&
-      config.clientId !== "" &&
-      config.clientSecret !== undefined &&
-      config.clientSecret !== ""
-    );
+    return config.clientId !== "" && config.clientSecret !== "";
   }
 
   /**

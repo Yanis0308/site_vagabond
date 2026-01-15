@@ -6,6 +6,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "typescript-check": "tsc --noEmit",
+    "lint-check": "eslint . --max-warnings 0",
+    "prettier-check": "prettier . --check",
     "drizzle-generate": "drizzle-kit generate",
     "build": "pnpm run clean && tsc && cp -r src/migrations dist/migrations",
     "watch": "pnpm run clean && tsc --watch",

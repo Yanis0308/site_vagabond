@@ -60,7 +60,7 @@ export class GoogleMapsScrapingProcessor implements ScrapingProcessor<
     }
 
     // Calculate distance (informational only)
-    if (params.geoCoordinates !== undefined && response.place !== null) {
+    if (response.place !== null) {
       // Parse POI coordinates from "lat,lng" format
       const [poiLatStr, poiLngStr] = params.geoCoordinates.split(",");
       const poiLat = parseFloat(poiLatStr ?? "");

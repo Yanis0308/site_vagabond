@@ -91,7 +91,7 @@ export function sortRegionsByLatestPoiDate(
         const allPois: BriefVisitedPoiType[] = [];
         for (const dept of r.departements) {
           for (const city of dept.cities) {
-            allPois.push(...(city.pois ?? []));
+            allPois.push(...city.pois);
           }
         }
         return allPois;
@@ -118,7 +118,7 @@ export function sortDepartementsByLatestPoiDate(
       ): BriefVisitedPoiType[] => {
         const allPois: BriefVisitedPoiType[] = [];
         for (const city of d.cities) {
-          allPois.push(...(city.pois ?? []));
+          allPois.push(...city.pois);
         }
         return allPois;
       };
@@ -133,11 +133,11 @@ export function sortCitiesByLatestPoiDate(cities: CityType[]): CityType[] {
   return [...cities]
     .map((city) => ({
       ...city,
-      pois: sortPoisByDate(city.pois ?? []),
+      pois: sortPoisByDate(city.pois),
     }))
     .sort((a, b) => {
-      const dateA = getLatestPoiDate(a.pois ?? []);
-      const dateB = getLatestPoiDate(b.pois ?? []);
+      const dateA = getLatestPoiDate(a.pois);
+      const dateB = getLatestPoiDate(b.pois);
       return dateB - dateA;
     });
 }
@@ -162,7 +162,7 @@ export function calculateStats(zoneHierarchy: CountryType[]): Stats {
         departements++;
         for (const city of dept.cities) {
           cities++;
-          const pois = city.pois ?? [];
+          const pois = city.pois;
           visitedPlaces += pois.length;
 
           // Trouver le POI le plus récent pendant la boucle

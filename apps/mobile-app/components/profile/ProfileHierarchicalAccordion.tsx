@@ -64,7 +64,7 @@ const flattenHierarchy = (
               });
 
               if (expandedCities.has(city.zoneId)) {
-                const pois = city.pois ?? [];
+                const pois = city.pois;
                 for (const poi of pois) {
                   result.push({
                     type: "poi",

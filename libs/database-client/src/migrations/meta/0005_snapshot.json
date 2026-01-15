@@ -245,12 +245,8 @@
           "name": "poi_boundaries_poi_id_fkey",
           "tableFrom": "poi_boundaries",
           "tableTo": "pois",
-          "columnsFrom": [
-            "poi_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["poi_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         },
@@ -258,12 +254,8 @@
           "name": "poi_boundaries_boundary_id_fkey",
           "tableFrom": "poi_boundaries",
           "tableTo": "boundaries",
-          "columnsFrom": [
-            "boundary_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["boundary_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -512,12 +504,8 @@
           "name": "poi_enriched_poi_id_fkey",
           "tableFrom": "poi_enriched",
           "tableTo": "pois",
-          "columnsFrom": [
-            "poi_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["poi_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -584,12 +572,8 @@
           "name": "poi_fun_facts_poi_enriched_id_fkey",
           "tableFrom": "poi_fun_facts",
           "tableTo": "poi_enriched",
-          "columnsFrom": [
-            "poi_enriched_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["poi_enriched_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "cascade"
         }
@@ -954,12 +938,8 @@
           "name": "visited_pois_user_id_fkey",
           "tableFrom": "visited_pois",
           "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "user_id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["user_id"],
           "onDelete": "restrict",
           "onUpdate": "cascade"
         }
@@ -987,73 +967,42 @@
     "public.LanguageEnum": {
       "name": "LanguageEnum",
       "schema": "public",
-      "values": [
-        "EN",
-        "FR"
-      ]
+      "values": ["EN", "FR"]
     },
     "public.PoiDataSourceEnum": {
       "name": "PoiDataSourceEnum",
       "schema": "public",
-      "values": [
-        "OSM",
-        "AI",
-        "CUSTOM"
-      ]
+      "values": ["OSM", "AI", "CUSTOM"]
     },
     "public.PoiFilterLevelEnum": {
       "name": "PoiFilterLevelEnum",
       "schema": "public",
-      "values": [
-        "UNKNOWN",
-        "STRICT",
-        "STANDARD",
-        "INTERMEDIATE",
-        "LAXIST"
-      ]
+      "values": ["UNKNOWN", "STRICT", "STANDARD", "INTERMEDIATE", "LAXIST"]
     },
     "public.PoiSourceEnum": {
       "name": "PoiSourceEnum",
       "schema": "public",
-      "values": [
-        "OSM"
-      ]
+      "values": ["OSM"]
     },
     "public.ProcessingStatusEnum": {
       "name": "ProcessingStatusEnum",
       "schema": "public",
-      "values": [
-        "pending",
-        "success",
-        "error"
-      ]
+      "values": ["pending", "success", "error"]
     },
     "public.ProcessingTypeEnum": {
       "name": "ProcessingTypeEnum",
       "schema": "public",
-      "values": [
-        "scraper-maps",
-        "scraper-web",
-        "llm",
-        "wikidata",
-        "wikipedia"
-      ]
+      "values": ["scraper-maps", "scraper-web", "llm", "wikidata", "wikipedia"]
     },
     "public.RoleEnum": {
       "name": "RoleEnum",
       "schema": "public",
-      "values": [
-        "ADMIN",
-        "USER"
-      ]
+      "values": ["ADMIN", "USER"]
     },
     "public.VisitedPoiStatus": {
       "name": "VisitedPoiStatus",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "CONFIRMED"
-      ]
+      "values": ["PENDING", "CONFIRMED"]
     }
   },
   "schemas": {},
