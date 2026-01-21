@@ -9,6 +9,8 @@ import {
 import { type Static } from "typebox";
 
 import { PoiEnrichmentService } from "../../services/poi-enrichment.service.js";
+import { isProcessSuccess } from "../../services/processing/processing-result-orchestrator.js";
+import { isScrapingSuccess } from "../../services/processing/scraping-processor.interface.js";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
@@ -32,7 +34,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       const enrichmentService = new PoiEnrichmentService(fastify);
 
       try {
-        // 1. Check if enriched data already exists
+        // 1. Check if enriched data already exists (version is already filtered in SQL query)
         const existingEnriched =
           await fastify.dbRepositories.poiEnriched.findByPoiId(poiId);
 
@@ -110,11 +112,24 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           wikipediaRawData: Record<string, unknown>;
         } = {
           googleMapsRawData: googleMapsPlace,
-          jinaRawData: processingResults.jinaResult?.scrapeResponse?.data ?? {},
+          jinaRawData:
+            processingResults.jinaResult !== undefined &&
+            isProcessSuccess(processingResults.jinaResult) &&
+            isScrapingSuccess(processingResults.jinaResult.scrapeResponse)
+              ? processingResults.jinaResult.scrapeResponse.data ?? {}
+              : {},
           wikidataRawData:
-            processingResults.wikidataResult?.scrapeResponse?.data ?? {},
+            processingResults.wikidataResult !== undefined &&
+            isProcessSuccess(processingResults.wikidataResult) &&
+            isScrapingSuccess(processingResults.wikidataResult.scrapeResponse)
+              ? processingResults.wikidataResult.scrapeResponse.data ?? {}
+              : {},
           wikipediaRawData:
-            processingResults.wikipediaResult?.scrapeResponse?.data ?? {},
+            processingResults.wikipediaResult !== undefined &&
+            isProcessSuccess(processingResults.wikipediaResult) &&
+            isScrapingSuccess(processingResults.wikipediaResult.scrapeResponse)
+              ? processingResults.wikipediaResult.scrapeResponse.data ?? {}
+              : {},
         };
 
         // 10. Process Gemini LLM enrichment

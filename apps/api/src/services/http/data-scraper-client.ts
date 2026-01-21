@@ -8,6 +8,11 @@ import type { FastifyInstance } from "fastify";
 import type { KyInstance } from "ky";
 
 import { createBaseClient } from "./base-client.js";
+import type {
+  ScrapingErrorResponse,
+  ScrapingResponse,
+  ScrapingSuccessResponse,
+} from "../processing/scraping-processor.interface.js";
 
 export interface ScrapeParams {
   query: string;
@@ -16,11 +21,11 @@ export interface ScrapeParams {
   langCode: string;
 }
 
-export interface GoogleMapsScrapeResponse {
-  success: boolean;
+export interface GoogleMapsScrapeSuccessData {
   place: GoogleMapsPlaceStrict | null;
-  error?: string;
 }
+
+export type GoogleMapsScrapeResponse = ScrapingResponse<GoogleMapsScrapeSuccessData>;
 
 // Legacy type for backward compatibility (deprecated)
 export type ScrapeResponse = GoogleMapsScrapeResponse;
@@ -100,22 +105,32 @@ export async function scrapeGoogleMaps(
       }
     }
 
-    return {
-      success: validatedResult.success,
-      place: validatedPlace,
-      ...(validatedResult.error !== undefined &&
-        validatedResult.error !== "" && { error: validatedResult.error }),
+    if (!validatedResult.success) {
+      const errorResponse: ScrapingErrorResponse = {
+        success: false,
+        error: validatedResult.error ?? "Unknown error from data-scraper service",
+      };
+      return errorResponse;
+    }
+
+    const successResponse: ScrapingSuccessResponse<GoogleMapsScrapeSuccessData> = {
+      success: true,
+      ...({ place: validatedPlace } as GoogleMapsScrapeSuccessData),
     };
+
+    return successResponse;
   } catch (error) {
     fastify.log.error({ error, params }, "Data scraper request failed");
 
-    return {
+    const errorResponse: ScrapingErrorResponse = {
       success: false,
-      place: null,
       error:
         error instanceof Error
           ? error.message
           : `HTTP request failed: ${String(error)}`,
+      ...(error instanceof Error && { errorInstance: error }),
     };
+
+    return errorResponse;
   }
 }

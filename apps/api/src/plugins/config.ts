@@ -28,6 +28,7 @@ const RawConfigSchema = z.object({
   DATA_SCRAPER_BASIC_AUTH_PASSWORD: z.string(),
   JINA_API_KEY: z.string(),
   GEMINI_API_KEY: z.string(),
+  GROQ_API_KEY: z.string(),
   WIKIMEDIA_OAUTH2_CLIENT_ID: z.string(),
   WIKIMEDIA_OAUTH2_CLIENT_SECRET: z.string(),
 });
@@ -54,6 +55,9 @@ export interface Config {
     apiKey: string;
   };
   gemini: {
+    apiKey: string;
+  };
+  groq: {
     apiKey: string;
   };
   wikimedia: {
@@ -115,6 +119,9 @@ export default fp(
         },
         gemini: {
           apiKey: rawConfig.GEMINI_API_KEY,
+        },
+        groq: {
+          apiKey: rawConfig.GROQ_API_KEY,
         },
         wikimedia: {
           oauth2: {

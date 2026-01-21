@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import {
@@ -16,6 +16,8 @@ export interface CreateProcessingResultInput {
   type: ProcessingTypeEnum;
   distance?: number | null;
   isValid?: boolean | null;
+  cost?: number | null;
+  metadata?: Record<string, unknown> | null;
 }
 
 export interface UpdateProcessingResultInput {
@@ -24,6 +26,8 @@ export interface UpdateProcessingResultInput {
   duration?: number | null;
   distance?: number | null;
   isValid?: boolean | null;
+  cost?: number | null;
+  metadata?: Record<string, unknown> | null;
 }
 
 export class ProcessingResultRepository {
@@ -43,6 +47,8 @@ export class ProcessingResultRepository {
         type: data.type,
         distance: data.distance ?? null,
         isValid: data.isValid ?? null,
+        cost: data.cost ?? null,
+        metadata: data.metadata ?? null,
       })
       .returning({ id: processingResults.id });
 
@@ -58,6 +64,8 @@ export class ProcessingResultRepository {
         duration: data.duration ?? null,
         distance: data.distance ?? null,
         isValid: data.isValid ?? null,
+        cost: data.cost ?? null,
+        metadata: data.metadata ?? null,
       })
       .where(eq(processingResults.id, id));
   }
@@ -69,5 +77,23 @@ export class ProcessingResultRepository {
       where: eq(processingResults.targetId, targetId),
       orderBy: (results, { desc }) => [desc(results.createdAt)],
     });
+  }
+
+  async findExistingSuccessResult(
+    targetId: string,
+    type: ProcessingTypeEnum,
+    version: number,
+  ): Promise<typeof processingResults.$inferSelect | undefined> {
+    const result = await this.db.query.processingResults.findFirst({
+      where: and(
+        eq(processingResults.targetId, targetId),
+        eq(processingResults.type, type),
+        eq(processingResults.status, "success"),
+        eq(processingResults.version, version),
+      ),
+      orderBy: (results, { desc }) => [desc(results.updatedAt)],
+    });
+
+    return result;
   }
 }

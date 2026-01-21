@@ -6,35 +6,14 @@ import {
   poiBoundaries,
   poiData,
   pois,
-  users,
-  visitedPois,
 } from "../schema.js";
 import type { CustomPoiCreateInput } from "../types.js";
 
 interface PoiWithData {
   id: string;
   coords: { latitude: number; longitude: number };
-  data: Array<{
-    id: number;
-    name: string;
-    description: string;
-    filterLevel: "UNKNOWN" | "STRICT" | "STANDARD" | "INTERMEDIATE" | "LAXIST";
-    rawInfo: Record<string, unknown>;
-    language: "EN" | "FR";
-    dataSource: "OSM" | "AI" | "CUSTOM";
-    createdAt: string;
-    updatedAt: string;
-  }>;
-  visitedPois: Array<{
-    id: number;
-    poiId: string;
-    userId: string;
-    username: string;
-    createdAt: string;
-    comment: string;
-    imageKey: string;
-    rating: number;
-  }>;
+  name: string;
+  filterLevel: "UNKNOWN" | "STRICT" | "STANDARD" | "INTERMEDIATE" | "LAXIST";
 }
 
 export class PoiRepository {
@@ -64,83 +43,27 @@ export class PoiRepository {
           'longitude', ST_X(${pois.coords}::geometry),
           'latitude', ST_Y(${pois.coords}::geometry)
         )`,
-        data: sql<
-          Array<{
-            id: number;
-            name: string;
-            description: string;
-            filterLevel:
-              | "UNKNOWN"
-              | "STRICT"
-              | "STANDARD"
-              | "INTERMEDIATE"
-              | "LAXIST";
-            rawInfo: Record<string, unknown>;
-            language: "EN" | "FR";
-            dataSource: "OSM" | "AI" | "CUSTOM";
-            createdAt: string;
-            updatedAt: string;
-          }>
-        >`json_agg (
-          DISTINCT jsonb_build_object(
-            'id', ${poiData.id},
-            'name', ${poiData.name},
-            'description', ${poiData.description},
-            'filterLevel', ${pois.filterLevel},
-            'rawInfo', ${poiData.rawInfo},
-            'language', ${poiData.language},
-            'dataSource', ${poiData.source},
-            'createdAt', to_char(${poiData.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
-            'updatedAt', to_char(${poiData.updatedAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')
-          )
-        ) FILTER (WHERE ${poiData.id} IS NOT NULL)`,
-        visitedPois: sql<
-          Array<{
-            id: number;
-            poiId: string;
-            userId: string;
-            username: string;
-            createdAt: string;
-            comment: string;
-            imageKey: string;
-            rating: number;
-          }>
-        >`json_agg (
-          DISTINCT jsonb_build_object(
-            'id', ${visitedPois.id},
-            'poiId', ${visitedPois.poiId},
-            'userId', ${visitedPois.userId},
-            'username', CASE 
-              WHEN ${users.email} IS NOT NULL AND POSITION('@' IN ${users.email}) > 0 THEN 
-                SUBSTRING(${users.email} FROM 1 FOR POSITION('@' IN ${users.email}) - 1)
-              ELSE 'John Doe'
-            END,
-            'createdAt', to_char(${visitedPois.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"'),
-            'comment', ${visitedPois.comment},
-            'imageKey', ${visitedPois.imageKey},
-            'rating', ${visitedPois.rating}
-          )
-        ) FILTER (WHERE ${visitedPois.id} IS NOT NULL)`,
+        name: sql<string>`(
+          SELECT pd.name
+          FROM ${poiData} pd
+          WHERE pd.poi_id = ${pois.id}
+          ORDER BY pd.language DESC, pd.id DESC
+          LIMIT 1
+        )`,
+        filterLevel: pois.filterLevel,
       })
       .from(pois)
       .leftJoin(poiData, eq(pois.id, poiData.poiId))
-      .leftJoin(visitedPois, eq(pois.id, visitedPois.poiId))
-      .leftJoin(users, eq(visitedPois.userId, users.userId))
       .where(
         and(
           sql`ST_Within(${pois.coords}::geometry, ST_GeomFromText(${polygon}, 4326))`,
           eq(pois.disabled, false),
         ),
       )
-      .groupBy(pois.id)
       .limit(10000);
 
-    return result.map((row) => ({
-      ...row,
-      data: row.data,
-      visitedPois: row.visitedPois,
-    }));
-  }
+    return result
+  } 
 
   async createManyCustom(data: CustomPoiCreateInput[]): Promise<unknown> {
     if (data.length === 0) return;

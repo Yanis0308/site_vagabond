@@ -57,6 +57,13 @@
       "when": 1768473352827,
       "tag": "0007_messy_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1768992848074,
+      "tag": "0008_perfect_naoko",
+      "breakpoints": true
     }
   ]
 }

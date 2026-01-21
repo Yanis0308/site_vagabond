@@ -1,9 +1,12 @@
+import { getProcessingResultVersion } from "@vagabond/database-client";
 import type { FastifyInstance } from "fastify";
 
 import type {
+  ScrapingErrorResponse,
   ScrapingProcessor,
   ScrapingResponse,
 } from "./scraping-processor.interface.js";
+import { isScrapingSuccess } from "./scraping-processor.interface.js";
 
 export interface ProcessInput<TInput> {
   targetId: string;
@@ -11,11 +14,44 @@ export interface ProcessInput<TInput> {
   batchId?: string | null;
 }
 
-export interface ProcessResult<TResponse extends ScrapingResponse> {
+/**
+ * Result when processing succeeds (processor executed successfully and returned success)
+ * Only returned when scrapeResponse.success is true
+ */
+export interface ProcessSuccessResult<
+  TResponse extends ScrapingResponse<unknown>,
+> {
+  success: true;
   processingResultId: number;
-  success: boolean;
-  scrapeResponse: TResponse | undefined;
-  error?: string;
+  scrapeResponse: TResponse;
+}
+
+/**
+ * Result when processing fails at orchestrator level
+ * (exception thrown, failed to create processing result, or processor returned success=false)
+ */
+export interface ProcessErrorResult {
+  success: false;
+  processingResultId: number;
+  error: string;
+  errorInstance?: Error;
+}
+
+/**
+ * Union type for process results
+ * Use isProcessSuccess() type guard to narrow the type
+ */
+export type ProcessResult<TResponse extends ScrapingResponse<unknown>> =
+  | ProcessSuccessResult<TResponse>
+  | ProcessErrorResult;
+
+/**
+ * Type guard to check if a result is a success result
+ */
+export function isProcessSuccess<TResponse extends ScrapingResponse<unknown>>(
+  result: ProcessResult<TResponse>,
+): result is ProcessSuccessResult<TResponse> {
+  return result.success === true;
 }
 
 /**
@@ -32,11 +68,50 @@ export class ProcessingResultOrchestrator {
    * Process scraping using a specific processor
    * Returns a typed result with the specific response type from the processor
    */
-  async process<TInput, TResponse extends ScrapingResponse>(
+  async process<TInput, TResponse extends ScrapingResponse<unknown>>(
     processor: ScrapingProcessor<TInput, TResponse>,
     input: ProcessInput<TInput>,
   ): Promise<ProcessResult<TResponse>> {
     const { targetId, params, batchId } = input;
+    const processorType = processor.getType();
+    const version = getProcessingResultVersion(processorType);
+
+    // Check if a successful result already exists for this targetId, type, and version
+    const existingResult =
+      await this.fastify.dbRepositories.processingResult.findExistingSuccessResult(
+        targetId,
+        processorType,
+        version,
+      );
+
+    if (existingResult !== undefined && existingResult.output !== null) {
+      // Reuse existing result
+      try {
+        // Reconstruct the scrape response from stored output
+        const scrapeResponse = {
+          success: true,
+          ...(existingResult.output as Partial<TResponse>),
+        } as TResponse;
+
+        const result: ProcessSuccessResult<TResponse> = {
+          processingResultId: existingResult.id,
+          success: true,
+          scrapeResponse,
+        };
+        return result;
+      } catch (error) {
+        this.fastify.log.warn(
+          {
+            error,
+            existingResultId: existingResult.id,
+            targetId,
+            processorType,
+          },
+          "Failed to reuse existing result, will process again",
+        );
+        // Continue with normal processing if reuse fails
+      }
+    }
 
     // 1. Create processing result with pending status
     const processingResult =
@@ -46,16 +121,16 @@ export class ProcessingResultOrchestrator {
         input: processor.transformInput(params),
         output: null,
         batchId: batchId ?? null,
-        type: processor.getType(),
+        type: processorType,
       });
 
     if (processingResult === undefined) {
-      return {
+      const result: ProcessErrorResult = {
         processingResultId: 0,
         success: false,
-        scrapeResponse: undefined,
         error: "Failed to create processing result",
       };
+      return result;
     }
 
     const processingResultId = processingResult.id;
@@ -67,8 +142,8 @@ export class ProcessingResultOrchestrator {
 
       // 3. Update processing result with result
       const duration = Date.now() - startTime;
-      if (scrapeResponse.success) {
-        // Get metadata from processor if available (distance, isValid, etc.)
+      if (isScrapingSuccess(scrapeResponse)) {
+        // Get metadata from processor if available (distance, isValid, cost, metadata, etc.)
         const metadata = processor.getMetadata?.(params, scrapeResponse);
 
         const updateData: {
@@ -77,11 +152,20 @@ export class ProcessingResultOrchestrator {
           duration: number;
           distance?: number;
           isValid?: boolean;
+          cost?: number;
+          metadata?: Record<string, unknown>;
         } = {
           status: "success",
           output: processor.transformOutput(scrapeResponse),
           duration,
-          ...metadata,
+          ...(metadata?.distance !== undefined && {
+            distance: metadata.distance,
+          }),
+          ...(metadata?.isValid !== undefined && { isValid: metadata.isValid }),
+          ...(metadata?.cost !== undefined && { cost: metadata.cost }),
+          ...(metadata?.metadata !== undefined && {
+            metadata: metadata.metadata,
+          }),
         };
 
         await this.fastify.dbRepositories.processingResult.update(
@@ -89,45 +173,62 @@ export class ProcessingResultOrchestrator {
           updateData,
         );
       } else {
+        // scrapeResponse is ScrapingErrorResponse here
+        const errorResponse = scrapeResponse as ScrapingErrorResponse;
         await this.fastify.dbRepositories.processingResult.update(
           processingResultId,
           {
             status: "error",
             output: {
-              error: scrapeResponse.error ?? "Unknown scraping error",
+              error: errorResponse.error,
             },
             duration,
           },
         );
+
+        // Return ProcessErrorResult when processor response indicates failure
+        // Transmit errorInstance from ScrapingErrorResponse if available
+        const result: ProcessErrorResult = {
+          processingResultId,
+          success: false,
+          error: errorResponse.error,
+          ...(errorResponse.errorInstance !== undefined && {
+            errorInstance: errorResponse.errorInstance,
+          }),
+        };
+        return result;
       }
 
-      return {
+      // Return ProcessSuccessResult only when processor response indicates success
+      const result: ProcessSuccessResult<TResponse> = {
         processingResultId,
-        success: scrapeResponse.success,
+        success: true,
         scrapeResponse,
-        ...(scrapeResponse.error !== undefined &&
-          scrapeResponse.error !== "" && { error: scrapeResponse.error }),
       };
+      return result;
     } catch (error) {
       // Update processing result with error status
       const duration = Date.now() - startTime;
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
       await this.fastify.dbRepositories.processingResult.update(
         processingResultId,
         {
           status: "error",
           output: {
-            error: error instanceof Error ? error.message : String(error),
+            error: errorMessage,
           },
           duration,
         },
       );
 
-      return {
+      const result: ProcessErrorResult = {
         processingResultId,
         success: false,
-        scrapeResponse: undefined,
-        error: error instanceof Error ? error.message : String(error),
+        error: errorMessage,
+        ...(error instanceof Error && { errorInstance: error }),
       };
+      return result;
     }
   }
 }

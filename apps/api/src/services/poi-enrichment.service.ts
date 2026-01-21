@@ -10,14 +10,19 @@ import type { GoogleMapsScrapeResponse } from "./http/data-scraper-client.js";
 import type { JinaScrapeResponse } from "./http/jina-client.js";
 import type { WikimediaResponse } from "./http/wikimedia-client.js";
 import type { ProcessResult } from "./processing/processing-result-orchestrator.js";
-import { ProcessingResultOrchestrator } from "./processing/processing-result-orchestrator.js";
-import { GeminiLlmProcessor } from "./processing/processors/gemini-llm.processor.js";
+import {
+  isProcessSuccess,
+  ProcessingResultOrchestrator,
+} from "./processing/processing-result-orchestrator.js";
 import { GoogleMapsScrapingProcessor } from "./processing/processors/google-maps-scraping.processor.js";
 import { JinaWebScrapingProcessor } from "./processing/processors/jina-web-scraping.processor.js";
-import {
-  WikidataProcessor,
-  WikipediaProcessor,
-} from "./processing/processors/wikimedia.processor.js";
+import { LlmProcessor } from "./processing/processors/llm.processor.js";
+import { isScrapingSuccess } from "./processing/scraping-processor.interface.js";
+// Temporarily disabled: WikidataProcessor, WikipediaProcessor
+// import {
+//   WikidataProcessor,
+//   WikipediaProcessor,
+// } from "./processing/processors/wikimedia.processor.js";
 
 // Type for full enriched POI data
 type EnrichedPoiData = Static<typeof jsonSchemas.PoiEnrichedSchema>;
@@ -112,6 +117,7 @@ export class PoiEnrichmentService {
     const geoCoordinates = `${poi.latitude},${poi.longitude}`;
 
     // Execute all 4 tasks as a typed tuple
+    // Temporarily disabled: WikidataProcessor and WikipediaProcessor
     const results = await Promise.allSettled([
       orchestrator.process(new GoogleMapsScrapingProcessor(), {
         targetId: poiId,
@@ -133,22 +139,24 @@ export class PoiEnrichmentService {
         },
         batchId,
       }),
-      // Wikidata: execute if tag is present, otherwise use dummy result
-      wikidataId !== undefined && wikidataId !== ""
-        ? orchestrator.process(new WikidataProcessor(), {
-            targetId: poiId,
-            params: { wikidataId },
-            batchId,
-          })
-        : undefined,
-      // Wikipedia: execute if tag is present, otherwise use dummy result
-      wikipediaTitle !== undefined && wikipediaTitle !== ""
-        ? orchestrator.process(new WikipediaProcessor(), {
-            targetId: poiId,
-            params: { wikipediaTitle },
-            batchId,
-          })
-        : undefined,
+      // Temporarily disabled: Wikidata processor
+      // wikidataId !== undefined && wikidataId !== ""
+      //   ? orchestrator.process(new WikidataProcessor(), {
+      //       targetId: poiId,
+      //       params: { wikidataId },
+      //       batchId,
+      //     })
+      //   : undefined,
+      undefined,
+      // Temporarily disabled: Wikipedia processor
+      // wikipediaTitle !== undefined && wikipediaTitle !== ""
+      //   ? orchestrator.process(new WikipediaProcessor(), {
+      //       targetId: poiId,
+      //       params: { wikipediaTitle },
+      //       batchId,
+      //     })
+      //   : undefined,
+      undefined,
     ]);
 
     // Build result object, only including optional properties if they are defined
@@ -174,17 +182,30 @@ export class PoiEnrichmentService {
     poiLatitude: number,
     poiLongitude: number,
   ): GoogleMapsPlaceStrict | null {
-    const scrapeResponse = results.googleMapsResult?.scrapeResponse;
+    const googleMapsResult = results.googleMapsResult;
+    if (googleMapsResult === undefined) {
+      return null;
+    }
 
-    if (scrapeResponse?.place === null || scrapeResponse?.place === undefined) {
+    if (!isProcessSuccess(googleMapsResult)) {
+      return null;
+    }
+
+    const scrapeResponse = googleMapsResult.scrapeResponse;
+    if (!isScrapingSuccess(scrapeResponse)) {
+      return null;
+    }
+
+    const place = scrapeResponse.place;
+    if (place === null) {
       return null;
     }
 
     const distance = getDistance(
       { latitude: poiLatitude, longitude: poiLongitude },
       {
-        latitude: scrapeResponse.place.latitude,
-        longitude: scrapeResponse.place.longitude,
+        latitude: place.latitude,
+        longitude: place.longitude,
       },
     );
 
@@ -193,18 +214,18 @@ export class PoiEnrichmentService {
       this.fastify.log.info(
         {
           distance,
-          placeTitle: scrapeResponse.place.title,
+          placeTitle: place.title,
         },
         "Google Maps place filtered out (beyond 1km)",
       );
       return null;
     }
 
-    return scrapeResponse.place;
+    return place;
   }
 
   /**
-   * Process Gemini LLM enrichment
+   * Process LLM enrichment (Gemini or Groq)
    */
   async processGeminiEnrichment(
     poiId: string,
@@ -219,9 +240,9 @@ export class PoiEnrichmentService {
   ): Promise<EnrichedPoiData> {
     const orchestrator = new ProcessingResultOrchestrator(this.fastify);
     const batchId = randomUUID();
-    const geminiProcessor = new GeminiLlmProcessor();
+    const llmProcessor = new LlmProcessor();
 
-    const geminiResult = await orchestrator.process(geminiProcessor, {
+    const llmResult = await orchestrator.process(llmProcessor, {
       targetId: poiId,
       params: {
         googleMapsData: rawData.googleMapsRawData ?? {},
@@ -236,89 +257,119 @@ export class PoiEnrichmentService {
       batchId,
     });
 
-    if (!geminiResult.success || geminiResult.scrapeResponse === undefined) {
-      const errorMessage = geminiResult.error ?? "Unknown error";
-
-      const errorDetails = {
-        message: errorMessage,
-        success: geminiResult.success,
-        hasData: geminiResult.scrapeResponse !== undefined,
-      };
-
-      this.fastify.log.error(
-        { poiId, geminiResult, errorDetails },
-        "Gemini LLM enrichment failed",
-      );
-
-      throw new Error(`Gemini LLM enrichment failed: ${errorMessage}`);
-    }
-
-    // geminiResult.scrapeResponse is GeminiGenerateEnrichedPoiResponse
-    // We need to access its data property to get the enriched data
-    const geminiResponse = geminiResult.scrapeResponse;
-
-    if (
-      !geminiResponse.success ||
-      geminiResponse.data === undefined ||
-      (geminiResponse.error !== undefined && geminiResponse.error !== "")
-    ) {
-      const errorMessage = geminiResponse.error ?? "Unknown error";
+    // Check if orchestrator failed (exception, failed to create processing result, or processor returned success=false)
+    if (!isProcessSuccess(llmResult)) {
+      const errorMessage = llmResult.error;
 
       this.fastify.log.error(
         {
           poiId,
-          geminiResult,
-          geminiResponse,
-          errorMessage,
+          llmResult,
+          errorInstance: llmResult.errorInstance,
         },
-        "Gemini LLM enrichment failed - response indicates failure",
+        "LLM enrichment failed",
       );
 
-      throw new Error(`Gemini LLM enrichment failed: ${errorMessage}`);
+      throw new Error(`LLM enrichment failed: ${errorMessage}`);
     }
 
-    return geminiResponse.data;
+    // If we reach here, orchestrator succeeded and processor response indicates success
+    const llmResponse = llmResult.scrapeResponse;
+
+    // Validate that we have the expected data
+    if (!isScrapingSuccess(llmResponse)) {
+      const errorMessage = llmResponse.error;
+
+      this.fastify.log.error(
+        {
+          poiId,
+          llmResult,
+          llmResponse,
+          errorInstance: llmResponse.errorInstance,
+          errorMessage,
+        },
+        "LLM enrichment failed - response indicates failure",
+      );
+
+      throw new Error(`LLM enrichment failed: ${errorMessage}`);
+    }
+
+    // llmResponse is ScrapingSuccessResponse<LLMGenerateEnrichedPoiSuccessData> here
+    // data is required in LLMGenerateEnrichedPoiSuccessData, so it should always be defined
+    // But we check anyway for safety
+    if (llmResponse.data === undefined) {
+      const errorMessage = "LLM response missing data";
+
+      this.fastify.log.error(
+        {
+          poiId,
+          llmResult,
+          llmResponse,
+          errorMessage,
+        },
+        "LLM enrichment failed - response missing data",
+      );
+
+      throw new Error(`LLM enrichment failed: ${errorMessage}`);
+    }
+
+    return llmResponse.data as EnrichedPoiData;
   }
 
   /**
    * Log processing results for monitoring
    */
   logProcessingResults(poiId: string, results: ProcessingResults): void {
-    if (results.jinaResult !== undefined && !results.jinaResult.success) {
-      this.fastify.log.warn(
-        { webScrapeResult: results.jinaResult, poiId },
-        "Web scraping with Jina AI failed, continuing without Jina data",
-      );
+    if (results.jinaResult !== undefined) {
+      if (!isProcessSuccess(results.jinaResult)) {
+        this.fastify.log.warn(
+          {
+            webScrapeResult: results.jinaResult,
+            errorInstance: results.jinaResult.errorInstance,
+            poiId,
+          },
+          "Web scraping with Jina AI failed, continuing without Jina data",
+        );
+      }
     }
 
-    if (
-      results.googleMapsResult !== undefined &&
-      !results.googleMapsResult.success
-    ) {
-      this.fastify.log.warn(
-        { processResult: results.googleMapsResult, poiId },
-        "Google Maps scraping failed, continuing without Google Maps data",
-      );
+    if (results.googleMapsResult !== undefined) {
+      if (!isProcessSuccess(results.googleMapsResult)) {
+        this.fastify.log.warn(
+          {
+            processResult: results.googleMapsResult,
+            errorInstance: results.googleMapsResult.errorInstance,
+            poiId,
+          },
+          "Google Maps scraping failed, continuing without Google Maps data",
+        );
+      }
     }
 
-    if (
-      results.wikidataResult !== undefined &&
-      !results.wikidataResult.success
-    ) {
-      this.fastify.log.warn(
-        { wikidataResult: results.wikidataResult, poiId },
-        "Wikidata fetch failed, continuing without Wikidata data",
-      );
+    if (results.wikidataResult !== undefined) {
+      if (!isProcessSuccess(results.wikidataResult)) {
+        this.fastify.log.warn(
+          {
+            wikidataResult: results.wikidataResult,
+            errorInstance: results.wikidataResult.errorInstance,
+            poiId,
+          },
+          "Wikidata fetch failed, continuing without Wikidata data",
+        );
+      }
     }
 
-    if (
-      results.wikipediaResult !== undefined &&
-      !results.wikipediaResult.success
-    ) {
-      this.fastify.log.warn(
-        { wikipediaResult: results.wikipediaResult, poiId },
-        "Wikipedia fetch failed, continuing without Wikipedia data",
-      );
+    if (results.wikipediaResult !== undefined) {
+      if (!isProcessSuccess(results.wikipediaResult)) {
+        this.fastify.log.warn(
+          {
+            wikipediaResult: results.wikipediaResult,
+            errorInstance: results.wikipediaResult.errorInstance,
+            poiId,
+          },
+          "Wikipedia fetch failed, continuing without Wikipedia data",
+        );
+      }
     }
   }
 }

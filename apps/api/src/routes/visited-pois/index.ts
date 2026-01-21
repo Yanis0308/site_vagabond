@@ -5,6 +5,51 @@ import {
 import { getUserDisplayName, jsonSchemas } from "@vagabond/shared-utils";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
+  fastify.get(
+    "/",
+    {
+      schema: {
+        tags: ["visited-pois"],
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: jsonSchemas.GetVisitedPoisResponseSchema,
+        },
+      },
+    },
+    async function (request, reply) {
+      const visitedPois =
+        await fastify.dbRepositories.visitedPoi.findByUserId(
+          request.user.uid,
+        );
+
+      return await reply.status(200).send({ data: visitedPois });
+    },
+  );
+
+  fastify.get(
+    "/:poiId",
+    {
+      schema: {
+        tags: ["visited-pois"],
+        security: [{ bearerAuth: [] }],
+        params: Type.Object({
+          poiId: Type.String(),
+        }),
+        response: {
+          200: jsonSchemas.GetVisitedPoisResponseSchema,
+        },
+      },
+    },
+    async function (request, reply) {
+      const { poiId } = request.params;
+
+      const visitedPois =
+        await fastify.dbRepositories.visitedPoi.findByPoiId(poiId);
+
+      return await reply.status(200).send({ data: visitedPois });
+    },
+  );
+
   fastify.post(
     "/:poiId",
     {

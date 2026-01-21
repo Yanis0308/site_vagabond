@@ -2,11 +2,36 @@ import type { schema } from "@vagabond/database-client";
 import type { FastifyInstance } from "fastify";
 
 /**
- * Base interface for scraping responses
+ * Response when scraping succeeds
  */
-export interface ScrapingResponse {
-  success: boolean;
-  error?: string;
+export type ScrapingSuccessResponse<TData> = TData & {
+  success: true;
+};
+
+/**
+ * Response when scraping fails
+ */
+export interface ScrapingErrorResponse {
+  success: false;
+  error: string;
+  errorInstance?: Error;
+}
+
+/**
+ * Union type for scraping responses
+ * Use isScrapingSuccess() type guard to narrow the type
+ */
+export type ScrapingResponse<TData> =
+  | ScrapingSuccessResponse<TData>
+  | ScrapingErrorResponse;
+
+/**
+ * Type guard to check if a scraping response is a success response
+ */
+export function isScrapingSuccess<TData>(
+  response: ScrapingResponse<TData>,
+): response is ScrapingSuccessResponse<TData> {
+  return response.success === true;
 }
 
 /**
@@ -15,13 +40,18 @@ export interface ScrapingResponse {
 export interface ProcessingMetadata {
   distance?: number;
   isValid?: boolean;
+  cost?: number; // Number of tokens used (for Jina, Gemini, Groq)
+  metadata?: Record<string, unknown>; // Other API metadata (excluding main data)
 }
 
 /**
  * Interface for scraping processors
  * Each processor handles a specific type of scraping (Google Maps, Jina, etc.)
  */
-export interface ScrapingProcessor<TInput, TResponse extends ScrapingResponse> {
+export interface ScrapingProcessor<
+  TInput,
+  TResponse extends ScrapingResponse<unknown>,
+> {
   /**
    * Execute the scraping operation
    */

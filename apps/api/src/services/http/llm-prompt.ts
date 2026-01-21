@@ -170,7 +170,10 @@ ${dataSections.join("\n\n")}
 ## RÈGLES DE QUALITÉ
 
 1. **Fidélité aux sources**: Utilise uniquement les informations documentées dans ${sourcesList}.
-2. **Gestion des absences**: Laisse null si l'information n'est pas disponible dans les sources.
+2. **Gestion des absences**: 
+   - Pour les champs optionnels (objets complexes), omets complètement le champ si l'information n'est pas disponible (ne génère pas d'objet avec des valeurs null).
+   - Pour les champs simples optionnels, tu peux utiliser null si l'information n'est pas disponible.
+   - Ne génère jamais null pour des propriétés requises à l'intérieur d'un objet (comme durationInMinutes dans averageVisitDuration).
 3. **Exactitude des données factuelles**: Reproduis exactement les dates, heures et prix sans modification.
 4. **Fun facts**: Propose des anecdotes surprenantes, historiques ou insolites, distinctes de la description principale. Base-toi uniquement sur des faits documentés.
 

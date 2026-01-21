@@ -1,9 +1,10 @@
 import { generateValidator, jsonSchemas, logger } from "@vagabond/shared-utils";
 import { type PoiEnrichedData } from "@vagabond/shared-utils/dist/schemas/processors/llm.js";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import { poiEnriched } from "../schema.js";
+import { POI_ENRICHED_VERSION } from "../versions.js";
 
 export interface CreatePoiEnrichedInput {
   poiId: string;
@@ -30,7 +31,10 @@ export class PoiEnrichedRepository {
 
   async findByPoiId(poiId: string): Promise<PoiEnrichedWithData | undefined> {
     const enriched = await this.db.query.poiEnriched.findFirst({
-      where: eq(poiEnriched.poiId, poiId),
+      where: and(
+        eq(poiEnriched.poiId, poiId),
+        eq(poiEnriched.version, POI_ENRICHED_VERSION),
+      ),
     });
 
     if (enriched === undefined) {

@@ -8,6 +8,10 @@ import {
   type WikimediaResponse,
 } from "../../http/wikimedia-client.js";
 import type { ScrapingProcessor } from "../scraping-processor.interface.js";
+import {
+  isScrapingSuccess,
+  type ScrapingErrorResponse,
+} from "../scraping-processor.interface.js";
 
 export interface WikimediaProcessorParams {
   wikidataId?: string;
@@ -40,10 +44,11 @@ export class WikimediaProcessor implements ScrapingProcessor<
       return fetchWikipediaPage(fastify, fetchParams);
     }
 
-    return Promise.resolve({
+    const errorResponse: ScrapingErrorResponse = {
       success: false,
       error: "Either wikidataId or wikipediaTitle must be provided",
-    });
+    };
+    return Promise.resolve(errorResponse);
   }
 
   getType(): "wikidata" | "wikipedia" {
@@ -62,15 +67,17 @@ export class WikimediaProcessor implements ScrapingProcessor<
   }
 
   transformOutput(response: WikimediaResponse): Record<string, unknown> {
+    if (!isScrapingSuccess(response)) {
+      return {
+        error: response.error,
+      };
+    }
+
     return {
       data: response.data,
       ...(response.wikipediaData !== undefined && {
         wikipediaData: response.wikipediaData,
       }),
-      ...(response.error !== undefined &&
-        response.error !== "" && {
-          error: response.error,
-        }),
     };
   }
 }
@@ -87,10 +94,11 @@ export class WikidataProcessor implements ScrapingProcessor<
     params: WikimediaProcessorParams,
   ): Promise<WikimediaResponse> {
     if (params.wikidataId === undefined || params.wikidataId === "") {
-      return Promise.resolve({
+      const errorResponse: ScrapingErrorResponse = {
         success: false,
         error: "wikidataId is required",
-      });
+      };
+      return Promise.resolve(errorResponse);
     }
 
     return fetchWikidataEntity(fastify, {
@@ -109,15 +117,17 @@ export class WikidataProcessor implements ScrapingProcessor<
   }
 
   transformOutput(response: WikimediaResponse): Record<string, unknown> {
+    if (!isScrapingSuccess(response)) {
+      return {
+        error: response.error,
+      };
+    }
+
     return {
       data: response.data,
       ...(response.wikipediaData !== undefined && {
         wikipediaData: response.wikipediaData,
       }),
-      ...(response.error !== undefined &&
-        response.error !== "" && {
-          error: response.error,
-        }),
     };
   }
 }
@@ -134,10 +144,11 @@ export class WikipediaProcessor implements ScrapingProcessor<
     params: WikimediaProcessorParams,
   ): Promise<WikimediaResponse> {
     if (params.wikipediaTitle === undefined || params.wikipediaTitle === "") {
-      return Promise.resolve({
+      const errorResponse: ScrapingErrorResponse = {
         success: false,
         error: "wikipediaTitle is required",
-      });
+      };
+      return Promise.resolve(errorResponse);
     }
 
     return fetchWikipediaPage(fastify, {
@@ -156,15 +167,17 @@ export class WikipediaProcessor implements ScrapingProcessor<
   }
 
   transformOutput(response: WikimediaResponse): Record<string, unknown> {
+    if (!isScrapingSuccess(response)) {
+      return {
+        error: response.error,
+      };
+    }
+
     return {
       data: response.data,
       ...(response.wikipediaData !== undefined && {
         wikipediaData: response.wikipediaData,
       }),
-      ...(response.error !== undefined &&
-        response.error !== "" && {
-          error: response.error,
-        }),
     };
   }
 }

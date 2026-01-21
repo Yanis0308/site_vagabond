@@ -10,6 +10,7 @@ import type {
   ProcessingMetadata,
   ScrapingProcessor,
 } from "../scraping-processor.interface.js";
+import { isScrapingSuccess } from "../scraping-processor.interface.js";
 
 /**
  * Processor for Google Maps scraping via data-scraper service
@@ -39,6 +40,12 @@ export class GoogleMapsScrapingProcessor implements ScrapingProcessor<
   }
 
   transformOutput(response: GoogleMapsScrapeResponse): Record<string, unknown> {
+    if (!isScrapingSuccess(response)) {
+      return {
+        error: response.error,
+      };
+    }
+
     return {
       place: response.place,
     };
@@ -50,17 +57,18 @@ export class GoogleMapsScrapingProcessor implements ScrapingProcessor<
   ): ProcessingMetadata {
     const metadata: ProcessingMetadata = {};
 
-    // Place is already validated in data-scraper-client
-    // Only consider valid if the place exists and response was successful
-    if (response.success && response.place !== null) {
-      metadata.isValid = true;
-    } else {
-      // If request failed or no place, response is not valid
+    if (!isScrapingSuccess(response)) {
+      // If request failed, response is not valid
       metadata.isValid = false;
+      return metadata;
     }
 
-    // Calculate distance (informational only)
+    // Place is already validated in data-scraper-client
+    // Only consider valid if the place exists and response was successful
     if (response.place !== null) {
+      metadata.isValid = true;
+
+      // Calculate distance (informational only)
       // Parse POI coordinates from "lat,lng" format
       const [poiLatStr, poiLngStr] = params.geoCoordinates.split(",");
       const poiLat = parseFloat(poiLatStr ?? "");
@@ -86,6 +94,9 @@ export class GoogleMapsScrapingProcessor implements ScrapingProcessor<
 
         metadata.distance = distance;
       }
+    } else {
+      // If no place, response is not valid
+      metadata.isValid = false;
     }
 
     return metadata;

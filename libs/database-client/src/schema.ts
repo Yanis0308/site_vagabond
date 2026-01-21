@@ -274,6 +274,8 @@ export const processingResults = pgTable("processing_results", {
   duration: integer(),
   distance: integer(),
   isValid: boolean("is_valid"),
+  cost: integer(),
+  metadata: jsonb("metadata"),
 });
 
 export const poiEnriched = pgTable(

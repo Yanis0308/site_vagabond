@@ -2,6 +2,11 @@ import type { FastifyInstance } from "fastify";
 import { Mwn } from "mwn";
 
 import { wikimediaOAuthService } from "./wikimedia-oauth.service.js";
+import type {
+  ScrapingErrorResponse,
+  ScrapingResponse,
+  ScrapingSuccessResponse,
+} from "../processing/scraping-processor.interface.js";
 
 export interface FetchWikidataParams {
   wikidataId: string; // Format: "Q12345"
@@ -12,12 +17,12 @@ export interface FetchWikipediaParams {
   lang?: string; // Language code (e.g., "fr"), extracted from title if present
 }
 
-export interface WikimediaResponse {
-  success: boolean;
-  data?: Record<string, unknown>;
+export interface WikimediaSuccessData {
+  data: Record<string, unknown>;
   wikipediaData?: Record<string, unknown>; // Wikipedia data if linked from Wikidata
-  error?: string;
 }
+
+export type WikimediaResponse = ScrapingResponse<WikimediaSuccessData>;
 
 // Cache for bot instances
 let wikidataBot: Mwn | null = null;
@@ -514,36 +519,40 @@ export async function fetchWikidataEntity(
     const entities = response.entities as Record<string, unknown> | undefined;
 
     if (entities === undefined || Object.keys(entities).length === 0) {
-      return {
+      const errorResponse: ScrapingErrorResponse = {
         success: false,
         error: `No entity found for Wikidata ID: ${params.wikidataId}`,
       };
+      return errorResponse;
     }
 
     // Get the entity (should be only one)
     const entityIds = Object.keys(entities);
     if (entityIds.length === 0) {
-      return {
+      const errorResponse: ScrapingErrorResponse = {
         success: false,
         error: `No entity found for Wikidata ID: ${params.wikidataId}`,
       };
+      return errorResponse;
     }
 
     const entityId = entityIds[0];
     if (entityId === undefined) {
-      return {
+      const errorResponse: ScrapingErrorResponse = {
         success: false,
         error: `Entity ID is undefined for Wikidata ID: ${params.wikidataId}`,
       };
+      return errorResponse;
     }
 
     const entity = entities[entityId] as Record<string, unknown> | undefined;
 
     if (entity === undefined) {
-      return {
+      const errorResponse: ScrapingErrorResponse = {
         success: false,
         error: `Entity data is empty for Wikidata ID: ${params.wikidataId}`,
       };
+      return errorResponse;
     }
 
     // Simplify entity data
@@ -598,21 +607,30 @@ export async function fetchWikidataEntity(
       }
     }
 
-    return {
-      success: true,
+    const successData: WikimediaSuccessData = {
       data: simplifiedEntity,
       ...(wikipediaData !== undefined && { wikipediaData }),
     };
+
+    const successResponse: ScrapingSuccessResponse<WikimediaSuccessData> = {
+      success: true,
+      ...successData,
+    };
+
+    return successResponse;
   } catch (error) {
     fastify.log.error({ error, params }, "Wikidata entity fetch failed");
 
-    return {
+    const errorResponse: ScrapingErrorResponse = {
       success: false,
       error:
         error instanceof Error
           ? error.message
           : `HTTP request failed: ${String(error)}`,
+      ...(error instanceof Error && { errorInstance: error }),
     };
+
+    return errorResponse;
   }
 }
 
@@ -630,25 +648,35 @@ export async function fetchWikipediaPage(
     const response = await fetchWikipediaSummary(fastify, lang, title);
 
     if (response === null) {
-      return {
+      const errorResponse: ScrapingErrorResponse = {
         success: false,
         error: `Failed to fetch Wikipedia page: ${title} (${lang})`,
       };
+      return errorResponse;
     }
 
-    return {
-      success: true,
+    const successData: WikimediaSuccessData = {
       data: response,
     };
+
+    const successResponse: ScrapingSuccessResponse<WikimediaSuccessData> = {
+      success: true,
+      ...successData,
+    };
+
+    return successResponse;
   } catch (error) {
     fastify.log.error({ error, params }, "Wikipedia page fetch failed");
 
-    return {
+    const errorResponse: ScrapingErrorResponse = {
       success: false,
       error:
         error instanceof Error
           ? error.message
           : `HTTP request failed: ${String(error)}`,
+      ...(error instanceof Error && { errorInstance: error }),
     };
+
+    return errorResponse;
   }
 }

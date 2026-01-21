@@ -8,4 +8,5 @@ export * from "./repositories/user.repository.js";
 export * from "./repositories/visited-poi.repository.js";
 export * as schema from "./schema.js";
 export * from "./types.js";
+export * from "./versions.js";
 export * from "drizzle-orm";

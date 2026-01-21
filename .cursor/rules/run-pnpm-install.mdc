@@ -1,8 +1,0 @@
----
-name: run-pnpm-i
-description: Pnpm build instructions for /libs
----
-
-# Overview
-
-When you change code in /libs you need to run `pnpm install` to update the dependencies for apps/ then no need to run `pnpm build` for any /libs
