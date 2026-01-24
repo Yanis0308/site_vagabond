@@ -7,7 +7,8 @@ import {
   VectorSource,
 } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
-import { memo, type ReactElement, type RefObject, useMemo } from "react";
+import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
+import { memo, type ReactElement, type RefObject, useCallback, useMemo } from "react";
 import { Platform } from "react-native";
 
 import { BoundaryLineLayer } from "@/components/custom-ui/BoundaryLineLayer";
@@ -15,7 +16,8 @@ import { BoundarySymbolLayers } from "@/components/custom-ui/BoundarySymbolLayer
 import { MapPOILayers } from "@/components/custom-ui/MapPOILayers";
 import { config } from "@/constants/Config";
 import { useMapImages } from "@/hooks/maps/useMapImages";
-import { type OnPressEvent } from "@/hooks/maps/useMapLogic";
+import { type OnPressEventPoi } from "@/hooks/maps/useMapLogic";
+import { useUserVisitedPois } from "@/hooks/queries/useUserVisitedPois";
 import { type PoiType } from "@/utils/types";
 
 // Types
@@ -26,7 +28,7 @@ interface CustomMapViewProps {
   selectedPlace: PoiType | null;
   onMapIdle: (mapState: MapState) => void;
   onCameraChanged: (mapState: MapState) => void;
-  onPress: (event: OnPressEvent) => void;
+  onPress: (event: OnPressEventPoi) => void;
 }
 
 export const CustomMapView = memo(function CustomMapView({
@@ -39,6 +41,7 @@ export const CustomMapView = memo(function CustomMapView({
   onPress,
 }: CustomMapViewProps): ReactElement {
   const images = useMapImages();
+  const { data: { visitedPoiIds } } = useUserVisitedPois();
 
   const pulsing = useMemo(() => ({ isEnabled: false }), []);
 
@@ -51,6 +54,15 @@ export const CustomMapView = memo(function CustomMapView({
   );
 
   const boundariesSourceId = "remote-boundaries-source";
+  const poisSourceId = "remote-pois-source";
+
+  // Wrapper to convert OnPressEvent to OnPressEventPoi
+  const handleVectorSourcePress = useCallback(
+    (event: OnPressEvent) => {
+      onPress(event as OnPressEventPoi);
+    },
+    [onPress],
+  );
 
   return (
     <MapView
@@ -73,17 +85,26 @@ export const CustomMapView = memo(function CustomMapView({
       <Images images={images} />
 
       {/* Vector source for boundaries */}
-      <VectorSource id={boundariesSourceId} url={config.mapboxTilesetUrl}>
+      <VectorSource
+        id={boundariesSourceId}
+        url={config.mapboxBoundariesTilesetUrl}
+      >
         {/* Boundary layers using the vector source */}
         <BoundaryLineLayer sourceId={boundariesSourceId} />
         <BoundarySymbolLayers sourceId={boundariesSourceId} />
       </VectorSource>
 
-      <MapPOILayers
-        customShape={customShape}
-        onPress={onPress}
-        selectedPlace={selectedPlace}
-      />
+      <VectorSource
+        id={poisSourceId}
+        url={config.mapboxPoisTilesetUrl}
+        onPress={handleVectorSourcePress}
+      >
+        <MapPOILayers
+          sourceId={poisSourceId}
+          selectedPlace={selectedPlace}
+          visitedPoiIds={visitedPoiIds}
+        />
+      </VectorSource>
     </MapView>
   );
 });

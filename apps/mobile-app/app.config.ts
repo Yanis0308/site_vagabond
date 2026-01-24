@@ -10,7 +10,8 @@ export const RuntimeConfigSchema = z.object({
   googleSignInWebClientId: z.string(),
   publicMapboxToken: z.string(),
   mapboxStyleUrl: z.string(),
-  mapboxTilesetUrl: z.string(),
+  mapboxBoundariesTilesetUrl: z.string(),
+  mapboxPoisTilesetUrl: z.string(),
   vexoApiKey: z.string(),
 });
 
@@ -58,7 +59,9 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       publicMapboxToken: process.env.EXPO_PUBLIC_MAPBOX_TOKEN,
       vexoApiKey: process.env.EXPO_PUBLIC_VEXO_API_KEY,
       mapboxStyleUrl: process.env.EXPO_PUBLIC_MAPBOX_STYLE_URL,
-      mapboxTilesetUrl: process.env.EXPO_PUBLIC_MAPBOX_TILESET_URL,
+      mapboxBoundariesTilesetUrl:
+        process.env.EXPO_PUBLIC_BOUNDARIES_MAPBOX_TILESET_URL,
+      mapboxPoisTilesetUrl: process.env.EXPO_PUBLIC_POIS_MAPBOX_TILESET_URL,
     },
   };
 

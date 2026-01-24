@@ -10,7 +10,8 @@ export const RuntimeConfigSchema = z.object({
   googleSignInWebClientId: z.string(),
   publicMapboxToken: z.string(),
   mapboxStyleUrl: z.string(),
-  mapboxTilesetUrl: z.string(),
+  mapboxBoundariesTilesetUrl: z.string(),
+  mapboxPoisTilesetUrl: z.string(),
   vexoApiKey: z.string(),
 });
 

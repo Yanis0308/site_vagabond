@@ -1,13 +1,12 @@
 import { CircleLayer, ShapeSource, SymbolLayer } from "@rnmapbox/maps";
 import { memo, type ReactElement } from "react";
 
-import { type OnPressEvent } from "@/hooks/maps/useMapLogic";
 import { type PoiType } from "@/utils/types";
 
 interface MapPOILayersProps {
-  customShape: GeoJSON.FeatureCollection;
-  onPress: (event: OnPressEvent) => void;
+  sourceId: string;
   selectedPlace: PoiType | null;
+  visitedPoiIds: string[];
 }
 
 // Constants for zoom-based sizing
@@ -15,6 +14,13 @@ const ZOOM_LEVELS = {
   MIN: 11,
   // MID: 12.5,
   MAX: 13,
+} as const;
+
+// POI layer configuration
+const POI_LAYER_CONFIG = {
+  sourceLayerId: "pois-data-layer-v1",
+  minZoomLevel: 10,
+  // maxZoomLevel: 22,
 } as const;
 
 // Helper to create filter level condition
@@ -76,7 +82,7 @@ const createSizeInterpolation = (
     ZOOM_LEVELS.MIN,
     [
       "case",
-      ["==", ["get", "id"], selectedId],
+      ["==", ["get", "poiId"], selectedId],
       sizeConfig[ZOOM_LEVELS.MIN].selected,
       createFilterLevelCondition(),
       sizeConfig[ZOOM_LEVELS.MIN].important,
@@ -85,7 +91,7 @@ const createSizeInterpolation = (
     // ZOOM_LEVELS.MID,
     // [
     //   "case",
-    //   ["==", ["get", "id"], selectedId],
+    //   ["==", ["get", "poiId"], selectedId],
     //   sizeConfig[ZOOM_LEVELS.MID].selected,
     //   createFilterLevelCondition(),
     //   sizeConfig[ZOOM_LEVELS.MID].important,
@@ -94,7 +100,7 @@ const createSizeInterpolation = (
     ZOOM_LEVELS.MAX,
     [
       "case",
-      ["==", ["get", "id"], selectedId],
+      ["==", ["get", "poiId"], selectedId],
       sizeConfig[ZOOM_LEVELS.MAX].selected,
       createFilterLevelCondition(),
       sizeConfig[ZOOM_LEVELS.MAX].important,
@@ -111,7 +117,7 @@ const createTextSizeInterpolation = (selectedId: string) =>
     ZOOM_LEVELS.MIN,
     [
       "case",
-      ["==", ["get", "id"], selectedId],
+      ["==", ["get", "poiId"], selectedId],
       SIZES.textSize[ZOOM_LEVELS.MIN].selected,
       createFilterLevelCondition(),
       SIZES.textSize[ZOOM_LEVELS.MIN].important,
@@ -120,7 +126,7 @@ const createTextSizeInterpolation = (selectedId: string) =>
     // ZOOM_LEVELS.MID,
     // [
     //   "case",
-    //   ["==", ["get", "id"], selectedId],
+    //   ["==", ["get", "poiId"], selectedId],
     //   // SIZES.textSize[ZOOM_LEVELS.MID].selected,
     //   createFilterLevelCondition(),
     //   // SIZES.textSize[ZOOM_LEVELS.MID].important,
@@ -129,7 +135,7 @@ const createTextSizeInterpolation = (selectedId: string) =>
     ZOOM_LEVELS.MAX,
     [
       "case",
-      ["==", ["get", "id"], selectedId],
+      ["==", ["get", "poiId"], selectedId],
       SIZES.textSize[ZOOM_LEVELS.MAX].selected,
       createFilterLevelCondition(),
       SIZES.textSize[ZOOM_LEVELS.MAX].important,
@@ -139,45 +145,45 @@ const createTextSizeInterpolation = (selectedId: string) =>
 
 export const MapPOILayers = memo(
   ({
-    customShape,
-    onPress,
+    // customShape,
+    // onPress,
+    sourceId,
     selectedPlace,
+    visitedPoiIds,
   }: MapPOILayersProps): ReactElement => {
     return (
-      <ShapeSource id="pois" shape={customShape} onPress={onPress}>
-        {/* Couche pour tous les points avec tailles selon filter_level */}
+      <> 
+           {/* Couche pour tous les points avec tailles selon filter_level */}
         <CircleLayer
           id="all-points"
-          sourceID="pois"
+          sourceID={sourceId}
+          sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
+          minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
+          // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
           style={{
             circleColor: [
               "case",
               // Place sélectionnée - orange vif
-              ["==", ["get", "id"], selectedPlace?.id ?? ""],
+              ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
               "#f97316", // orange-500 - couleur distinctive pour la sélection
-              // Points visités - transparents
-              ["get", "isVisited"],
-              "green", // Blanc transparent pour tous les visités
+              // Points visités - vert
+              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+              "#22c55e", // green-500 pour les POIs visités
               // Points non visités - couleurs selon filter_level
               [
-                "case",
-                // STRICT/STANDARD non visités - violet foncé
-                [
-                  "any",
-                  ["==", ["get", "filterLevel"], "STRICT"],
-                  ["==", ["get", "filterLevel"], "STANDARD"],
-                ],
-                "#7c3aed", // violet-600 - violet foncé pour les importants
-                // LAXIST/INTERMEDIATE non visités - violet clair
-                [
-                  "any",
-                  ["==", ["get", "filterLevel"], "LAXIST"],
-                  ["==", ["get", "filterLevel"], "INTERMEDIATE"],
-                ],
-                "#a855f7", // violet-500 - violet clair pour les moins importants
-                // UNKNOWN non visités - gris
-                "#6b7280", // gray-500 - gris pour les inconnus
+                "any",
+                ["==", ["get", "filterLevel"], "STRICT"],
+                ["==", ["get", "filterLevel"], "STANDARD"],
               ],
+              "#7c3aed", // violet-600 - violet foncé pour les importants
+              [
+                "any",
+                ["==", ["get", "filterLevel"], "LAXIST"],
+                ["==", ["get", "filterLevel"], "INTERMEDIATE"],
+              ],
+              "#a855f7", // violet-500 - violet clair pour les moins importants
+              // Couleur par défaut pour UNKNOWN
+              "#6b7280", // gray-500 - gris pour les inconnus
             ],
             // Taille des points : priorité à la place sélectionnée, puis selon filter_level
             // Varie avec le niveau de zoom pour une meilleure visibilité
@@ -192,9 +198,14 @@ export const MapPOILayers = memo(
             circleSortKey: [
               "+",
               // PRIORITÉ MAXIMALE : Point sélectionné (+1000 points)
-              ["case", ["==", ["get", "id"], selectedPlace?.id ?? ""], 1000, 0],
+              ["case", ["==", ["get", "poiId"], selectedPlace?.id ?? ""], 1000, 0],
               // Bonus pour les POI visités (+100 points)
-              ["case", ["get", "isVisited"], 100, 0],
+              [
+                "case",
+                ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+                100,
+                0,
+              ],
               // Bonus pour les niveaux de filtrage importants
               [
                 "case",
@@ -210,15 +221,23 @@ export const MapPOILayers = memo(
               ],
             ],
           }}
-          minZoomLevel={ZOOM_LEVELS.MIN}
         />
-
         {/* Couche pour les icônes sur tous les points */}
         <SymbolLayer
           id="custom-marker-symbol"
-          sourceID="pois"
+          sourceID={sourceId}
+          sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
+          minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
+          // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
           style={{
-            iconImage: ["get", "iconName"],
+            iconImage: [
+              "case",
+              // Si le POI est visité, afficher checkmark
+              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+              "checkmark",
+              // Sinon afficher questionMark
+              "questionMark",
+            ],
             iconAllowOverlap: true,
             iconSize: createSizeInterpolation(
               SIZES.iconSize,
@@ -230,7 +249,7 @@ export const MapPOILayers = memo(
               // PRIORITÉ MAXIMALE : Point sélectionné (-1000 points)
               [
                 "case",
-                ["==", ["get", "id"], selectedPlace?.id ?? ""],
+                ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
                 -1000,
                 0,
               ],
@@ -251,13 +270,14 @@ export const MapPOILayers = memo(
               ],
             ],
           }}
-          minZoomLevel={ZOOM_LEVELS.MIN}
         />
-
         {/* Couche pour les noms des lieux - sans overlap */}
         <SymbolLayer
           id="place-names"
-          sourceID="pois"
+          sourceID={sourceId}
+          sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
+          minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
+          // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
           style={{
             textField: ["get", "name"],
             textFont: ["Open Sans Semibold", "Arial Unicode MS Regular"],
@@ -265,7 +285,7 @@ export const MapPOILayers = memo(
             textColor: [
               "case",
               // Place sélectionnée - couleur orange
-              ["==", ["get", "id"], selectedPlace?.id ?? ""],
+              ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
               "#f97316", // orange-500 pour assortir avec le cercle
               // Autres places - couleur normale
               "#333333",
@@ -280,15 +300,20 @@ export const MapPOILayers = memo(
             // Priorité d'affichage : le point sélectionné a la priorité maximale
             symbolSortKey: [
               "+",
-              // PRIORITÉ MAXIMALE : Point non sélectionné (-1000 points)
+              // PRIORITÉ MAXIMALE : Point sélectionné (-1000 points)
               [
                 "case",
-                ["==", ["get", "id"], selectedPlace?.id ?? ""],
+                ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
                 -1000,
                 0,
               ],
               // Bonus pour les POI visités
-              ["case", ["get", "isVisited"], 0, 100],
+              [
+                "case",
+                ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+                0,
+                100,
+              ],
               // Bonus pour les niveaux de filtrage importants
               [
                 "case",
@@ -304,9 +329,8 @@ export const MapPOILayers = memo(
               ],
             ],
           }}
-          minZoomLevel={ZOOM_LEVELS.MIN} // Affiche les noms seulement à partir du zoom 11
         />
-      </ShapeSource>
+      </>
     );
   },
 );

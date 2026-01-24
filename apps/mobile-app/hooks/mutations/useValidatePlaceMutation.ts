@@ -3,7 +3,6 @@ import { type jsonSchemas } from "@vagabond/shared-utils";
 import { type Static } from "typebox";
 
 import { queryClient } from "@/constants/QueryClient";
-import { forceBboxCacheRefresh } from "@/hooks/queries/useBboxCacheUtils";
 import { validatePlace } from "@/http/validate-place";
 import { logger } from "@/utils/logger";
 
@@ -29,16 +28,17 @@ export const useValidatePlaceMutation = () => {
         throw error;
       }
     },
-    onSuccess: async () => {
+    onSuccess: async (_, variables) => {
       return await Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["user-zone-stats"],
         }),
         queryClient.invalidateQueries({
-          queryKey: ["places"],
+          queryKey: ["visited-pois", variables.placeId],
         }),
-        // Forcer le rafraîchissement du cache bbox pour actualiser les avis des places
-        forceBboxCacheRefresh(queryClient, "places"),
+        queryClient.invalidateQueries({
+          queryKey: ["user-visited-pois"],
+        }),
       ]);
     },
   });

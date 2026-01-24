@@ -13,6 +13,9 @@ import {
   type PoiType,
   type ZoneStatType,
 } from "@/utils/types";
+import { Geometry } from "geojson";
+import { PoiFilterLevel } from "@vagabond/shared-utils";
+import { OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
 
 const getPoiIsVisited = (
   visitedPoisByPoiIdMap: Map<string, BriefVisitedPoiType> | undefined,
@@ -25,16 +28,8 @@ const getPoiIconName = (poi: PoiType, isVisited: boolean): string | null => {
   return isVisited ? "checkmark" : "questionMark";
 };
 
-export interface OnPressEvent {
-  features: GeoJSON.Feature[];
-  coordinates: {
-    latitude: number;
-    longitude: number;
-  };
-  point: {
-    x: number;
-    y: number;
-  };
+export interface OnPressEventPoi extends OnPressEvent {
+  features: Array<GeoJSON.Feature<Geometry, {poiId: string; name: string; filterLevel: PoiFilterLevel;}>>;
 }
 
 interface UseMapLogicReturn {
@@ -67,7 +62,7 @@ interface UseMapLogicReturn {
   // Event handlers
   onMapIdle: (mapState: MapState) => void;
   onCameraChanged: (mapState: MapState) => void;
-  onPress: (event: OnPressEvent) => void;
+  onPress: (event: OnPressEventPoi) => void;
 
   // Actions
   moveToUserLocation: () => void;
@@ -142,10 +137,8 @@ export const useMapLogic = (): UseMapLogicReturn => {
   };
 
   // Récupérer les données des places (l'atom est mis à jour automatiquement)
-  const { data: placesData, isFetching: isFetchingPlaces } = usePlaces(
-    bbox,
-    zoom,
-  );
+  const placesData: PoiType[] | undefined = [];
+  const isFetchingPlaces = false;
 
   // Hook unifié pour gérer la sélection de lieu
   const { setSelectedPlace } = usePlaceSelection();
@@ -218,6 +211,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
   const customShape = {
     type: "FeatureCollection" as const,
     features:
+      //eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- foo
       placesData?.map((place, index) => {
         const isVisited = getPoiIsVisited(visitedPoisByPoiIdMap, place.id);
         const iconName = getPoiIconName(place, isVisited);
@@ -227,13 +221,13 @@ export const useMapLogic = (): UseMapLogicReturn => {
           properties: {
             id: place.id.toString(),
             baseId: index.toString(),
-            name: place.data[0]?.name ?? "",
+            name: place.name,
             data: place,
             imageUrl: `https://picsum.photos/seed/${place.id}/20/20`,
             isVisited: isVisited,
             iconName: iconName,
             // Filter level pour l'affichage différencié
-            filterLevel: place.data[0]?.filterLevel ?? "UNKNOWN",
+            // filterLevel: place.filterLevel ?? "UNKNOWN",
           },
           geometry: {
             type: "Point" as const,
@@ -290,7 +284,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
     }
   };
 
-  const onPress = (event: OnPressEvent): void => {
+  const onPress = (event: OnPressEventPoi): void => {
     logger("onPress");
 
     try {
@@ -301,7 +295,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
         typeof event.features[0].properties === "object" &&
         event.features[0].properties !== null
       ) {
-        const properties = event.features[0].properties;
+        const properties = event.features[0].properties
 
         // CLUSTERING DÉSACTIVÉ - pour réactiver, décommenter le code ci-dessous :
         // Vérifier si c'est un cluster
@@ -316,8 +310,16 @@ export const useMapLogic = (): UseMapLogicReturn => {
         //   });
         //   return;
         // }
-
-        const poiData = properties.data as PoiType | undefined;
+ 
+        const poiData : PoiType | undefined = properties ? {
+          id: properties?.poiId,
+            name: properties.name,
+            filterLevel: properties.filterLevel,
+            coords: {
+              latitude: event.coordinates.latitude,
+              longitude: event.coordinates.longitude,
+            },
+          } : undefined; 
 
         if (poiData !== undefined) {
           setSelectedPlace(poiData);
@@ -335,6 +337,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
   //   return [];
   // }
   const imagesUrls =
+    //eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- foo
     placesData?.map(
       (place) => `https://picsum.photos/seed/${place.id}/20/20`,
     ) ?? [];
