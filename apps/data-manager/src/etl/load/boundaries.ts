@@ -1,14 +1,14 @@
 import { getDrizzleClient, schema } from "@vagabond/database-client";
-import { sql } from "drizzle-orm";
 import { logger } from "@vagabond/shared-utils";
+import { sql } from "drizzle-orm";
 
 import { getBoundaryLevel } from "../boundary-mapping-config";
+import { getDbId, getSourceId } from "../id-utils";
 import { JsonlFileReader } from "../jsonl-utils";
 import {
   type ConsolidatedBoundaryRow,
   type JsonlBoundaryRecord,
 } from "../types";
-import { getDbId, getSourceId } from "./index";
 
 function getPlaceTypeFromAdminLevel(adminLevel: number): string {
   // Map admin levels to place types

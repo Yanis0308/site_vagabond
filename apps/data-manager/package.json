@@ -6,9 +6,10 @@
   "author": "",
   "scripts": {
     "extract": "dotenvx run -- zx src/etl/extract.mjs",
-    "transform": "dotenvx run -- tsx src/etl/transform.ts",
-    "load-db": "dotenvx run -- tsx src/etl/load-db.ts",
-    "load-mapbox": "dotenvx run -- zx src/etl/load-mapbox.mjs"
+    "transform": "dotenvx run -- pnpx tsx src/etl/transform.ts",
+    "load-db": "dotenvx run -- pnpx tsx src/etl/load-db.ts",
+    "load-mapbox-boundaries": "dotenvx run -- zx src/etl/load-mapbox-boundaries.mjs",
+    "load-mapbox-pois": "dotenvx run -- zx src/etl/load/load-pois-mapbox.mjs"
   },
   "dependencies": {
     "@vagabond/database-client": "workspace:*",

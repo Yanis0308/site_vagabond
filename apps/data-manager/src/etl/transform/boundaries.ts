@@ -145,11 +145,9 @@ export async function processBoundaries(
       associationsFilePath,
     );
     for await (const record of reader.read()) {
-      if (record.type === "association") {
-        const boundaryId = `${record.data.boundary_osm_type}-${record.data.boundary_osm_id}`;
-        const currentCount = poisCountGlobal.get(boundaryId) ?? 0;
-        poisCountGlobal.set(boundaryId, currentCount + 1);
-      }
+      const boundaryId = `${record.data.boundary_osm_type}-${record.data.boundary_osm_id}`;
+      const currentCount = poisCountGlobal.get(boundaryId) ?? 0;
+      poisCountGlobal.set(boundaryId, currentCount + 1);
     }
     await reader.close();
     logger.info(
@@ -169,11 +167,9 @@ export async function processBoundaries(
       hierarchiesFilePath,
     );
     for await (const record of reader.read()) {
-      if (record.type === "hierarchy") {
-        const parentId = `${record.data.parent_osm_type}-${record.data.parent_osm_id}`;
-        const currentCount = subzonesCountGlobal.get(parentId) ?? 0;
-        subzonesCountGlobal.set(parentId, currentCount + 1);
-      }
+      const parentId = `${record.data.parent_osm_type}-${record.data.parent_osm_id}`;
+      const currentCount = subzonesCountGlobal.get(parentId) ?? 0;
+      subzonesCountGlobal.set(parentId, currentCount + 1);
     }
     await reader.close();
     logger.info(
@@ -360,12 +356,7 @@ export async function processBoundaries(
         const boundary = convertedData[i];
         const originalData = data[i];
 
-        if (
-          boundary === null ||
-          boundary === undefined ||
-          originalData === null ||
-          originalData === undefined
-        ) {
+        if (boundary === undefined || originalData === undefined) {
           continue;
         }
 
@@ -381,7 +372,7 @@ export async function processBoundaries(
           originalData.admin_level,
         );
         const levelWriter = jsonlWriters[boundaryLevel];
-        if (levelWriter !== null && levelWriter !== undefined) {
+        if (levelWriter !== undefined) {
           const placeType = determinePlaceType(boundary);
           const importanceScore = calculateImportanceScore(boundary);
           const finalPopulation = determineFinalPopulation(boundary);
@@ -421,7 +412,7 @@ export async function processBoundaries(
 
         // Générer feature polygonale JSONL
         const polygonWriter = polygonWriters[boundaryLevel];
-        if (polygonWriter !== null && polygonWriter !== undefined) {
+        if (polygonWriter !== undefined) {
           const placeType = determinePlaceType(boundary);
           const importanceScore = calculateImportanceScore(boundary);
           const finalPopulation = determineFinalPopulation(boundary);

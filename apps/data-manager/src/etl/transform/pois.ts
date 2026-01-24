@@ -1,7 +1,13 @@
-import { generateValidator } from "@vagabond/shared-utils";
-import { jsonSchemas } from "@vagabond/shared-utils";
+import {
+  generateValidator,
+  getFilterLevelName,
+  jsonSchemas,
+  logger,
+} from "@vagabond/shared-utils";
+import { type Feature, type Point } from "geojson";
 
-import { JsonlFileWriter } from "../jsonl-utils";
+import { getDbId, getSourceId } from "../id-utils";
+import { JsonlFileReader, JsonlFileWriter } from "../jsonl-utils";
 import { type ExtractedPoiDatabaseRow, type JsonlPoiRecord } from "../types";
 import { processStreamInBatches } from "./stream-processor";
 
@@ -30,9 +36,19 @@ export async function processPois(
     data: ExtractedPoiDatabaseRow[],
   ): Promise<void> => {
     for (const poi of data) {
+      // Compute ID and add it to the data
+      const sourceId = getSourceId({
+        osm_type: poi.osm_type,
+        osm_id: poi.osm_id,
+      });
+      const id = getDbId("OSM", sourceId);
+
       const record: JsonlPoiRecord = {
         type: "poi",
-        data: poi,
+        data: {
+          id, // Add computed ID to the data
+          ...poi,
+        },
       };
       await writer.write(record);
     }
@@ -41,6 +57,63 @@ export async function processPois(
   try {
     await processStreamInBatches("POIs", query, validateRows, writePoiBatch);
   } finally {
+    await writer.close();
+  }
+}
+
+// Types for GeoJSON export
+interface PoiGeoJSONProperties {
+  poiId: string;
+  name: string | null;
+  filterLevel: string;
+}
+
+type PoiGeoJSONFeature = Feature<Point, PoiGeoJSONProperties>;
+
+/**
+ * Generate GeoJSON file from POI JSONL for Mapbox upload
+ */
+export async function generatePoisGeoJSON(
+  inputJsonlPath: string,
+  outputGeoJsonPath: string,
+): Promise<void> {
+  const reader = new JsonlFileReader<JsonlPoiRecord>(inputJsonlPath);
+  const writer = new JsonlFileWriter<PoiGeoJSONFeature>(outputGeoJsonPath);
+
+  try {
+    let count = 0;
+
+    for await (const record of reader.read()) {
+      const poi = record.data;
+
+      // Create GeoJSON Feature
+      const feature: PoiGeoJSONFeature = {
+        type: "Feature",
+        properties: {
+          poiId: poi.id,
+          name: poi.tags.name ?? null,
+          filterLevel: getFilterLevelName(poi.filter_level),
+        },
+        geometry: {
+          type: "Point",
+          coordinates: [poi.longitude, poi.latitude],
+        },
+      };
+
+      await writer.write(feature);
+      count++;
+
+      if (count % 10000 === 0) {
+        logger.info(`GeoJSON POIs generated: ${count}`);
+      }
+    }
+
+    logger.info(`GeoJSON generation completed: ${count} POIs`);
+  } catch (error) {
+    logger.error("Error generating POI GeoJSON:", error);
+    throw error;
+  } finally {
+    await reader.close();
     await writer.close();
   }
 }

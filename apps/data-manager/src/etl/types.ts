@@ -64,7 +64,7 @@ export interface TransformOutputFiles {
 // Interface pour les données intermédiaires en JSONL
 export interface JsonlPoiRecord {
   type: "poi";
-  data: ExtractedPoiDatabaseRow;
+  data: ExtractedPoiDatabaseRow & { id: string };
 }
 
 export interface JsonlBoundaryRecord {

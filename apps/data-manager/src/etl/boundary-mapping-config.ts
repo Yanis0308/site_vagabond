@@ -1,4 +1,6 @@
-import { BoundaryLevelEnum } from "@vagabond/database-client";
+import { schema } from "@vagabond/database-client";
+
+type BoundaryLevelEnum = (typeof schema.boundaryLevelEnum.enumValues)[number];
 
 /**
  * Configuration for mapping OpenStreetMap admin_level values to BoundaryLevelEnum
@@ -23,12 +25,12 @@ export const COUNTRY_BOUNDARY_MAPPINGS: Record<string, CountryBoundaryMapping> =
       countryCode: "FR",
       countryName: "France",
       adminLevelMapping: {
-        2: BoundaryLevelEnum.COUNTRY, // Pays
-        4: BoundaryLevelEnum.REGION, // Région
-        6: BoundaryLevelEnum.COUNTY, // Département
-        8: BoundaryLevelEnum.CITY, // Commune
-        9: BoundaryLevelEnum.DISTRICT, // Arrondissement municipal
-        10: BoundaryLevelEnum.NEIGHBORHOOD, // Quartier
+        2: "COUNTRY", // Pays
+        4: "REGION", // Région
+        6: "COUNTY", // Département
+        8: "CITY", // Commune
+        9: "DISTRICT", // Arrondissement municipal
+        10: "NEIGHBORHOOD", // Quartier
       },
     },
 
@@ -37,12 +39,12 @@ export const COUNTRY_BOUNDARY_MAPPINGS: Record<string, CountryBoundaryMapping> =
       countryCode: "DEFAULT",
       countryName: "Default",
       adminLevelMapping: {
-        2: BoundaryLevelEnum.COUNTRY,
-        4: BoundaryLevelEnum.REGION,
-        6: BoundaryLevelEnum.COUNTY,
-        8: BoundaryLevelEnum.CITY,
-        9: BoundaryLevelEnum.DISTRICT,
-        10: BoundaryLevelEnum.NEIGHBORHOOD,
+        2: "COUNTRY",
+        4: "REGION",
+        6: "COUNTY",
+        8: "CITY",
+        9: "DISTRICT",
+        10: "NEIGHBORHOOD",
       },
     },
   };

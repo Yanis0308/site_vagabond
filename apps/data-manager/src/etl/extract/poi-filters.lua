@@ -14,16 +14,30 @@ local function has_wiki_reference(tags)
     return tags.wikidata or tags.wikipedia
 end
 
+-- List of generic name patterns to exclude
+local excluded_name_patterns =
+    {"^maisons?$", "^immeubles?$", "^h%S+tels? particuliers?$" -- Using %S to handle any non-space character (lua regex are specific)
+    }
+
 -- Helper function to check if name should be excluded
 local function should_exclude_name(tags)
     if not tags.name then
         return true
     end
 
-    local name = tags.name:lower()
-    -- Exclude empty names or generic building names
-    if name == "" or name:match("^maisons?$") or name:match("^immeubles?$") or name:match("^h[ôo]tel particulier$") then
+    -- Normalize name: trim whitespace, convert to lowercase, collapse multiple spaces
+    local name = tags.name:gsub("^%s+", ""):gsub("%s+$", ""):gsub("%s+", " "):lower()
+
+    -- Check if name is empty
+    if name == "" then
         return true
+    end
+
+    -- Check against excluded patterns
+    for _, pattern in ipairs(excluded_name_patterns) do
+        if name:match(pattern) then
+            return true
+        end
     end
 
     return false
@@ -57,6 +71,15 @@ local function filter_tourism(tags)
         return {
             class = "tourism",
             subclass = "artwork",
+            filter_level = FILTER_LEVEL_STRICT
+        }
+    end
+
+    -- Filter level STRICT: tourism = bridge + (wikidata or wikipedia)
+    if tags.tourism == "bridge" and has_wiki_reference(tags) then
+        return {
+            class = "tourism",
+            subclass = "bridge",
             filter_level = FILTER_LEVEL_STRICT
         }
     end
@@ -253,6 +276,19 @@ local function filter_bridge(tags)
     return nil
 end
 
+-- Man_made filter handler
+local function filter_man_made(tags)
+    -- Filter level STRICT: man_made = bridge + (wikidata or wikipedia)
+    if tags.man_made == "bridge" and has_wiki_reference(tags) then
+        return {
+            class = "man_made",
+            subclass = "bridge",
+            filter_level = FILTER_LEVEL_STRICT
+        }
+    end
+    return nil
+end
+
 -- Leisure filter handler
 local function filter_leisure(tags)
     -- Filter level STRICT: leisure = marina + (wikidata or wikipedia)
@@ -320,6 +356,7 @@ local poi_filters = {
     building = filter_building,
     amenity = filter_amenity,
     bridge = filter_bridge,
+    man_made = filter_man_made,
     leisure = filter_leisure,
     government = filter_government,
     landuse = filter_landuse,

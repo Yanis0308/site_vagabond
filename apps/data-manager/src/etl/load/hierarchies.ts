@@ -2,56 +2,10 @@ import { getDrizzleClient, schema } from "@vagabond/database-client";
 import { eq } from "drizzle-orm";
 import { logger } from "@vagabond/shared-utils";
 
+import { getDbId, getSourceId } from "../id-utils";
 import { JsonlFileReader } from "../jsonl-utils";
 import { type BoundaryHierarchyRow, type JsonlHierarchyRecord } from "../types";
-import { getDbId, getSourceId } from "./index";
 
-// Fonction originale pour les batch (conservée pour compatibilité)
-export async function updateBoundaryParents(
-  data: BoundaryHierarchyRow[],
-): Promise<void> {
-  const db = await getDrizzleClient();
-
-  try {
-    for (const item of data) {
-      const childId = getDbId(
-        "OSM",
-        getSourceId({
-          osm_type: item.child_osm_type,
-          osm_id: item.child_osm_id,
-        }),
-      );
-      const parentId = getDbId(
-        "OSM",
-        getSourceId({
-          osm_type: item.parent_osm_type,
-          osm_id: item.parent_osm_id,
-        }),
-      );
-
-      await db
-        .update(schema.boundaries)
-        .set({ parentId: parentId })
-        .where(eq(schema.boundaries.id, childId));
-    }
-
-    logger.info(
-      `${data.length} relations parent-enfant mises à jour avec succès`,
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      logger.error(
-        "Erreur lors de la mise à jour des relations parent-enfant:",
-        error,
-      );
-    }
-    throw error;
-  } finally {
-    await db.close();
-  }
-}
-
-// Nouvelle fonction pour lire depuis JSONL et charger
 export async function loadHierarchiesFromJsonl(
   filePath: string,
 ): Promise<void> {

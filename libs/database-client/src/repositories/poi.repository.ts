@@ -77,7 +77,7 @@ export class PoiRepository {
       id: item.id,
       source: item.source as "OSM", // Cast if needed or ensure type match
       sourceId: item.sourceId,
-      coords: sql`ST_GeomFromText('POINT(${item.coords.longitude} ${item.coords.latitude})', 4326)`,
+      coords: sql`ST_SetSRID(ST_MakePoint(${item.coords.longitude}, ${item.coords.latitude}), 4326)`,
       filterLevel: item.filterLevel,
     }));
 

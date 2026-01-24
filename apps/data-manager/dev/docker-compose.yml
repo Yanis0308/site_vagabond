@@ -1,9 +1,9 @@
-version: "3.8"
 name: vagabond-data-manager
 services:
   db:
     container_name: postgresql-postgis-data-manager
     image: postgis/postgis:17-3.5-alpine
+    platform: linux/amd64
     restart: unless-stopped
     environment:
       POSTGRES_USER: user

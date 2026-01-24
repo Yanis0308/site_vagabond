@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "layers": {
+    "pois-data-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/pois-src-v1",
+      "minzoom": 10,
+      "maxzoom": 10
+    }
+  }
+}

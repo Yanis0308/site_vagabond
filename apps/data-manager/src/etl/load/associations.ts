@@ -1,66 +1,13 @@
 import { getDrizzleClient, schema } from "@vagabond/database-client";
 import { logger } from "@vagabond/shared-utils";
 
+import { getDbId, getSourceId } from "../id-utils";
 import { JsonlFileReader } from "../jsonl-utils";
 import {
   type JsonlAssociationRecord,
   type PoiBoundaryAssociation,
 } from "../types";
-import { getDbId, getSourceId } from "./index";
 
-// Fonction originale pour les batch (conservée pour compatibilité)
-export async function loadPoiBoundaryAssociations(
-  data: PoiBoundaryAssociation[],
-): Promise<void> {
-  const db = await getDrizzleClient();
-
-  try {
-    const insertData: (typeof schema.poiBoundaries.$inferInsert)[] = data.map(
-      (item) => {
-        const poiId = getDbId(
-          "OSM",
-          getSourceId({
-            osm_type: item.poi_osm_type,
-            osm_id: item.poi_osm_id,
-          }),
-        );
-        const boundaryId = getDbId(
-          "OSM",
-          getSourceId({
-            osm_type: item.boundary_osm_type,
-            osm_id: item.boundary_osm_id,
-          }),
-        );
-
-        return {
-          poiId: poiId,
-          boundaryId: boundaryId,
-        };
-      },
-    );
-
-    await db
-      .insert(schema.poiBoundaries)
-      .values(insertData)
-      .onConflictDoNothing();
-
-    logger.info(
-      `Lot de ${data.length} associations POI-Boundary inséré avec succès`,
-    );
-  } catch (error) {
-    if (error instanceof Error) {
-      logger.error(
-        "Erreur lors du traitement du lot d'associations POI-Boundary:",
-        error,
-      );
-    }
-    throw error;
-  } finally {
-    await db.close();
-  }
-}
-
-// Nouvelle fonction pour lire depuis JSONL et charger
 export async function loadAssociationsFromJsonl(
   filePath: string,
 ): Promise<void> {

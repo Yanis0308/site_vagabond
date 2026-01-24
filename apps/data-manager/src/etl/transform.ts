@@ -9,7 +9,7 @@ import { processPoiBoundaryAssociations } from "./transform/associations";
 import { processBoundaries } from "./transform/boundaries";
 import { parseArgs } from "./transform/cli-args";
 import { processBoundaryHierarchies } from "./transform/hierarchies";
-import { processPois } from "./transform/pois";
+import { generatePoisGeoJSON, processPois } from "./transform/pois";
 import { knexInstance } from "./transform/stream-processor";
 
 dotenv.config();
@@ -35,6 +35,13 @@ async function transformOnly(): Promise<void> {
     // Traiter les POIs
     logger.info("Début du traitement des POIs...");
     await processPois(schema, outputFiles.pois.filePath);
+
+    // Générer le fichier GeoJSON des POIs pour Mapbox
+    logger.info("Génération du fichier GeoJSON des POIs...");
+    await generatePoisGeoJSON(
+      outputFiles.pois.filePath,
+      outputFiles.poisGeoJsonl.filePath,
+    );
 
     // Traiter les associations POI-Boundary d'abord
     logger.info("Début du traitement des associations...");
@@ -77,6 +84,7 @@ async function transformOnly(): Promise<void> {
     logger.info(`- boundaries.jsonl`);
     logger.info(`- associations.jsonl`);
     logger.info(`- hierarchies.jsonl`);
+    logger.info(`- pois.jsonl (GeoJSON pour Mapbox Tileset)`);
     logger.info(`- boundaries-country.jsonl (points pour Mapbox Tileset)`);
     logger.info(`- boundaries-region.jsonl (points pour Mapbox Tileset)`);
     logger.info(`- boundaries-county.jsonl (points pour Mapbox Tileset)`);
@@ -103,7 +111,7 @@ async function transformOnly(): Promise<void> {
     );
     logger.info("=======================================");
     logger.info(
-      `Pour charger les données en base, exécutez: pnpm run load --transform-dir ${outputFiles.transformDir.replace("output/", "")}`,
+      `Pour charger les données en base, exécutez: pnpm run load-db --transform-dir ${outputFiles.transformDir.replace("output/", "")}`,
     );
   } catch (error) {
     logger.error("Erreur lors de la transformation:", error);

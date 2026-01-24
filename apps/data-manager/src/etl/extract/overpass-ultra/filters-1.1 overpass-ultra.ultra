@@ -1,4 +1,4 @@
-﻿---
+---
 # Overpass Ultra query (https://overpass-ultra.us/)
 # - 🟥 Strict (Fermé) : Rouge
 # - 🟧 Standard (Fermé) : Orange
@@ -173,6 +173,8 @@ style:
 
   // Bridges (bridges)
   nwr["bridge"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+  nwr["man_made"="bridge"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
+  nwr["tourism"="bridge"](if:is_tag("wikidata") || is_tag("wikipedia"))({{bbox}});
 
 )->.group_strict;
 

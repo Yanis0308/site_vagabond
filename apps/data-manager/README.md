@@ -13,12 +13,19 @@ output/
     │   ├── associations.jsonl
     │   └── hierarchies.jsonl
     └── geojson/              # Données pour Mapbox
+        ├── pois.jsonl
         ├── boundaries-country.jsonl
         ├── boundaries-region.jsonl
         ├── boundaries-county.jsonl
         ├── boundaries-city.jsonl
         ├── boundaries-district.jsonl
-        └── boundaries-neighborhood.jsonl
+        ├── boundaries-neighborhood.jsonl
+        ├── boundaries-polygons-country.jsonl
+        ├── boundaries-polygons-region.jsonl
+        ├── boundaries-polygons-county.jsonl
+        ├── boundaries-polygons-city.jsonl
+        ├── boundaries-polygons-district.jsonl
+        └── boundaries-polygons-neighborhood.jsonl
 ```
 
 ## Utilisation
@@ -26,6 +33,8 @@ output/
 ### 1. Extract
 
 Extraction depuis fichier PBF OpenStreetMap vers PostgreSQL :
+
+- renommer le fichier PBF en <pays>-<annee>-<mois>-<jour>.osm.pbf et le placer dans le dossier src/etl/extract/pbf-files/
 
 ```bash
 pnpm run extract france-2024-01-15.osm.pbf
@@ -36,6 +45,9 @@ Le script crée automatiquement le schéma et exécute osm2pgsql.
 ### 2. Transform
 
 Transformation des données PostgreSQL vers fichiers JSONL :
+
+- un nouveau schema en bdd a été créé automatiquement avec le nom du pays et la date d'extraction
+- ⚠️ le schema comporte des underscore _ au lieu de tirets -
 
 ```bash
 pnpm run transform --schema=france_2024_01_15 --country=FR
@@ -53,12 +65,20 @@ pnpm run load-db --transform-dir=france_2024_01_15_2025-01-01-12-00-00
 
 **Obligatoire :** `--transform-dir` doit pointer vers un dossier existant dans `output/`.
 
-### 4. Load Mapbox
+### 4. Load Mapbox Boundaries
 
-Upload vers Mapbox Tileset :
+Upload des boundaries vers Mapbox Tileset :
 
 ```bash
-pnpm run load-mapbox --transform-dir=france_2024_01_15_2025-01-01-12-00-00
+pnpm run load-mapbox-boundaries --transform-dir=france_2024_01_15_2025-01-01-12-00-00
+```
+
+### 5. Load Mapbox POIs
+
+Upload des POI vers Mapbox Tileset :
+
+```bash
+pnpm run load-mapbox-pois --transform-dir=france_2024_01_15_2025-01-01-12-00-00
 ```
 
 **Obligatoire :** `--transform-dir` doit pointer vers un dossier existant dans `output/`.
@@ -71,9 +91,30 @@ pnpm run load-mapbox --transform-dir=france_2024_01_15_2025-01-01-12-00-00
 ## Scripts disponibles
 
 - `pnpm run extract <fichier.pbf>` - Extraction PBF → PostgreSQL
-- `pnpm run transform` - PostgreSQL → JSONL
+- `pnpm run transform` - PostgreSQL → JSONL (génère POI et boundaries)
 - `pnpm run load-db` - JSONL → Base de données
-- `pnpm run load-mapbox` - JSONL → Mapbox Tileset
+- `pnpm run load-mapbox-boundaries` - JSONL boundaries → Mapbox Tileset
+- `pnpm run load-mapbox-pois` - JSONL POI → Mapbox Tileset
+
+## Nettoyage des données
+
+Pour réimporter les données depuis le début, truncate les tables dans cet ordre :
+
+```sql
+-- 1. Supprimer les associations
+TRUNCATE TABLE "poi_boundaries" CASCADE;
+
+-- 2. Supprimer les POI data
+TRUNCATE TABLE "poi_data" CASCADE;
+
+-- 3. Supprimer les POI
+TRUNCATE TABLE "pois" CASCADE;
+
+-- 4. Supprimer les boundaries
+TRUNCATE TABLE "boundaries" CASCADE;
+```
+
+Puis relancer `pnpm run load-db`.
 
 ## Configuration
 
@@ -85,13 +126,17 @@ MAPBOX_ACCESS_TOKEN=your_token
 MAPBOX_USERNAME=your_username
 ```
 
-### Mapbox Tileset
+### Mapbox Tilesets
 
-Les fichiers GeoJSON sont organisés par niveau administratif avec optimisation zoom :
+**Boundaries** - organisés par niveau administratif avec optimisation zoom :
 
-- **Country** (zoom 0-5)
-- **Region** (zoom 6-10)
-- **County** (zoom 7-10)
-- **City** (zoom 8-11)
-- **District** (zoom 9-12)
-- **Neighborhood** (zoom 10-16)
+- **Country** (zoom 0-10)
+- **Region** (zoom 3-10)
+- **County** (zoom 3-10)
+- **City** (zoom 6-10)
+- **District** (zoom 7-10)
+- **Neighborhood** (zoom 9-10)
+
+**POIs** - points d'intérêt (zoom 10-10) :
+
+- Properties : `poiId`, `name`, `filterLevel` (UNKNOWN, STRICT, STANDARD, INTERMEDIATE, LAXIST)

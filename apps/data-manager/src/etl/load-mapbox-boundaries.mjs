@@ -55,7 +55,7 @@ function listAvailableTransformDirs() {
 }
 
 // Upload source to Mapbox
-async function uploadSource(level, filePath, username, type = "points") {
+async function uploadSource(level, filePath, username, type) {
   // Map level names to shorter IDs to respect 32 char limit
   const levelMap = {
     country: "co",
@@ -86,14 +86,14 @@ async function uploadSource(level, filePath, username, type = "points") {
 
 // Create and publish tileset (une seule fois)
 async function createAndPublishTileset(username) {
-  const tilesetId = `${username}.boundaries-tileset-v1`;
+  const tilesetId = `${username}.boundaries-tileset-v2`;
   const recipeFilePath = `src/etl/load/boundaries-recipe.json`;
 
   console.log(`\n=== CREATE AND PUBLISH TILESET ===`);
 
   try {
     console.log(`🔨 Create tileset: ${tilesetId}`);
-    await $`tilesets create ${tilesetId} --recipe ${recipeFilePath} --name "Boundaries Tileset v1"`.pipe(
+    await $`tilesets create ${tilesetId} --recipe ${recipeFilePath} --name "Boundaries Tileset v2"`.pipe(
       process.stdout,
     );
 
@@ -203,7 +203,7 @@ async function main() {
     );
 
     console.log("\n📊 Tileset créé:");
-    console.log(`  • ${username}.boundaries-tileset-v1`);
+    console.log(`  • ${username}.boundaries-tileset-v2`);
     console.log("\n📋 Sources points uploadées:");
     Object.keys(geoJsonFiles).forEach((level) => {
       const levelMap = {

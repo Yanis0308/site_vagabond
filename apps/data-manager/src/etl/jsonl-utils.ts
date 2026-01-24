@@ -119,6 +119,7 @@ export function generateTransformOutputFiles(
   boundaries: { filePath: string; batchSize: number };
   associations: { filePath: string; batchSize: number };
   hierarchies: { filePath: string; batchSize: number };
+  poisGeoJsonl: { filePath: string };
   boundariesGeoJsonl: {
     country: { filePath: string };
     region: { filePath: string };
@@ -173,6 +174,9 @@ export function generateTransformOutputFiles(
     hierarchies: {
       filePath: `${dbDir}/hierarchies.jsonl`,
       batchSize: 1000,
+    },
+    poisGeoJsonl: {
+      filePath: `${geojsonDir}/pois.jsonl`,
     },
     boundariesGeoJsonl: {
       country: { filePath: `${geojsonDir}/boundaries-country.jsonl` },
