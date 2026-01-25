@@ -12,18 +12,6 @@ export const Longitude = Type.Number({
   $id: "Longitude",
 });
 
-export const BoundingBoxSchema = Type.Object(
-  {
-    minLat: Latitude,
-    maxLat: Latitude,
-    minLng: Longitude,
-    maxLng: Longitude,
-  },
-  {
-    $id: "BoundingBox",
-  },
-);
-
 export const CoordsSchema = Type.Object(
   {
     latitude: Latitude,

@@ -1,69 +1,11 @@
 import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
-import {
-  boundaries,
-  poiBoundaries,
-  poiData,
-  pois,
-} from "../schema.js";
+import { boundaries, poiBoundaries, poiData, pois } from "../schema.js";
 import type { CustomPoiCreateInput } from "../types.js";
-
-interface PoiWithData {
-  id: string;
-  coords: { latitude: number; longitude: number };
-  name: string;
-  filterLevel: "UNKNOWN" | "STRICT" | "STANDARD" | "INTERMEDIATE" | "LAXIST";
-}
 
 export class PoiRepository {
   constructor(private readonly db: DrizzleClient) {}
-
-  async findInBoundingBoxWithData(boundingBox: {
-    minLat: number;
-    maxLat: number;
-    minLng: number;
-    maxLng: number;
-  }): Promise<PoiWithData[]> {
-    const polygon = `POLYGON((
-      ${boundingBox.minLng} ${boundingBox.minLat},
-      ${boundingBox.maxLng} ${boundingBox.minLat},
-      ${boundingBox.maxLng} ${boundingBox.maxLat},
-      ${boundingBox.minLng} ${boundingBox.maxLat},
-      ${boundingBox.minLng} ${boundingBox.minLat}
-    ))`;
-
-    const result = await this.db
-      .select({
-        id: pois.id,
-        coords: sql<{
-          latitude: number;
-          longitude: number;
-        }>`jsonb_build_object(
-          'longitude', ST_X(${pois.coords}::geometry),
-          'latitude', ST_Y(${pois.coords}::geometry)
-        )`,
-        name: sql<string>`(
-          SELECT pd.name
-          FROM ${poiData} pd
-          WHERE pd.poi_id = ${pois.id}
-          ORDER BY pd.language DESC, pd.id DESC
-          LIMIT 1
-        )`,
-        filterLevel: pois.filterLevel,
-      })
-      .from(pois)
-      .leftJoin(poiData, eq(pois.id, poiData.poiId))
-      .where(
-        and(
-          sql`ST_Within(${pois.coords}::geometry, ST_GeomFromText(${polygon}, 4326))`,
-          eq(pois.disabled, false),
-        ),
-      )
-      .limit(10000);
-
-    return result
-  } 
 
   async createManyCustom(data: CustomPoiCreateInput[]): Promise<unknown> {
     if (data.length === 0) return;

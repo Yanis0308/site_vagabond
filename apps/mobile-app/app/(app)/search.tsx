@@ -31,7 +31,7 @@ export default function SearchScreen(): ReactElement {
     removeRecentSearch,
     clearAllRecentSearches,
   } = useRecentSearches();
-  const { setPendingPlaceId } = usePlaceSelection();
+  const { setSelectedPlace } = usePlaceSelection();
   const { searchTerm, setSearchTerm } = useSearchTerm();
   const safeAreaInsets = useSafeAreaCustom();
   const searchHeaderRef = useRef<SearchHeaderRef>(null);
@@ -66,9 +66,14 @@ export default function SearchScreen(): ReactElement {
     // If it's a POI, store the ID to select it once places are loaded
     const isPoi = result.type === "POI";
     if (isPoi) {
-      setPendingPlaceId(result.id);
+      setSelectedPlace({
+        id: result.id,
+        name: result.name,
+        filterLevel: "UNKNOWN",
+        coords: result.coordinates,
+      });
     } else {
-      setPendingPlaceId(null);
+      setSelectedPlace(null);
     }
 
     // Store the pending move - will be executed when map screen is focused

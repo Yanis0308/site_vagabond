@@ -20,11 +20,8 @@ import { mapService } from "@/services/MapService";
 export default function MapsTab(): ReactElement {
   // Utilisation du hook personnalisé pour toute la logique de la carte
   const {
-    placesData,
-    customShape,
     mapRef,
     cameraRef,
-    isFetchingPlaces,
     isFetchingAllZones,
     onMapIdle,
     onCameraChanged,
@@ -79,7 +76,7 @@ export default function MapsTab(): ReactElement {
           bottomSheetAnimatedIndex={bottomSheetAnimatedIndex}
         />
 
-        {(isFetchingPlaces || isFetchingAllZones) && (
+        {isFetchingAllZones && (
           <Box
             className="absolute inset-0 z-50 flex items-center justify-center"
             style={{
@@ -88,11 +85,7 @@ export default function MapsTab(): ReactElement {
           >
             <Box className="flex items-center justify-center rounded-xl bg-white p-6">
               <Spinner size="large" color={themeColors.secondary[500].hex} />
-              <CustomText>
-                {isFetchingPlaces
-                  ? "Chargement des points..."
-                  : "Chargement des zones..."}
-              </CustomText>
+              <CustomText>Chargement des zones...</CustomText>
             </Box>
           </Box>
         )}
@@ -100,7 +93,6 @@ export default function MapsTab(): ReactElement {
         <CustomMapView
           mapRef={mapRef}
           cameraRef={cameraRef}
-          customShape={customShape}
           selectedPlace={selectedPlace}
           onMapIdle={onMapIdle}
           onCameraChanged={onCameraChanged}
@@ -114,10 +106,7 @@ export default function MapsTab(): ReactElement {
           heading={headingRealtime}
         />
 
-        <MapDebugInfo
-          zoom={zoomRealtime ?? 0}
-          placesCount={placesData?.length ?? 0}
-        />
+        <MapDebugInfo zoom={zoomRealtime ?? 0} placesCount={0} />
 
         <PlaceDetailsSheet
           place={selectedPlace}

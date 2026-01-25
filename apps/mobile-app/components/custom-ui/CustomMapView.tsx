@@ -8,7 +8,13 @@ import {
 } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
-import { memo, type ReactElement, type RefObject, useCallback, useMemo } from "react";
+import {
+  memo,
+  type ReactElement,
+  type RefObject,
+  useCallback,
+  useMemo,
+} from "react";
 import { Platform } from "react-native";
 
 import { BoundaryLineLayer } from "@/components/custom-ui/BoundaryLineLayer";
@@ -24,7 +30,6 @@ import { type PoiType } from "@/utils/types";
 interface CustomMapViewProps {
   mapRef: RefObject<MapView | null>;
   cameraRef: RefObject<CameraRef | null>;
-  customShape: GeoJSON.FeatureCollection;
   selectedPlace: PoiType | null;
   onMapIdle: (mapState: MapState) => void;
   onCameraChanged: (mapState: MapState) => void;
@@ -34,14 +39,15 @@ interface CustomMapViewProps {
 export const CustomMapView = memo(function CustomMapView({
   mapRef,
   cameraRef,
-  customShape,
   selectedPlace,
   onMapIdle,
   onCameraChanged,
   onPress,
 }: CustomMapViewProps): ReactElement {
   const images = useMapImages();
-  const { data: { visitedPoiIds } } = useUserVisitedPois();
+  const {
+    data: { visitedPoiIds },
+  } = useUserVisitedPois();
 
   const pulsing = useMemo(() => ({ isEnabled: false }), []);
 

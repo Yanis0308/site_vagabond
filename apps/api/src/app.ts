@@ -18,7 +18,6 @@ import swaggerPlugin from "./plugins/swagger.js";
 // Routes
 import leaderboardRoute from "./routes/leaderboard/index.js";
 import poisIdRoute from "./routes/pois/[id].js";
-import poisRoute from "./routes/pois/index.js";
 import searchRoute from "./routes/search/index.js";
 import uploadRoute from "./routes/upload/index.js";
 import usersRoute from "./routes/users/index.js";
@@ -67,7 +66,6 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
 
   // 10. Routes
   await fastify.register(leaderboardRoute, { prefix: "api/leaderboard" });
-  await fastify.register(poisRoute, { prefix: "api/pois" });
   await fastify.register(poisIdRoute, { prefix: "api/pois" });
   await fastify.register(searchRoute, { prefix: "api/search" });
   await fastify.register(uploadRoute, { prefix: "api/upload" });

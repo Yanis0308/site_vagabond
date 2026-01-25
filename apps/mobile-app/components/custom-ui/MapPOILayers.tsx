@@ -145,15 +145,13 @@ const createTextSizeInterpolation = (selectedId: string) =>
 
 export const MapPOILayers = memo(
   ({
-    // customShape,
-    // onPress,
     sourceId,
     selectedPlace,
     visitedPoiIds,
   }: MapPOILayersProps): ReactElement => {
     return (
-      <> 
-           {/* Couche pour tous les points avec tailles selon filter_level */}
+      <>
+        {/* Couche pour tous les points avec tailles selon filter_level */}
         <CircleLayer
           id="all-points"
           sourceID={sourceId}
@@ -198,7 +196,12 @@ export const MapPOILayers = memo(
             circleSortKey: [
               "+",
               // PRIORITÉ MAXIMALE : Point sélectionné (+1000 points)
-              ["case", ["==", ["get", "poiId"], selectedPlace?.id ?? ""], 1000, 0],
+              [
+                "case",
+                ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
+                1000,
+                0,
+              ],
               // Bonus pour les POI visités (+100 points)
               [
                 "case",

@@ -1,50 +1,27 @@
 import { type MapState, type MapView } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
+import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
+import { type PoiFilterLevel } from "@vagabond/shared-utils";
+import { type Geometry } from "geojson";
 import { getDistance } from "geolib";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
-import { usePlaces } from "@/hooks/queries/usePlaces";
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
-import { useUserZoneStats } from "@/hooks/queries/useZonesStats";
 import { logger } from "@/utils/logger";
-import {
-  type BriefVisitedPoiType,
-  type PoiType,
-  type ZoneStatType,
-} from "@/utils/types";
-import { Geometry } from "geojson";
-import { PoiFilterLevel } from "@vagabond/shared-utils";
-import { OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
-
-const getPoiIsVisited = (
-  visitedPoisByPoiIdMap: Map<string, BriefVisitedPoiType> | undefined,
-  poiId: string,
-): boolean => {
-  return visitedPoisByPoiIdMap?.has(poiId) ?? false;
-};
-
-const getPoiIconName = (poi: PoiType, isVisited: boolean): string | null => {
-  return isVisited ? "checkmark" : "questionMark";
-};
+import { type PoiType, type ZoneStatType } from "@/utils/types";
 
 export interface OnPressEventPoi extends OnPressEvent {
-  features: Array<GeoJSON.Feature<Geometry, {poiId: string; name: string; filterLevel: PoiFilterLevel;}>>;
+  features: GeoJSON.Feature<
+    Geometry,
+    { poiId: string; name: string; filterLevel: PoiFilterLevel }
+  >[];
 }
 
 interface UseMapLogicReturn {
   // Data
-  placesData: PoiType[] | undefined;
   allZonesData: ZoneStatType[] | undefined;
-  customShape: GeoJSON.FeatureCollection;
   userLocation: { latitude: number; longitude: number } | undefined | null;
-  imagesUrls: string[];
-  bbox: {
-    minLat: number;
-    maxLat: number;
-    minLng: number;
-    maxLng: number;
-  } | null;
 
   // Realtime states
   headingRealtime: number;
@@ -56,11 +33,9 @@ interface UseMapLogicReturn {
   cameraRef: React.RefObject<CameraRef | null>;
 
   // Loading states
-  isFetchingPlaces: boolean;
   isFetchingAllZones: boolean;
 
   // Event handlers
-  onMapIdle: (mapState: MapState) => void;
   onCameraChanged: (mapState: MapState) => void;
   onPress: (event: OnPressEventPoi) => void;
 
@@ -74,71 +49,16 @@ interface UseMapLogicReturn {
 }
 
 export const useMapLogic = (): UseMapLogicReturn => {
-  const { data: zonesData } = useUserZoneStats();
-  const visitedPoisByPoiIdMap = zonesData?.visitedPoisByPoiIdMap;
   const userLocation = useUserLocation();
   const firstCenteringDone = useRef(false);
-
-  const [bbox, setBbox] = useState<{
-    minLat: number;
-    maxLat: number;
-    minLng: number;
-    maxLng: number;
-  } | null>(null);
 
   // États pour le zoom et heading (uniquement pour affichage en temps réel)
   const [headingRealtime, setHeadingRealtime] = useState(0);
   const [zoomRealtime, setZoomRealtime] = useState<number | null>(null);
   const [isCentered, setIsCentered] = useState(true);
 
-  // État pour le zoom utilisé dans les requêtes
-  const [zoom, setZoom] = useState<number | null>(null);
-
   const mapRef = useRef<MapView>(null);
   const cameraRef = useRef<CameraRef>(null);
-
-  // Refs pour stocker les valeurs précédentes et éviter les mises à jour inutiles
-  const previousBboxRef = useRef<{
-    minLat: number;
-    maxLat: number;
-    minLng: number;
-    maxLng: number;
-  } | null>(null);
-  const previousZoomRef = useRef<number | null>(null);
-
-  // Tolérance pour les comparaisons de bbox (en degrés, ~100m)
-  const BBOX_TOLERANCE = 0.0001;
-
-  // Fonction helper pour comparer deux bbox avec tolérance
-  const bboxHasChanged = (
-    newBbox: {
-      minLat: number;
-      maxLat: number;
-      minLng: number;
-      maxLng: number;
-    },
-    previousBbox: {
-      minLat: number;
-      maxLat: number;
-      minLng: number;
-      maxLng: number;
-    } | null,
-  ): boolean => {
-    if (previousBbox === null) {
-      return true;
-    }
-
-    return (
-      Math.abs(newBbox.minLat - previousBbox.minLat) > BBOX_TOLERANCE ||
-      Math.abs(newBbox.maxLat - previousBbox.maxLat) > BBOX_TOLERANCE ||
-      Math.abs(newBbox.minLng - previousBbox.minLng) > BBOX_TOLERANCE ||
-      Math.abs(newBbox.maxLng - previousBbox.maxLng) > BBOX_TOLERANCE
-    );
-  };
-
-  // Récupérer les données des places (l'atom est mis à jour automatiquement)
-  const placesData: PoiType[] | undefined = [];
-  const isFetchingPlaces = false;
 
   // Hook unifié pour gérer la sélection de lieu
   const { setSelectedPlace } = usePlaceSelection();
@@ -206,68 +126,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
     }
   }, [userLocation, moveToUserLocation]);
 
-  // Données formatées pour la carte
-  // TODO: déplacer ça ailleurs
-  const customShape = {
-    type: "FeatureCollection" as const,
-    features:
-      //eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- foo
-      placesData?.map((place, index) => {
-        const isVisited = getPoiIsVisited(visitedPoisByPoiIdMap, place.id);
-        const iconName = getPoiIconName(place, isVisited);
-
-        return {
-          type: "Feature" as const,
-          properties: {
-            id: place.id.toString(),
-            baseId: index.toString(),
-            name: place.name,
-            data: place,
-            imageUrl: `https://picsum.photos/seed/${place.id}/20/20`,
-            isVisited: isVisited,
-            iconName: iconName,
-            // Filter level pour l'affichage différencié
-            // filterLevel: place.filterLevel ?? "UNKNOWN",
-          },
-          geometry: {
-            type: "Point" as const,
-            coordinates: [place.coords.longitude, place.coords.latitude],
-          },
-        };
-      }) ?? [],
-  };
-
   // Gestion des événements de la carte
-  const onMapIdle = (mapState: MapState): void => {
-    const newZoom = mapState.properties.zoom;
-    const { ne: northEast, sw: southWest } = mapState.properties.bounds;
-    const newBbox = {
-      minLat: southWest[1] ?? 0,
-      maxLat: northEast[1] ?? 0,
-      minLng: southWest[0] ?? 0,
-      maxLng: northEast[0] ?? 0,
-    };
-
-    // Vérifier si le zoom a changé (tolérance de 0.01 pour éviter les micro-changements)
-    const zoomChanged =
-      previousZoomRef.current === null ||
-      Math.abs(newZoom - previousZoomRef.current) > 0.01;
-
-    // Vérifier si le bbox a changé (avec tolérance)
-    const bboxChanged = bboxHasChanged(newBbox, previousBboxRef.current);
-
-    // Ne mettre à jour l'état que si les valeurs ont réellement changé
-    if (zoomChanged) {
-      previousZoomRef.current = newZoom;
-      setZoom(newZoom);
-    }
-
-    if (bboxChanged) {
-      previousBboxRef.current = newBbox;
-      setBbox(newBbox);
-    }
-  };
-
   const onCameraChanged = (mapState: MapState): void => {
     const { center, heading } = mapState.properties;
     setHeadingRealtime(heading);
@@ -292,10 +151,9 @@ export const useMapLogic = (): UseMapLogicReturn => {
         Array.isArray(event.features) &&
         event.features.length > 0 &&
         event.features[0]?.properties !== undefined &&
-        typeof event.features[0].properties === "object" &&
-        event.features[0].properties !== null
+        typeof event.features[0].properties === "object"
       ) {
-        const properties = event.features[0].properties
+        const properties = event.features[0].properties;
 
         // CLUSTERING DÉSACTIVÉ - pour réactiver, décommenter le code ci-dessous :
         // Vérifier si c'est un cluster
@@ -310,46 +168,28 @@ export const useMapLogic = (): UseMapLogicReturn => {
         //   });
         //   return;
         // }
- 
-        const poiData : PoiType | undefined = properties ? {
-          id: properties?.poiId,
-            name: properties.name,
-            filterLevel: properties.filterLevel,
-            coords: {
-              latitude: event.coordinates.latitude,
-              longitude: event.coordinates.longitude,
-            },
-          } : undefined; 
 
-        if (poiData !== undefined) {
-          setSelectedPlace(poiData);
-        }
+        const poiData: PoiType | undefined = {
+          id: properties.poiId,
+          name: properties.name,
+          filterLevel: properties.filterLevel,
+          coords: {
+            latitude: event.coordinates.latitude,
+            longitude: event.coordinates.longitude,
+          },
+        };
+
+        setSelectedPlace(poiData);
       }
     } catch (error) {
       logger("Erreur lors du traitement de l'événement onPress:", error);
     }
   };
 
-  // URLs des images pour le chargement
-  // CLUSTERING DÉSACTIVÉ - toujours charger les images
-  // Avec clustering activé, utiliser cette logique :
-  // if (zoom === null || zoom < CLUSTER_MAX_ZOOM) {
-  //   return [];
-  // }
-  const imagesUrls =
-    //eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- foo
-    placesData?.map(
-      (place) => `https://picsum.photos/seed/${place.id}/20/20`,
-    ) ?? [];
-
   return {
     // Data
-    placesData,
     allZonesData,
-    customShape,
     userLocation,
-    imagesUrls,
-    bbox,
 
     // Realtime states
     headingRealtime,
@@ -361,11 +201,9 @@ export const useMapLogic = (): UseMapLogicReturn => {
     cameraRef,
 
     // Loading states
-    isFetchingPlaces,
     isFetchingAllZones,
 
     // Event handlers
-    onMapIdle,
     onCameraChanged,
     onPress,
 
