@@ -70,43 +70,56 @@ export class UserRepository {
       }));
   }
 
-  async upsertUser(userId: string, userInfo: UserInfo): Promise<DbUser> {
-    const existingUser = await this.db.query.users.findFirst({
-      where: eq(users.userId, userId),
-      columns: { userId: true, oauthProviders: true },
-    });
+  async upsertUser(
+    userId: string,
+    userInfo: UserInfo,
+  ): Promise<{ user: DbUser; isNew: boolean }> {
+    return await this.db.transaction(
+      async (tx) => {
+        // Lock the row for this user to prevent race conditions
+        const existingUser = await tx.query.users.findFirst({
+          where: eq(users.userId, userId),
+          columns: { userId: true, oauthProviders: true, createdAt: true },
+        });
 
-    const newOauthProviders =
-      existingUser?.oauthProviders !== null &&
-      existingUser?.oauthProviders !== undefined
-        ? Array.from(
-            new Set([
-              ...existingUser.oauthProviders,
-              ...userInfo.oauthProviders,
-            ]),
-          )
-        : userInfo.oauthProviders;
+        const isNew = existingUser === undefined;
 
-    const [dbUser] = await this.db
-      .insert(users)
-      .values({
-        userId: userId,
-        ...userInfo,
-        oauthProviders: newOauthProviders,
-      })
-      .onConflictDoUpdate({
-        target: users.userId,
-        set: {
-          ...userInfo,
-          oauthProviders: newOauthProviders,
-        },
-      })
-      .returning();
+        const newOauthProviders =
+          existingUser?.oauthProviders !== null &&
+          existingUser?.oauthProviders !== undefined
+            ? Array.from(
+                new Set([
+                  ...existingUser.oauthProviders,
+                  ...userInfo.oauthProviders,
+                ]),
+              )
+            : userInfo.oauthProviders;
 
-    if (dbUser === undefined) {
-      throw new Error("Failed to upsert user");
-    }
+        const [dbUser] = await tx
+          .insert(users)
+          .values({
+            userId: userId,
+            ...userInfo,
+            oauthProviders: newOauthProviders,
+          })
+          .onConflictDoUpdate({
+            target: users.userId,
+            set: {
+              ...userInfo,
+              oauthProviders: newOauthProviders,
+            },
+          })
+          .returning();
 
-    return dbUser;
+        if (dbUser === undefined) {
+          throw new Error("Failed to upsert user");
+        }
+
+        return { user: dbUser, isNew };
+      },
+      {
+        isolationLevel: "serializable",
+      },
+    );
   }
 }

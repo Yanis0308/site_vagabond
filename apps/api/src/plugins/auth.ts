@@ -69,18 +69,14 @@ export default fp(
         };
 
         // Ensure user exists and get the fresh DB record
-        const dbUser = await fastify.dbRepositories.user.upsertUser(
-          userId,
-          currentUserInfo,
-        );
+        const { user: dbUser, isNew } =
+          await fastify.dbRepositories.user.upsertUser(userId, currentUserInfo);
 
         // Attach DB user to request.user
         request.user = Object.assign(decodedToken, { db: dbUser });
 
         // Fire-and-forget Slack notification for new user
-        const isActuallyNewUser = dbUser.createdAt === dbUser.updatedAt;
-
-        if (isActuallyNewUser) {
+        if (isNew) {
           void (async (): Promise<void> => {
             try {
               await fastify.slack.sendSignupMessage(
