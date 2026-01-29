@@ -1,4 +1,4 @@
-import { CircleLayer, ShapeSource, SymbolLayer } from "@rnmapbox/maps";
+import { CircleLayer, SymbolLayer } from "@rnmapbox/maps";
 import { memo, type ReactElement } from "react";
 
 import { type PoiType } from "@/utils/types";

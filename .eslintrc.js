@@ -10,6 +10,7 @@ module.exports = {
     "plugin:eslint-comments/recommended",
     "plugin:tailwindcss/recommended",
     "plugin:@tanstack/query/recommended",
+    "prettier", // Must be last to override other configs
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {

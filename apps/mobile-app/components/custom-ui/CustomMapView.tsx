@@ -31,7 +31,6 @@ interface CustomMapViewProps {
   mapRef: RefObject<MapView | null>;
   cameraRef: RefObject<CameraRef | null>;
   selectedPlace: PoiType | null;
-  onMapIdle: (mapState: MapState) => void;
   onCameraChanged: (mapState: MapState) => void;
   onPress: (event: OnPressEventPoi) => void;
 }
@@ -40,7 +39,6 @@ export const CustomMapView = memo(function CustomMapView({
   mapRef,
   cameraRef,
   selectedPlace,
-  onMapIdle,
   onCameraChanged,
   onPress,
 }: CustomMapViewProps): ReactElement {
@@ -75,7 +73,6 @@ export const CustomMapView = memo(function CustomMapView({
       ref={mapRef}
       style={{ flex: 1 }}
       styleURL={config.mapboxStyleUrl}
-      onMapIdle={onMapIdle}
       onCameraChanged={onCameraChanged}
       projection={"globe"}
       compassEnabled={false}

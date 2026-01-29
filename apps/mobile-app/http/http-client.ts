@@ -9,6 +9,7 @@ import { logger } from "@/utils/logger";
  */
 export const httpClient: KyInstance = ky.create({
   timeout: 60 * 1000, // 60 secondes par défaut
+  retry: 0, // Désactiver le retry par défaut - TanStack Query will handle retries
   hooks: {
     beforeRequest: [
       (request: Request): Promise<void> => {

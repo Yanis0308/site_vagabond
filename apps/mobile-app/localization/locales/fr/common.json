@@ -2,6 +2,9 @@
   "tabs": {
     "map": "Carte"
   },
+  "place_details_sheet": {
+    "loading_enriched_data": "Chargement des informations supplémentaires..."
+  },
   "sign_out": "Se déconnecter",
   "validated_places": "Mes lieux validés",
   "no_validated_places": "Aucun lieu validé pour le moment",

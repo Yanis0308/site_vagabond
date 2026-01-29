@@ -11,7 +11,8 @@
     "search_on_google": "Search on Google",
     "search_on_wikipedia": "Search on Wikipedia",
     "search_on_wikidata": "Search on Wikidata",
-    "navigate_to_place": "Navigate to place"
+    "navigate_to_place": "Navigate to place",
+    "loading_enriched_data": "Loading additional information..."
   },
   "picture_input": {
     "add_your_photo": "Add your photo",

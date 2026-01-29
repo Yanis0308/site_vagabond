@@ -1,50 +1,39 @@
-import { memo, useMemo } from "react";
+import { type PoiEnrichedPhoto } from "@vagabond/shared-utils/dist/schemas/processors/llm";
+import { type ReactElement } from "react";
 
-import { config } from "@/constants/Config";
-import { localImages } from "@/utils/localImages";
-import { logger } from "@/utils/logger";
-import { type PoiType } from "@/utils/types";
+import { shadowStyles } from "@/styles/shadows";
 
 import { CustomImage } from "../custom-ui/CustomImage";
+import { Box } from "../ui/box";
 
-export const PlaceImage = memo(({ place }: { place: PoiType }) => {
-  // Prepare image sources in priority order: wikidata -> first visited poi -> placeholder
-  const imageSources = useMemo(() => {
-    const sources: (string | number)[] = [];
+const DEFAULT_IMAGE_HEIGHT = 236;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe
-    if (place.data[0]?.rawInfo?.wikidata !== undefined) {
-      sources.push(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access -- safe
-        `https://hub.toolforge.org/${place.data[0].rawInfo.wikidata}?property=image&width=1000`,
-      );
-    }
+interface PlaceImageProps extends PoiEnrichedPhoto {
+  isSinglePhoto?: boolean;
+}
 
-    const lastVisitedPoiImageKey =
-      place.visitedPois[place.visitedPois.length - 1]?.imageKey;
-
-    if (lastVisitedPoiImageKey !== undefined) {
-      sources.push(`${config.cdnUrl}/${lastVisitedPoiImageKey}`);
-    }
-
-    sources.push(localImages.noPhotoPlaceholder);
-
-    return sources;
-  }, [place]);
-
-  logger("imageSources", JSON.stringify(imageSources, null, 2));
+export const PlaceImage = ({
+  url,
+  caption,
+  isSinglePhoto = false,
+}: PlaceImageProps): ReactElement => {
+  const imageSources: string[] = [url];
 
   return (
-    <CustomImage
-      sources={imageSources}
-      alt="Place photo illustration"
-      height={236}
-      className={"rounded-lg"}
-      contentFit={"autoWithBackground"}
-      priority={"high"}
-      showLoader={true}
-    />
+    <Box
+      style={[shadowStyles.ratingBlock]}
+      className="rotate-2 rounded-2xl bg-background-50 p-1.5"
+    >
+      <CustomImage
+        sources={imageSources}
+        alt={caption ?? ""}
+        height={DEFAULT_IMAGE_HEIGHT}
+        maxWidthPercentage={isSinglePhoto ? undefined : 0.8}
+        className={"rounded-2xl"}
+        contentFit={"aspectRatio"}
+        priority={"high"}
+        showLoader={true}
+      />
+    </Box>
   );
-});
-
-PlaceImage.displayName = "PlaceImage";
+};

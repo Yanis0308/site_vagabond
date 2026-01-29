@@ -23,7 +23,6 @@ export default function MapsTab(): ReactElement {
     mapRef,
     cameraRef,
     isFetchingAllZones,
-    onMapIdle,
     onCameraChanged,
     onPress,
     moveToUserLocation,
@@ -94,7 +93,6 @@ export default function MapsTab(): ReactElement {
           mapRef={mapRef}
           cameraRef={cameraRef}
           selectedPlace={selectedPlace}
-          onMapIdle={onMapIdle}
           onCameraChanged={onCameraChanged}
           onPress={onPress}
         />

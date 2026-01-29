@@ -12,16 +12,16 @@ import { useValidatePlaceMutation } from "@/hooks/mutations/useValidatePlaceMuta
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { logger } from "@/utils/logger";
+import { type PoiType } from "@/utils/types";
 
 import { CustomText } from "../custom-ui/CustomText";
 import { CustomTextarea } from "../custom-ui/CustomTextarea";
 import { PolaroidForm } from "../polaroid/PolaroidForm";
 import { Box } from "../ui/box";
 import { Button, ButtonText } from "../ui/button";
-import { type Place } from "./types";
 
 interface ReviewStepProps {
-  place: Place;
+  place: PoiType;
   capturedImage: string;
   imageKey: string | null;
   setReviewFormEnded: (value: boolean) => void;
@@ -182,10 +182,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = React.memo(
       <View className="flex flex-1">
         {/* Étape validation */}
         <View className="flex items-center">
-          <PolaroidForm
-            imageUrl={capturedImage}
-            title={place.data[0]?.name ?? ""}
-          />
+          <PolaroidForm imageUrl={capturedImage} title={place.name} />
         </View>
         <Box className="mx-8 mb-12 flex flex-col items-center gap-6">
           <Controller control={control} name="rating" render={renderRating} />

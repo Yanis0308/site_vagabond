@@ -1,3 +1,10 @@
 {
-  "plugins": ["@prettier/plugin-lua"]
+  "plugins": ["@prettier/plugin-lua"],
+  "tabWidth": 2,
+  "useTabs": false,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "all",
+  "bracketSpacing": true,
+  "arrowParens": "always"
 }

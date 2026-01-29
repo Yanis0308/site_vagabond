@@ -4,15 +4,15 @@ import { memo, useCallback, useMemo } from "react";
 import { FlatList } from "react-native-gesture-handler";
 
 import { config } from "@/constants/Config";
+import { type VisitedPoiType } from "@/http/visited-pois";
 import { localImages } from "@/utils/localImages";
-import { type PoiType } from "@/utils/types";
 
 import { PolaroidReview } from "../polaroid/PolaroidReview";
 
 cssInterop(FlashList, { contentContainerClassName: "contentContainerStyle" });
 
 interface ReviewsListProps {
-  poi: PoiType;
+  visitedPois: VisitedPoiType[];
 }
 
 interface ReviewItem {
@@ -24,10 +24,10 @@ interface ReviewItem {
   comment: string | null;
 }
 
-export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
+export const ReviewsList = memo(({ visitedPois }: ReviewsListProps) => {
   const reviewsData: ReviewItem[] = useMemo(() => {
     return [
-      ...poi.visitedPois.map((visitedPoi) => ({
+      ...visitedPois.map((visitedPoi) => ({
         id: visitedPoi.id.toString(),
         imageUrl: `${config.cdnUrl}/${visitedPoi.imageKey}`,
         username: visitedPoi.username,
@@ -44,7 +44,7 @@ export const ReviewsList = memo(({ poi }: ReviewsListProps) => {
         comment: `Ajoutez votre propre avis ✍🏻\nC'est très simple !\nIl suffit d'appuyer sur le bouton "Valider le lieu" ci-dessus ☝`,
       },
     ];
-  }, [poi.visitedPois]);
+  }, [visitedPois]);
 
   const renderItem = useCallback(
     ({ item }: { item: ReviewItem }) => (

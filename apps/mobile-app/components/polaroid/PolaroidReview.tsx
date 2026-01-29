@@ -1,5 +1,6 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Pressable } from "react-native";
 
 import { type ImageLoadAsyncSource } from "@/hooks/queries/useImageFromMultipleSources";
 import { getPlainTextDate } from "@/utils/date";
@@ -29,6 +30,10 @@ export const PolaroidReview = memo(
     className,
   }: PolaroidReviewProps) => {
     const { i18n } = useTranslation();
+    const [isExpanded, setIsExpanded] = useState(false);
+    const commentText = comment.trim() !== "" ? comment : "Aucun commentaire";
+    const needsTruncation = commentText.length > 100;
+    const shouldShowReadMore = needsTruncation && !isExpanded;
 
     return (
       <PolaroidBase
@@ -61,9 +66,21 @@ export const PolaroidReview = memo(
           </Box>
 
           {/* Commentaire en dessous */}
-          <Text className="h-[100px] pt-2 text-sm text-black-300">
-            {comment.trim() !== "" ? comment : "Aucun commentaire"}
-          </Text>
+          <Box className="pt-2">
+            <Text
+              className="text-sm text-black-300"
+              numberOfLines={shouldShowReadMore ? 3 : undefined}
+            >
+              {commentText}
+            </Text>
+            {needsTruncation && (
+              <Pressable onPress={() => setIsExpanded(!isExpanded)}>
+                <Text className="mt-1 text-xs text-primary-500">
+                  {isExpanded ? "...Lire moins" : "...Lire plus"}
+                </Text>
+              </Pressable>
+            )}
+          </Box>
         </Box>
       </PolaroidBase>
     );
