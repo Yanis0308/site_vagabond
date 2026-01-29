@@ -47,7 +47,7 @@ Le script crée automatiquement le schéma et exécute osm2pgsql.
 Transformation des données PostgreSQL vers fichiers JSONL :
 
 - un nouveau schema en bdd a été créé automatiquement avec le nom du pays et la date d'extraction
-- ⚠️ le schema comporte des underscore _ au lieu de tirets -
+- ⚠️ le schema comporte des underscore \_ au lieu de tirets -
 
 ```bash
 pnpm run transform --schema=france_2024_01_15 --country=FR
