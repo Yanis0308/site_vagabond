@@ -11,19 +11,17 @@ import type {
 } from "../scraping-processor.interface.js";
 import { isScrapingSuccess } from "../scraping-processor.interface.js";
 
-export type LlmGenerateEnrichedPoiResponse = LLMGenerateEnrichedPoiResponse;
-
 /**
  * Processor for LLM enrichment using AI models (Gemini or Groq)
  */
 export class LlmProcessor implements ScrapingProcessor<
   LLMGenerateEnrichedPoiParams,
-  LlmGenerateEnrichedPoiResponse
+  LLMGenerateEnrichedPoiResponse
 > {
   async execute(
     fastify: FastifyInstance,
     params: LLMGenerateEnrichedPoiParams,
-  ): Promise<LlmGenerateEnrichedPoiResponse> {
+  ): Promise<LLMGenerateEnrichedPoiResponse> {
     return await generateEnrichedPoi(fastify, params);
   }
 
@@ -48,7 +46,7 @@ export class LlmProcessor implements ScrapingProcessor<
   }
 
   transformOutput(
-    response: LlmGenerateEnrichedPoiResponse,
+    response: LLMGenerateEnrichedPoiResponse,
   ): Record<string, unknown> {
     // Store the complete response JSON
     if (!isScrapingSuccess(response)) {
@@ -66,7 +64,7 @@ export class LlmProcessor implements ScrapingProcessor<
 
   getMetadata(
     _params: LLMGenerateEnrichedPoiParams,
-    response: LlmGenerateEnrichedPoiResponse,
+    response: LLMGenerateEnrichedPoiResponse,
   ): ProcessingMetadata | undefined {
     if (!isScrapingSuccess(response)) {
       return undefined;

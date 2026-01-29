@@ -79,7 +79,7 @@ export class PoiEnrichedRepository {
     }
 
     // Use upsert to handle existing records
-    const [enriched] = await this.db
+    await this.db
       .insert(poiEnriched)
       .values({
         poiId: data.poiId,
@@ -92,12 +92,7 @@ export class PoiEnrichedRepository {
           source: data.source,
           enrichedData: data.enrichedData,
         },
-      })
-      .returning();
-
-    if (enriched === undefined) {
-      return undefined;
-    }
+      });
 
     // Fetch the complete record
     return await this.findByPoiId(data.poiId);

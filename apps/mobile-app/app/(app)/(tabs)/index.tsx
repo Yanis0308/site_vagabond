@@ -4,15 +4,12 @@ import { type ReactElement, useEffect } from "react";
 import { useSharedValue } from "react-native-reanimated";
 
 import { CustomMapView } from "@/components/custom-ui/CustomMapView";
-import { CustomText } from "@/components/custom-ui/CustomText";
 import { MapButtons } from "@/components/custom-ui/MapButtons";
 import { MapDebugInfo } from "@/components/custom-ui/MapDebugInfo";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { PlaceDetailsSheet } from "@/components/place-details/PlaceDetailsSheet";
 import { SearchHeaderButton } from "@/components/SearchHeaderButton";
 import { Box } from "@/components/ui/box";
-import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
-import { Spinner } from "@/components/ui/spinner";
 import { useMapLogic } from "@/hooks/maps/useMapLogic";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { mapService } from "@/services/MapService";
@@ -22,7 +19,6 @@ export default function MapsTab(): ReactElement {
   const {
     mapRef,
     cameraRef,
-    isFetchingAllZones,
     onCameraChanged,
     onPress,
     moveToUserLocation,
@@ -74,20 +70,6 @@ export default function MapsTab(): ReactElement {
         <SearchHeaderButton
           bottomSheetAnimatedIndex={bottomSheetAnimatedIndex}
         />
-
-        {isFetchingAllZones && (
-          <Box
-            className="absolute inset-0 z-50 flex items-center justify-center"
-            style={{
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
-            }}
-          >
-            <Box className="flex items-center justify-center rounded-xl bg-white p-6">
-              <Spinner size="large" color={themeColors.secondary[500].hex} />
-              <CustomText>Chargement des zones...</CustomText>
-            </Box>
-          </Box>
-        )}
 
         <CustomMapView
           mapRef={mapRef}

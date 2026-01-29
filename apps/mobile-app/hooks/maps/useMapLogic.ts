@@ -9,7 +9,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
 import { logger } from "@/utils/logger";
-import { type PoiType, type ZoneStatType } from "@/utils/types";
+import { type PoiType } from "@/utils/types";
 
 export interface OnPressEventPoi extends OnPressEvent {
   features: GeoJSON.Feature<
@@ -20,7 +20,6 @@ export interface OnPressEventPoi extends OnPressEvent {
 
 interface UseMapLogicReturn {
   // Data
-  allZonesData: ZoneStatType[] | undefined;
   userLocation: { latitude: number; longitude: number } | undefined | null;
 
   // Realtime states
@@ -31,9 +30,6 @@ interface UseMapLogicReturn {
   // Refs
   mapRef: React.RefObject<MapView | null>;
   cameraRef: React.RefObject<CameraRef | null>;
-
-  // Loading states
-  isFetchingAllZones: boolean;
 
   // Event handlers
   onCameraChanged: (mapState: MapState) => void;
@@ -62,9 +58,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
   // Hook unifié pour gérer la sélection de lieu
   const { setSelectedPlace } = usePlaceSelection();
-
-  const isFetchingAllZones = false;
-  const allZonesData: ZoneStatType[] = [];
 
   const moveToUserLocation = useCallback(() => {
     if (userLocation !== null && cameraRef.current !== null) {
@@ -188,7 +181,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
   return {
     // Data
-    allZonesData,
     userLocation,
 
     // Realtime states
@@ -199,9 +191,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
     // Refs
     mapRef,
     cameraRef,
-
-    // Loading states
-    isFetchingAllZones,
 
     // Event handlers
     onCameraChanged,

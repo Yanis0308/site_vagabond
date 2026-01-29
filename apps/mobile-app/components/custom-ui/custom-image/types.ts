@@ -16,11 +16,6 @@ export interface CustomImageProps extends Omit<
   maxWidthPercentage?: number;
 }
 
-export interface ImageDimensions {
-  height: number | "full";
-  width?: number | "full";
-}
-
 export interface ImageStyleResult extends Pick<
   ViewStyle,
   "height" | "width" | "maxWidth" | "aspectRatio"

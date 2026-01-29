@@ -51,18 +51,25 @@ export const useOptimizedImageSource = ({
 
   // Use optimized source if available, otherwise use fallback
   let imageLoaded: ImageRef | number | null | undefined;
-  if (
+  let isLoading: boolean;
+
+  const isUsingOptimizedSource =
     optimizedImageSource !== null &&
     typeof firstStringSource === "string" &&
-    firstStringSource !== ""
-  ) {
+    firstStringSource !== "";
+
+  if (isUsingOptimizedSource) {
     imageLoaded = optimizedImageSource;
+    // When using optimized source, we're not loading since optimizedImageSource is already loaded (not null)
+    isLoading = false;
   } else {
     imageLoaded = fallbackImageLoaded;
+    // When using fallback, use the loading state from useImageFromMultipleSources
+    isLoading = isImageLoading;
   }
 
   return {
     imageLoaded,
-    isLoading: isImageLoading,
+    isLoading,
   };
 };
