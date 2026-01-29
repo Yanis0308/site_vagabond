@@ -11,50 +11,29 @@ import type {
 } from "../scraping-processor.interface.js";
 import { isScrapingSuccess } from "../scraping-processor.interface.js";
 
-export interface LlmParams {
-  googleMapsData: Record<string, unknown>;
-  jinaData: Record<string, unknown>;
-  wikidataData: Record<string, unknown>;
-  wikipediaData: Record<string, unknown>;
-  poiName: string;
-  latitude: number;
-  longitude: number;
-  osmTags: Record<string, unknown> | null;
-}
-
 export type LlmGenerateEnrichedPoiResponse = LLMGenerateEnrichedPoiResponse;
 
 /**
  * Processor for LLM enrichment using AI models (Gemini or Groq)
  */
 export class LlmProcessor implements ScrapingProcessor<
-  LlmParams,
+  LLMGenerateEnrichedPoiParams,
   LlmGenerateEnrichedPoiResponse
 > {
   async execute(
     fastify: FastifyInstance,
-    params: LlmParams,
+    params: LLMGenerateEnrichedPoiParams,
   ): Promise<LlmGenerateEnrichedPoiResponse> {
-    const llmParams: LLMGenerateEnrichedPoiParams = {
-      googleMapsData: params.googleMapsData,
-      jinaData: params.jinaData,
-      wikidataData: params.wikidataData,
-      wikipediaData: params.wikipediaData,
-      poiName: params.poiName,
-      latitude: params.latitude,
-      longitude: params.longitude,
-      osmTags: params.osmTags,
-    };
-
-    const response = await generateEnrichedPoi(fastify, llmParams);
-    return response;
+    return await generateEnrichedPoi(fastify, params);
   }
 
   getType(): "llm" {
     return "llm";
   }
 
-  transformInput(params: LlmParams): Record<string, unknown> {
+  transformInput(
+    params: LLMGenerateEnrichedPoiParams,
+  ): Record<string, unknown> {
     // Store the complete input including prompt context and raw data
     return {
       poiName: params.poiName,
@@ -86,7 +65,7 @@ export class LlmProcessor implements ScrapingProcessor<
   }
 
   getMetadata(
-    _params: LlmParams,
+    _params: LLMGenerateEnrichedPoiParams,
     response: LlmGenerateEnrichedPoiResponse,
   ): ProcessingMetadata | undefined {
     if (!isScrapingSuccess(response)) {
@@ -112,8 +91,3 @@ export class LlmProcessor implements ScrapingProcessor<
     return Object.keys(metadata).length > 0 ? metadata : undefined;
   }
 }
-
-// Re-export old names for backwards compatibility
-export type GeminiLlmParams = LlmParams;
-export type GeminiGenerateEnrichedPoiResponse = LlmGenerateEnrichedPoiResponse;
-export const GeminiLlmProcessor = LlmProcessor;
