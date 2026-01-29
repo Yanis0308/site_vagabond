@@ -103,7 +103,7 @@ export async function searchWithJina(
       return errorResponse;
     }
 
-    const result = rawResult as JinaApiResponse;
+    const result = rawResult;
 
     // Transform Jina API response to JinaScrapeResponse format
     const success = result.code === 200 && result.status === 20000;

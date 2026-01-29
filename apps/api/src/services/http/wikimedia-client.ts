@@ -1,12 +1,12 @@
 import type { FastifyInstance } from "fastify";
 import { Mwn } from "mwn";
 
-import { wikimediaOAuthService } from "./wikimedia-oauth.service.js";
 import type {
   ScrapingErrorResponse,
   ScrapingResponse,
   ScrapingSuccessResponse,
 } from "../processing/scraping-processor.interface.js";
+import { wikimediaOAuthService } from "./wikimedia-oauth.service.js";
 
 export interface FetchWikidataParams {
   wikidataId: string; // Format: "Q12345"

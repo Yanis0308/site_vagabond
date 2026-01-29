@@ -37,9 +37,6 @@ export {
 export { jsonSchemas } from "./schemas/index.js";
 export { PoiEnrichedSchema } from "./schemas/processors/llm.js";
 export { logger } from "./utils/logger.js";
-export {
-  getFilterLevelName,
-  type PoiFilterLevel,
-} from "./utils/poi.js";
+export { getFilterLevelName, type PoiFilterLevel } from "./utils/poi.js";
 export { getUserDisplayName } from "./utils/user.js";
 export { generateValidator } from "./utils/validation.js";

@@ -69,8 +69,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           await fastify.dbRepositories.poi.findOsmTagsByPoiId(poiId);
 
         // 4. Extract Wikidata and Wikipedia IDs from OSM tags
-        const { wikidataId, wikipediaTitle } =
-          enrichmentService.extractWikimediaIds(osmTags);
+        // const { wikidataId, wikipediaTitle } =
+        //   enrichmentService.extractWikimediaIds(osmTags);
 
         // 5. Build Jina query
         const jinaQuery = enrichmentService.buildJinaQuery({
@@ -90,8 +90,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             cityName: poi.cityName ?? null,
           },
           jinaQuery,
-          wikidataId,
-          wikipediaTitle,
+          // wikidataId,
+          // wikipediaTitle,
         );
 
         // 7. Log processing results for monitoring
@@ -116,19 +116,19 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             processingResults.jinaResult !== undefined &&
             isProcessSuccess(processingResults.jinaResult) &&
             isScrapingSuccess(processingResults.jinaResult.scrapeResponse)
-              ? processingResults.jinaResult.scrapeResponse.data ?? {}
+              ? processingResults.jinaResult.scrapeResponse.data
               : {},
           wikidataRawData:
             processingResults.wikidataResult !== undefined &&
             isProcessSuccess(processingResults.wikidataResult) &&
             isScrapingSuccess(processingResults.wikidataResult.scrapeResponse)
-              ? processingResults.wikidataResult.scrapeResponse.data ?? {}
+              ? processingResults.wikidataResult.scrapeResponse.data
               : {},
           wikipediaRawData:
             processingResults.wikipediaResult !== undefined &&
             isProcessSuccess(processingResults.wikipediaResult) &&
             isScrapingSuccess(processingResults.wikipediaResult.scrapeResponse)
-              ? processingResults.wikipediaResult.scrapeResponse.data ?? {}
+              ? processingResults.wikipediaResult.scrapeResponse.data
               : {},
         };
 

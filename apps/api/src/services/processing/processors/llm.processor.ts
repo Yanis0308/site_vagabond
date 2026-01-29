@@ -47,7 +47,7 @@ export class LlmProcessor implements ScrapingProcessor<
     };
 
     const response = await generateEnrichedPoi(fastify, llmParams);
-    return response as LlmGenerateEnrichedPoiResponse;
+    return response;
   }
 
   getType(): "llm" {
@@ -81,7 +81,7 @@ export class LlmProcessor implements ScrapingProcessor<
     return {
       data: response.data,
       isValid: response.isValid,
-      ...(response.usage && { usage: response.usage }),
+      ...(response.usage !== undefined && { usage: response.usage }),
     };
   }
 
@@ -101,7 +101,7 @@ export class LlmProcessor implements ScrapingProcessor<
       metadata.cost = response.usage.totalTokens;
     }
 
-    if (response.usage) {
+    if (response.usage !== undefined) {
       metadata.metadata = {
         promptTokens: response.usage.promptTokens,
         completionTokens: response.usage.completionTokens,

@@ -36,6 +36,8 @@ export const PoiEnrichedPhotoSchema = Type.Object(
   },
 );
 
+export type PoiEnrichedPhoto = Static<typeof PoiEnrichedPhotoSchema>;
+
 export const PoiEnrichedPopularitySchema = Type.Object(
   {
     rating: Type.Optional(

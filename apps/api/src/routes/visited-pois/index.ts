@@ -17,10 +17,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const visitedPois =
-        await fastify.dbRepositories.visitedPoi.findByUserId(
-          request.user.uid,
-        );
+      const visitedPois = await fastify.dbRepositories.visitedPoi.findByUserId(
+        request.user.uid,
+      );
 
       return await reply.status(200).send({ data: visitedPois });
     },

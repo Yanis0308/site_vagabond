@@ -109,8 +109,8 @@ export class PoiEnrichmentService {
     poiId: string,
     poi: PoiBasicInfo,
     jinaQuery: string,
-    wikidataId?: string,
-    wikipediaTitle?: string,
+    // wikidataId?: string,
+    // wikipediaTitle?: string,
   ): Promise<ProcessingResults> {
     const batchId = randomUUID();
     const orchestrator = new ProcessingResultOrchestrator(this.fastify);
@@ -147,7 +147,7 @@ export class PoiEnrichmentService {
       //       batchId,
       //     })
       //   : undefined,
-      undefined,
+      Promise.resolve(undefined),
       // Temporarily disabled: Wikipedia processor
       // wikipediaTitle !== undefined && wikipediaTitle !== ""
       //   ? orchestrator.process(new WikipediaProcessor(), {
@@ -156,7 +156,7 @@ export class PoiEnrichmentService {
       //       batchId,
       //     })
       //   : undefined,
-      undefined,
+      Promise.resolve(undefined),
     ]);
 
     // Build result object, only including optional properties if they are defined

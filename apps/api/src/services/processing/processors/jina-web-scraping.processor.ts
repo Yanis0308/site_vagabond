@@ -65,11 +65,11 @@ export class JinaWebScrapingProcessor implements ScrapingProcessor<
       metadata.cost = tokens;
     }
 
-    if (response.meta) {
+    if (response.meta !== undefined) {
       metadata.metadata = {
         code: response.meta.code,
         status: response.meta.status,
-        ...(response.meta.usage && {
+        ...(response.meta.usage !== undefined && {
           usage: {
             tokens: response.meta.usage.tokens,
           },

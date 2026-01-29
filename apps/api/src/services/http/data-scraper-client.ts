@@ -7,12 +7,12 @@ import {
 import type { FastifyInstance } from "fastify";
 import type { KyInstance } from "ky";
 
-import { createBaseClient } from "./base-client.js";
 import type {
   ScrapingErrorResponse,
   ScrapingResponse,
   ScrapingSuccessResponse,
 } from "../processing/scraping-processor.interface.js";
+import { createBaseClient } from "./base-client.js";
 
 export interface ScrapeParams {
   query: string;
@@ -25,7 +25,8 @@ export interface GoogleMapsScrapeSuccessData {
   place: GoogleMapsPlaceStrict | null;
 }
 
-export type GoogleMapsScrapeResponse = ScrapingResponse<GoogleMapsScrapeSuccessData>;
+export type GoogleMapsScrapeResponse =
+  ScrapingResponse<GoogleMapsScrapeSuccessData>;
 
 // Legacy type for backward compatibility (deprecated)
 export type ScrapeResponse = GoogleMapsScrapeResponse;
@@ -108,15 +109,17 @@ export async function scrapeGoogleMaps(
     if (!validatedResult.success) {
       const errorResponse: ScrapingErrorResponse = {
         success: false,
-        error: validatedResult.error ?? "Unknown error from data-scraper service",
+        error:
+          validatedResult.error ?? "Unknown error from data-scraper service",
       };
       return errorResponse;
     }
 
-    const successResponse: ScrapingSuccessResponse<GoogleMapsScrapeSuccessData> = {
-      success: true,
-      ...({ place: validatedPlace } as GoogleMapsScrapeSuccessData),
-    };
+    const successResponse: ScrapingSuccessResponse<GoogleMapsScrapeSuccessData> =
+      {
+        success: true,
+        ...({ place: validatedPlace } as GoogleMapsScrapeSuccessData),
+      };
 
     return successResponse;
   } catch (error) {

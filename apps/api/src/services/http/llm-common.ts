@@ -36,7 +36,8 @@ export interface LLMGenerateEnrichedPoiSuccessData {
 /**
  * Common interface for LLM generate enriched POI response
  */
-export type LLMGenerateEnrichedPoiResponse = ScrapingResponse<LLMGenerateEnrichedPoiSuccessData>;
+export type LLMGenerateEnrichedPoiResponse =
+  ScrapingResponse<LLMGenerateEnrichedPoiSuccessData>;
 
 /**
  * Common generation options for LLM models
@@ -117,7 +118,7 @@ export function createSuccessResponse(
     data,
   };
 
-  if (usage) {
+  if (usage !== undefined) {
     successData.usage = {
       ...(usage.promptTokens !== undefined && {
         promptTokens: usage.promptTokens,
@@ -131,10 +132,11 @@ export function createSuccessResponse(
     };
   }
 
-  const successResponse: ScrapingSuccessResponse<LLMGenerateEnrichedPoiSuccessData> = {
-    success: true,
-    ...successData,
-  };
+  const successResponse: ScrapingSuccessResponse<LLMGenerateEnrichedPoiSuccessData> =
+    {
+      success: true,
+      ...successData,
+    };
 
   return successResponse;
 }

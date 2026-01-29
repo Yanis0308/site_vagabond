@@ -7,7 +7,6 @@ import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
 import { generateText, jsonSchema, Output } from "ai";
 import type { FastifyInstance } from "fastify";
 
-import { buildGeminiPrompt } from "./llm-prompt.js";
 import {
   createErrorResponse,
   createSuccessResponse,
@@ -17,6 +16,7 @@ import {
   type LLMGenerateEnrichedPoiResponse,
   type LLMGenerationOptions,
 } from "./llm-common.js";
+import { buildGeminiPrompt } from "./llm-prompt.js";
 
 /**
  * Generate enriched POI data using Gemini AI
@@ -48,8 +48,19 @@ export async function generateEnrichedPoiWithGemini(
     // Use jsonSchema helper from AI SDK to wrap the JSON schema
     const schema = jsonSchema(jsonSchemas.PoiEnrichedSchema);
 
+    fastify.log.info(
+      {
+        poiName: params.poiName,
+        model: "gemini-2.5-flash",
+        temperature: options.temperature ?? DEFAULT_LLM_OPTIONS.temperature,
+        topP: options.topP ?? DEFAULT_LLM_OPTIONS.topP,
+        topK: options.topK ?? DEFAULT_LLM_OPTIONS.topK,
+      },
+      "Gemini request",
+    );
+
     const { text, usage } = await generateText({
-      model: google("gemini-2.0-flash-exp"),
+      model: google("gemini-2.5-flash"),
       prompt,
       temperature: options.temperature ?? DEFAULT_LLM_OPTIONS.temperature,
       topP: options.topP ?? DEFAULT_LLM_OPTIONS.topP,
@@ -81,13 +92,13 @@ export async function generateEnrichedPoiWithGemini(
       totalTokens?: number;
     } = {};
 
-    if (usage?.inputTokens !== undefined) {
+    if (usage.inputTokens !== undefined) {
       usageData.promptTokens = usage.inputTokens;
     }
-    if (usage?.outputTokens !== undefined) {
+    if (usage.outputTokens !== undefined) {
       usageData.completionTokens = usage.outputTokens;
     }
-    if (usage?.inputTokens !== undefined && usage?.outputTokens !== undefined) {
+    if (usage.inputTokens !== undefined && usage.outputTokens !== undefined) {
       usageData.totalTokens = usage.inputTokens + usage.outputTokens;
     }
 
