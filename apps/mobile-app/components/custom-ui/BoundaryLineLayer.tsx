@@ -1,6 +1,10 @@
 import { LineLayer } from "@rnmapbox/maps";
 import { memo, type ReactElement, useMemo } from "react";
 
+import {
+  getBoundaryFilter,
+  shouldDisplayBoundaryLevel,
+} from "@/components/custom-ui/BoundaryFilters";
 import { layersInfos } from "@/constants/MapLayersConfig";
 
 interface BoundaryLineLayerProps {
@@ -34,19 +38,24 @@ export const BoundaryLineLayer = memo(
     }, []);
 
     const lineLayers = useMemo(() => {
-      return Object.values(layersInfos).map((layer) => {
-        return (
-          <LineLayer
-            key={layer.polygon.polygonLayerId}
-            id={layer.polygon.polygonLayerId}
-            sourceID={sourceId}
-            sourceLayerID={layer.polygon.sourceLayerId}
-            minZoomLevel={layer.polygon.minZoomLevel}
-            maxZoomLevel={layer.polygon.maxZoomLevel}
-            style={boundaryLineStyle}
-          />
-        );
-      });
+      return Object.entries(layersInfos)
+        .filter(([boundaryLevel]) => shouldDisplayBoundaryLevel(boundaryLevel))
+        .map(([boundaryLevel, layer]) => {
+          const filter = getBoundaryFilter(boundaryLevel);
+
+          return (
+            <LineLayer
+              key={layer.polygon.polygonLayerId}
+              id={layer.polygon.polygonLayerId}
+              sourceID={sourceId}
+              sourceLayerID={layer.polygon.sourceLayerId}
+              minZoomLevel={layer.polygon.minZoomLevel}
+              maxZoomLevel={layer.polygon.maxZoomLevel}
+              filter={filter}
+              style={boundaryLineStyle}
+            />
+          );
+        });
     }, [boundaryLineStyle, sourceId]);
 
     return <>{lineLayers}</>;

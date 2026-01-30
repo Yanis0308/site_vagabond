@@ -1,6 +1,10 @@
 import { SymbolLayer } from "@rnmapbox/maps";
 import { memo, type ReactElement, useMemo } from "react";
 
+import {
+  getBoundaryFilter,
+  shouldDisplayBoundaryLevel,
+} from "@/components/custom-ui/BoundaryFilters";
 import { layersInfos } from "@/constants/MapLayersConfig";
 import { useUserZoneStats } from "@/hooks/queries/useZonesStats";
 import { type ZoneUserStatType } from "@/utils/types";
@@ -212,19 +216,24 @@ export const BoundarySymbolLayers = memo(
     }, [completionData]);
 
     const textLayers = useMemo(() => {
-      return Object.values(layersInfos).map((layer) => {
-        return (
-          <SymbolLayer
-            key={layer.textAndPoint.symbolLayerId}
-            id={layer.textAndPoint.symbolLayerId}
-            sourceID={sourceId}
-            sourceLayerID={layer.textAndPoint.sourceLayerId}
-            minZoomLevel={layer.textAndPoint.minZoomLevel}
-            maxZoomLevel={layer.textAndPoint.maxZoomLevel}
-            style={textStyleWithCompletionData}
-          />
-        );
-      });
+      return Object.entries(layersInfos)
+        .filter(([boundaryLevel]) => shouldDisplayBoundaryLevel(boundaryLevel))
+        .map(([boundaryLevel, layer]) => {
+          const filter = getBoundaryFilter(boundaryLevel);
+
+          return (
+            <SymbolLayer
+              key={layer.textAndPoint.symbolLayerId}
+              id={layer.textAndPoint.symbolLayerId}
+              sourceID={sourceId}
+              sourceLayerID={layer.textAndPoint.sourceLayerId}
+              minZoomLevel={layer.textAndPoint.minZoomLevel}
+              maxZoomLevel={layer.textAndPoint.maxZoomLevel}
+              filter={filter}
+              style={textStyleWithCompletionData}
+            />
+          );
+        });
     }, [textStyleWithCompletionData, sourceId]);
 
     return <>{textLayers}</>;
