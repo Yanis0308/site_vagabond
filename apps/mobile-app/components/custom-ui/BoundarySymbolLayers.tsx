@@ -2,6 +2,7 @@ import { SymbolLayer } from "@rnmapbox/maps";
 import { memo, type ReactElement, useMemo } from "react";
 
 import {
+  CITIES_WITH_MANAGED_DISTRICTS,
   getBoundaryFilter,
   shouldDisplayBoundaryLevel,
 } from "@/components/custom-ui/BoundaryFilters";
@@ -103,6 +104,12 @@ export const BoundarySymbolLayers = memo(
             ["get", "boundary_level"],
             ["literal", ["CITY", "DISTRICT", "NEIGHBORHOOD"]],
           ],
+          // Pour les CITY, vérifier qu'elles ont leurs districts gérés
+          [
+            "any",
+            ["!=", ["get", "boundary_level"], "CITY"],
+            ["in", ["get", "id"], ["literal", CITIES_WITH_MANAGED_DISTRICTS]],
+          ],
         ],
         [
           "concat",
@@ -115,8 +122,16 @@ export const BoundarySymbolLayers = memo(
           ["to-string", ["get", "pois_count"]],
           " lieux",
         ],
-        // Si seulement subzones_count > 0
-        [">", ["get", "subzones_count"], 0],
+        // Si seulement subzones_count > 0 (et pour les CITY, uniquement si districts gérés)
+        [
+          "all",
+          [">", ["get", "subzones_count"], 0],
+          [
+            "any",
+            ["!=", ["get", "boundary_level"], "CITY"],
+            ["in", ["get", "id"], ["literal", CITIES_WITH_MANAGED_DISTRICTS]],
+          ],
+        ],
         [
           "concat",
           ["get", "name"],
@@ -164,7 +179,13 @@ export const BoundarySymbolLayers = memo(
         let displayText = zone.name;
 
         // Ligne 2 : zones x/y et % zones
-        if (zone.total_subzones_count > 0) {
+        // Pour les CITY, ne montrer les subzones (districts) que si la ville est gérée
+        const shouldShowSubzones =
+          zone.total_subzones_count > 0 &&
+          (zone.boundary_level !== "CITY" ||
+            CITIES_WITH_MANAGED_DISTRICTS.includes(zoneId));
+
+        if (shouldShowSubzones) {
           let zonesPercent = Math.ceil(
             (zone.completed_subzones_count / zone.total_subzones_count) * 100,
           );
