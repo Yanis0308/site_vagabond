@@ -20,7 +20,6 @@ export const usePoiEnriched = (
       }
       return await getPoiEnriched(poiId);
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
   return {

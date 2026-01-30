@@ -18,7 +18,6 @@ export const useUserVisitedPois = (): {
     queryFn: async () => {
       return await getUserVisitedPois();
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
   // Extract POI IDs from visited POIs

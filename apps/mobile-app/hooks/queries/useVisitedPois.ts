@@ -20,7 +20,6 @@ export const useVisitedPois = (
       }
       return await getVisitedPois(poiId);
     },
-    staleTime: 1000 * 60 * 10, // 10 minutes
   });
 
   return {

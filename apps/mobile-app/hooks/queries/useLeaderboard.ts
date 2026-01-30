@@ -8,6 +8,5 @@ export const useLeaderboard = (
   return useQuery<LeaderboardResponse, Error>({
     queryKey: ["leaderboard", period],
     queryFn: () => getLeaderboard(period),
-    staleTime: 1000 * 60 * 1, // 1 minute
   });
 };
