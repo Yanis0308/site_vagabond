@@ -8,13 +8,15 @@ interface CustomTextareaProps {
   value: string;
   onChange: (value: string) => void;
   className?: string;
+  isInvalid?: boolean;
 }
 
 export const CustomTextarea = memo(
   forwardRef<React.ElementRef<typeof TextareaInput>, CustomTextareaProps>(
-    ({ placeholder, value, onChange, ...props }, ref) => {
+    ({ placeholder, value, onChange, isInvalid, ...props }, ref) => {
       return (
         <Textarea
+          isInvalid={isInvalid}
           className={cn(
             "border border-background-300 rounded-2xl border-solid bg-background-50 flex justify-start",
             props.className,

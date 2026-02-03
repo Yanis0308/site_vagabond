@@ -24,11 +24,12 @@ import { type PoiType } from "@/utils/types";
 import { themeColors } from "../ui/gluestack-ui-provider/config";
 import { buildListData } from "./buildListData";
 import { Handle } from "./Handle";
-import { useRenderListItem } from "./renderListItem";
+import { RenderListItem } from "./RenderListItem";
 
 interface PlaceDetailsSheetV2Props {
   place: PoiType | null;
-  onPressLink: () => void;
+  onPressCamera: () => Promise<void>;
+  onPressGallery: () => Promise<void>;
   onClose: () => void;
   onSheetChange?: (index: number) => void;
   animatedIndex?: SharedValue<number>;
@@ -65,7 +66,8 @@ const SheetBackdrop = ({
 
 export const PlaceDetailsSheet = ({
   place,
-  onPressLink,
+  onPressCamera,
+  onPressGallery,
   onClose,
   onSheetChange,
   animatedIndex,
@@ -150,8 +152,8 @@ export const PlaceDetailsSheet = ({
   const rating = Math.round(
     visitedPois.length > 0
       ? visitedPois.reduce((acc, visitedPoi) => {
-          return acc + visitedPoi.rating;
-        }, 0) / visitedPois.length
+        return acc + visitedPoi.rating;
+      }, 0) / visitedPois.length
       : enrichedData?.popularity?.rating !== undefined
         ? Math.round(enrichedData.popularity.rating)
         : 0,
@@ -187,15 +189,6 @@ export const PlaceDetailsSheet = ({
     isLoadingEnriched,
   });
 
-  const renderItem = useRenderListItem({
-    enrichedData: enrichedData ?? undefined,
-    onPressLink,
-    imageBoxAnimatedStyle,
-    contentAnimatedStyle,
-    visitedPois,
-    isLoadingEnriched,
-  });
-
   const keyExtractor = (
     item: ReturnType<typeof buildListData>[number],
     index: number,
@@ -222,7 +215,18 @@ export const PlaceDetailsSheet = ({
     >
       <FlashList
         data={listData}
-        renderItem={renderItem}
+        renderItem={({ item }) => (
+          <RenderListItem
+            item={item}
+            enrichedData={enrichedData ?? undefined}
+            onPressCamera={onPressCamera}
+            onPressGallery={onPressGallery}
+            imageBoxAnimatedStyle={imageBoxAnimatedStyle}
+            contentAnimatedStyle={contentAnimatedStyle}
+            visitedPois={visitedPois}
+            isLoadingEnriched={isLoadingEnriched}
+          />
+        )}
         keyExtractor={keyExtractor}
         stickyHeaderIndices={stickyHeaderIndices}
         renderScrollComponent={BottomSheetScrollable}

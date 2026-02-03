@@ -2,7 +2,7 @@ import { useNavigation, usePreventRemove } from "@react-navigation/native";
 import { useIsMutating } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import React, { type ReactElement, useCallback, useMemo } from "react";
+import React, { type ReactElement, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -12,9 +12,14 @@ import { CustomScreenContainer } from "@/components/navigation/CustomScreenConta
 import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { ReviewStep } from "@/components/validate-place";
-import { UPLOAD_FILE_MUTATION_KEY } from "@/hooks/mutations/useUploadFileMutation";
+import {
+  UPLOAD_FILE_MUTATION_KEY,
+  useUploadFileMutation,
+} from "@/hooks/mutations/useUploadFileMutation";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
+import { compressImage } from "@/utils/imageCompressor";
+import { logger } from "@/utils/logger";
 
 export default function ReviewForm(): ReactElement {
   const { t } = useTranslation("common");
@@ -23,49 +28,74 @@ export default function ReviewForm(): ReactElement {
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
   const navigation = useNavigation();
   const router = useRouter();
-  const isMutating = useIsMutating(
-    useMemo(() => ({ mutationKey: UPLOAD_FILE_MUTATION_KEY }), []),
-  );
+  const uploadFileMutation = useUploadFileMutation();
+  const isMutating = useIsMutating({
+    mutationKey: UPLOAD_FILE_MUTATION_KEY,
+  });
   const isUploading = isMutating > 0;
 
-  const handleReviewFormEnd = useCallback(() => {
+  // Upload photo when component mounts
+  useEffect(() => {
+    if (currentPhoto !== null && currentPhoto.fileId === null && !isUploading) {
+      void (async (): Promise<void> => {
+        try {
+          logger("Starting photo upload...");
+          const compressedUri = await compressImage(currentPhoto.imageUri);
+
+          const result = await uploadFileMutation.mutateAsync({
+            uri: compressedUri,
+            fileName: `photo_${Date.now()}.jpg`,
+            mimeType: "image/jpeg",
+          });
+
+          logger("Upload complete, fileId:", result.key);
+          // update the current photo with the new fileId to register it in form
+          setCurrentPhoto((prev) => {
+            if (prev !== null) {
+              return { ...prev, fileId: result.key };
+            }
+            return null;
+          });
+        } catch (error) {
+          logger("Error uploading photo:", error);
+          Alert.alert("Erreur", "Impossible d'envoyer la photo");
+        }
+      })();
+    }
+  }, [currentPhoto, isUploading, uploadFileMutation, setCurrentPhoto]);
+
+  const handleReviewFormEnd = (): void => {
     setCurrentPhoto(null);
     // Small delay to ensure usePreventRemove is properly disabled
     setTimeout(() => {
       router.dismissAll();
     }, 0);
-  }, [router, setCurrentPhoto]);
+  };
 
-  usePreventRemove(
-    currentPhoto !== null,
-    useCallback(
-      ({ data }) => {
-        // Prompt the user before leaving the screen
-        Alert.alert(
-          "Refaire la photo ?",
-          "Vous n'avez pas encore envoyé votre photo. Souhaitez-vous revenir en arrière pour en prendre une nouvelle ?",
-          [
-            {
-              text: "Non",
-              style: "cancel",
-              onPress: (): void => {
-                // Do nothing
-              },
-            },
-            {
-              text: "Oui",
-              style: "destructive",
-              onPress: (): void => {
-                setCurrentPhoto(null);
-                navigation.dispatch(data.action);
-              },
-            },
-          ],
-        );
-      },
-      [navigation, setCurrentPhoto],
-    ),
-  );
+  usePreventRemove(currentPhoto !== null, ({ data }) => {
+    // Prompt the user before leaving the screen
+    Alert.alert(
+      "Refaire la photo ?",
+      "Vous n'avez pas encore envoyé votre photo. Souhaitez-vous revenir en arrière pour en prendre une nouvelle ?",
+      [
+        {
+          text: "Non",
+          style: "cancel",
+          onPress: (): void => {
+            // Do nothing
+          },
+        },
+        {
+          text: "Oui",
+          style: "destructive",
+          onPress: (): void => {
+            setCurrentPhoto(null);
+            navigation.dispatch(data.action);
+          },
+        },
+      ],
+    );
+  });
 
   if (selectedPlace === null || currentPhoto === null) {
     return (

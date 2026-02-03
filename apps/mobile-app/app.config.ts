@@ -145,6 +145,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
       ],
       [
+        // actually unused since we use the camera from the expo-image-picker
         "expo-camera",
         {
           cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",

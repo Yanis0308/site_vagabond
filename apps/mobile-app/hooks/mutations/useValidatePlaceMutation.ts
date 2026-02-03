@@ -28,8 +28,8 @@ export const useValidatePlaceMutation = () => {
         throw error;
       }
     },
-    onSuccess: async (_, variables) => {
-      return await Promise.all([
+    onSuccess: (_, variables) => {
+      return void Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["user-zone-stats"],
         }),

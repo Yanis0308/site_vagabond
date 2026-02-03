@@ -33,7 +33,7 @@ export const BriefVisitedPoiSchema = Type.Object(
 
 export const CreateVisitedPoiRequestSchema = Type.Object(
   {
-    imageKey: Type.String(),
+    imageKey: Type.String({ minLength: 1 }),
     rating: Type.Number({ minimum: 1, maximum: 5 }),
     comment: Type.String(),
     coords: CoordsSchema,

@@ -1,6 +1,10 @@
 import { useFocusEffect } from "@react-navigation/native";
+import * as Device from "expo-device";
+import * as ImagePicker from "expo-image-picker";
 import { router } from "expo-router";
+import { useSetAtom } from "jotai";
 import { type ReactElement, useEffect } from "react";
+import { Alert, Platform } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
 import { CustomMapView } from "@/components/custom-ui/CustomMapView";
@@ -13,6 +17,7 @@ import { Box } from "@/components/ui/box";
 import { useMapLogic } from "@/hooks/maps/useMapLogic";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { mapService } from "@/services/MapService";
+import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 
 export default function MapsTab(): ReactElement {
   // Utilisation du hook personnalisé pour toute la logique de la carte
@@ -30,6 +35,7 @@ export default function MapsTab(): ReactElement {
   } = useMapLogic();
 
   const { selectedPlace, setSelectedPlace } = usePlaceSelection();
+  const setCurrentPhoto = useSetAtom(currentPhotoAtom);
 
   // Register moveToPlace function in MapService so it's available to the search screen
   useEffect(() => {
@@ -52,10 +58,60 @@ export default function MapsTab(): ReactElement {
     setSelectedPlace(null);
   };
 
-  const onPressLink = (): void => {
-    router.push({
-      pathname: "/validate-place/take-photo",
+  const handlePhotoSelected = (imageUri: string): void => {
+    setCurrentPhoto({ imageUri, fileId: null });
+    router.push("/validate-place/review-form");
+  };
+
+  const openCamera = async (): Promise<void> => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== ImagePicker.PermissionStatus.GRANTED) {
+      Alert.alert(
+        "Permission refusée",
+        "Nous avons besoin d'accéder à votre caméra",
+      );
+      return;
+    }
+
+    let result: ImagePicker.ImagePickerResult | null = null;
+
+    if (Platform.OS === "ios" && !Device.isDevice) {
+      Alert.alert(
+        "Fonctionnalité non disponible",
+        "Cette fonctionnalité n'est pas disponible sur le simulateur",
+      );
+    } else {
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ["images"],
+        allowsEditing: false,
+        quality: 1,
+      });
+    }
+
+    if (result !== null && !result.canceled && result.assets[0] !== undefined) {
+      const asset = result.assets[0];
+      handlePhotoSelected(asset.uri);
+    }
+  };
+
+  const openGallery = async (): Promise<void> => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== ImagePicker.PermissionStatus.GRANTED) {
+      Alert.alert(
+        "Permission refusée",
+        "Nous avons besoin d'accéder à votre galerie",
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ["images"],
     });
+
+    if (!result.canceled && result.assets[0] !== undefined) {
+      const asset = result.assets[0];
+      handlePhotoSelected(asset.uri);
+    }
   };
 
   return (
@@ -90,7 +146,8 @@ export default function MapsTab(): ReactElement {
 
         <PlaceDetailsSheet
           place={selectedPlace}
-          onPressLink={onPressLink}
+          onPressCamera={openCamera}
+          onPressGallery={openGallery}
           onClose={onBottomSheetClose}
           animatedIndex={bottomSheetAnimatedIndex}
         />

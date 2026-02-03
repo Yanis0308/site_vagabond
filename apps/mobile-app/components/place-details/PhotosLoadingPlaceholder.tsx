@@ -1,5 +1,4 @@
 import { type ReactElement } from "react";
-import { ActivityIndicator } from "react-native";
 import Animated, {
   useAnimatedStyle,
   withRepeat,
@@ -10,6 +9,7 @@ import Animated, {
 import { shadowStyles } from "@/styles/shadows";
 
 import { Box } from "../ui/box";
+import { Spinner } from "../ui/spinner";
 
 const DEFAULT_IMAGE_HEIGHT = 236;
 
@@ -40,7 +40,7 @@ export const PhotosLoadingPlaceholder = (): ReactElement => {
           style={{ height: DEFAULT_IMAGE_HEIGHT }}
           className="w-full items-center justify-center"
         >
-          <ActivityIndicator size="large" color="#8B5CF6" />
+          <Spinner size="large" className="text-primary-600" />
         </Box>
       </Animated.View>
     </Box>
