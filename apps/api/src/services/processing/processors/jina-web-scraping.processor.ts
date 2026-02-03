@@ -33,7 +33,7 @@ export class JinaWebScrapingProcessor implements ScrapingProcessor<
     return {
       query: params.query,
       gl: params.gl,
-      hl: params.hl,
+      // hl: params.hl,
       num: params.num,
     };
   }

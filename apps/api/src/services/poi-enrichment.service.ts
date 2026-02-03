@@ -134,7 +134,7 @@ export class PoiEnrichmentService {
         params: {
           query: jinaQuery,
           gl: "FR",
-          hl: "fr",
+          // hl: "fr",
           num: 5,
         },
         batchId,

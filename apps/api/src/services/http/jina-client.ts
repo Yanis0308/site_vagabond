@@ -13,7 +13,7 @@ import { createBaseClient } from "./base-client.js";
 export interface JinaSearchParams {
   query: string;
   gl: string; // Country code (e.g., "FR")
-  hl: string; // Language code (e.g., "fr")
+  // hl: string; // Language code (e.g., "fr") - commented because we got HTTP 422 errors with it sometimes
   num: number; // Number of results (default: 5)
 }
 
@@ -79,7 +79,7 @@ export async function searchWithJina(
   const searchParams = new URLSearchParams({
     q: params.query,
     gl: params.gl,
-    hl: params.hl,
+    // hl: params.hl,
     num: String(params.num),
   });
 
