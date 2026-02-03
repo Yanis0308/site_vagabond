@@ -2,7 +2,7 @@ import { useNavigation, usePreventRemove } from "@react-navigation/native";
 import { useIsMutating } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import React, { type ReactElement, useEffect } from "react";
+import React, { type ReactElement, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -33,10 +33,19 @@ export default function ReviewForm(): ReactElement {
     mutationKey: UPLOAD_FILE_MUTATION_KEY,
   });
   const isUploading = isMutating > 0;
+  const [uploadError, setUploadError] = useState(false);
+  const uploadAttemptedRef = useRef(false);
 
   // Upload photo when component mounts
   useEffect(() => {
-    if (currentPhoto !== null && currentPhoto.fileId === null && !isUploading) {
+    if (
+      currentPhoto !== null &&
+      currentPhoto.fileId === null &&
+      !isUploading &&
+      !uploadError &&
+      !uploadAttemptedRef.current
+    ) {
+      uploadAttemptedRef.current = true;
       void (async (): Promise<void> => {
         try {
           logger("Starting photo upload...");
@@ -56,13 +65,43 @@ export default function ReviewForm(): ReactElement {
             }
             return null;
           });
+          uploadAttemptedRef.current = false;
         } catch (error) {
           logger("Error uploading photo:", error);
-          Alert.alert("Erreur", "Impossible d'envoyer la photo");
+          setUploadError(true);
+          uploadAttemptedRef.current = false;
+          Alert.alert(
+            "Erreur",
+            "Impossible d'envoyer la photo. Voulez-vous réessayer ?",
+            [
+              {
+                text: "Reprendre une photo",
+                style: "cancel",
+                onPress: (): void => {
+                  setCurrentPhoto(null);
+                  setUploadError(false);
+                  navigation.goBack();
+                },
+              },
+              {
+                text: "Réessayer",
+                onPress: (): void => {
+                  setUploadError(false);
+                },
+              },
+            ],
+          );
         }
       })();
     }
-  }, [currentPhoto, isUploading, uploadFileMutation, setCurrentPhoto]);
+  }, [
+    currentPhoto,
+    isUploading,
+    uploadFileMutation,
+    setCurrentPhoto,
+    uploadError,
+    navigation,
+  ]);
 
   const handleReviewFormEnd = (): void => {
     setCurrentPhoto(null);
