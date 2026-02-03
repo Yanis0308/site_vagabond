@@ -77,6 +77,7 @@ export const CustomMapView = memo(function CustomMapView({
       projection={"globe"}
       compassEnabled={false}
       scaleBarEnabled={false}
+      pitchEnabled={false}
     >
       <Camera pitch={0} heading={0} ref={cameraRef} maxBounds={maxBounds} />
       <LocationPuck
