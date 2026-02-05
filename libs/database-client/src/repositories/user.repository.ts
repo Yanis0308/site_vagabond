@@ -50,6 +50,7 @@ export class UserRepository {
         ),
       )
       .groupBy(users.userId)
+      .having(({ visitedPoisCount }) => gte(visitedPoisCount, 1))
       .orderBy(desc(count(visitedPois.id)));
 
     return usersWithCounts
