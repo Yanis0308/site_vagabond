@@ -1,3 +1,9 @@
+# Web Dashboard
+
+> ⚠️ **Note** : Ce projet n'est actuellement **pas maintenu**. Il s'agit d'un dashboard web Next.js pour la visualisation et la gestion des POIs et boundaries, mais le développement actif se concentre sur l'application mobile et l'API.
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
@@ -36,4 +42,5 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
 # Rajouts
+
 - Version de react passée à 18.2 pour être raccord avec la version de react native

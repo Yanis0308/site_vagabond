@@ -1,3 +1,9 @@
+# Website
+
+> ⚠️ **Note** : Ce projet n'est actuellement **pas maintenu**. Il s'agit d'un site web marketing Next.js, mais le développement actif se concentre sur l'application mobile et l'API.
+
+---
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

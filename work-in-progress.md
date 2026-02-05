@@ -25,3 +25,9 @@
 
 - les points désactivés s'affichent toujours sur mapbox
 - les points ajoutés en bdd sont manquants sur mapbox sans synchronisation
+
+- vérifier que la bdd de DEV n'est pas exposée publiquement par la data API de supabase (activée pour le MCP supabase pour ChatGPT)
+
+- comparer la version de poi_enriched comme ça pour les relancer je peux mettre 0 en bdd + ajouter status cancelled comme ça on conserve le num de version précédent
+
+- spinner discret debug pour les admins quand une requete réseau tourne ou lib plus complète
