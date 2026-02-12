@@ -23,6 +23,7 @@ export const BriefVisitedPoiSchema = Type.Object(
     id: Type.Number(),
     poiId: Type.String(),
     name: Type.Optional(Type.String()),
+    coords: CoordsSchema,
     createdAt: Type.String(),
     comment: Nullable(Type.String()),
     rating: Type.Number(),

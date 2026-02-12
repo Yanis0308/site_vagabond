@@ -7,6 +7,7 @@ import {
   type BoundaryLevelEnum,
   poiBoundaries,
   poiData,
+  pois,
   visitedPois,
 } from "../schema.js";
 
@@ -20,6 +21,10 @@ interface UserZoneStat {
     id: number;
     poiId: string;
     name: string;
+    coords: {
+      latitude: number;
+      longitude: number;
+    };
     createdAt: string;
     comment: string | null;
     rating: number;
@@ -107,6 +112,10 @@ export class BoundaryRepository {
                     WHERE pd.poi_id = ${visitedPois.poiId} 
                     ORDER BY pd.language DESC, pd.id LIMIT 1
                   ),
+                  'coords', jsonb_build_object(
+                    'latitude', ST_Y(${pois.coords}::geometry),
+                    'longitude', ST_X(${pois.coords}::geometry)
+                  ),
                   'createdAt', ${visitedPois.createdAt},
                   'comment', ${visitedPois.comment},
                   'rating', ${visitedPois.rating},
@@ -130,6 +139,7 @@ export class BoundaryRepository {
           eq(visitedPois.userId, userId),
         ),
       )
+      .leftJoin(pois, eq(visitedPois.poiId, pois.id))
       .where(
         and(
           inArray(boundaries.id, relevantZoneIds),
