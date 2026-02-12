@@ -40,7 +40,7 @@ export class UserRepository {
         lastVisitedPoiDate: max(visitedPois.createdAt),
       })
       .from(users)
-      .leftJoin(
+      .innerJoin(
         visitedPois,
         and(
           eq(users.userId, visitedPois.userId),
@@ -50,7 +50,6 @@ export class UserRepository {
         ),
       )
       .groupBy(users.userId)
-      .having(({ visitedPoisCount }) => gte(visitedPoisCount, 1))
       .orderBy(desc(count(visitedPois.id)));
 
     return usersWithCounts
