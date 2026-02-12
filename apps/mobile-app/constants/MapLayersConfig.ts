@@ -37,14 +37,14 @@ export const layersInfos: Record<
     textAndPoint: {
       sourceLayerId: "neighborhood-data-layer-v1",
       symbolLayerId: "neighborhood-boundaries-labels",
-      minZoomLevel: 10,
-      maxZoomLevel: 18,
+      minZoomLevel: 22, // never
+      maxZoomLevel: 22, // never
     },
     polygon: {
       sourceLayerId: "neighborhood-polygon-layer-v1",
       polygonLayerId: "neighborhood-boundaries-lines",
-      minZoomLevel: 10,
-      maxZoomLevel: 18,
+      minZoomLevel: 22, // never
+      maxZoomLevel: 22, // never
     },
   },
   DISTRICT: {
@@ -52,14 +52,14 @@ export const layersInfos: Record<
     textAndPoint: {
       sourceLayerId: "district-data-layer-v1",
       symbolLayerId: "district-boundaries-labels",
-      minZoomLevel: 10,
-      maxZoomLevel: 16,
+      minZoomLevel: 9, // start during city
+      maxZoomLevel: 22, // to max zoom
     },
     polygon: {
       sourceLayerId: "district-polygon-layer-v1",
       polygonLayerId: "district-boundaries-lines",
-      minZoomLevel: 10,
-      maxZoomLevel: 16,
+      minZoomLevel: 9, // start during city
+      maxZoomLevel: 22, // never
     },
   },
   CITY: {
@@ -67,14 +67,14 @@ export const layersInfos: Record<
     textAndPoint: {
       sourceLayerId: "city-data-layer-v1",
       symbolLayerId: "city-boundaries-labels",
-      minZoomLevel: 8,
-      maxZoomLevel: 16,
+      minZoomLevel: 8, // start after county
+      maxZoomLevel: 22, // never
     },
     polygon: {
       sourceLayerId: "city-polygon-layer-v1",
       polygonLayerId: "city-boundaries-lines",
-      minZoomLevel: 8,
-      maxZoomLevel: 16,
+      minZoomLevel: 8, // start after county
+      maxZoomLevel: 22, // never
     },
   },
   COUNTY: {
@@ -82,14 +82,14 @@ export const layersInfos: Record<
     textAndPoint: {
       sourceLayerId: "county-data-layer-v1",
       symbolLayerId: "county-boundaries-labels",
-      minZoomLevel: 6,
-      maxZoomLevel: 10,
+      minZoomLevel: 6, // start after region
+      maxZoomLevel: 8, // end before city
     },
     polygon: {
       sourceLayerId: "county-polygon-layer-v1",
       polygonLayerId: "county-boundaries-lines",
-      minZoomLevel: 6,
-      maxZoomLevel: 10,
+      minZoomLevel: 6, // start after region
+      maxZoomLevel: 22, // never
     },
   },
   REGION: {
@@ -97,14 +97,14 @@ export const layersInfos: Record<
     textAndPoint: {
       sourceLayerId: "region-data-layer-v1",
       symbolLayerId: "region-boundaries-labels",
-      minZoomLevel: 3,
-      maxZoomLevel: 10,
+      minZoomLevel: 4, // start after country
+      maxZoomLevel: 6, // end before county
     },
     polygon: {
       sourceLayerId: "region-polygon-layer-v1",
       polygonLayerId: "region-boundaries-lines",
-      minZoomLevel: 3,
-      maxZoomLevel: 10,
+      minZoomLevel: 4, // start after country
+      maxZoomLevel: 8, // end before city
     },
   },
   COUNTRY: {
@@ -113,13 +113,13 @@ export const layersInfos: Record<
       sourceLayerId: "country-data-layer-v1",
       symbolLayerId: "country-boundaries-labels",
       minZoomLevel: 0,
-      maxZoomLevel: 7,
+      maxZoomLevel: 4, // end before region
     },
     polygon: {
       sourceLayerId: "country-polygon-layer-v1",
       polygonLayerId: "country-boundaries-lines",
-      minZoomLevel: 0,
-      maxZoomLevel: 7,
+      minZoomLevel: 0, // never
+      maxZoomLevel: 4, // never
     },
   },
 };

@@ -31,3 +31,6 @@ cache/
 **/builds-and-releases/
 
 **/.DS_Store
+
+# Local user files (personal MD files, etc)
+local-user-files/
