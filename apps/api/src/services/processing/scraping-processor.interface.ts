@@ -31,7 +31,7 @@ export type ScrapingResponse<TData> =
 export function isScrapingSuccess<TData>(
   response: ScrapingResponse<TData>,
 ): response is ScrapingSuccessResponse<TData> {
-  return response.success === true;
+  return response.success;
 }
 
 /**

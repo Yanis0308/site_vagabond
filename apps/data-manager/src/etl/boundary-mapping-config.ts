@@ -1,4 +1,4 @@
-import { schema } from "@vagabond/database-client";
+import { type schema } from "@vagabond/database-client";
 
 type BoundaryLevelEnum = (typeof schema.boundaryLevelEnum.enumValues)[number];
 

@@ -247,7 +247,7 @@ function parseInfoboxes(
         const params: Record<string, unknown> = {};
         for (const param of template.parameters) {
           const paramName = String(param.name).trim();
-          const paramValue = String(param.value).trim();
+          const paramValue = param.value.trim();
           if (paramName !== "") {
             params[paramName] = paramValue;
           }

@@ -2,9 +2,15 @@ import { type MapState, type MapView } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
 import { type PoiFilterLevel } from "@vagabond/shared-utils";
-import { type Geometry } from "geojson";
+import { type Feature, type Geometry } from "geojson";
 import { getDistance } from "geolib";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { useUserLocation } from "@/hooks/queries/useUserLocation";
@@ -12,10 +18,12 @@ import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
 export interface OnPressEventPoi extends OnPressEvent {
-  features: GeoJSON.Feature<
-    Geometry,
-    { poiId: string; name: string; filterLevel: PoiFilterLevel }
-  >[];
+  features: Array<
+    Feature<
+      Geometry,
+      { poiId: string; name: string; filterLevel: PoiFilterLevel }
+    >
+  >;
 }
 
 interface UseMapLogicReturn {
@@ -28,8 +36,8 @@ interface UseMapLogicReturn {
   isCentered: boolean;
 
   // Refs
-  mapRef: React.RefObject<MapView | null>;
-  cameraRef: React.RefObject<CameraRef | null>;
+  mapRef: RefObject<MapView | null>;
+  cameraRef: RefObject<CameraRef | null>;
 
   // Event handlers
   onCameraChanged: (mapState: MapState) => void;

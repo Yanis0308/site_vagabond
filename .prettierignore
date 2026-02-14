@@ -1,0 +1,12 @@
+# Build outputs
+dist/
+**/dist/
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Generated / cache
+.next/
+.expo/
+coverage/

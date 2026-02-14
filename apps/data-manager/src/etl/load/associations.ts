@@ -20,18 +20,11 @@ export async function loadAssociationsFromJsonl(
     let totalProcessed = 0;
 
     for await (const record of reader.read()) {
-      if (record.type !== "association") {
-        logger.warn(
-          `Type d'enregistrement inattendu: ${JSON.stringify(record)}`,
-        );
-        continue;
-      }
-
       batch.push(record.data);
 
       if (batch.length >= BATCH_SIZE) {
         // Inline logic to use same db instance
-        const insertData: (typeof schema.poiBoundaries.$inferInsert)[] =
+        const insertData: Array<typeof schema.poiBoundaries.$inferInsert> =
           batch.map((item) => {
             const poiId = getDbId(
               "OSM",
@@ -74,7 +67,7 @@ export async function loadAssociationsFromJsonl(
 
     // Traiter le dernier batch
     if (batch.length > 0) {
-      const insertData: (typeof schema.poiBoundaries.$inferInsert)[] =
+      const insertData: Array<typeof schema.poiBoundaries.$inferInsert> =
         batch.map((item) => {
           const poiId = getDbId(
             "OSM",

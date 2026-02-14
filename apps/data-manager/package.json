@@ -5,6 +5,11 @@
   "keywords": [],
   "author": "",
   "scripts": {
+    "typescript-check": "tsc --noEmit",
+    "lint-check": "eslint . --max-warnings 0",
+    "lint-fix": "eslint . --fix",
+    "prettier-check": "prettier . --check",
+    "prettier-fix": "prettier . --write",
     "extract": "dotenvx run -- zx src/etl/extract.mjs",
     "transform": "dotenvx run -- pnpx tsx src/etl/transform.ts",
     "load-db": "dotenvx run -- pnpx tsx src/etl/load-db.ts",
@@ -23,6 +28,9 @@
   },
   "devDependencies": {
     "@types/ndjson": "^2.0.4",
-    "@types/pg": "catalog:"
+    "@types/pg": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
   }
 }

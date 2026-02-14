@@ -74,7 +74,11 @@ export const PolaroidReview = memo(
               {commentText}
             </Text>
             {needsTruncation && (
-              <Pressable onPress={() => setIsExpanded(!isExpanded)}>
+              <Pressable
+                onPress={() => {
+                  setIsExpanded(!isExpanded);
+                }}
+              >
                 <Text className="mt-1 text-xs text-primary-500">
                   {isExpanded ? "...Lire moins" : "...Lire plus"}
                 </Text>

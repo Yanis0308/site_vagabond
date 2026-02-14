@@ -90,6 +90,16 @@ pnpm run load-mapbox-pois --transform-dir=france_2024_01_15_2025-01-01-12-00-00
 
 ## Scripts disponibles
 
+### Vérifications
+
+- `pnpm typescript-check` - Vérification TypeScript
+- `pnpm lint-check` - Vérification ESLint
+- `pnpm lint-fix` - Correction automatique ESLint
+- `pnpm prettier-check` - Vérification Prettier
+- `pnpm prettier-fix` - Correction automatique Prettier
+
+### ETL
+
 - `pnpm run extract <fichier.pbf>` - Extraction PBF → PostgreSQL
 - `pnpm run transform` - PostgreSQL → JSONL (génère POI et boundaries)
 - `pnpm run load-db` - JSONL → Base de données

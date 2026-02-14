@@ -1,8 +1,12 @@
-import { useNavigation, usePreventRemove } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  usePreventRemove,
+} from "@react-navigation/native";
 import { useIsMutating } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import React, { type ReactElement, useEffect, useRef, useState } from "react";
+import React, { type ReactElement, useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -36,72 +40,71 @@ export default function ReviewForm(): ReactElement {
   const [uploadError, setUploadError] = useState(false);
   const uploadAttemptedRef = useRef(false);
 
-  // Upload photo when component mounts
-  useEffect(() => {
-    if (
-      currentPhoto !== null &&
-      currentPhoto.fileId === null &&
-      !isUploading &&
-      !uploadError &&
-      !uploadAttemptedRef.current
-    ) {
-      uploadAttemptedRef.current = true;
-      void (async (): Promise<void> => {
-        try {
-          logger("Starting photo upload...");
-          const compressedUri = await compressImage(currentPhoto.imageUri);
+  const uploadPhoto = useCallback(async (): Promise<void> => {
+    if (currentPhoto?.fileId !== null) return;
 
-          const result = await uploadFileMutation.mutateAsync({
-            uri: compressedUri,
-            fileName: `photo_${Date.now()}.jpg`,
-            mimeType: "image/jpeg",
-          });
+    try {
+      logger("Starting photo upload...");
+      const compressedUri = await compressImage(currentPhoto.imageUri);
 
-          logger("Upload complete, fileId:", result.key);
-          // update the current photo with the new fileId to register it in form
-          setCurrentPhoto((prev) => {
-            if (prev !== null) {
-              return { ...prev, fileId: result.key };
-            }
-            return null;
-          });
-          uploadAttemptedRef.current = false;
-        } catch (error) {
-          logger("Error uploading photo:", error);
-          setUploadError(true);
-          uploadAttemptedRef.current = false;
-          Alert.alert(
-            "Erreur",
-            "Impossible d'envoyer la photo. Voulez-vous réessayer ?",
-            [
-              {
-                text: "Reprendre une photo",
-                style: "cancel",
-                onPress: (): void => {
-                  setCurrentPhoto(null);
-                  setUploadError(false);
-                  navigation.goBack();
-                },
-              },
-              {
-                text: "Réessayer",
-                onPress: (): void => {
-                  setUploadError(false);
-                },
-              },
-            ],
-          );
+      const result = await uploadFileMutation.mutateAsync({
+        uri: compressedUri,
+        fileName: `photo_${Date.now()}.jpg`,
+        mimeType: "image/jpeg",
+      });
+
+      logger("Upload complete, fileId:", result.key);
+      setCurrentPhoto((prev) => {
+        if (prev !== null) {
+          return { ...prev, fileId: result.key };
         }
-      })();
+        return null;
+      });
+      uploadAttemptedRef.current = false;
+    } catch (error) {
+      logger("Error uploading photo:", error);
+      setUploadError(true);
+      uploadAttemptedRef.current = false;
+      Alert.alert(
+        "Erreur",
+        "Impossible d'envoyer la photo. Voulez-vous réessayer ?",
+        [
+          {
+            text: "Reprendre une photo",
+            style: "cancel",
+            onPress: (): void => {
+              setCurrentPhoto(null);
+              setUploadError(false);
+              navigation.goBack();
+            },
+          },
+          {
+            text: "Réessayer",
+            onPress: (): void => {
+              setUploadError(false);
+              void uploadPhoto();
+            },
+          },
+        ],
+      );
     }
-  }, [
-    currentPhoto,
-    isUploading,
-    uploadFileMutation,
-    setCurrentPhoto,
-    uploadError,
-    navigation,
-  ]);
+  }, [currentPhoto, uploadFileMutation, setCurrentPhoto, navigation]);
+
+  // Upload photo when screen gains focus with a photo to upload (event: user navigated here)
+  useFocusEffect(
+    useCallback(() => {
+      if (
+        currentPhoto !== null &&
+        currentPhoto.fileId === null &&
+        !isUploading &&
+        !uploadError &&
+        !uploadAttemptedRef.current
+      ) {
+        uploadAttemptedRef.current = true;
+        void uploadPhoto();
+      }
+    }, [currentPhoto, isUploading, uploadError, uploadPhoto]),
+  );
 
   const handleReviewFormEnd = (): void => {
     setCurrentPhoto(null);

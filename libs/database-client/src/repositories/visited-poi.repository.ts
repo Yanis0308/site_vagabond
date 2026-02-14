@@ -52,12 +52,15 @@ export class VisitedPoiRepository {
         id: visitedPois.id,
         poiId: visitedPois.poiId,
         userId: visitedPois.userId,
-        username: sql<string>`CASE 
+        username: sql`CASE 
           WHEN ${users.email} IS NOT NULL AND POSITION('@' IN ${users.email}) > 0 THEN 
             SUBSTRING(${users.email} FROM 1 FOR POSITION('@' IN ${users.email}) - 1)
           ELSE 'John Doe'
-        END`,
-        createdAt: sql<string>`to_char(${visitedPois.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`,
+        END`.mapWith(String),
+        createdAt:
+          sql`to_char(${visitedPois.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`.mapWith(
+            String,
+          ),
         comment: visitedPois.comment,
         imageKey: visitedPois.imageKey,
         rating: visitedPois.rating,
@@ -86,12 +89,15 @@ export class VisitedPoiRepository {
         id: visitedPois.id,
         poiId: visitedPois.poiId,
         userId: visitedPois.userId,
-        username: sql<string>`CASE 
+        username: sql`CASE 
           WHEN ${users.email} IS NOT NULL AND POSITION('@' IN ${users.email}) > 0 THEN 
             SUBSTRING(${users.email} FROM 1 FOR POSITION('@' IN ${users.email}) - 1)
           ELSE 'John Doe'
-        END`,
-        createdAt: sql<string>`to_char(${visitedPois.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`,
+        END`.mapWith(String),
+        createdAt:
+          sql`to_char(${visitedPois.createdAt} AT TIME ZONE 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')`.mapWith(
+            String,
+          ),
         comment: visitedPois.comment,
         imageKey: visitedPois.imageKey,
         rating: visitedPois.rating,

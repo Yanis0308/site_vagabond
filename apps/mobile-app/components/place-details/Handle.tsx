@@ -2,10 +2,10 @@ import { type BottomSheetHandleProps } from "@gorhom/bottom-sheet";
 import React, { memo, useMemo } from "react";
 import { Pressable } from "react-native";
 import Animated, {
+  Extrapolation,
   interpolate,
   useAnimatedStyle,
 } from "react-native-reanimated";
-import { Extrapolation } from "react-native-reanimated";
 
 import { View } from "@/components/ui/view";
 

@@ -6,6 +6,9 @@
   "scripts": {
     "typescript-check": "tsc --noEmit",
     "lint-check": "eslint . --max-warnings 0",
+    "lint-fix": "eslint . --fix",
+    "prettier-check": "prettier . --check",
+    "prettier-fix": "prettier . --write",
     "clean": "rimraf dist",
     "prebuild": "pnpm run clean",
     "start": "node dist/server.js",
@@ -30,11 +33,13 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "eslint": "catalog:",
     "fastify-tsconfig": "^2.0.0",
     "pino-pretty": "^13.0.0",
     "rimraf": "^6.0.1",
     "ts-node": "^10.4.0",
     "tsc-watch": "^6.2.1",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "prettier": "catalog:"
   }
 }

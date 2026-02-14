@@ -1,5 +1,7 @@
+import { jsonSchemas } from "@vagabond/shared-utils";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
+import { type Static, Type } from "typebox";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import {
@@ -10,6 +12,7 @@ import {
   pois,
   visitedPois,
 } from "../schema.js";
+import { mapWithJsonSchema } from "../sqlMappers.js";
 
 interface UserZoneStat {
   zone_id: string;
@@ -17,19 +20,7 @@ interface UserZoneStat {
   boundary_level: BoundaryLevelEnum;
   parent_id: string | null;
   validated_pois_count: number;
-  validated_pois: Array<{
-    id: number;
-    poiId: string;
-    name: string;
-    coords: {
-      latitude: number;
-      longitude: number;
-    };
-    createdAt: string;
-    comment: string | null;
-    rating: number;
-    imageKey: string;
-  }>;
+  validated_pois: Array<Static<typeof jsonSchemas.BriefVisitedPoiSchema>>;
   total_pois_count: number;
   total_subzones_count: number;
   completed_subzones_count: number;
@@ -75,7 +66,9 @@ export class BoundaryRepository {
 
     // 2. Fetch stats for these zones using Drizzle Query Builder
     const totalPoisSubquery = this.db
-      .select({ count: sql<number>`count(distinct ${poiBoundaries.poiId})` })
+      .select({
+        count: sql`count(distinct ${poiBoundaries.poiId})`.mapWith(Number),
+      })
       .from(poiBoundaries)
       .where(eq(poiBoundaries.boundaryId, boundaries.id));
 
@@ -96,11 +89,13 @@ export class BoundaryRepository {
     const stats = await this.db
       .select({
         zone_id: boundaries.id,
-        name: boundaries.name,
+        name: sql`COALESCE(${boundaries.name}, 'Unknown')`.mapWith(String),
         boundary_level: boundaries.boundaryLevel,
         parent_id: boundaries.parentId,
-        validated_pois_count: sql<number>`count(distinct ${visitedPois.poiId})`,
-        validated_pois: sql<UserZoneStat["validated_pois"]>`
+        validated_pois_count: sql`count(distinct ${visitedPois.poiId})`.mapWith(
+          Number,
+        ),
+        validated_pois: sql`
           COALESCE(
             jsonb_agg(
               DISTINCT jsonb_strip_nulls(
@@ -124,11 +119,21 @@ export class BoundaryRepository {
               )
             ) FILTER (WHERE ${visitedPois.id} IS NOT NULL),
             '[]'::jsonb
-          )
-        `,
-        total_pois_count: sql<number>`COALESCE((${totalPoisSubquery}), 0)`,
-        total_subzones_count: sql<number>`COALESCE((${totalSubzonesSubquery}), 0)`,
-        completed_subzones_count: sql<number>`COALESCE((${completedSubzonesSubquery}), 0)`,
+          ) 
+        `.mapWith(
+          mapWithJsonSchema(
+            Type.Array(jsonSchemas.BriefVisitedPoiSchema, {
+              $id: "ValidatedPoisArray",
+            }),
+          ),
+        ),
+        total_pois_count: sql`COALESCE((${totalPoisSubquery}), 0)`.mapWith(
+          Number,
+        ),
+        total_subzones_count:
+          sql`COALESCE((${totalSubzonesSubquery}), 0)`.mapWith(Number),
+        completed_subzones_count:
+          sql`COALESCE((${completedSubzonesSubquery}), 0)`.mapWith(Number),
       })
       .from(boundaries)
       .leftJoin(poiBoundaries, eq(boundaries.id, poiBoundaries.boundaryId))
@@ -165,16 +170,6 @@ export class BoundaryRepository {
         boundaries.name,
       );
 
-    return stats.map((stat) => ({
-      zone_id: stat.zone_id,
-      name: stat.name ?? "Unknown",
-      boundary_level: stat.boundary_level,
-      parent_id: stat.parent_id,
-      validated_pois_count: Number(stat.validated_pois_count),
-      validated_pois: stat.validated_pois,
-      total_pois_count: Number(stat.total_pois_count),
-      total_subzones_count: Number(stat.total_subzones_count),
-      completed_subzones_count: Number(stat.completed_subzones_count),
-    }));
+    return stats;
   }
 }

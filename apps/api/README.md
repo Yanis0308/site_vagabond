@@ -138,7 +138,9 @@ pnpm test
 # Vérifications
 pnpm typescript-check  # Vérification TypeScript
 pnpm lint-check        # Vérification ESLint
+pnpm lint-fix          # Correction automatique ESLint
 pnpm prettier-check    # Vérification Prettier
+pnpm prettier-fix      # Correction automatique Prettier
 ```
 
 ## Endpoints API

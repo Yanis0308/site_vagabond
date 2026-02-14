@@ -4,8 +4,8 @@ import { getLeaderboard, type LeaderboardResponse } from "@/http/leaderboard";
 
 export const useLeaderboard = (
   period: "all-time" | "monthly",
-): UseQueryResult<LeaderboardResponse, Error> => {
-  return useQuery<LeaderboardResponse, Error>({
+): UseQueryResult<LeaderboardResponse> => {
+  return useQuery<LeaderboardResponse>({
     queryKey: ["leaderboard", period],
     queryFn: () => getLeaderboard(period),
   });

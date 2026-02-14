@@ -1,6 +1,6 @@
 import { getDrizzleClient, schema } from "@vagabond/database-client";
-import { eq } from "drizzle-orm";
 import { logger } from "@vagabond/shared-utils";
+import { eq } from "drizzle-orm";
 
 import { getDbId, getSourceId } from "../id-utils";
 import { JsonlFileReader } from "../jsonl-utils";
@@ -18,13 +18,6 @@ export async function loadHierarchiesFromJsonl(
     let totalProcessed = 0;
 
     for await (const record of reader.read()) {
-      if (record.type !== "hierarchy") {
-        logger.warn(
-          `Type d'enregistrement inattendu: ${JSON.stringify(record)}`,
-        );
-        continue;
-      }
-
       batch.push(record.data);
 
       if (batch.length >= BATCH_SIZE) {

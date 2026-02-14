@@ -1,5 +1,4 @@
-import { jsonSchemas } from "@vagabond/shared-utils";
-import { generateValidator } from "@vagabond/shared-utils";
+import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
 import { type ZoneUserStatType } from "@/utils/types";

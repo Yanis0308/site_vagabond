@@ -1,5 +1,5 @@
-import { type Static } from "typebox";
 import { type jsonSchemas } from "@vagabond/shared-utils";
+import { type Static } from "typebox";
 
 // Types exportés depuis les schemas
 export type ExtractedPoiDatabaseRow = Static<

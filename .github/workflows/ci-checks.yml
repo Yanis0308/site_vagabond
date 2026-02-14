@@ -29,6 +29,4 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - run: pnpm i --frozen-lockfile
-      - run: pnpm run -r typescript-check
-      - run: pnpm run -r lint-check
-      - run: pnpm run -r prettier-check
+      - run: pnpm run check-all

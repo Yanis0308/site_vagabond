@@ -1,11 +1,11 @@
 import { type BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback } from "react";
+import { type RefObject, useCallback } from "react";
 import { BackHandler } from "react-native";
 
 export const useBottomSheetBack = (
   bottomSheetOpen: boolean,
-  bottomSheetModalRef: React.RefObject<BottomSheetModal | null>,
+  bottomSheetModalRef: RefObject<BottomSheetModal | null>,
   onClose?: () => void,
 ): void => {
   useFocusEffect(

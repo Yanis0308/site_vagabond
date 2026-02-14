@@ -2,6 +2,7 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import { boundaries, poiBoundaries, poiData, pois } from "../schema.js";
+import { mapWithNullableString } from "../sqlMappers.js";
 import type { CustomPoiCreateInput } from "../types.js";
 
 export class PoiRepository {
@@ -54,17 +55,23 @@ export class PoiRepository {
     const result = await this.db
       .select({
         poiId: pois.id,
-        latitude: sql<number>`ST_Y(${pois.coords}::geometry)`.as("latitude"),
-        longitude: sql<number>`ST_X(${pois.coords}::geometry)`.as("longitude"),
+        latitude: sql`ST_Y(${pois.coords}::geometry)`
+          .mapWith(Number)
+          .as("latitude"),
+        longitude: sql`ST_X(${pois.coords}::geometry)`
+          .mapWith(Number)
+          .as("longitude"),
         name: poiData.name,
-        cityName: sql<string | null>`(
+        cityName: sql`(
           SELECT city_b.name
           FROM ${poiBoundaries} pb2
           INNER JOIN ${boundaries} city_b ON pb2.boundary_id = city_b.id
           WHERE pb2.poi_id = ${pois.id}
             AND city_b.boundary_level = 'CITY'
           LIMIT 1
-        )`.as("cityName"),
+        )`
+          .mapWith(mapWithNullableString)
+          .as("cityName"),
       })
       .from(pois)
       .innerJoin(poiData, eq(pois.id, poiData.poiId))

@@ -1,4 +1,4 @@
-import { forwardRef, memo } from "react";
+import { type ComponentRef, forwardRef, memo } from "react";
 
 import { Textarea, TextareaInput } from "@/components/ui/textarea";
 import { cn } from "@/utils/cn";
@@ -12,7 +12,7 @@ interface CustomTextareaProps {
 }
 
 export const CustomTextarea = memo(
-  forwardRef<React.ElementRef<typeof TextareaInput>, CustomTextareaProps>(
+  forwardRef<ComponentRef<typeof TextareaInput>, CustomTextareaProps>(
     ({ placeholder, value, onChange, isInvalid, ...props }, ref) => {
       return (
         <Textarea

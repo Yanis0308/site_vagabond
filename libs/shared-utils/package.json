@@ -8,7 +8,9 @@
   "scripts": {
     "typescript-check": "tsc --noEmit",
     "lint-check": "eslint . --max-warnings 0",
+    "lint-fix": "eslint . --fix",
     "prettier-check": "prettier . --check",
+    "prettier-fix": "prettier . --write",
     "build": "pnpm run clean && tsc",
     "clean": "rm -rf dist",
     "develop": "pnpm run clean && tsc --watch",
@@ -20,6 +22,7 @@
     "dotenv": "catalog:"
   },
   "devDependencies": {
+    "eslint": "catalog:",
     "typescript": "^5.6.2"
   }
 }

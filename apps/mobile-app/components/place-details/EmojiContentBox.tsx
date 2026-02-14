@@ -58,7 +58,11 @@ export const EmojiContentBox = ({
           {content}
         </CustomText>
         {needsTruncation && (
-          <Pressable onPress={() => setIsExpanded(!isExpanded)}>
+          <Pressable
+            onPress={() => {
+              setIsExpanded(!isExpanded);
+            }}
+          >
             <CustomText type="ratingText" className="text-sm text-primary-500">
               {isExpanded ? collapseText : expandText}
             </CustomText>

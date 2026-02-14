@@ -1,4 +1,4 @@
-﻿- forcer SSL sur supabase
+- forcer SSL sur supabase
 
 - modifier et valider une liste de catégories de 100 éléments max
 - gérer les images
@@ -31,3 +31,5 @@
 - comparer la version de poi_enriched comme ça pour les relancer je peux mettre 0 en bdd + ajouter status cancelled comme ça on conserve le num de version précédent
 
 - spinner discret debug pour les admins quand une requete réseau tourne ou lib plus complète
+
+- Migrer vers ESLint v10 quand typescript-eslint l'aura supporté (actuellement on utilise ESLint V9)

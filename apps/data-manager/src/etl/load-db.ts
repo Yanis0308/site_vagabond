@@ -46,18 +46,16 @@ async function loadDbOnly(): Promise<void> {
     "Début du chargement en base de données depuis les fichiers JSONL",
   );
 
-  if (
-    options.transformDir === null ||
-    options.transformDir === undefined ||
-    options.transformDir === ""
-  ) {
+  if (options.transformDir === undefined || options.transformDir === "") {
     logger.error("Dossier de transformation requis avec --transform-dir");
     logger.info("Dossiers disponibles dans output/:");
     const available = listAvailableTransformDirs();
     if (available.length === 0) {
       logger.info("  (aucun)");
     } else {
-      available.forEach((dir) => logger.info(`  ${dir}`));
+      available.forEach((dir) => {
+        logger.info(`  ${dir}`);
+      });
     }
     logger.info(
       "\n📖 Consultez le README.md pour plus d'informations sur l'usage",

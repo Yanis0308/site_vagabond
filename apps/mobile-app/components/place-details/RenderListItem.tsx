@@ -31,11 +31,11 @@ interface RenderListItemProps {
   onPressGallery: () => Promise<void>;
   imageBoxAnimatedStyle: {
     opacity: number;
-    transform: { translateY: number }[];
+    transform: Array<{ translateY: number }>;
     marginTop: number;
   };
   contentAnimatedStyle: {
-    transform: { translateY: number }[];
+    transform: Array<{ translateY: number }>;
   };
   visitedPois: VisitedPoiType[];
   isLoadingEnriched: boolean;

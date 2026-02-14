@@ -1,6 +1,5 @@
 import "@/global.css";
 import "react-native-reanimated";
-import "../global.css";
 import "@/localization";
 
 import { getAuth } from "@react-native-firebase/auth";
@@ -64,7 +63,7 @@ export default function RootLayout(): ReactElement | null {
         const signInMethod = user.providerData[0]?.providerId;
 
         // Prefetch user profile and set analytics context
-        void ((): void => {
+        ((): void => {
           // Set unified analytics user context with role (handles both Crashlytics and Vexo)
           void UnifiedAnalyticsService.getInstance().setUserContext({
             email: user.email ?? undefined,

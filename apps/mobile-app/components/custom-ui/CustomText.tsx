@@ -1,5 +1,5 @@
 import { tva } from "@gluestack-ui/utils/nativewind-utils";
-import { memo } from "react";
+import { type ComponentProps, memo, type ReactNode } from "react";
 
 import { cn } from "@/utils/cn";
 
@@ -25,7 +25,7 @@ export const CustomText = memo(
     type,
     ...props
   }: {
-    children: React.ReactNode;
+    children: ReactNode;
     type?:
       | "title"
       | "rating"
@@ -34,7 +34,7 @@ export const CustomText = memo(
       | "ratingText"
       | "tabBarTitle";
     className?: string;
-  } & React.ComponentProps<typeof Text>) => {
+  } & ComponentProps<typeof Text>) => {
     return (
       <Text className={cn(text({ type }), className)} {...props}>
         {children}

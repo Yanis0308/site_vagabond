@@ -3,6 +3,7 @@ import { alias, unionAll } from "drizzle-orm/pg-core";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import { boundaries, poiBoundaries, poiData, pois } from "../schema.js";
+import { mapWithNullableString } from "../sqlMappers.js";
 
 interface SearchResult {
   type: "POI" | "CITY";
@@ -23,8 +24,8 @@ interface SearchResult {
 const calculateRelevanceScore = (
   nameColumn: unknown,
   query: string,
-): ReturnType<typeof sql<number>> => {
-  return sql<number>`(
+): ReturnType<typeof sql> => {
+  return sql`(
     CASE 
       -- Exact match: highest priority (score 0)
       WHEN normalize_search_text(${nameColumn}) = normalize_search_text(${query}) THEN 0
@@ -33,7 +34,7 @@ const calculateRelevanceScore = (
       -- Contains query: lower priority, score based on position and length
       ELSE 1000 + POSITION(normalize_search_text(${query}) IN normalize_search_text(${nameColumn})) + LENGTH(${nameColumn}) / 10
     END
-  )`;
+  )`.mapWith(Number);
 };
 
 export class SearchRepository {
@@ -42,20 +43,28 @@ export class SearchRepository {
   async searchPoisAndCities(query: string): Promise<SearchResult[]> {
     const poiQuery = this.db
       .select({
-        type: sql<string>`'POI'`.as("type"),
+        type: sql`'POI'`.mapWith(String).as("type"),
         id: pois.id,
         name: poiData.name,
-        latitude: sql<number>`ST_Y(${pois.coords}::geometry)`.as("latitude"),
-        longitude: sql<number>`ST_X(${pois.coords}::geometry)`.as("longitude"),
-        cityName: sql<string>`(
+        latitude: sql`ST_Y(${pois.coords}::geometry)`
+          .mapWith(Number)
+          .as("latitude"),
+        longitude: sql`ST_X(${pois.coords}::geometry)`
+          .mapWith(Number)
+          .as("longitude"),
+        cityName: sql`(
               SELECT city_b.name
               FROM ${poiBoundaries} pb2
               INNER JOIN ${boundaries} city_b ON pb2.boundary_id = city_b.id
               WHERE pb2.poi_id = ${pois.id}
                 AND city_b.boundary_level = 'CITY'
               LIMIT 1
-            )`.as("cityName"),
-        departmentName: sql<string | null>`NULL`.as("departmentName"),
+            )`
+          .mapWith(String)
+          .as("cityName"),
+        departmentName: sql`NULL`
+          .mapWith(mapWithNullableString)
+          .as("departmentName"),
         relevance_score: calculateRelevanceScore(poiData.name, query).as(
           "relevance_score",
         ),
@@ -78,19 +87,19 @@ export class SearchRepository {
 
     const cityQuery = this.db
       .select({
-        type: sql<string>`'CITY'`.as("type"),
+        type: sql`'CITY'`.mapWith(String).as("type"),
         id: boundaries.id,
-        name: sql<string>`COALESCE(${boundaries.name}, '')`.as("name"),
-        latitude: sql<number>`ST_Y(${boundaries.displayPoint}::geometry)`.as(
-          "latitude",
-        ),
-        longitude: sql<number>`ST_X(${boundaries.displayPoint}::geometry)`.as(
-          "longitude",
-        ),
-        cityName: sql<string>`NULL`.as("cityName"),
-        departmentName: sql<string | null>`${deptBoundary.name}`.as(
-          "departmentName",
-        ),
+        name: sql`COALESCE(${boundaries.name}, '')`.mapWith(String).as("name"),
+        latitude: sql`ST_Y(${boundaries.displayPoint}::geometry)`
+          .mapWith(Number)
+          .as("latitude"),
+        longitude: sql`ST_X(${boundaries.displayPoint}::geometry)`
+          .mapWith(Number)
+          .as("longitude"),
+        cityName: sql`NULL`.mapWith(String).as("cityName"),
+        departmentName: sql`${deptBoundary.name}`
+          .mapWith(mapWithNullableString)
+          .as("departmentName"),
         relevance_score: calculateRelevanceScore(boundaries.name, query).as(
           "relevance_score",
         ),
@@ -132,8 +141,8 @@ export class SearchRepository {
         id: result.id,
         name: result.name,
         coordinates: {
-          latitude: Number(result.latitude),
-          longitude: Number(result.longitude),
+          latitude: result.latitude,
+          longitude: result.longitude,
         },
       };
 

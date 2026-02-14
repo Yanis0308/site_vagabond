@@ -43,7 +43,6 @@ export const buildListData = ({
   rating,
   ratingCount,
   userRole,
-  insets,
   isLoadingEnriched,
 }: BuildListDataParams): ListItemType[] => {
   if (place === null) return [];

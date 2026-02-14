@@ -94,7 +94,9 @@ export const OpeningHoursCompact = memo(
     return (
       <Box className={cn("gap-2", className)}>
         <Pressable
-          onPress={() => setIsExpanded(!isExpanded)}
+          onPress={() => {
+            setIsExpanded(!isExpanded);
+          }}
           className="flex-row items-center justify-between py-1"
         >
           <Box className="flex-1 flex-row items-center gap-2">

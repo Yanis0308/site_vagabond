@@ -69,11 +69,7 @@ type SizeConfig = Record<
 >;
 
 // Helper to create size interpolation for circle/icon
-const createSizeInterpolation = (
-  sizeConfig: SizeConfig,
-  selectedId: string,
-  interpolationType: "exponential" | "linear" = "exponential",
-) =>
+const createSizeInterpolation = (sizeConfig: SizeConfig, selectedId: string) =>
   [
     "interpolate",
     // interpolationType === "exponential" ? ["exponential", 1.5] : ["linear"],

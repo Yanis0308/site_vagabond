@@ -41,11 +41,11 @@ export const SocialMediaSection = memo(
         });
     };
 
-    const socialItems: {
+    const socialItems: Array<{
       IconComponent: typeof Instagram;
       label: string;
       url: string;
-    }[] = [];
+    }> = [];
 
     if (socialMedia.instagramHandle !== undefined) {
       socialItems.push({
@@ -79,7 +79,9 @@ export const SocialMediaSection = memo(
           return (
             <Box key={index}>
               <Pressable
-                onPress={() => handlePress(item.url)}
+                onPress={() => {
+                  handlePress(item.url);
+                }}
                 className="px-6 active:opacity-70"
               >
                 <Box className="flex-row items-center gap-3 py-2">

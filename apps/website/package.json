@@ -3,15 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "fixme-typescript-check": "tsc --noEmit",
-    "fixme-lint-check": "eslint . --max-warnings 0",
-    "fixme-lint-fix": "eslint . --fix",
-    "fixme-prettier-check": "prettier . --check",
-    "fixme-prettier-fix": "prettier . --write",
     "email-develop": "email dev --port 3003",
     "develop": "next dev --turbopack --port 3002",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "disabled-typescript-check": "tsc --noEmit",
+    "disabled-lint-check": "eslint . --max-warnings 0",
+    "disabled-lint-fix": "eslint . --fix",
+    "prettier-check": "prettier . --check",
+    "prettier-fix": "prettier . --write"
   },
   "dependencies": {
     "@react-email/components": "^0.0.34",
@@ -35,16 +35,16 @@
     "use-local-storage-state": "^19.5.0"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
     "@types/node": "catalog:",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
     "@vagabond/shared-utils": "workspace:*",
     "eslint": "catalog:",
-    "eslint-config-next": "15.1.1",
-    "eslint-plugin-i18next": "^6.1.1",
+    "eslint-config-next": "catalog:",
+    "eslint-plugin-i18next": "catalog:",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "prettier": "catalog:"
   }
 }

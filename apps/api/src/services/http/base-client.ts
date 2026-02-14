@@ -20,7 +20,7 @@ export function createBaseClient(fastify: FastifyInstance): KyInstance {
         },
       ],
       beforeError: [
-        async (error): Promise<HTTPError<unknown>> => {
+        async (error): Promise<HTTPError> => {
           const { response } = error;
           const body = await response.text();
           fastify.log.error(

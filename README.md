@@ -280,6 +280,11 @@ Utilisez des noms de branches descriptifs avec les modèles suivants :
 - Utilisez Prettier pour le formatage
 - Les hooks pre-commit exécuteront automatiquement les vérifications
 
+**Scripts (depuis la racine)** :
+
+- `pnpm check-all` - Vérifie TypeScript, ESLint et Prettier sur tous les projets
+- `pnpm fix-all` - Correction ESLint et Prettier sur tous les projets
+
 ### Gestion des erreurs
 
 1. **Pour le backend**

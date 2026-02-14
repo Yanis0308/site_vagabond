@@ -377,6 +377,11 @@ pnpm typescript-check
 
 # Linting
 pnpm lint-check
+pnpm lint-fix      # Correction automatique
+
+# Prettier
+pnpm prettier-check
+pnpm prettier-fix  # Correction automatique
 
 # Build
 pnpm build

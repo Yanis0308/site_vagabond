@@ -80,7 +80,7 @@ export const useRecentSearches = (): {
   const recentSearches = recordToSortedArray(recentSearchesRecordResolved);
 
   const addRecentSearch = async (result: SearchResultType): Promise<void> => {
-    return await setRecentSearchesRecord(async (prev) => {
+    await setRecentSearchesRecord(async (prev) => {
       const prevRecord = await prev;
 
       // Update timestamp if exists, otherwise create new entry
@@ -106,10 +106,11 @@ export const useRecentSearches = (): {
   };
 
   const removeRecentSearch = async (id: string): Promise<void> => {
-    return await setRecentSearchesRecord(async (prev) => {
+    await setRecentSearchesRecord(async (prev) => {
       const prevRecord = await prev;
-      const { [id]: _, ...rest } = prevRecord;
-      return rest;
+      return Object.fromEntries(
+        Object.entries(prevRecord).filter(([key]) => key !== id),
+      );
     });
   };
 

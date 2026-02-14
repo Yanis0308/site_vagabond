@@ -65,7 +65,9 @@ Les migrations sont stockées dans `src/migrations/`.
 - `pnpm develop` - Mode développement avec watch TypeScript et génération Drizzle
 - `pnpm typescript-check` - Vérification TypeScript
 - `pnpm lint-check` - Vérification ESLint
+- `pnpm lint-fix` - Correction automatique ESLint
 - `pnpm prettier-check` - Vérification Prettier
+- `pnpm prettier-fix` - Correction automatique Prettier
 
 ## Structure
 

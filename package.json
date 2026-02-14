@@ -8,7 +8,8 @@
   "scripts": {
     "prepare": "husky",
     "prettier-write": "prettier . --write",
-    "mobile-app-dev": "pnpm --filter @vagabond/mobile-app run develop"
+    "check-all": "pnpm -r run typescript-check && pnpm -r run lint-check && pnpm -r run prettier-check",
+    "fix-all": "pnpm -r run lint-fix && pnpm -r run prettier-fix"
   },
   "dependencies": {
     "dayjs": "catalog:",
@@ -18,31 +19,28 @@
     "zx": "^8.3.0"
   },
   "devDependencies": {
-    "@arthurgeron/eslint-plugin-react-usememo": "^2.4.3",
-    "@eslint/js": "^9.15.0",
+    "@arthurgeron/eslint-plugin-react-usememo": "^3.0.0",
+    "@eslint-community/eslint-plugin-eslint-comments": "^4.6.0",
+    "@eslint/js": "catalog:",
     "@prettier/plugin-lua": "^0.0.3",
-    "@tanstack/eslint-plugin-query": "^5.66.1",
-    "@ts-safeql/eslint-plugin": "^4.0.0",
+    "@tanstack/eslint-plugin-query": "^5.91.4",
+    "@ts-safeql/eslint-plugin": "^4.2.0",
     "@types/geojson": "catalog:",
     "@types/geolib": "catalog:",
-    "@typescript-eslint/eslint-plugin": "^8.46.2",
-    "@typescript-eslint/parser": "^8.46.2",
     "concurrently": "^9.1.2",
     "eslint": "catalog:",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-import-resolver-typescript": "^3.6.3",
-    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-config-prettier": "catalog:",
     "eslint-plugin-goodeffects": "^1.0.2",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.2.1",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "eslint-plugin-tailwindcss": "^3.17.5",
+    "eslint-plugin-prettier": "catalog:",
+    "eslint-plugin-simple-import-sort": "catalog:",
+    "eslint-plugin-tailwindcss": "catalog:",
     "husky": "^9.1.6",
     "libpg-query": "^17.1.1",
     "prettier": "catalog:",
     "typescript": "catalog:",
-    "typescript-eslint": "^8.15.0",
-    "utility-types": "^3.11.0"
+    "typescript-eslint": "catalog:",
+    "utility-types": "^3.11.0",
+    "eslint-plugin-react-you-might-not-need-an-effect": "catalog:"
   },
   "pnpm": {
     "overrides": {

@@ -18,7 +18,7 @@ interface HeaderSectionProps {
   isLoadingEnriched: boolean;
   imageBoxAnimatedStyle: {
     opacity: number;
-    transform: { translateY: number }[];
+    transform: Array<{ translateY: number }>;
     marginTop: number;
   };
 }

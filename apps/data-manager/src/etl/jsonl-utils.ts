@@ -39,20 +39,20 @@ export class JsonlFileWriter<T> implements JsonlWriter<T> {
   }
 
   async write(record: T): Promise<void> {
-    return await new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       this.stringify.write(record, (error) => {
         if (error instanceof Error) {
           reject(error);
         } else {
           this.writtenCount++;
-          resolve();
+          resolve(undefined);
         }
       });
     });
   }
 
   async close(): Promise<void> {
-    return await new Promise((resolve, reject) => {
+    await new Promise((resolve, reject) => {
       this.stringify.end((error: Error | null | undefined) => {
         if (error instanceof Error) {
           reject(error);
@@ -60,7 +60,7 @@ export class JsonlFileWriter<T> implements JsonlWriter<T> {
           logger.info(
             `Écriture JSONL terminée: ${this.writtenCount} enregistrements → ${this.filePath}`,
           );
-          resolve();
+          resolve(undefined);
         }
       });
     });

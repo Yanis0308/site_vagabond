@@ -51,7 +51,7 @@ export type ProcessResult<TResponse extends ScrapingResponse<unknown>> =
 export function isProcessSuccess<TResponse extends ScrapingResponse<unknown>>(
   result: ProcessResult<TResponse>,
 ): result is ProcessSuccessResult<TResponse> {
-  return result.success === true;
+  return result.success;
 }
 
 /**

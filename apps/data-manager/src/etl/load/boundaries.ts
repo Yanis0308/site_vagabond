@@ -104,11 +104,7 @@ export async function loadBoundariesConsolidated(
 
       // Si la population n'est pas définie par l'admin_centre,
       // essayer de la récupérer depuis les tags de la boundary elle-même.
-      if (
-        population === null &&
-        item.tags.population !== null &&
-        item.tags.population !== undefined
-      ) {
+      if (population === null && item.tags.population !== undefined) {
         const parsedPopulation = parseInt(item.tags.population, 10);
         if (!isNaN(parsedPopulation)) {
           population = parsedPopulation;
@@ -117,18 +113,14 @@ export async function loadBoundariesConsolidated(
 
       // De même pour 'is_capital', vérifier les tags de la boundary
       // si l'info n'est pas dans l'admin_centre.
-      if (
-        !isCapital &&
-        item.tags.capital !== null &&
-        item.tags.capital !== undefined
-      ) {
+      if (!isCapital && item.tags.capital !== undefined) {
         isCapital = true;
       }
 
       // S'assurer que les valeurs non-nullables ont des valeurs par défaut
       const finalPopulation = population ?? 0;
 
-      if (displayPoint) {
+      if (displayPoint !== null) {
         // Insérer dans la table boundaries avec toutes les données consolidées
         await db
           .insert(schema.boundaries)
@@ -185,13 +177,6 @@ export async function loadBoundariesFromJsonl(filePath: string): Promise<void> {
     let totalProcessed = 0;
 
     for await (const record of reader.read()) {
-      if (record.type !== "boundary") {
-        logger.warn(
-          `Type d'enregistrement inattendu: ${JSON.stringify(record)}`,
-        );
-        continue;
-      }
-
       batch.push({ data: record.data, countryCode: record.countryCode });
 
       if (batch.length >= BATCH_SIZE) {

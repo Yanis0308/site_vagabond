@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, type ReactNode, useEffect, useState } from "react";
 
 import { type ImageLoadAsyncSource } from "@/hooks/queries/useImageFromMultipleSources";
 import { shadowStyles } from "@/styles/shadows";
@@ -9,7 +9,7 @@ import { Box } from "../ui/box";
 
 interface PolaroidBaseProps {
   imageUrl: ImageLoadAsyncSource;
-  children: React.ReactNode;
+  children: ReactNode;
   imageWithBorder: boolean;
   maintainAspectRatio: boolean;
   isSmall: boolean;
@@ -27,7 +27,7 @@ export const PolaroidBase = memo(
   }: PolaroidBaseProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
-      // eslint-disable-next-line react-you-might-not-need-an-effect/no-initialize-state, react-hooks/set-state-in-effect -- force re-render to trigger animation
+      // eslint-disable-next-line react-you-might-not-need-an-effect/no-initialize-state -- force re-render to trigger fade-in animation
       setIsLoaded(true);
     }, []);
 

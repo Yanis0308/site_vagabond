@@ -16,7 +16,7 @@ interface TitleAndButtonSectionProps {
   onPressCamera: () => Promise<void>;
   onPressGallery: () => Promise<void>;
   contentAnimatedStyle: {
-    transform: { translateY: number }[];
+    transform: Array<{ translateY: number }>;
   };
 }
 

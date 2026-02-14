@@ -8,7 +8,9 @@
   "scripts": {
     "typescript-check": "tsc --noEmit",
     "lint-check": "eslint . --max-warnings 0",
+    "lint-fix": "eslint . --fix",
     "prettier-check": "prettier . --check",
+    "prettier-fix": "prettier . --write",
     "build": "pnpm run clean && tsc",
     "watch": "pnpm run clean && tsc --watch",
     "clean": "rm -rf dist",
@@ -25,6 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "eslint": "catalog:",
     "typescript": "catalog:"
   }
 }

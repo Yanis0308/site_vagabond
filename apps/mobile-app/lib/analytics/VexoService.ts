@@ -62,7 +62,7 @@ export class VexoService implements IAnalyticsService {
       logger("Failed to clear Vexo user context:", error);
     }
   }
-
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Vexo doesn't support setting global attributes like other services
   setAttributes(attributes: Record<string, string>): Promise<void> {
     // Vexo doesn't support setting global attributes like other services
     return Promise.resolve();

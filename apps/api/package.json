@@ -13,7 +13,9 @@
   "scripts": {
     "typescript-check": "tsc --noEmit",
     "lint-check": "eslint . --max-warnings 0",
+    "lint-fix": "eslint . --fix",
     "prettier-check": "prettier . --check",
+    "prettier-fix": "prettier . --write",
     "clean": "rimraf dist",
     "prebuild": "pnpm run clean",
     "test": "pnpm run build && tsc -p test/tsconfig.json && node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts",

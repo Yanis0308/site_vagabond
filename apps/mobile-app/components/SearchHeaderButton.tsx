@@ -55,7 +55,7 @@ export const SearchHeaderButton = ({
   const handlePress = (): void => {
     // Navigate to search screen when the search bar is pressed
     // Since the input is not editable, we handle press instead of focus
-    void router.push({
+    router.push({
       pathname: "/search",
     });
   };
@@ -66,7 +66,9 @@ export const SearchHeaderButton = ({
     const timer = setTimeout(() => {
       Keyboard.dismiss();
     }, 100);
-    return (): void => clearTimeout(timer);
+    return (): void => {
+      clearTimeout(timer);
+    };
   });
 
   return (

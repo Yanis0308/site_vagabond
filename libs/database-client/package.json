@@ -8,7 +8,9 @@
   "scripts": {
     "typescript-check": "tsc --noEmit",
     "lint-check": "eslint . --max-warnings 0",
+    "lint-fix": "eslint . --fix",
     "prettier-check": "prettier . --check",
+    "prettier-fix": "prettier . --write",
     "drizzle-generate": "drizzle-kit generate",
     "build": "pnpm run clean && tsc && cp -r src/migrations dist/migrations",
     "watch": "pnpm run clean && tsc --watch",
@@ -26,6 +28,7 @@
     "@types/pg": "^8.11.11",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.31.8",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "eslint": "catalog:"
   }
 }

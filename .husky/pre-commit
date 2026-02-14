@@ -1,3 +1,2 @@
-pnpm run -r typescript-check
-pnpm run -r lint-check
-pnpm run -r prettier-check
+pnpm run check-all
+

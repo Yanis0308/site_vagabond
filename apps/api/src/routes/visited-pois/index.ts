@@ -94,7 +94,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       });
 
       // Envoyer la réponse HTTP immédiatement
-      const response = reply.status(200).send();
+      const response = reply.status(200).send({ data: {} });
 
       // Envoyer notification Slack en arrière-plan (sans await)
       void (async (): Promise<void> => {

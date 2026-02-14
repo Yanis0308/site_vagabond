@@ -31,7 +31,7 @@ export const getWikipediaLink = async (
 ): Promise<string | null> => {
   try {
     // Construction de l'URL Hub: /{wikidata-id}?lang={lang}&format=json
-    const response = await hubClient.get(`${wikidataId}`, {
+    const response = await hubClient.get(wikidataId, {
       searchParams: {
         lang,
         format: "json",
