@@ -25,8 +25,8 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-100 to-primary-50">
-      <div className="mx-auto max-w-4xl px-4 pt-12 md:pt-20">
-        <Hero lng={lng} t={t} />
+      <div className="mx-auto max-w-4xl px-4 pt-8 md:pt-20">
+        <Hero t={t} />
 
         <CountdownTimer
           labels={{

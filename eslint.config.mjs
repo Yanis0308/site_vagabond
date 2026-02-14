@@ -94,6 +94,7 @@ export default tseslint.config(
             "N'utilise pas sql<T>. Utilise .mapWith(Number), .mapWith(String), etc. à la place pour une conversion runtime.",
         },
       ],
+      "@typescript-eslint/no-deprecated": "warn",
     },
   },
 );

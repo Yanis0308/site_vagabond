@@ -1,40 +1,29 @@
 import Image from "next/image";
-import Link from "next/link";
 
 interface HeroProps {
-  lng: string;
   t: (key: string) => string;
 }
 
-export default function Hero({ lng, t }: HeroProps) {
+export default function Hero({ t }: HeroProps) {
   return (
     <div className="text-center">
-      <div className="mb-12">
+      <div className="mb-6 md:mb-12">
         <Image
           src="https://res.cloudinary.com/dkkyl2gjb/image/upload/v1743522684/vagabond-invert-color_bmrqw2.png"
           alt="Vagabond Logo"
           width={300}
           height={300}
-          className="mx-auto"
+          className="mx-auto w-40 md:w-[300px]"
         />
       </div>
 
-      <h1 className="mb-8 text-4xl font-bold text-primary md:text-5xl">
+      <h1 className="mb-4 text-3xl font-bold text-primary md:mb-8 md:text-5xl">
         {t("home.title")}
       </h1>
 
-      <p className="mb-12 text-xl text-gray-600">{t("home.subtitle")}</p>
-
-      <div className="mb-16 flex items-center justify-center">
-        <div className="text-5xl">👉</div>
-        <Link
-          href={`/${lng}/quiz/recommend-city?skipIntro`}
-          className="mx-4 inline-block rounded-full bg-primary px-10 py-4 text-xl font-bold text-white transition-all hover:scale-105 hover:bg-primary-600"
-        >
-          {t("home.cta")}
-        </Link>
-        <div className="text-5xl">👈</div>
-      </div>
+      <p className="mb-8 text-lg text-gray-600 md:mb-16 md:text-xl">
+        {t("home.subtitle")}
+      </p>
     </div>
   );
 }

@@ -25,7 +25,7 @@ interface CountdownTimerProps {
   };
 }
 
-const targetDate = new Date("2026-01-31T00:00:00");
+const targetDate = new Date("2026-03-06T00:00:00");
 
 export default function CountdownTimer({ labels }: CountdownTimerProps) {
   const [email, setEmail] = useState("");
@@ -89,6 +89,7 @@ export default function CountdownTimer({ labels }: CountdownTimerProps) {
 
     // Mettre à jour toutes les secondes
     const timer = setInterval(updateTimer, 1000);
+    // eslint-disable-next-line react-you-might-not-need-an-effect/no-initialize-state -- it's temporary
     updateTimer(); // Pour éviter un délai initial
 
     return (): void => {
@@ -98,67 +99,81 @@ export default function CountdownTimer({ labels }: CountdownTimerProps) {
 
   return (
     <CardWithEmoji emoji={"🚀"}>
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="w-full text-center text-xl font-bold">
+      <div className="mb-2 flex items-center justify-between md:mb-4">
+        <h3 className="w-full text-center text-lg font-bold md:text-xl">
           {labels.eventTitle}
         </h3>
       </div>
       {/* Chronomètre */}
-      <div className="mb-2 flex justify-center text-center">
-        <div className="mx-2">
-          <div className="flex text-4xl font-bold">
-            <div className="mr-1 flex h-14 w-12 items-center justify-center rounded-md bg-gray-200">
+      <div className="mb-1 flex justify-center text-center md:mb-2">
+        <div className="mx-1 md:mx-2">
+          <div className="flex text-2xl font-bold md:text-4xl">
+            <div className="mr-0.5 flex h-10 w-9 items-center justify-center rounded-md bg-gray-200 md:mr-1 md:h-14 md:w-12">
               {String(timeLeft.days).padStart(2, "0")}
             </div>
           </div>
-          <div className="mt-1 text-sm">{labels.daysLabel}</div>
+          <div className="mt-0.5 text-xs md:mt-1 md:text-sm">
+            {labels.daysLabel}
+          </div>
         </div>
 
-        <div className="mx-1 flex items-start pt-2 text-4xl font-bold">:</div>
+        <div className="mx-0.5 flex items-start pt-1 text-2xl font-bold md:mx-1 md:pt-2 md:text-4xl">
+          :
+        </div>
 
-        <div className="mx-2">
-          <div className="flex text-4xl font-bold ">
-            <div className="mr-1 flex h-14 w-12 items-center justify-center rounded-md bg-gray-200">
+        <div className="mx-1 md:mx-2">
+          <div className="flex text-2xl font-bold md:text-4xl">
+            <div className="mr-0.5 flex h-10 w-9 items-center justify-center rounded-md bg-gray-200 md:mr-1 md:h-14 md:w-12">
               {String(timeLeft.hours).padStart(2, "0")}
             </div>
           </div>
-          <div className="mt-1 text-sm">{labels.hoursLabel}</div>
+          <div className="mt-0.5 text-xs md:mt-1 md:text-sm">
+            {labels.hoursLabel}
+          </div>
         </div>
 
-        <div className="mx-1 flex items-start pt-2 text-4xl font-bold">:</div>
+        <div className="mx-0.5 flex items-start pt-1 text-2xl font-bold md:mx-1 md:pt-2 md:text-4xl">
+          :
+        </div>
 
-        <div className="mx-2">
-          <div className="flex text-4xl font-bold">
-            <div className="mr-1 flex h-14 w-12 items-center justify-center rounded-md bg-gray-200">
+        <div className="mx-1 md:mx-2">
+          <div className="flex text-2xl font-bold md:text-4xl">
+            <div className="mr-0.5 flex h-10 w-9 items-center justify-center rounded-md bg-gray-200 md:mr-1 md:h-14 md:w-12">
               {String(timeLeft.minutes).padStart(2, "0")}
             </div>
           </div>
-          <div className="mt-1 text-sm">{labels.minutesLabel}</div>
+          <div className="mt-0.5 text-xs md:mt-1 md:text-sm">
+            {labels.minutesLabel}
+          </div>
         </div>
 
-        <div className="mx-1 flex items-start pt-2 text-4xl font-bold">:</div>
+        <div className="mx-0.5 flex items-start pt-1 text-2xl font-bold md:mx-1 md:pt-2 md:text-4xl">
+          :
+        </div>
 
-        <div className="mx-2">
-          <div className="flex text-4xl font-bold">
-            <div className="mr-1 flex h-14 w-12 items-center justify-center rounded-md bg-gray-200">
+        <div className="mx-1 md:mx-2">
+          <div className="flex text-2xl font-bold md:text-4xl">
+            <div className="mr-0.5 flex h-10 w-9 items-center justify-center rounded-md bg-gray-200 md:mr-1 md:h-14 md:w-12">
               {String(timeLeft.seconds).padStart(2, "0")}
             </div>
           </div>
-          <div className="mt-1 text-sm">{labels.secondsLabel}</div>
+          <div className="mt-0.5 text-xs md:mt-1 md:text-sm">
+            {labels.secondsLabel}
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-4 py-4">
-        <p className="text-center text-4xl">{"📩"}</p>
-        <p className="text-center font-medium text-gray-800">
+      <div className="flex items-center justify-center gap-2 py-2 md:gap-4 md:py-4">
+        <p className="text-center text-2xl md:text-4xl">{"📩"}</p>
+        <p className="text-center text-sm font-medium text-gray-800 md:text-base">
           {labels.emailPrompt}
         </p>
-        <p className="text-center text-4xl">{"📩"}</p>
+        <p className="text-center text-2xl md:text-4xl">{"📩"}</p>
       </div>
 
       <form
         onSubmit={handleEmailSubmit}
-        className="flex flex-col items-center pt-4"
+        className="flex flex-col items-center pt-2 md:pt-4"
       >
         <input
           type="email"
@@ -167,7 +182,7 @@ export default function CountdownTimer({ labels }: CountdownTimerProps) {
             setEmail(e.target.value);
           }}
           placeholder={labels.placeHolderText}
-          className="mb-4 w-full rounded-md border border-gray-300 bg-white p-3 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+          className="mb-2 w-full rounded-md border border-gray-300 bg-white p-2.5 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary md:mb-4 md:p-3"
           required
           disabled={isSubmitting}
         />
