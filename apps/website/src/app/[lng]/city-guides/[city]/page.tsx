@@ -29,8 +29,6 @@ const TitleAndInfo = ({
 export default function CityPage() {
   const { lng, city } = useParams<{ lng: string; city: string }>();
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [showPopup, setShowPopup] = useState(false);
 
   const searchParams = useSearchParams();
@@ -39,6 +37,10 @@ export default function CityPage() {
   const { t } = useTranslationClient(lng, ["cities-top-10"]);
   const tWithCity = (str: string): string =>
     t(`${city}.${str}`, { ns: "cities-top-10" });
+
+  const error = SUPPORTED_CITIES.includes(city)
+    ? null
+    : t("error-title", { ns: "cities-top-10" });
 
   useEffect(() => {
     // Configuration du popup si l'utilisateur vient du quiz
@@ -53,28 +55,9 @@ export default function CityPage() {
     }
   }, [fromQuiz]);
 
-  useEffect(() => {
-    // On vérifie si nous avons des données complètes pour cette ville
-    if (SUPPORTED_CITIES.includes(city)) {
-      setLoading(false);
-    } else {
-      // Si la ville n'est pas dans nos données complètes, on affiche un message d'erreur
-      setError(t("error-title", { ns: "cities-top-10" }));
-      setLoading(false);
-    }
-  }, [city, t]);
-
   const handleClosePopup = (): void => {
     setShowPopup(false);
   };
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="size-12 animate-spin rounded-full border-4 border-primary-500 border-t-transparent"></div>
-      </div>
-    );
-  }
 
   if (error !== null) {
     return (

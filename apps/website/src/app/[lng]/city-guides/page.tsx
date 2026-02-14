@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import React from "react";
 
 import { useTranslationClient } from "@/app/i18n/client";
@@ -15,17 +15,16 @@ export default function CitiesPage() {
 
   const { t } = useTranslationClient(lng, ["common", "cities-top-10"]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredCities, setFilteredCities] = useState<string[]>(
-    [...SUPPORTED_CITIES].sort(),
-  );
 
-  // Mettre à jour les villes filtrées lorsque le terme de recherche change
-  useEffect(() => {
-    const filtered = [...SUPPORTED_CITIES]
-      .sort()
-      .filter((city) => city.toLowerCase().includes(searchTerm.toLowerCase()));
-    setFilteredCities(filtered);
-  }, [searchTerm]);
+  const filteredCities = useMemo(
+    () =>
+      [...SUPPORTED_CITIES]
+        .sort()
+        .filter((city) =>
+          city.toLowerCase().includes(searchTerm.toLowerCase()),
+        ),
+    [searchTerm],
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-primary-100 to-primary-50 md:py-10">
