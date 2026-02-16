@@ -8,6 +8,7 @@ import {
 import { processPoiBoundaryAssociations } from "./transform/associations";
 import { processBoundaries } from "./transform/boundaries";
 import { parseArgs } from "./transform/cli-args";
+import { generateVoronoiZones } from "./transform/generate-voronoi";
 import { processBoundaryHierarchies } from "./transform/hierarchies";
 import { generatePoisGeoJSON, processPois } from "./transform/pois";
 import { knexInstance } from "./transform/stream-processor";
@@ -15,61 +16,86 @@ import { knexInstance } from "./transform/stream-processor";
 dotenv.config();
 
 async function transformOnly(): Promise<void> {
-  const { schema, countryCode } = parseArgs();
+  const { schema, countryCode, voronoiOnly, transformDir } = parseArgs();
+
+  if (voronoiOnly) {
+    logger.info("Mode Voronoi Only activé");
+  }
 
   logger.info(
-    `Début de la transformation seule - Schema: ${schema}, Pays: ${countryCode}`,
+    `Début de la transformation${voronoiOnly ? " (Voronoi Unique)" : ""} - Schema: ${schema}, Pays: ${countryCode}`,
   );
 
   // S'assurer que le répertoire data/ existe
   ensureDataDirectory();
 
-  // Générer les chemins de fichiers de sortie avec timestamp
-  const outputFiles = generateTransformOutputFiles(schema, countryCode);
+  // En voronoi-only: réutiliser le dossier fourni (lecture inputs + écriture output)
+  // Sinon: créer un nouveau dossier
+  const existingDir: string | undefined =
+    voronoiOnly && typeof transformDir === "string" && transformDir !== ""
+      ? transformDir.replace(/^output\//, "")
+      : undefined;
+  const outputFiles = generateTransformOutputFiles(
+    schema,
+    countryCode,
+    existingDir,
+  );
 
   logger.info(`Dossier de transformation: ${outputFiles.transformDir}`);
 
   try {
     const startTime = Date.now();
 
-    // Traiter les POIs
-    logger.info("Début du traitement des POIs...");
-    await processPois(schema, outputFiles.pois.filePath);
+    if (!voronoiOnly) {
+      // Traiter les POIs
+      logger.info("Début du traitement des POIs...");
+      await processPois(schema, outputFiles.pois.filePath);
 
-    // Générer le fichier GeoJSON des POIs pour Mapbox
-    logger.info("Génération du fichier GeoJSON des POIs...");
-    await generatePoisGeoJSON(
+      // Générer le fichier GeoJSON des POIs pour Mapbox
+      logger.info("Génération du fichier GeoJSON des POIs...");
+      await generatePoisGeoJSON(
+        outputFiles.pois.filePath,
+        outputFiles.poisGeoJsonl.filePath,
+      );
+
+      // Traiter les associations POI-Boundary d'abord
+      logger.info("Début du traitement des associations...");
+      await processPoiBoundaryAssociations(
+        schema,
+        countryCode,
+        outputFiles.associations.filePath,
+      );
+
+      // Traiter les hiérarchies de boundaries (pour les comptes de sous-zones)
+      logger.info("Début du traitement des hiérarchies...");
+      await processBoundaryHierarchies(
+        schema,
+        countryCode,
+        outputFiles.hierarchies.filePath,
+      );
+
+      // Traiter les boundaries (avec jointure directe admin_centres et consolidation)
+      // en passant les fichiers d'associations et hiérarchies pour optimiser les comptes
+      logger.info("Début du traitement des boundaries...");
+      await processBoundaries(
+        schema,
+        countryCode,
+        outputFiles.boundaries.filePath,
+        outputFiles.boundariesGeoJsonl,
+        outputFiles.associations.filePath,
+        outputFiles.hierarchies.filePath,
+        outputFiles.boundariesPolygonsGeoJsonl,
+      );
+    }
+
+    // Générer les zones Voronoi pré-calculées pour le tileset POIs
+    // Toujours exécuté (soit dans le flux complet, soit en voronoiOnly)
+    logger.info("Génération des zones Voronoi...");
+    await generateVoronoiZones(
       outputFiles.pois.filePath,
-      outputFiles.poisGeoJsonl.filePath,
-    );
-
-    // Traiter les associations POI-Boundary d'abord
-    logger.info("Début du traitement des associations...");
-    await processPoiBoundaryAssociations(
-      schema,
-      countryCode,
       outputFiles.associations.filePath,
-    );
-
-    // Traiter les hiérarchies de boundaries (pour les comptes de sous-zones)
-    logger.info("Début du traitement des hiérarchies...");
-    await processBoundaryHierarchies(
-      schema,
-      countryCode,
-      outputFiles.hierarchies.filePath,
-    );
-
-    // Traiter les boundaries (avec jointure directe admin_centres et consolidation)
-    // en passant les fichiers d'associations et hiérarchies pour optimiser les comptes
-    logger.info("Début du traitement des boundaries...");
-    await processBoundaries(
-      schema,
-      countryCode,
-      outputFiles.boundaries.filePath,
-      outputFiles.boundariesGeoJsonl,
-      outputFiles.associations.filePath,
-      outputFiles.hierarchies.filePath,
-      outputFiles.boundariesPolygonsGeoJsonl,
+      outputFiles.boundariesPolygonsGeoJsonl.city.filePath,
+      outputFiles.voronoiGeoJsonl.filePath,
     );
 
     const totalTime = (Date.now() - startTime) / 1000;
@@ -85,6 +111,7 @@ async function transformOnly(): Promise<void> {
     logger.info(`- associations.jsonl`);
     logger.info(`- hierarchies.jsonl`);
     logger.info(`- pois.jsonl (GeoJSON pour Mapbox Tileset)`);
+    logger.info(`- voronoi-zones.jsonl (Voronoi zones pour Mapbox Tileset)`);
     logger.info(`- boundaries-country.jsonl (points pour Mapbox Tileset)`);
     logger.info(`- boundaries-region.jsonl (points pour Mapbox Tileset)`);
     logger.info(`- boundaries-county.jsonl (points pour Mapbox Tileset)`);

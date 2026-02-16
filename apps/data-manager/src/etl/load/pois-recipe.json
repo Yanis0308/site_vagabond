@@ -4,7 +4,14 @@
     "pois-data-layer-v1": {
       "source": "mapbox://tileset-source/glutomax/pois-src-v1",
       "minzoom": 10,
-      "maxzoom": 10
+      "maxzoom": 10,
+      "features": { "simplification": 0 }
+    },
+    "voronoi-zones-layer-v1": {
+      "source": "mapbox://tileset-source/glutomax/voronoi-src-v1",
+      "minzoom": 10,
+      "maxzoom": 10,
+      "features": { "simplification": 0 }
     }
   }
 }

@@ -110,3 +110,20 @@ export function getBoundaryFilter(
 
   return undefined;
 }
+
+/**
+ * Combines base boundary filter with a state filter (zone IDs).
+ * Use for layering: unvisited (bottom), inProgress, completed (top).
+ */
+export function combineBoundaryFilter(
+  baseFilter: unknown[] | undefined,
+  stateFilter: unknown[] | undefined,
+): unknown[] | undefined {
+  if (stateFilter === undefined) {
+    return baseFilter;
+  }
+  if (baseFilter === undefined) {
+    return stateFilter;
+  }
+  return ["all", baseFilter, stateFilter];
+}

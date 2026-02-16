@@ -7,7 +7,6 @@ export default function RootLayout(): ReactElement | null {
   return (
     <Stack screenOptions={defaultScreenOptions}>
       <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="validate-place/take-photo" />
       <Stack.Screen
         name="validate-place/review-form"
         options={{

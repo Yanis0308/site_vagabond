@@ -55,18 +55,16 @@ function listAvailableTransformDirs() {
 }
 
 // Upload source to Mapbox
-async function uploadSource(filePath, username) {
-  const sourceId = `pois-src-v1`;
-
+async function uploadSource(sourceId, filePath, username, label) {
   console.log(`📤 Upload source: ${sourceId}`);
 
   try {
     await $`tilesets upload-source ${username} ${sourceId} ${filePath} --replace`.pipe(
       process.stdout,
     );
-    console.log(`✅ Source POIs uploadée avec succès`);
+    console.log(`✅ Source ${label} uploadée avec succès`);
   } catch (error) {
-    console.error(`❌ Erreur upload source POIs:`, error.message);
+    console.error(`❌ Erreur upload source ${label}:`, error.message);
     process.exit(1);
   }
 }
@@ -131,21 +129,29 @@ async function main() {
     : `output/${transformDir}`;
 
   const geoJsonFile = `${baseDir}/geojson/pois.jsonl`;
+  const voronoiFile = `${baseDir}/geojson/voronoi-zones.jsonl`;
 
-  // Validate file exists
-  console.log("🔍 Validation du fichier POIs...");
+  // Validate files exist
+  console.log("🔍 Validation des fichiers...");
   if (!fs.existsSync(geoJsonFile)) {
     console.error(`❌ Fichier JSONL POIs non trouvé: ${geoJsonFile}`);
     process.exit(1);
   }
   console.log(`✅ POIs: ${geoJsonFile}`);
 
+  if (!fs.existsSync(voronoiFile)) {
+    console.error(`❌ Fichier JSONL Voronoi non trouvé: ${voronoiFile}`);
+    process.exit(1);
+  }
+  console.log(`✅ Voronoi: ${voronoiFile}`);
+
   try {
     const startTime = Date.now();
 
-    // 1. Upload source
-    console.log("\n=== UPLOAD DES SOURCES POIS ===");
-    await uploadSource(geoJsonFile, username);
+    // 1. Upload sources
+    console.log("\n=== UPLOAD DES SOURCES ===");
+    await uploadSource("pois-src-v1", geoJsonFile, username, "POIs");
+    await uploadSource("voronoi-src-v1", voronoiFile, username, "Voronoi");
 
     // 2. Create and publish tileset
     await createAndPublishTileset(username);
@@ -157,8 +163,9 @@ async function main() {
 
     console.log("\n📊 Tileset créé:");
     console.log(`  • ${username}.pois-tileset-v1`);
-    console.log("\n📋 Source POIs uploadée:");
+    console.log("\n📋 Sources uploadées:");
     console.log(`  • pois-src-v1`);
+    console.log(`  • voronoi-src-v1`);
   } catch (error) {
     console.error("❌ Erreur lors de l'upload Mapbox:", error.message);
     process.exit(1);

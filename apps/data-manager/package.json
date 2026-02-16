@@ -13,12 +13,14 @@
     "extract": "dotenvx run -- zx src/etl/extract.mjs",
     "transform": "dotenvx run -- pnpx tsx src/etl/transform.ts",
     "load-db": "dotenvx run -- pnpx tsx src/etl/load-db.ts",
-    "load-mapbox-boundaries": "dotenvx run -- zx src/etl/load-mapbox-boundaries.mjs",
+    "load-mapbox-boundaries": "dotenvx run -- zx src/etl/load/load-mapbox-boundaries.mjs",
     "load-mapbox-pois": "dotenvx run -- zx src/etl/load/load-pois-mapbox.mjs"
   },
   "dependencies": {
+    "@turf/turf": "catalog:",
     "@vagabond/database-client": "workspace:*",
     "@vagabond/shared-utils": "workspace:*",
+    "d3-delaunay": "^6.0.4",
     "dotenv": "catalog:",
     "drizzle-orm": "catalog:",
     "knex": "^3.1.0",
@@ -27,6 +29,7 @@
     "pg-query-stream": "^4.7.1"
   },
   "devDependencies": {
+    "@types/d3-delaunay": "^6.0.4",
     "@types/ndjson": "^2.0.4",
     "@types/pg": "catalog:",
     "eslint": "catalog:",

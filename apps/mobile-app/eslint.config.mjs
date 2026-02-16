@@ -25,12 +25,7 @@ export default [
   },
 
   // React compiler
-  {
-    plugins: { "react-compiler": reactCompiler },
-    rules: {
-      "react-compiler/react-compiler": "error",
-    },
-  },
+  reactCompiler.configs.recommended,
 
   // Performance: disable no-deprecated for mobile app — this rule causes ESLint
   // to hang due to quadratic type graph traversal with React Native/Expo types.

@@ -7,21 +7,12 @@ settings:
 
 catalogs:
   default:
-    '@eslint/js':
-      specifier: ^9.39.2
-      version: 9.39.2
-    '@types/geojson':
-      specifier: ^7946.0.14
-      version: 7946.0.16
-    '@types/geolib':
-      specifier: ^2.0.3
-      version: 2.0.25
+    '@turf/turf':
+      specifier: ^7.2.0
+      version: 7.3.4
     '@types/node':
       specifier: ^22.9.0
       version: 22.19.11
-    '@types/pg':
-      specifier: ^8.11.11
-      version: 8.16.0
     ajv-errors:
       specifier: ^3.0.0
       version: 3.0.0
@@ -31,48 +22,15 @@ catalogs:
     dayjs:
       specifier: ^1.11.13
       version: 1.11.19
-    dotenv:
-      specifier: ^16.4.5
-      version: 16.6.1
-    drizzle-orm:
-      specifier: ^0.45.0
-      version: 0.45.1
     eslint:
       specifier: ^9.39.2
       version: 9.39.2
     eslint-config-expo:
       specifier: ^10.0.0
       version: 10.0.0
-    eslint-config-next:
-      specifier: ^16.0.0
-      version: 16.1.6
-    eslint-config-prettier:
-      specifier: ^10.1.8
-      version: 10.1.8
     eslint-plugin-i18next:
       specifier: ^6.1.3
       version: 6.1.3
-    eslint-plugin-prettier:
-      specifier: ^5.5.5
-      version: 5.5.5
-    eslint-plugin-react-you-might-not-need-an-effect:
-      specifier: ^0.8.5
-      version: 0.8.5
-    eslint-plugin-simple-import-sort:
-      specifier: ^12.1.1
-      version: 12.1.1
-    eslint-plugin-tailwindcss:
-      specifier: ^3.18.2
-      version: 3.18.2
-    geojson:
-      specifier: ^0.5.0
-      version: 0.5.0
-    geolib:
-      specifier: ^3.3.4
-      version: 3.3.4
-    pg:
-      specifier: ^8.13.1
-      version: 8.18.0
     prettier:
       specifier: ^3.3.3
       version: 3.8.1
@@ -82,15 +40,6 @@ catalogs:
     react-dom:
       specifier: 19.1.0
       version: 19.1.0
-    typebox:
-      specifier: ^1.0.77
-      version: 1.0.81
-    typescript:
-      specifier: ^5.9.2
-      version: 5.9.3
-    typescript-eslint:
-      specifier: ^8.55.0
-      version: 8.55.0
     zod:
       specifier: ^3.23.8
       version: 3.25.76
@@ -316,12 +265,18 @@ importers:
 
   apps/data-manager:
     dependencies:
+      '@turf/turf':
+        specifier: 'catalog:'
+        version: 7.3.4
       '@vagabond/database-client':
         specifier: workspace:*
         version: link:../../libs/database-client
       '@vagabond/shared-utils':
         specifier: workspace:*
         version: link:../../libs/shared-utils
+      d3-delaunay:
+        specifier: ^6.0.4
+        version: 6.0.4
       dotenv:
         specifier: 'catalog:'
         version: 16.6.1
@@ -341,6 +296,9 @@ importers:
         specifier: ^4.7.1
         version: 4.12.0(pg@8.18.0)
     devDependencies:
+      '@types/d3-delaunay':
+        specifier: ^6.0.4
+        version: 6.0.4
       '@types/ndjson':
         specifier: ^2.0.4
         version: 2.0.4
@@ -508,14 +466,14 @@ importers:
         specifier: ^5.89.0
         version: 5.90.22(@tanstack/react-query@5.90.21(react@19.1.0))(react@19.1.0)
       '@turf/turf':
-        specifier: ^7.2.0
+        specifier: 'catalog:'
         version: 7.3.4
       '@types/supercluster':
         specifier: ^7.1.3
         version: 7.1.3
       '@vagabond/shared-utils':
         specifier: workspace:*
-        version: link:../../libs/shared-utils
+        version: file:libs/shared-utils
       ajv:
         specifier: ^8.17.1
         version: 8.17.1(patch_hash=a9b5f791cf567c6ae4de8507c7f00f6b31560f90235f98d0048a5e4b2c46d316)
@@ -528,9 +486,6 @@ importers:
       babel-plugin-module-resolver:
         specifier: ^5.0.2
         version: 5.0.2
-      babel-plugin-react-compiler:
-        specifier: 19.0.0-beta-af1b7da-20250417
-        version: 19.0.0-beta-af1b7da-20250417
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -5374,6 +5329,9 @@ packages:
   '@types/cors@2.8.19':
     resolution: {integrity: sha512-mFNylyeyqN93lfe/9CSxOGREz8cpzAhH+E93xJ4xWQf62V8sQ/24reV2nyzUWM6H6Xji+GGHpkbLe7pVoUEskg==}
 
+  '@types/d3-delaunay@6.0.4':
+    resolution: {integrity: sha512-ZMaSKu4THYCU6sV64Lhg6qjf1orxBthaC161plr5KuPHo3CNm8DTHiLw/5Eq2b6TsNP0W0iJrUOFscY6Q450Hw==}
+
   '@types/d3-voronoi@1.1.12':
     resolution: {integrity: sha512-DauBl25PKZZ0WVJr42a6CNvI6efsdzofl9sajqZr2Gf5Gu733WkDdUGiPkUHXiUvYGzNNlFQde2wdZdfQPG+yw==}
 
@@ -6045,9 +6003,6 @@ packages:
   babel-plugin-react-compiler@1.0.0:
     resolution: {integrity: sha512-Ixm8tFfoKKIPYdCCKYTsqv+Fd4IJ0DQqMyEimo+pxUOMUR9cVPlwTrFt9Avu+3cb6Zp3mAzl+t1MrG2fxxKsxw==}
 
-  babel-plugin-react-compiler@19.0.0-beta-af1b7da-20250417:
-    resolution: {integrity: sha512-UyTCRmzpxa4H1EqJk8fWeUOzHdEA12NQZ5DrF5hyhCs+Y6f7B4pg1fkul49sRn9GPPGFgkrH4IxOtnQJ7tNXIA==}
-
   babel-plugin-react-native-web@0.21.2:
     resolution: {integrity: sha512-SPD0J6qjJn8231i0HZhlAGH6NORe+QvRSQM2mwQEzJ2Fb3E4ruWTiiicPlHjmeWShDXLcvoorOCXjeR7k/lyWA==}
 
@@ -6592,6 +6547,10 @@ packages:
   d3-array@1.2.4:
     resolution: {integrity: sha512-KHW6M86R+FUPYGb3R5XiYjXPq7VzwxZ22buHhAEVG5ztoEcZZMLov530mmccaqA1GghZArjQV46fuc8kUqhhHw==}
 
+  d3-delaunay@6.0.4:
+    resolution: {integrity: sha512-mdjtIZ1XLAM8bm/hx3WwjfHt6Sggek7qH043O8KEjDXN40xi3vx/6pYSVTwLjEgiXQTbvaouWKynLBiUZ6SK6A==}
+    engines: {node: '>=12'}
+
   d3-geo@1.7.1:
     resolution: {integrity: sha512-O4AempWAr+P5qbk2bC2FuN/sDW4z+dN2wDf9QV3bxQt4M5HfOEeXLgJ/UKQW0+o1Dj8BE+L5kiDbdWUMjsmQpw==}
 
@@ -6709,6 +6668,9 @@ packages:
   degenerator@5.0.1:
     resolution: {integrity: sha512-TllpMR/t0M5sqCXfj85i4XaAzxmS5tVA16dqvdkMwGmzI+dXLXnw3J+3Vdv7VKw+ThlTMboK6i9rnZ6Nntj5CQ==}
     engines: {node: '>= 14'}
+
+  delaunator@5.0.1:
+    resolution: {integrity: sha512-8nvh+XBe96aCESrGOqMp/84b13H9cdKbG5P2ejQCh4d4sK9RL4371qou9drQjMhvnPmhWl5hnmqbEE0fXr9Xnw==}
 
   delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
@@ -18540,6 +18502,8 @@ snapshots:
     dependencies:
       '@types/node': 22.19.11
 
+  '@types/d3-delaunay@6.0.4': {}
+
   '@types/d3-voronoi@1.1.12': {}
 
   '@types/debug@4.1.12':
@@ -19482,10 +19446,6 @@ snapshots:
     dependencies:
       '@babel/types': 7.29.0
 
-  babel-plugin-react-compiler@19.0.0-beta-af1b7da-20250417:
-    dependencies:
-      '@babel/types': 7.29.0
-
   babel-plugin-react-native-web@0.21.2: {}
 
   babel-plugin-syntax-hermes-parser@0.29.1:
@@ -20073,6 +20033,10 @@ snapshots:
 
   d3-array@1.2.4: {}
 
+  d3-delaunay@6.0.4:
+    dependencies:
+      delaunator: 5.0.1
+
   d3-geo@1.7.1:
     dependencies:
       d3-array: 1.2.4
@@ -20164,6 +20128,10 @@ snapshots:
       ast-types: 0.13.4
       escodegen: 2.1.0
       esprima: 4.0.1
+
+  delaunator@5.0.1:
+    dependencies:
+      robust-predicates: 3.0.2
 
   delayed-stream@1.0.0: {}
 

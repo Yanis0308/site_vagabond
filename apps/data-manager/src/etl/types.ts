@@ -42,6 +42,8 @@ export interface ConsolidatedBoundaryRow {
 export interface CliArgs {
   schema: string;
   countryCode: string;
+  voronoiOnly: boolean;
+  transformDir?: string;
 }
 
 // Types pour le stream processing
@@ -51,7 +53,6 @@ export type BatchProcessorFunction<T> = (batch: T[]) => Promise<void>;
 // Types pour le découplage Transform/Load avec fichiers JSONL
 export interface JsonlFileConfig {
   filePath: string;
-  batchSize: number;
 }
 
 export interface TransformOutputFiles {

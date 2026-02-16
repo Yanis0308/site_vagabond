@@ -142,7 +142,7 @@ export default function MapsTab(): ReactElement {
           heading={headingRealtime}
         />
 
-        <MapDebugInfo zoom={zoomRealtime ?? 0} placesCount={0} />
+        <MapDebugInfo zoom={zoomRealtime ?? 0} />
 
         <PlaceDetailsSheet
           place={selectedPlace}

@@ -1,6 +1,7 @@
 import { CircleLayer, SymbolLayer } from "@rnmapbox/maps";
-import { memo, type ReactElement } from "react";
+import { type ReactElement } from "react";
 
+import { MAP_LAYER_IDS } from "@/constants/MapLayerIds";
 import { type PoiType } from "@/utils/types";
 
 interface MapPOILayersProps {
@@ -139,199 +140,197 @@ const createTextSizeInterpolation = (selectedId: string) =>
     ],
   ] as const;
 
-export const MapPOILayers = memo(
-  ({
-    sourceId,
-    selectedPlace,
-    visitedPoiIds,
-  }: MapPOILayersProps): ReactElement => {
-    return (
-      <>
-        {/* Couche pour tous les points avec tailles selon filter_level */}
-        <CircleLayer
-          id="all-points"
-          sourceID={sourceId}
-          sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
-          minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
-          // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
-          style={{
-            circleColor: [
-              "case",
-              // Place sélectionnée - orange vif
-              ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
-              "#f97316", // orange-500 - couleur distinctive pour la sélection
-              // Points visités - vert
-              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
-              "#22c55e", // green-500 pour les POIs visités
-              // Points non visités - couleurs selon filter_level
-              [
-                "any",
-                ["==", ["get", "filterLevel"], "STRICT"],
-                ["==", ["get", "filterLevel"], "STANDARD"],
-              ],
-              "#7c3aed", // violet-600 - violet foncé pour les importants
-              [
-                "any",
-                ["==", ["get", "filterLevel"], "LAXIST"],
-                ["==", ["get", "filterLevel"], "INTERMEDIATE"],
-              ],
-              "#a855f7", // violet-500 - violet clair pour les moins importants
-              // Couleur par défaut pour UNKNOWN
-              "#6b7280", // gray-500 - gris pour les inconnus
+export const MapPOILayers = ({
+  sourceId,
+  selectedPlace,
+  visitedPoiIds,
+}: MapPOILayersProps): ReactElement => {
+  return (
+    <>
+      {/* Couche pour tous les points avec tailles selon filter_level */}
+      <CircleLayer
+        id={MAP_LAYER_IDS.POI_ALL_POINTS}
+        sourceID={sourceId}
+        sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
+        minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
+        // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
+        style={{
+          circleColor: [
+            "case",
+            // Place sélectionnée - orange vif
+            ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
+            "#f97316", // orange-500 - couleur distinctive pour la sélection
+            // Points visités - vert
+            ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+            "#22c55e", // green-500 pour les POIs visités
+            // Points non visités - couleurs selon filter_level
+            [
+              "any",
+              ["==", ["get", "filterLevel"], "STRICT"],
+              ["==", ["get", "filterLevel"], "STANDARD"],
             ],
-            // Taille des points : priorité à la place sélectionnée, puis selon filter_level
-            // Varie avec le niveau de zoom pour une meilleure visibilité
-            circleRadius: createSizeInterpolation(
-              SIZES.circleRadius,
-              selectedPlace?.id ?? "",
-            ),
-            circleStrokeWidth: 1,
-            circleStrokeColor: "#fff",
+            "#7c3aed", // violet-600 - violet foncé pour les importants
+            [
+              "any",
+              ["==", ["get", "filterLevel"], "LAXIST"],
+              ["==", ["get", "filterLevel"], "INTERMEDIATE"],
+            ],
+            "#a855f7", // violet-500 - violet clair pour les moins importants
+            // Couleur par défaut pour UNKNOWN
+            "#6b7280", // gray-500 - gris pour les inconnus
+          ],
+          // Taille des points : priorité à la place sélectionnée, puis selon filter_level
+          // Varie avec le niveau de zoom pour une meilleure visibilité
+          circleRadius: createSizeInterpolation(
+            SIZES.circleRadius,
+            selectedPlace?.id ?? "",
+          ),
+          circleStrokeWidth: 1,
+          circleStrokeColor: "#fff",
 
-            // Priorité d'affichage : le point sélectionné a la priorité maximale
-            circleSortKey: [
-              "+",
-              // PRIORITÉ MAXIMALE : Point sélectionné (+1000 points)
-              [
-                "case",
-                ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
-                1000,
-                0,
-              ],
-              // Bonus pour les POI visités (+100 points)
-              [
-                "case",
-                ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
-                100,
-                0,
-              ],
-              // Bonus pour les niveaux de filtrage importants
-              [
-                "case",
-                ["==", ["get", "filterLevel"], "STRICT"],
-                90,
-                ["==", ["get", "filterLevel"], "STANDARD"],
-                80,
-                ["==", ["get", "filterLevel"], "INTERMEDIATE"],
-                70,
-                ["==", ["get", "filterLevel"], "LAXIST"],
-                60,
-                0, // UNKNOWN ou autres
-              ],
-            ],
-          }}
-        />
-        {/* Couche pour les icônes sur tous les points */}
-        <SymbolLayer
-          id="custom-marker-symbol"
-          sourceID={sourceId}
-          sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
-          minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
-          // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
-          style={{
-            iconImage: [
+          // Priorité d'affichage : le point sélectionné a la priorité maximale
+          circleSortKey: [
+            "+",
+            // PRIORITÉ MAXIMALE : Point sélectionné (+1000 points)
+            [
               "case",
-              // Si le POI est visité, afficher checkmark
-              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
-              "checkmark",
-              // Sinon afficher questionMark
-              "questionMark",
-            ],
-            iconAllowOverlap: true,
-            iconSize: createSizeInterpolation(
-              SIZES.iconSize,
-              selectedPlace?.id ?? "",
-            ),
-            // Priorité d'affichage : le point sélectionné a la priorité maximale
-            symbolSortKey: [
-              "+",
-              // PRIORITÉ MAXIMALE : Point sélectionné (-1000 points)
-              [
-                "case",
-                ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
-                -1000,
-                0,
-              ],
-              // Bonus pour les POI visités
-              ["case", ["get", "isVisited"], 0, 100],
-              // Bonus pour les niveaux de filtrage importants
-              [
-                "case",
-                ["==", ["get", "filterLevel"], "STRICT"],
-                10,
-                ["==", ["get", "filterLevel"], "STANDARD"],
-                20,
-                ["==", ["get", "filterLevel"], "INTERMEDIATE"],
-                30,
-                ["==", ["get", "filterLevel"], "LAXIST"],
-                40,
-                0, // UNKNOWN ou autres
-              ],
-            ],
-          }}
-        />
-        {/* Couche pour les noms des lieux - sans overlap */}
-        <SymbolLayer
-          id="place-names"
-          sourceID={sourceId}
-          sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
-          minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
-          // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
-          style={{
-            textField: ["get", "name"],
-            textFont: ["Open Sans Semibold", "Arial Unicode MS Regular"],
-            textSize: createTextSizeInterpolation(selectedPlace?.id ?? ""),
-            textColor: [
-              "case",
-              // Place sélectionnée - couleur orange
               ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
-              "#f97316", // orange-500 pour assortir avec le cercle
-              // Autres places - couleur normale
-              "#333333",
+              1000,
+              0,
             ],
-            textHaloColor: "#ffffff",
-            textHaloWidth: 1,
-            textAnchor: "top",
-            textOffset: [0, 0.75], // Décalage vers le bas pour éviter le chevauchement avec l'icône
-            textAllowOverlap: false, // Les textes ne se chevauchent pas
-            textIgnorePlacement: false,
-            textOptional: true, // Permet de masquer le texte si pas de place
-            // Priorité d'affichage : le point sélectionné a la priorité maximale
-            symbolSortKey: [
-              "+",
-              // PRIORITÉ MAXIMALE : Point sélectionné (-1000 points)
-              [
-                "case",
-                ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
-                -1000,
-                0,
-              ],
-              // Bonus pour les POI visités
-              [
-                "case",
-                ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
-                0,
-                100,
-              ],
-              // Bonus pour les niveaux de filtrage importants
-              [
-                "case",
-                ["==", ["get", "filterLevel"], "STRICT"],
-                0,
-                ["==", ["get", "filterLevel"], "STANDARD"],
-                10,
-                ["==", ["get", "filterLevel"], "INTERMEDIATE"],
-                20,
-                ["==", ["get", "filterLevel"], "LAXIST"],
-                30,
-                40, // UNKNOWN ou autres
-              ],
+            // Bonus pour les POI visités (+100 points)
+            [
+              "case",
+              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+              100,
+              0,
             ],
-          }}
-        />
-      </>
-    );
-  },
-);
+            // Bonus pour les niveaux de filtrage importants
+            [
+              "case",
+              ["==", ["get", "filterLevel"], "STRICT"],
+              90,
+              ["==", ["get", "filterLevel"], "STANDARD"],
+              80,
+              ["==", ["get", "filterLevel"], "INTERMEDIATE"],
+              70,
+              ["==", ["get", "filterLevel"], "LAXIST"],
+              60,
+              0, // UNKNOWN ou autres
+            ],
+          ],
+        }}
+      />
+      {/* Couche pour les icônes sur tous les points */}
+      <SymbolLayer
+        id={MAP_LAYER_IDS.POI_ICONS}
+        sourceID={sourceId}
+        sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
+        minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
+        // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
+        style={{
+          iconImage: [
+            "case",
+            // Si le POI est visité, afficher checkmark
+            ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+            "checkmark",
+            // Sinon afficher questionMark
+            "questionMark",
+          ],
+          iconAllowOverlap: true,
+          iconSize: createSizeInterpolation(
+            SIZES.iconSize,
+            selectedPlace?.id ?? "",
+          ),
+          // Priorité d'affichage : le point sélectionné a la priorité maximale
+          symbolSortKey: [
+            "+",
+            // PRIORITÉ MAXIMALE : Point sélectionné (-1000 points)
+            [
+              "case",
+              ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
+              -1000,
+              0,
+            ],
+            // Bonus pour les POI visités
+            ["case", ["get", "isVisited"], 0, 100],
+            // Bonus pour les niveaux de filtrage importants
+            [
+              "case",
+              ["==", ["get", "filterLevel"], "STRICT"],
+              10,
+              ["==", ["get", "filterLevel"], "STANDARD"],
+              20,
+              ["==", ["get", "filterLevel"], "INTERMEDIATE"],
+              30,
+              ["==", ["get", "filterLevel"], "LAXIST"],
+              40,
+              0, // UNKNOWN ou autres
+            ],
+          ],
+        }}
+      />
+      {/* Couche pour les noms des lieux - sans overlap */}
+      <SymbolLayer
+        id={MAP_LAYER_IDS.POI_LABELS}
+        sourceID={sourceId}
+        sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
+        minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
+        // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
+        style={{
+          textField: ["get", "name"],
+          textFont: ["Open Sans Semibold", "Arial Unicode MS Regular"],
+          textSize: createTextSizeInterpolation(selectedPlace?.id ?? ""),
+          textColor: [
+            "case",
+            // Place sélectionnée - couleur orange
+            ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
+            "#f97316", // orange-500 pour assortir avec le cercle
+            // Autres places - couleur normale
+            "#333333",
+          ],
+          textHaloColor: "#ffffff",
+          textHaloWidth: 1,
+          textAnchor: "top",
+          textOffset: [0, 0.75], // Décalage vers le bas pour éviter le chevauchement avec l'icône
+          textAllowOverlap: false, // Les textes ne se chevauchent pas
+          textIgnorePlacement: false,
+          textOptional: true, // Permet de masquer le texte si pas de place
+          // Priorité d'affichage : le point sélectionné a la priorité maximale
+          symbolSortKey: [
+            "+",
+            // PRIORITÉ MAXIMALE : Point sélectionné (-1000 points)
+            [
+              "case",
+              ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
+              -1000,
+              0,
+            ],
+            // Bonus pour les POI visités
+            [
+              "case",
+              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+              0,
+              100,
+            ],
+            // Bonus pour les niveaux de filtrage importants
+            [
+              "case",
+              ["==", ["get", "filterLevel"], "STRICT"],
+              0,
+              ["==", ["get", "filterLevel"], "STANDARD"],
+              10,
+              ["==", ["get", "filterLevel"], "INTERMEDIATE"],
+              20,
+              ["==", ["get", "filterLevel"], "LAXIST"],
+              30,
+              40, // UNKNOWN ou autres
+            ],
+          ],
+        }}
+      />
+    </>
+  );
+};
 
 MapPOILayers.displayName = "MapPOILayers";

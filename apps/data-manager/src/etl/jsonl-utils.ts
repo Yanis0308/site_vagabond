@@ -113,13 +113,15 @@ export class JsonlFileReader<T> implements JsonlReader<T> {
 export function generateTransformOutputFiles(
   schema: string,
   countryCode: string,
+  existingDir?: string,
 ): {
   transformDir: string;
-  pois: { filePath: string; batchSize: number };
-  boundaries: { filePath: string; batchSize: number };
-  associations: { filePath: string; batchSize: number };
-  hierarchies: { filePath: string; batchSize: number };
+  pois: { filePath: string };
+  boundaries: { filePath: string };
+  associations: { filePath: string };
+  hierarchies: { filePath: string };
   poisGeoJsonl: { filePath: string };
+  voronoiGeoJsonl: { filePath: string };
   boundariesGeoJsonl: {
     country: { filePath: string };
     region: { filePath: string };
@@ -138,12 +140,28 @@ export function generateTransformOutputFiles(
   };
 } {
   const baseDir = "output";
-  const timestamp = new Date().toISOString().slice(0, 19).replace(/[T:]/g, "-");
-  const transformDir = `${baseDir}/${schema}_${countryCode}_${timestamp}`;
+  let transformDir: string;
 
-  // S'assurer que le dossier de transformation existe
-  if (!fs.existsSync(transformDir)) {
-    fs.mkdirSync(transformDir, { recursive: true });
+  if (existingDir !== undefined && existingDir !== "") {
+    transformDir = existingDir.startsWith("output/")
+      ? existingDir
+      : `output/${existingDir}`;
+
+    if (!fs.existsSync(transformDir)) {
+      throw new Error(`Dossier transform existant non trouvé: ${transformDir}`);
+    }
+  } else {
+    const timestamp = new Date()
+
+      .toISOString()
+      .slice(0, 19)
+      .replace(/[T:]/g, "-");
+    transformDir = `${baseDir}/${schema}_${countryCode}_${timestamp}`;
+
+    // S'assurer que le dossier de transformation existe
+    if (!fs.existsSync(transformDir)) {
+      fs.mkdirSync(transformDir, { recursive: true });
+    }
   }
 
   // Créer les sous-dossiers db et tileset
@@ -161,22 +179,21 @@ export function generateTransformOutputFiles(
     transformDir,
     pois: {
       filePath: `${dbDir}/pois.jsonl`,
-      batchSize: 1000,
     },
     boundaries: {
       filePath: `${dbDir}/boundaries.jsonl`,
-      batchSize: 500, // Plus petit batch à cause des géométries
     },
     associations: {
       filePath: `${dbDir}/associations.jsonl`,
-      batchSize: 1000,
     },
     hierarchies: {
       filePath: `${dbDir}/hierarchies.jsonl`,
-      batchSize: 1000,
     },
     poisGeoJsonl: {
       filePath: `${geojsonDir}/pois.jsonl`,
+    },
+    voronoiGeoJsonl: {
+      filePath: `${geojsonDir}/voronoi-zones.jsonl`,
     },
     boundariesGeoJsonl: {
       country: { filePath: `${geojsonDir}/boundaries-country.jsonl` },

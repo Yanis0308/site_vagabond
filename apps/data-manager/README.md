@@ -50,7 +50,11 @@ Transformation des données PostgreSQL vers fichiers JSONL :
 - ⚠️ le schema comporte des underscore \_ au lieu de tirets -
 
 ```bash
+# Transformation complète (crée un nouveau dossier output)
 pnpm run transform --schema=france_2024_01_15 --country=FR
+
+# Regénérer uniquement les zones Voronoi (réutilise un dossier existant, écrase voronoi-zones.jsonl)
+pnpm run transform --schema=france_2024_01_15 --country=FR --voronoi-only --transform-dir=france_2024_01_15_FR_2025-01-01-12-00-00
 ```
 
 Génère un dossier `output/schema_country_timestamp/` avec sous-dossiers `db/` et `geojson/`.
@@ -100,9 +104,9 @@ pnpm run load-mapbox-pois --transform-dir=france_2024_01_15_2025-01-01-12-00-00
 
 ### ETL
 
-- `pnpm run extract <fichier.pbf>` - Extraction PBF → PostgreSQL
-- `pnpm run transform` - PostgreSQL → JSONL (génère POI et boundaries)
-- `pnpm run load-db` - JSONL → Base de données
+- `pnpm run extract <fichier.pbf>` - Extraction PBF → PostgreSQL data-manager
+- `pnpm run transform` - PostgreSQL data-manager → JSONL (génère POI et boundaries)
+- `pnpm run load-db` - JSONL → PostgreSQL API
 - `pnpm run load-mapbox-boundaries` - JSONL boundaries → Mapbox Tileset
 - `pnpm run load-mapbox-pois` - JSONL POI → Mapbox Tileset
 

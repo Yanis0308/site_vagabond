@@ -7,11 +7,10 @@ import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 
 interface MapDebugInfoProps {
   zoom: number;
-  placesCount: number;
 }
 
 export const MapDebugInfo = memo(
-  ({ zoom, placesCount }: MapDebugInfoProps): ReactElement => {
+  ({ zoom }: MapDebugInfoProps): ReactElement => {
     const safeAreaInsets = useSafeAreaCustom();
 
     return (
@@ -27,9 +26,6 @@ export const MapDebugInfo = memo(
       >
         <CustomText className="text-xs text-white">
           {`Zoom: ${zoom.toFixed(1)}`}
-        </CustomText>
-        <CustomText className="text-xs text-white">
-          {`Lieux: ${placesCount}`}
         </CustomText>
       </View>
     );
