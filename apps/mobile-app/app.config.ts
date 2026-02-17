@@ -195,6 +195,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
       ],
       "react-native-compressor",
+      "./custom.plugin.js",
     ],
     experiments: {
       typedRoutes: true,

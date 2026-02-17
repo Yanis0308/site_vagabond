@@ -7,12 +7,24 @@ settings:
 
 catalogs:
   default:
+    '@eslint/js':
+      specifier: ^9.39.2
+      version: 9.39.2
     '@turf/turf':
       specifier: ^7.2.0
       version: 7.3.4
+    '@types/geojson':
+      specifier: ^7946.0.14
+      version: 7946.0.16
+    '@types/geolib':
+      specifier: ^2.0.3
+      version: 2.0.25
     '@types/node':
       specifier: ^22.9.0
       version: 22.19.11
+    '@types/pg':
+      specifier: ^8.11.11
+      version: 8.16.0
     ajv-errors:
       specifier: ^3.0.0
       version: 3.0.0
@@ -22,15 +34,48 @@ catalogs:
     dayjs:
       specifier: ^1.11.13
       version: 1.11.19
+    dotenv:
+      specifier: ^16.4.5
+      version: 16.6.1
+    drizzle-orm:
+      specifier: ^0.45.0
+      version: 0.45.1
     eslint:
       specifier: ^9.39.2
       version: 9.39.2
     eslint-config-expo:
       specifier: ^10.0.0
       version: 10.0.0
+    eslint-config-next:
+      specifier: ^16.0.0
+      version: 16.1.6
+    eslint-config-prettier:
+      specifier: ^10.1.8
+      version: 10.1.8
     eslint-plugin-i18next:
       specifier: ^6.1.3
       version: 6.1.3
+    eslint-plugin-prettier:
+      specifier: ^5.5.5
+      version: 5.5.5
+    eslint-plugin-react-you-might-not-need-an-effect:
+      specifier: ^0.8.5
+      version: 0.8.5
+    eslint-plugin-simple-import-sort:
+      specifier: ^12.1.1
+      version: 12.1.1
+    eslint-plugin-tailwindcss:
+      specifier: ^3.18.2
+      version: 3.18.2
+    geojson:
+      specifier: ^0.5.0
+      version: 0.5.0
+    geolib:
+      specifier: ^3.3.4
+      version: 3.3.4
+    pg:
+      specifier: ^8.13.1
+      version: 8.18.0
     prettier:
       specifier: ^3.3.3
       version: 3.8.1
@@ -40,6 +85,15 @@ catalogs:
     react-dom:
       specifier: 19.1.0
       version: 19.1.0
+    typebox:
+      specifier: ^1.0.77
+      version: 1.0.81
+    typescript:
+      specifier: ^5.9.2
+      version: 5.9.3
+    typescript-eslint:
+      specifier: ^8.55.0
+      version: 8.55.0
     zod:
       specifier: ^3.23.8
       version: 3.25.76
@@ -188,10 +242,10 @@ importers:
         version: 7.14.1
       '@vagabond/api-utils':
         specifier: workspace:*
-        version: file:libs/api-utils(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(postgres@3.4.8)
+        version: link:../../libs/api-utils
       '@vagabond/database-client':
         specifier: workspace:*
-        version: link:../../libs/database-client
+        version: file:libs/database-client(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0)(postgres@3.4.8)
       '@vagabond/shared-utils':
         specifier: workspace:*
         version: link:../../libs/shared-utils
@@ -282,7 +336,7 @@ importers:
         version: 16.6.1
       drizzle-orm:
         specifier: 'catalog:'
-        version: 0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(pg@8.18.0)(postgres@3.4.8)
+        version: 0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0)(pg@8.18.0)(postgres@3.4.8)
       knex:
         specifier: ^3.1.0
         version: 3.1.0(pg@8.18.0)
@@ -325,7 +379,7 @@ importers:
         version: 6.1.0(typebox@1.0.81)
       '@vagabond/api-utils':
         specifier: workspace:*
-        version: file:libs/api-utils
+        version: link:../../libs/api-utils
       '@vagabond/shared-utils':
         specifier: workspace:*
         version: link:../../libs/shared-utils
@@ -390,6 +444,9 @@ importers:
 
   apps/mobile-app:
     dependencies:
+      '@expo/config-plugins':
+        specifier: ~54.0.4
+        version: 54.0.4
       '@expo/html-elements':
         specifier: ^0.12.5
         version: 0.12.5
@@ -473,7 +530,7 @@ importers:
         version: 7.1.3
       '@vagabond/shared-utils':
         specifier: workspace:*
-        version: file:libs/shared-utils
+        version: link:../../libs/shared-utils
       ajv:
         specifier: ^8.17.1
         version: 8.17.1(patch_hash=a9b5f791cf567c6ae4de8507c7f00f6b31560f90235f98d0048a5e4b2c46d316)
@@ -857,7 +914,7 @@ importers:
         version: link:../shared-utils
       drizzle-orm:
         specifier: ^0.45.0
-        version: 0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(pg@8.18.0)(postgres@3.4.8)
+        version: 0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0)(pg@8.18.0)(postgres@3.4.8)
       pg:
         specifier: ^8.13.1
         version: 8.18.0
@@ -5656,9 +5713,6 @@ packages:
     resolution: {integrity: sha512-TQMCz2pFJMfpNxmSfX1VSfTjwUIFx/mL+p1bnfM1xjjdla7Z+KnGMW/EhFbpckp3LyWAH4PgOsMwOMnIN+MBFg==}
     peerDependencies:
       '@urql/core': ^5.0.0
-
-  '@vagabond/api-utils@file:libs/api-utils':
-    resolution: {directory: libs/api-utils, type: directory}
 
   '@vagabond/database-client@file:libs/database-client':
     resolution: {directory: libs/database-client, type: directory}
@@ -11042,6 +11096,7 @@ packages:
   tar@7.5.7:
     resolution: {integrity: sha512-fov56fJiRuThVFXD6o6/Q354S7pnWMJIVlDBYijsTNx6jKSE4pvrDTs6lUnmGvNyfJwFQQwWy3owKz1ucIhveQ==}
     engines: {node: '>=18'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   tarn@3.0.2:
     resolution: {integrity: sha512-51LAVKUSZSVfI05vjPESNc5vwqqZpbXCsU+/+wxlOrUjk2SnFTt97v9ZgQrD4YmxYW1Px6w2KjaDitCfkvgxMQ==}
@@ -18909,158 +18964,6 @@ snapshots:
       '@urql/core': 5.2.0
       wonka: 6.3.5
 
-  '@vagabond/api-utils@file:libs/api-utils':
-    dependencies:
-      '@fastify/compress': 8.3.1
-      '@fastify/sensible': 6.0.4
-      '@vagabond/database-client': file:libs/database-client
-      '@vagabond/shared-utils': file:libs/shared-utils
-      fastify: 5.7.4(patch_hash=73cf5bf49e4f95e5e0234d8b8ecdf88338d7b9f8bfbfed8e66361be14b19e1ae)
-      fastify-plugin: 5.1.0
-      zod: 3.25.76
-    transitivePeerDependencies:
-      - '@aws-sdk/client-rds-data'
-      - '@cloudflare/workers-types'
-      - '@electric-sql/pglite'
-      - '@libsql/client'
-      - '@libsql/client-wasm'
-      - '@neondatabase/serverless'
-      - '@op-engineering/op-sqlite'
-      - '@opentelemetry/api'
-      - '@planetscale/database'
-      - '@prisma/client'
-      - '@tidbcloud/serverless'
-      - '@types/better-sqlite3'
-      - '@types/pg'
-      - '@types/sql.js'
-      - '@upstash/redis'
-      - '@vercel/postgres'
-      - '@xata.io/client'
-      - better-sqlite3
-      - bun-types
-      - expo-sqlite
-      - gel
-      - knex
-      - kysely
-      - mysql2
-      - pg-native
-      - postgres
-      - prisma
-      - sql.js
-      - sqlite3
-
-  '@vagabond/api-utils@file:libs/api-utils(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(postgres@3.4.8)':
-    dependencies:
-      '@fastify/compress': 8.3.1
-      '@fastify/sensible': 6.0.4
-      '@vagabond/database-client': file:libs/database-client(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(postgres@3.4.8)
-      '@vagabond/shared-utils': file:libs/shared-utils
-      fastify: 5.7.4(patch_hash=73cf5bf49e4f95e5e0234d8b8ecdf88338d7b9f8bfbfed8e66361be14b19e1ae)
-      fastify-plugin: 5.1.0
-      zod: 3.25.76
-    transitivePeerDependencies:
-      - '@aws-sdk/client-rds-data'
-      - '@cloudflare/workers-types'
-      - '@electric-sql/pglite'
-      - '@libsql/client'
-      - '@libsql/client-wasm'
-      - '@neondatabase/serverless'
-      - '@op-engineering/op-sqlite'
-      - '@opentelemetry/api'
-      - '@planetscale/database'
-      - '@prisma/client'
-      - '@tidbcloud/serverless'
-      - '@types/better-sqlite3'
-      - '@types/pg'
-      - '@types/sql.js'
-      - '@upstash/redis'
-      - '@vercel/postgres'
-      - '@xata.io/client'
-      - better-sqlite3
-      - bun-types
-      - expo-sqlite
-      - gel
-      - knex
-      - kysely
-      - mysql2
-      - pg-native
-      - postgres
-      - prisma
-      - sql.js
-      - sqlite3
-
-  '@vagabond/database-client@file:libs/database-client':
-    dependencies:
-      '@vagabond/shared-utils': file:libs/shared-utils
-      drizzle-orm: 0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0)(pg@8.18.0)(postgres@3.4.8)
-      pg: 8.18.0
-    transitivePeerDependencies:
-      - '@aws-sdk/client-rds-data'
-      - '@cloudflare/workers-types'
-      - '@electric-sql/pglite'
-      - '@libsql/client'
-      - '@libsql/client-wasm'
-      - '@neondatabase/serverless'
-      - '@op-engineering/op-sqlite'
-      - '@opentelemetry/api'
-      - '@planetscale/database'
-      - '@prisma/client'
-      - '@tidbcloud/serverless'
-      - '@types/better-sqlite3'
-      - '@types/pg'
-      - '@types/sql.js'
-      - '@upstash/redis'
-      - '@vercel/postgres'
-      - '@xata.io/client'
-      - better-sqlite3
-      - bun-types
-      - expo-sqlite
-      - gel
-      - knex
-      - kysely
-      - mysql2
-      - pg-native
-      - postgres
-      - prisma
-      - sql.js
-      - sqlite3
-
-  '@vagabond/database-client@file:libs/database-client(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(postgres@3.4.8)':
-    dependencies:
-      '@vagabond/shared-utils': file:libs/shared-utils
-      drizzle-orm: 0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(pg@8.18.0)(postgres@3.4.8)
-      pg: 8.18.0
-    transitivePeerDependencies:
-      - '@aws-sdk/client-rds-data'
-      - '@cloudflare/workers-types'
-      - '@electric-sql/pglite'
-      - '@libsql/client'
-      - '@libsql/client-wasm'
-      - '@neondatabase/serverless'
-      - '@op-engineering/op-sqlite'
-      - '@opentelemetry/api'
-      - '@planetscale/database'
-      - '@prisma/client'
-      - '@tidbcloud/serverless'
-      - '@types/better-sqlite3'
-      - '@types/pg'
-      - '@types/sql.js'
-      - '@upstash/redis'
-      - '@vercel/postgres'
-      - '@xata.io/client'
-      - better-sqlite3
-      - bun-types
-      - expo-sqlite
-      - gel
-      - knex
-      - kysely
-      - mysql2
-      - pg-native
-      - postgres
-      - prisma
-      - sql.js
-      - sqlite3
-
   '@vagabond/database-client@file:libs/database-client(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0)(postgres@3.4.8)':
     dependencies:
       '@vagabond/shared-utils': file:libs/shared-utils
@@ -20214,14 +20117,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(pg@8.18.0)(postgres@3.4.8):
-    optionalDependencies:
-      '@opentelemetry/api': 1.9.0
-      '@types/pg': 8.16.0
-      knex: 3.1.0(pg@8.18.0)
-      pg: 8.18.0
-      postgres: 3.4.8
-
   drizzle-orm@0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0)(pg@8.18.0)(postgres@3.4.8):
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
@@ -20552,7 +20447,7 @@ snapshots:
       '@next/eslint-plugin-next': 16.1.6
       eslint: 9.39.2(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.2(jiti@2.4.2))
       eslint-plugin-react: 7.37.5(eslint@9.39.2(jiti@2.4.2))
@@ -20579,6 +20474,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2)):
+    dependencies:
+      '@nolyfill/is-core-module': 1.0.39
+      debug: 4.4.3
+      eslint: 9.39.2(jiti@2.4.2)
+      get-tsconfig: 4.13.6
+      is-bun-module: 2.0.0
+      stable-hash: 0.0.5
+      tinyglobby: 0.2.15
+      unrs-resolver: 1.11.1
+    optionalDependencies:
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.4.2))
+    transitivePeerDependencies:
+      - supports-color
+
   eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@1.21.7)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
@@ -20594,21 +20504,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.4.2)):
-    dependencies:
-      '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.3
-      eslint: 9.39.2(jiti@2.4.2)
-      get-tsconfig: 4.13.6
-      is-bun-module: 2.0.0
-      stable-hash: 0.0.5
-      tinyglobby: 0.2.15
-      unrs-resolver: 1.11.1
-    optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.4.2))
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-module-utils@2.12.1(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@1.21.7))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@1.21.7)):
     dependencies:
       debug: 3.2.7
@@ -20620,14 +20515,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.4.2)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3)
       eslint: 9.39.2(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -20689,7 +20584,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.2(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.2(jiti@2.4.2))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2)))(eslint@9.39.2(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3

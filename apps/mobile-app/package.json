@@ -38,6 +38,7 @@
     "create-update-prd": "dotenvx run -f .env.prd -- zx create-update.mjs --environment production --message"
   },
   "dependencies": {
+    "@expo/config-plugins": "~54.0.4",
     "@expo/html-elements": "^0.12.5",
     "@expo/vector-icons": "^15.0.3",
     "@gluestack-ui/core": "^3.0.10",
