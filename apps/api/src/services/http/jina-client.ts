@@ -106,7 +106,7 @@ export async function searchWithJina(
     const result = rawResult;
 
     // Transform Jina API response to JinaScrapeResponse format
-    const success = result.code === 200 && result.status === 20000;
+    const success = result.code === 200 && result.status === 200;
 
     if (!success) {
       const errorResponse: ScrapingErrorResponse = {

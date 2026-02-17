@@ -53,7 +53,7 @@ export const JinaDataItemSchema = Type.Object(
 export const JinaApiResponseSchema = Type.Object(
   {
     code: Type.Number({ examples: [200] }),
-    status: Type.Number({ examples: [20000] }),
+    status: Type.Number({ examples: [200] }),
     data: Type.Optional(Type.Array(JinaDataItemSchema)),
     meta: Type.Optional(
       Type.Object({
