@@ -11,6 +11,13 @@ export interface UserInfo {
   lastLogin: Date;
 }
 
+export interface PublicUserInfo {
+  id: string;
+  email: string | null;
+  fullName: string | null;
+  createdAt: Date;
+}
+
 export type DbUser = typeof users.$inferSelect;
 
 type LeaderboardResult = Array<{
@@ -171,5 +178,23 @@ export class UserRepository {
       // Re-throw any other errors
       throw error;
     }
+  }
+
+  async getPublicUserInfo(userId: string): Promise<PublicUserInfo | null> {
+    const retrievedUser = await this.db.query.users.findFirst({
+      where: eq(users.userId, userId),
+      columns: { userId: true, email: true, fullName: true, createdAt: true },
+    });
+
+    if (retrievedUser === undefined) {
+      return null;
+    }
+
+    return {
+      id: retrievedUser.userId,
+      email: retrievedUser.email,
+      fullName: retrievedUser.fullName,
+      createdAt: retrievedUser.createdAt,
+    };
   }
 }

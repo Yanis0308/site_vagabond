@@ -20,3 +20,18 @@ export const UsersMeResponseSchema = ApiResponseSchema(
   UserMeSchema,
   "UsersMeResponse",
 );
+
+export const UserPublicInfoSchema = Type.Object(
+  {
+    id: Type.String(),
+    email: Nullable(Type.String()),
+    fullName: Nullable(Type.String()),
+    createdAt: DateSchema,
+  },
+  { $id: "UserPublicInfo" },
+);
+
+export const UserPublicInfoResponseSchema = ApiResponseSchema(
+  UserPublicInfoSchema,
+  "UserPublicInfoResponse",
+);

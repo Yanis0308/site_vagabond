@@ -2,10 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
 import { getUserZoneStats } from "@/http/zones";
-import { logger } from "@/utils/logger";
 import { type BriefVisitedPoiType, type ZoneUserStatType } from "@/utils/types";
 
-export const useUserZoneStats = (): {
+interface UseUserZoneStatsReturn {
   data:
     | {
         zonesStats: ZoneUserStatType[];
@@ -16,12 +15,13 @@ export const useUserZoneStats = (): {
   isFetching: boolean;
   isLoading: boolean;
   error: unknown;
-} => {
+}
+
+export const useUserZoneStats = (userId?: string): UseUserZoneStatsReturn => {
   const queryResult = useQuery({
-    queryKey: ["user-zone-stats"],
+    queryKey: ["user-zone-stats", userId ?? "me"],
     queryFn: async () => {
-      logger("fetching all zones");
-      return await getUserZoneStats();
+      return await getUserZoneStats(userId);
     },
   });
 

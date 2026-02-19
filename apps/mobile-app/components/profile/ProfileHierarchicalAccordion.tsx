@@ -18,6 +18,7 @@ import type {
 
 interface ProfileHierarchicalAccordionProps {
   countries: CountryType[];
+  allowVisitedPoiNavigation: boolean;
 }
 
 // Types pour les items plats
@@ -195,6 +196,7 @@ const FlatItemRenderer = memo(
     toggleRegion,
     toggleDepartement,
     toggleCity,
+    allowVisitedPoiNavigation,
   }: {
     item: FlatItem;
     expandedRegions: Set<string>;
@@ -203,6 +205,7 @@ const FlatItemRenderer = memo(
     toggleRegion: (id: string) => void;
     toggleDepartement: (id: string) => void;
     toggleCity: (id: string) => void;
+    allowVisitedPoiNavigation: boolean;
   }): ReactElement => {
     // Create callbacks before switch to avoid hook rule violations
     const regionToggle = useCallback(() => {
@@ -251,7 +254,10 @@ const FlatItemRenderer = memo(
       case "poi":
         return (
           <Box className="pl-6">
-            <ProfilePoiItem poi={item.data} />
+            <ProfilePoiItem
+              poi={item.data}
+              allowNavigation={allowVisitedPoiNavigation}
+            />
           </Box>
         );
       default:
@@ -263,7 +269,10 @@ const FlatItemRenderer = memo(
 FlatItemRenderer.displayName = "FlatItemRenderer";
 
 export const ProfileHierarchicalAccordion = memo(
-  ({ countries }: ProfileHierarchicalAccordionProps): ReactElement => {
+  ({
+    countries,
+    allowVisitedPoiNavigation,
+  }: ProfileHierarchicalAccordionProps): ReactElement => {
     // Initialize all cities as expanded by default
     const defaultExpandedCities = useMemo(() => {
       const citiesSet = new Set<string>();
@@ -351,6 +360,7 @@ export const ProfileHierarchicalAccordion = memo(
           toggleRegion={toggleRegion}
           toggleDepartement={toggleDepartement}
           toggleCity={toggleCity}
+          allowVisitedPoiNavigation={allowVisitedPoiNavigation}
         />
       ),
       [
@@ -360,6 +370,7 @@ export const ProfileHierarchicalAccordion = memo(
         toggleRegion,
         toggleDepartement,
         toggleCity,
+        allowVisitedPoiNavigation,
       ],
     );
 

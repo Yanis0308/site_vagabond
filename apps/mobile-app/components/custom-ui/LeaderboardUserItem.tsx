@@ -1,6 +1,8 @@
 import { getUserDisplayName } from "@vagabond/shared-utils";
+import { router } from "expo-router";
 import React, { memo, type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
+import { Pressable } from "react-native";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
@@ -47,55 +49,61 @@ export const LeaderboardUserItem = memo(
       return null;
     };
 
+    const handlePress = (): void => {
+      router.push(`/user/${user.userId}`);
+    };
+
     const rankEmoji = getRankEmoji(user.rank);
     const isWinner = rankEmoji !== null;
 
     return (
-      <Box
-        className={`rounded-lg border bg-white p-2 shadow-sm ${
-          isCurrentUser
-            ? "border-2 border-primary-500 bg-primary-50"
-            : "border-gray-200"
-        }`}
-      >
-        <HStack className="items-center gap-2">
-          {/* Rank */}
-          <Box className="w-10 items-center">
-            <CustomText
-              className={`font-bold ${getRankColor(user.rank)} ${
-                isWinner ? "text-4xl" : "text-xl"
-              }`}
-            >
-              {rankEmoji ?? `#${user.rank}`}
-            </CustomText>
-          </Box>
-
-          {/* Avatar */}
-          <Avatar size="sm" className="bg-primary-200">
-            <AvatarFallbackText>{displayName}</AvatarFallbackText>
-          </Avatar>
-
-          {/* User Info */}
-          <VStack className="flex-1 gap-0.5">
-            <CustomText className="text-sm font-semibold text-gray-900">
-              {displayName}
-            </CustomText>
-            <CustomText className="text-xs text-gray-600">
-              {`${user.visitedPoisCount} ${user.visitedPoisCount > 1 ? "lieux visités" : "lieu visité"}`}
-            </CustomText>
-            <VStack className="gap-0">
-              <CustomText className="text-xs text-gray-500">
-                {`Inscrit le ${registrationDate}`}
+      <Pressable onPress={handlePress}>
+        <Box
+          className={`rounded-lg border bg-white p-2 shadow-sm ${
+            isCurrentUser
+              ? "border-2 border-primary-500 bg-primary-50"
+              : "border-gray-200"
+          }`}
+        >
+          <HStack className="items-center gap-2">
+            {/* Rank */}
+            <Box className="w-10 items-center">
+              <CustomText
+                className={`font-bold ${getRankColor(user.rank)} ${
+                  isWinner ? "text-4xl" : "text-xl"
+                }`}
+              >
+                {rankEmoji ?? `#${user.rank}`}
               </CustomText>
-              {lastVisitedPoiDate !== null && (
+            </Box>
+
+            {/* Avatar */}
+            <Avatar size="sm" className="bg-primary-200">
+              <AvatarFallbackText>{displayName}</AvatarFallbackText>
+            </Avatar>
+
+            {/* User Info */}
+            <VStack className="flex-1 gap-0.5">
+              <CustomText className="text-sm font-semibold text-gray-900">
+                {displayName}
+              </CustomText>
+              <CustomText className="text-xs text-gray-600">
+                {`${user.visitedPoisCount} ${user.visitedPoisCount > 1 ? "lieux visités" : "lieu visité"}`}
+              </CustomText>
+              <VStack className="gap-0">
                 <CustomText className="text-xs text-gray-500">
-                  {`Dernier lieu visité le ${lastVisitedPoiDate}`}
+                  {`Inscrit le ${registrationDate}`}
                 </CustomText>
-              )}
+                {lastVisitedPoiDate !== null && (
+                  <CustomText className="text-xs text-gray-500">
+                    {`Dernier lieu visité le ${lastVisitedPoiDate}`}
+                  </CustomText>
+                )}
+              </VStack>
             </VStack>
-          </VStack>
-        </HStack>
-      </Box>
+          </HStack>
+        </Box>
+      </Pressable>
     );
   },
 );

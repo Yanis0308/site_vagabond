@@ -13,10 +13,11 @@ import type { BriefVisitedPoiType, PoiType } from "@/utils/types";
 
 interface ProfilePoiItemProps {
   poi: BriefVisitedPoiType;
+  allowNavigation: boolean;
 }
 
 export const ProfilePoiItem = memo(
-  ({ poi }: ProfilePoiItemProps): ReactElement => {
+  ({ poi, allowNavigation }: ProfilePoiItemProps): ReactElement => {
     const { setSelectedPlace } = usePlaceSelection();
     const visitDate = new Date(poi.createdAt).toLocaleDateString("fr-FR", {
       day: "2-digit",
@@ -25,6 +26,9 @@ export const ProfilePoiItem = memo(
     });
 
     const handlePress = (): void => {
+      if (!allowNavigation) {
+        return;
+      }
       const poiData: PoiType = {
         id: poi.poiId,
         name: poi.name ?? "",

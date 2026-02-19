@@ -19,6 +19,12 @@ export default function RootLayout(): ReactElement | null {
           animation: "fade",
         }}
       />
+      <Stack.Screen
+        name="user/[userId]"
+        options={{
+          animation: "fade",
+        }}
+      />
     </Stack>
   );
 }

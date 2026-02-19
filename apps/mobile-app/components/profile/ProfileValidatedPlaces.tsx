@@ -9,10 +9,14 @@ import type { CountryType } from "./utils";
 
 interface ProfileValidatedPlacesProps {
   countries: CountryType[];
+  allowVisitedPoiNavigation: boolean;
 }
 
 export const ProfileValidatedPlaces = memo(
-  ({ countries }: ProfileValidatedPlacesProps): ReactElement => {
+  ({
+    countries,
+    allowVisitedPoiNavigation,
+  }: ProfileValidatedPlacesProps): ReactElement => {
     const { t } = useTranslation("common");
 
     return (
@@ -28,7 +32,10 @@ export const ProfileValidatedPlaces = memo(
             </CustomText>
           </Box>
         ) : (
-          <ProfileHierarchicalAccordion countries={countries} />
+          <ProfileHierarchicalAccordion
+            countries={countries}
+            allowVisitedPoiNavigation={allowVisitedPoiNavigation}
+          />
         )}
       </Box>
     );
