@@ -27,12 +27,21 @@ M.pois = osm2pgsql.define_table({
     type = "int",
     not_null = true,
   }, {
+    column = "main_category",
+    type = "text",
+    not_null = true,
+  }, {
+    column = "categories",
+    type = "jsonb",
+    not_null = true,
+  }, {
     column = "geom",
     type = "point",
     not_null = true,
   }, {
     column = "tags",
     type = "jsonb",
+    not_null = true,
   } },
 })
 

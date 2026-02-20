@@ -1,7 +1,15 @@
 import * as turf from "@turf/turf";
 import { logger } from "@vagabond/shared-utils";
 import { Delaunay } from "d3-delaunay";
-import { type Feature, type MultiPolygon, type Polygon } from "geojson";
+import {
+  type Feature,
+  type MultiPolygon,
+  type Polygon,
+  type Position,
+} from "geojson";
+import * as martinez from "martinez-polygon-clipping";
+import { cpus } from "os";
+import pLimit from "p-limit";
 
 import { getDbId, getSourceId } from "../id-utils";
 import { JsonlFileReader, JsonlFileWriter } from "../jsonl-utils";
@@ -117,7 +125,7 @@ function extractPolygons(
   }
 
   // MultiPolygon → split into individual Polygons
-  return feature.geometry.coordinates.map((coords) => ({
+  return feature.geometry.coordinates.map((coords: Position[][]) => ({
     type: "Feature" as const,
     properties: feature.properties,
     geometry: {
@@ -125,6 +133,243 @@ function extractPolygons(
       coordinates: coords,
     },
   }));
+}
+
+/** Martinez polygon coordinates: Polygon = [ring], MultiPolygon = [poly1, poly2, ...] */
+type MartinezCoords = number[][][] | number[][][][];
+
+/**
+ * Clip a Voronoi cell polygon to a boundary using martinez (faster than turf/JSTS).
+ * Returns array of Polygon geometries, or empty if no intersection.
+ */
+function clipPolygonToBoundary(
+  voronoiCoords: number[][][],
+  boundaryCoords: MartinezCoords,
+): Array<Polygon["coordinates"]> {
+  try {
+    // Martinez expects Geometry (Polygon | MultiPolygon); number[][][] is compatible but TS infers number[]
+    const result = martinez.intersection(
+      voronoiCoords as Parameters<typeof martinez.intersection>[0],
+      boundaryCoords as Parameters<typeof martinez.intersection>[1],
+    );
+    if (result === null || result.length === 0) return [];
+
+    const polygons: Array<Polygon["coordinates"]> = [];
+    // Martinez returns Polygon [ring1, ring2, ...] or MultiPolygon [[poly1], [poly2], ...]
+    // Detect Polygon: result[0][0][0] is number (Position); MultiPolygon: result[0][0][0] is number[] (Ring)
+    const first = result[0]?.[0]?.[0];
+    const isPolygon = typeof first === "number";
+
+    if (isPolygon) {
+      polygons.push(result as Polygon["coordinates"]);
+    } else {
+      for (const poly of result as number[][][][]) {
+        if (poly.length > 0 && poly[0] !== undefined && poly[0].length >= 3) {
+          polygons.push(poly as Polygon["coordinates"]);
+        }
+      }
+    }
+    return polygons;
+  } catch (error) {
+    logger.error("Failed to clip Voronoi polygon to boundary", {
+      error,
+      voronoiRings: voronoiCoords.length,
+    });
+    return [];
+  }
+}
+
+/**
+ * Get boundary coordinates in martinez format (pre-computed once per city).
+ * Martinez handles both Polygon and MultiPolygon natively; we pass coordinates as-is.
+ */
+function getBoundaryMartinezCoords(
+  feature: Feature<Polygon | MultiPolygon>,
+): MartinezCoords {
+  return feature.geometry.coordinates;
+}
+
+// --- City processing (for parallel execution) ---
+
+const PARALLEL_LIMIT = Math.max(1, cpus().length - 1);
+
+interface ProcessCityResult {
+  zones: VoronoiZoneFeature[];
+  processed: boolean;
+}
+
+/**
+ * Process a single city: compute Voronoi diagram, clip to boundary, return zones.
+ * Used for parallel execution across cities.
+ */
+async function processCityVoronoi(
+  cityId: string,
+  cityFeature: CityPolygonFeature,
+  poisById: Map<string, PoiInfo>,
+  poiIdsInCity: Set<string>,
+): Promise<ProcessCityResult> {
+  const cityPois: PoiInfo[] = [];
+  for (const poiId of poiIdsInCity) {
+    const poi = poisById.get(poiId);
+    if (poi !== undefined) {
+      cityPois.push(poi);
+    }
+  }
+
+  if (cityPois.length === 0) {
+    return await Promise.resolve({ zones: [], processed: false });
+  }
+
+  const dedupResult = deduplicateNearbyPois(cityPois);
+  const dedupPois = dedupResult.pois;
+  const mergedClusters = dedupResult.mergedClusters;
+  if (mergedClusters.length > 0) {
+    let totalRemoved = 0;
+    for (const c of mergedClusters) {
+      totalRemoved += c.removed.length;
+    }
+    logger.info(
+      `[Voronoi] City ${cityId}: ${totalRemoved} POI(s) merged in ${mergedClusters.length} cluster(s)`,
+    );
+    for (const cluster of mergedClusters) {
+      const removedIds = cluster.removed.join(", ");
+      logger.info(
+        "[Voronoi]   kept " + cluster.kept + ", removed [" + removedIds + "]",
+      );
+    }
+  }
+
+  const points = dedupPois.map(
+    (p) => [p.longitude, p.latitude] as [number, number],
+  );
+  const cityBoundary: Feature<Polygon | MultiPolygon> = cityFeature;
+
+  const rawBbox = turf.bbox(cityBoundary) as [number, number, number, number];
+  const padLon = Math.max(1e-4, (rawBbox[2] - rawBbox[0]) * 0.01);
+  const padLat = Math.max(1e-4, (rawBbox[3] - rawBbox[1]) * 0.01);
+  const bbox: [number, number, number, number] = [
+    rawBbox[0] - padLon,
+    rawBbox[1] - padLat,
+    rawBbox[2] + padLon,
+    rawBbox[3] + padLat,
+  ];
+
+  const zones: VoronoiZoneFeature[] = [];
+
+  if (dedupPois.length === 1) {
+    const poi = dedupPois[0];
+    if (poi === undefined) {
+      return await Promise.resolve({ zones: [], processed: false });
+    }
+    const polygons = extractPolygons(cityBoundary);
+    for (const polygon of polygons) {
+      zones.push({
+        type: "Feature",
+        properties: {
+          poiId: poi.id,
+          cityId,
+          cityName: cityFeature.properties.name,
+        },
+        geometry: polygon.geometry,
+      });
+    }
+    return await Promise.resolve({ zones, processed: true });
+  }
+
+  let voronoiFeatures: Array<{ feature: Feature<Polygon>; poiIndex: number }>;
+  try {
+    const delaunay = Delaunay.from(points);
+    const voronoi = delaunay.voronoi(bbox);
+    voronoiFeatures = [];
+    for (let i = 0; i < dedupPois.length; i++) {
+      const cell = voronoi.cellPolygon(i) as
+        | Iterable<[number, number]>
+        | null
+        | undefined;
+      if (cell === null || cell === undefined) {
+        logger.warn(
+          `[Voronoi] Cellule dégénérée pour POI ${dedupPois[i]?.id} (index ${i}) dans city ${cityId}`,
+        );
+        continue;
+      }
+      const coords = Array.from(cell);
+      if (coords.length < 3) {
+        logger.warn(
+          `[Voronoi] Cellule <3 points pour POI ${dedupPois[i]?.id} (index ${i}) dans city ${cityId}`,
+        );
+        continue;
+      }
+      const first = coords[0];
+      const last = coords[coords.length - 1];
+      if (
+        first !== undefined &&
+        last !== undefined &&
+        (first[0] !== last[0] || first[1] !== last[1])
+      ) {
+        coords.push(first);
+      }
+      voronoiFeatures.push({
+        feature: {
+          type: "Feature",
+          properties: {},
+          geometry: { type: "Polygon", coordinates: [coords] },
+        } as Feature<Polygon>,
+        poiIndex: i,
+      });
+    }
+  } catch (error) {
+    logger.warn(
+      `[Voronoi] Erreur Voronoi pour city ${cityId} (${dedupPois.length} POIs): ${String(error)}`,
+    );
+    logger.error(error);
+    return await Promise.resolve({ zones: [], processed: false });
+  }
+
+  if (voronoiFeatures.length === 0) {
+    return await Promise.resolve({ zones: [], processed: false });
+  }
+
+  // Pre-compute boundary coords in martinez format (once per city)
+  const boundaryCoords = getBoundaryMartinezCoords(cityBoundary);
+  const cityName = cityFeature.properties.name;
+
+  const clipResults = voronoiFeatures.map(
+    ({ feature: voronoiCell, poiIndex }): VoronoiZoneFeature[] => {
+      const correspondingPoi = dedupPois[poiIndex];
+      if (correspondingPoi === undefined) return [];
+
+      const voronoiCoords = voronoiCell.geometry.coordinates;
+      const clippedPolygons = clipPolygonToBoundary(
+        voronoiCoords,
+        boundaryCoords,
+      );
+
+      if (clippedPolygons.length === 0) {
+        logger.warn(
+          `[Voronoi] Intersection nulle pour POI ${correspondingPoi.id} dans city ${cityId}`,
+        );
+        return [];
+      }
+
+      return clippedPolygons.map((geomCoords) => ({
+        type: "Feature" as const,
+        properties: {
+          poiId: correspondingPoi.id,
+          cityId,
+          cityName,
+        },
+        geometry: {
+          type: "Polygon" as const,
+          coordinates: geomCoords,
+        },
+      }));
+    },
+  );
+  for (const zoneBatch of clipResults) {
+    zones.push(...zoneBatch);
+  }
+
+  return { zones, processed: true };
 }
 
 // --- Main function ---
@@ -217,215 +462,63 @@ export async function generateVoronoiZones(
   logger.info(`[Voronoi] ${cityPolygonsMap.size} polygones city chargés`);
 
   // ------------------------------------------------------------------
-  // Step 4 – For each city, compute Voronoi & clip
+  // Step 4 – Process cities in parallel, write zones incrementally
   // ------------------------------------------------------------------
-  logger.info("[Voronoi] Calcul des diagrammes Voronoi par ville...");
+  logger.info(
+    "[Voronoi] Calcul des diagrammes Voronoi par ville (parallèle, écriture incrémentale)...",
+  );
 
+  const citiesToProcess: Array<{
+    cityId: string;
+    cityFeature: CityPolygonFeature;
+    poiIdsInCity: Set<string>;
+  }> = [];
+  for (const [cityId, poiIdsInCity] of poisPerBoundary.entries()) {
+    if (poiIdsInCity.size === 0) continue;
+    const cityFeature = cityPolygonsMap.get(cityId);
+    if (cityFeature === undefined) continue;
+    citiesToProcess.push({ cityId, cityFeature, poiIdsInCity });
+  }
+
+  const totalCities = citiesToProcess.length;
+  const progress = { completed: 0 };
+  const limit = pLimit(PARALLEL_LIMIT);
   const writer = new JsonlFileWriter<VoronoiZoneFeature>(outputVoronoiPath);
-  let totalZones = 0;
+  const BATCH_SIZE = 100; // Process N cities, write their zones, then next batch (avoids OOM)
+
   let citiesProcessed = 0;
   let citiesSkipped = 0;
+  let totalZones = 0;
 
-  for (const [cityId, cityFeature] of cityPolygonsMap.entries()) {
-    const poiIdsInCity = poisPerBoundary.get(cityId);
-    if (poiIdsInCity === undefined || poiIdsInCity.size === 0) {
-      citiesSkipped++;
-      continue;
-    }
-
-    // Collect POI points for this city
-    const cityPois: PoiInfo[] = [];
-    for (const poiId of poiIdsInCity) {
-      const poi = poisById.get(poiId);
-      if (poi !== undefined) {
-        cityPois.push(poi);
-      }
-    }
-
-    if (cityPois.length === 0) {
-      citiesSkipped++;
-      continue;
-    }
-
-    // Deduplicate POIs that are within 5 m of each other (e.g. same monument
-    // imported as both an OSM Node and an OSM Relation). Keeps the POI with
-    // the most tags (then best filter_level) as cluster representative.
-    const dedupResult = deduplicateNearbyPois(cityPois);
-    const dedupPois = dedupResult.pois;
-    const mergedClusters = dedupResult.mergedClusters;
-    if (mergedClusters.length > 0) {
-      let totalRemoved = 0;
-      for (const c of mergedClusters) {
-        totalRemoved += c.removed.length;
-      }
-      logger.info(
-        `[Voronoi] City ${cityId}: ${totalRemoved} POI(s) merged in ${mergedClusters.length} cluster(s)`,
-      );
-      for (const cluster of mergedClusters) {
-        const removedIds = cluster.removed.join(", ");
-        logger.info(
-          "[Voronoi]   kept " + cluster.kept + ", removed [" + removedIds + "]",
-        );
-      }
-    }
-
-    // Points as [lon, lat] for d3-delaunay (x=lon, y=lat).
-    const points = dedupPois.map(
-      (p) => [p.longitude, p.latitude] as [number, number],
+  for (let i = 0; i < citiesToProcess.length; i += BATCH_SIZE) {
+    const cityBatch = citiesToProcess.slice(i, i + BATCH_SIZE);
+    const results: ProcessCityResult[] = await Promise.all(
+      cityBatch.map(({ cityId, cityFeature, poiIdsInCity }) =>
+        limit(async () => {
+          const cityStart = Date.now();
+          const result = await processCityVoronoi(
+            cityId,
+            cityFeature,
+            poisById,
+            poiIdsInCity,
+          );
+          progress.completed += 1;
+          const cityDuration = ((Date.now() - cityStart) / 1000).toFixed(2);
+          const cityName = cityFeature.properties.name ?? cityId;
+          logger.info(
+            `[Voronoi] [${progress.completed}/${totalCities}] ${cityName} (${cityId}): ${cityDuration}s, ${result.zones.length} zones`,
+          );
+          return result;
+        }),
+      ),
     );
 
-    // City boundary for clipping
-    const cityBoundary: Feature<Polygon | MultiPolygon> = cityFeature;
+    citiesProcessed += results.filter((r) => r.processed).length;
+    citiesSkipped += results.filter((r) => !r.processed).length;
 
-    // Bounding box [xmin, ymin, xmax, ymax] for Voronoi extent
-    const rawBbox = turf.bbox(cityBoundary) as [number, number, number, number];
-    const padLon = Math.max(1e-4, (rawBbox[2] - rawBbox[0]) * 0.01);
-    const padLat = Math.max(1e-4, (rawBbox[3] - rawBbox[1]) * 0.01);
-    const bbox: [number, number, number, number] = [
-      rawBbox[0] - padLon,
-      rawBbox[1] - padLat,
-      rawBbox[2] + padLon,
-      rawBbox[3] + padLat,
-    ];
-
-    // If only 1 POI in the city, the zone covers the entire city polygon
-    if (dedupPois.length === 1) {
-      const poi = dedupPois[0];
-      if (poi === undefined) {
-        citiesSkipped++;
-        continue;
-      }
-      const polygons = extractPolygons(cityBoundary);
-      for (const polygon of polygons) {
-        const voronoiFeature: VoronoiZoneFeature = {
-          type: "Feature",
-          properties: {
-            poiId: poi.id,
-            cityId,
-            cityName: cityFeature.properties.name,
-          },
-          geometry: polygon.geometry,
-        };
-        await writer.write(voronoiFeature);
-        totalZones++;
-      }
-      citiesProcessed++;
-      continue;
-    }
-
-    // Compute Voronoi diagram using d3-delaunay (not turf.voronoi).
-    // turf.voronoi relies on deprecated d3-voronoi which crashes on collinear/cocircular
-    // points ("Cannot read properties of null" in clipCells). d3-delaunay is the modern
-    // replacement: numerically robust, handles edge cases, and is the most performant
-    // Voronoi library in JavaScript (5–10× faster than d3-voronoi).
-    /** Cell polygon + index of the POI it belongs to (index can differ when cells are skipped) */
-    let voronoiFeatures: Array<{ feature: Feature<Polygon>; poiIndex: number }>;
-    try {
-      const delaunay = Delaunay.from(points);
-      const voronoi = delaunay.voronoi(bbox);
-      voronoiFeatures = [];
-      for (let i = 0; i < dedupPois.length; i++) {
-        // Les types de d3-delaunay indiquent que cellPolygon() ne renvoie jamais null,
-        // mais en pratique il renvoie null pour les cellules dégénérées (points dupliqués, etc.).
-        // On corrige le typage pour permettre null/undefined et éviter une erreur à l'exécution.
-        const cell = voronoi.cellPolygon(i) as
-          | Iterable<[number, number]>
-          | null
-          | undefined;
-        if (cell === null || cell === undefined) {
-          logger.warn(
-            `[Voronoi] Cellule dégénérée pour POI ${dedupPois[i]?.id} (index ${i}) dans city ${cityId}`,
-          );
-          continue;
-        }
-        const coords = Array.from(cell);
-        if (coords.length < 3) {
-          logger.warn(
-            `[Voronoi] Cellule <3 points pour POI ${dedupPois[i]?.id} (index ${i}) dans city ${cityId}`,
-          );
-          continue;
-        }
-        // Ensure closed ring for GeoJSON (first === last)
-        const first = coords[0];
-        const last = coords[coords.length - 1];
-        if (
-          first !== undefined &&
-          last !== undefined &&
-          (first[0] !== last[0] || first[1] !== last[1])
-        ) {
-          coords.push(first);
-        }
-        voronoiFeatures.push({
-          feature: {
-            type: "Feature",
-            properties: {},
-            geometry: { type: "Polygon", coordinates: [coords] },
-          } as Feature<Polygon>,
-          poiIndex: i,
-        });
-      }
-    } catch (error) {
-      logger.warn(
-        `[Voronoi] Erreur Voronoi pour city ${cityId} (${dedupPois.length} POIs): ${String(error)}`,
-      );
-      logger.error(error);
-      citiesSkipped++;
-      continue;
-    }
-
-    if (voronoiFeatures.length === 0) {
-      citiesSkipped++;
-      continue;
-    }
-
-    // Clip each Voronoi cell to the city boundary
-    for (const { feature: voronoiCell, poiIndex } of voronoiFeatures) {
-      const correspondingPoi = dedupPois[poiIndex];
-      if (correspondingPoi === undefined) continue;
-
-      try {
-        const clipped = turf.intersect(
-          turf.featureCollection([voronoiCell, cityBoundary]),
-        );
-
-        if (clipped === null) {
-          logger.warn(
-            `[Voronoi] Intersection nulle pour POI ${correspondingPoi.id} dans city ${cityId}`,
-          );
-          continue;
-        }
-
-        // intersect can return Polygon or MultiPolygon
-        const clippedPolygons = extractPolygons(clipped);
-
-        for (const polygon of clippedPolygons) {
-          const voronoiFeature: VoronoiZoneFeature = {
-            type: "Feature",
-            properties: {
-              poiId: correspondingPoi.id,
-              cityId,
-              cityName: cityFeature.properties.name,
-            },
-            geometry: polygon.geometry,
-          };
-          await writer.write(voronoiFeature);
-          totalZones++;
-        }
-      } catch (error) {
-        logger.warn(
-          `[Voronoi] Erreur clip pour POI ${correspondingPoi.id} dans city ${cityId}: ${String(error)}`,
-        );
-        continue;
-      }
-    }
-
-    citiesProcessed++;
-
-    if (citiesProcessed % 1000 === 0) {
-      logger.info(
-        `[Voronoi] ${citiesProcessed} villes traitées, ${totalZones} zones générées...`,
-      );
-    }
+    const batchZones = results.flatMap((r) => r.zones);
+    totalZones += batchZones.length;
+    await writer.writeBatch(batchZones);
   }
 
   await writer.close();

@@ -86,3 +86,54 @@ export function getSupportedAdminLevelsSQL(countryCode: string): string {
   const levels = getSupportedAdminLevels(countryCode);
   return `(${levels.join(",")})`;
 }
+
+/**
+ * Get the immediate parent admin_level for a given child level
+ * @param childLevel The OSM admin_level of the child boundary
+ * @param countryCode The ISO country code
+ * @returns The parent admin_level or null if no parent (e.g. country level 2)
+ */
+export function getParentAdminLevel(
+  childLevel: number,
+  countryCode: string,
+): number | null {
+  const levels = getSupportedAdminLevels(countryCode).sort((a, b) => a - b);
+  const parentLevels = levels.filter((l) => l < childLevel);
+  return parentLevels.length > 0 ? Math.max(...parentLevels) : null;
+}
+
+/**
+ * Get all fallback parent levels from a given parent level down to country (level 2)
+ * Used for chained fallback when intermediate levels don't exist (e.g. Monaco 8->2)
+ * @param parentLevel The expected parent admin_level
+ * @param countryCode The ISO country code
+ * @returns Array of levels below parentLevel, ordered from closest to farthest (e.g. [4, 2] for parentLevel 6)
+ */
+export function getAllFallbackParentLevels(
+  parentLevel: number,
+  countryCode: string,
+): number[] {
+  const levels = getSupportedAdminLevels(countryCode).sort((a, b) => a - b);
+  return levels.filter((l) => l < parentLevel).sort((a, b) => b - a);
+}
+
+/**
+ * Get child-to-parent level mappings as array for parallel hierarchy queries
+ * @param countryCode The ISO country code
+ * @returns Array of {childLevel, parentLevel} pairs
+ */
+export function getParentLevelMappings(countryCode: string): Array<{
+  childLevel: number;
+  parentLevel: number;
+}> {
+  const levels = getSupportedAdminLevels(countryCode).sort((a, b) => a - b);
+  const result: Array<{ childLevel: number; parentLevel: number }> = [];
+  for (let i = 1; i < levels.length; i++) {
+    const childLevel = levels[i];
+    const parentLevel = levels[i - 1];
+    if (childLevel !== undefined && parentLevel !== undefined) {
+      result.push({ childLevel, parentLevel });
+    }
+  }
+  return result;
+}

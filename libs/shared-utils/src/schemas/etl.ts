@@ -9,6 +9,8 @@ export const ExtractedPoiDatabaseRowSchema = Type.Object(
     latitude: Latitude,
     longitude: Longitude,
     filter_level: Type.Number(),
+    main_category: Type.String(),
+    categories: Type.Array(Type.String()),
     tags: Type.Record(Type.String(), Type.String()),
   },
   { $id: "ExtractedPoiDatabaseRow" },

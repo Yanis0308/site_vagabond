@@ -56,23 +56,26 @@ function mapAdminLevelToBoundaryLevel(adminLevel: number): string {
   }
 }
 
-// Fonction pour obtenir la tolérance de simplification selon le niveau
+/**
+ * Simplification tolerance (degrees) per boundary level for Mapbox polygon export.
+ * Approximate equivalent in meters at France latitude (~46°N): 1° ≈ 111 km (lat), ~77 km (lon).
+ */
 function getSimplificationTolerance(boundaryLevel: string): number {
   switch (boundaryLevel) {
     case "COUNTRY":
-      return 0.01;
+      return 0.01; // ~1 km
     case "REGION":
-      return 0.005;
+      return 0.005; // ~500 m
     case "COUNTY":
-      return 0.001;
+      return 0.001; // ~100 m
     case "CITY":
-      return 0.0005;
+      return 0.0005; // ~50 m
     case "DISTRICT":
-      return 0.0001;
+      return 0.0001; // ~10 m
     case "NEIGHBORHOOD":
-      return 0.00005;
+      return 0.00005; // ~5 m
     default:
-      return 0.001;
+      return 0.001; // ~100 m
   }
 }
 
@@ -317,12 +320,12 @@ export async function processBoundaries(
       logger.info(`Traitement batch de ${data.length} boundaries...`);
       const startTime = Date.now();
 
-      // Calculer way_area en batch pour toutes les géométries
       const osmIds = data
         .map((item) => `'${item.osm_type}-${item.osm_id}'`)
         .join(",");
 
-      const wayAreaCalculations = await knexInstance.raw<{
+      // Batch query for way_area
+      const areaResults = await knexInstance.raw<{
         rows: Array<{ key: string; area: number }>;
       }>(`
         SELECT 
@@ -332,11 +335,63 @@ export async function processBoundaries(
         WHERE osm_type || '-' || osm_id IN (${osmIds})
       `);
 
-      // Créer un map pour lookup rapide des aires
       const areaMap = new Map<string, number>();
-      wayAreaCalculations.rows.forEach((row) => {
+      for (const row of areaResults.rows) {
         areaMap.set(row.key, row.area);
-      });
+      }
+
+      // Batch queries per level for simplified geometries (ST_SimplifyPreserveTopology)
+      const geometryMap = new Map<string, MultiPolygon>();
+      const byLevel = new Map<
+        string,
+        Array<{ osm_type: string; osm_id: string }>
+      >();
+      for (const item of data) {
+        const level = mapAdminLevelToBoundaryLevel(item.admin_level);
+        if (polygonWriters[level] === undefined) continue;
+        if (!byLevel.has(level)) byLevel.set(level, []);
+        const arr = byLevel.get(level);
+        if (arr !== undefined) {
+          arr.push({ osm_type: item.osm_type, osm_id: item.osm_id });
+        }
+      }
+
+      for (const [level, items] of byLevel) {
+        if (items.length === 0) continue;
+        const tolerance = getSimplificationTolerance(level);
+        const levelIds = items
+          .map((i) => `'${i.osm_type}-${i.osm_id}'`)
+          .join(",");
+        const geomResults = await knexInstance.raw<{
+          rows: Array<{ key: string; geom: string | null }>;
+        }>(`
+          SELECT 
+            osm_type || '-' || osm_id as key,
+            ST_AsGeoJSON(
+              ST_Multi(
+                ST_SimplifyPreserveTopology(
+                  ST_Transform(geom, 4326),
+                  ${tolerance}
+                )
+              )
+            ) as geom
+          FROM ${schema}.boundaries 
+          WHERE osm_type || '-' || osm_id IN (${levelIds})
+        `);
+        for (const row of geomResults.rows) {
+          if (row.geom !== null) {
+            try {
+              geometryMap.set(row.key, JSON.parse(row.geom) as MultiPolygon);
+            } catch (error) {
+              logger.warn("Failed to parse geometry JSON", {
+                key: row.key,
+                rawGeom: row.geom,
+                error: error instanceof Error ? error.message : String(error),
+              });
+            }
+          }
+        }
+      }
 
       // Utiliser les POIs et subzones counts pré-calculés depuis les fichiers JSONL
       // (beaucoup plus rapide que les requêtes géospatiales)
@@ -347,9 +402,6 @@ export async function processBoundaries(
         display_point_lon: item.display_point_lon,
         way_area: areaMap.get(`${item.osm_type}-${item.osm_id}`) ?? 0,
       }));
-
-      const elapsed = (Date.now() - startTime) / 1000;
-      logger.info(`Traitement terminé en ${elapsed.toFixed(1)}s`);
 
       // Écrire en JSONL au lieu de charger en DB
       for (let i = 0; i < convertedData.length; i++) {
@@ -410,7 +462,7 @@ export async function processBoundaries(
           await levelWriter.write(jsonlFeature);
         }
 
-        // Générer feature polygonale JSONL
+        // Générer feature polygonale JSONL (geometry from pre-fetched batch)
         const polygonWriter = polygonWriters[boundaryLevel];
         if (polygonWriter !== undefined) {
           const placeType = determinePlaceType(boundary);
@@ -419,35 +471,10 @@ export async function processBoundaries(
           const isCapital = determineIsCapital(boundary);
           const computedId = `${boundary.osm_type}-${boundary.osm_id}`;
           const wayArea = boundary.way_area;
-          const tolerance = getSimplificationTolerance(boundaryLevel);
 
-          // Extraire la géométrie simplifiée depuis la base de données
-          // Forcer la conversion en MultiPolygon pour assurer la compatibilité
-          const simplifiedGeometryResult = await knexInstance.raw<{
-            rows: Array<{ simplified_geom: unknown }>;
-          }>(`
-            SELECT ST_AsGeoJSON(
-              ST_Multi(
-                ST_SimplifyPreserveTopology(
-                  ST_Transform(geom, 4326), 
-                  ${tolerance}
-                )
-              )
-            ) as simplified_geom
-            FROM ${schema}.boundaries 
-            WHERE osm_type = '${boundary.osm_type}' AND osm_id = '${boundary.osm_id}'
-          `);
-
-          if (
-            simplifiedGeometryResult.rows.length > 0 &&
-            simplifiedGeometryResult.rows[0]?.simplified_geom !== null &&
-            simplifiedGeometryResult.rows[0]?.simplified_geom !== undefined
-          ) {
+          const geometryData = geometryMap.get(computedId);
+          if (geometryData !== undefined) {
             try {
-              const geometryData = JSON.parse(
-                simplifiedGeometryResult.rows[0].simplified_geom as string,
-              ) as MultiPolygon;
-
               const polygonFeature: BoundaryPolygonGeoJSONFeature = {
                 type: "Feature",
                 properties: {
@@ -475,6 +502,9 @@ export async function processBoundaries(
           }
         }
       }
+
+      const elapsed = (Date.now() - startTime) / 1000;
+      logger.info(`Traitement terminé en ${elapsed.toFixed(1)}s`);
     };
 
     await processStreamInBatches(

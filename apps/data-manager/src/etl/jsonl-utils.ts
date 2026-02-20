@@ -51,6 +51,10 @@ export class JsonlFileWriter<T> implements JsonlWriter<T> {
     });
   }
 
+  async writeBatch(records: T[]): Promise<void> {
+    await Promise.all(records.map((r) => this.write(r)));
+  }
+
   async close(): Promise<void> {
     await new Promise((resolve, reject) => {
       this.stringify.end((error: Error | null | undefined) => {

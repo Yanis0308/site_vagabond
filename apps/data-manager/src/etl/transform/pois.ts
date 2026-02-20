@@ -28,6 +28,8 @@ export async function processPois(
       p.name,
       ST_X(ST_Transform(p.geom, 4326)) as longitude,
       ST_Y(ST_Transform(p.geom, 4326)) as latitude,
+      p.main_category,
+      p.categories,
       p.tags
     FROM ${schema}.raw_pois p`;
 
@@ -61,11 +63,13 @@ export async function processPois(
   }
 }
 
-// Types for GeoJSON export
+// Types for GeoJSON export (Mapbox tileset)
 interface PoiGeoJSONProperties {
   poiId: string;
   name: string | null;
   filterLevel: string;
+  mainCategory: string;
+  categories: string;
 }
 
 type PoiGeoJSONFeature = Feature<Point, PoiGeoJSONProperties>;
@@ -93,6 +97,8 @@ export async function generatePoisGeoJSON(
           poiId: poi.id,
           name: poi.tags.name ?? null,
           filterLevel: getFilterLevelName(poi.filter_level),
+          mainCategory: poi.main_category,
+          categories: JSON.stringify(poi.categories),
         },
         geometry: {
           type: "Point",

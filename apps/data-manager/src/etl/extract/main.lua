@@ -22,13 +22,13 @@ function process_poi(object, geom)
   if poi_data then
     local current_poi = {
       name = object.tags.name,
-      wikidata = object.tags.wikidata,
-      wikipedia = object.tags.wikipedia,
       geom = geom,
       tags = object.tags,
       class = poi_data.class,
       subclass = poi_data.subclass,
       filter_level = poi_data.filter_level,
+      main_category = poi_data.main_category,
+      categories = poi_data.categories,
     }
 
     tables.pois:insert(current_poi)

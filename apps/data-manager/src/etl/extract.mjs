@@ -75,9 +75,14 @@ console.log("=".repeat(80));
 console.log(osm2pgsqlCommand);
 console.log("=".repeat(80));
 
-// Increase work_mem
-await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "SET work_mem = '1024MB';"`;
-console.log("✅ Increased work_mem to 1024MB");
+// PostgreSQL tuning for ETL (hierarchy queries, index creation)
+// Use \\" so the shell receives \" and properly quotes the database name (hyphens require quoting in PostgreSQL)
+await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "ALTER DATABASE \\"vagabond-data-manager\\" SET statement_timeout = '10min';"`;
+await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "ALTER DATABASE \\"vagabond-data-manager\\" SET max_parallel_workers_per_gather = 4;"`;
+await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "ALTER DATABASE \\"vagabond-data-manager\\" SET work_mem = '1024MB';"`;
+console.log(
+  "✅ PostgreSQL tuning applied (statement_timeout, max_parallel_workers_per_gather, work_mem)",
+);
 
 // Run osm2pgsql
 try {
@@ -88,19 +93,32 @@ try {
   process.exit(1);
 }
 
+// Add point_on_surface column for hierarchy queries (avoids recomputing ST_PointOnSurface per row)
+console.log("\n" + "=".repeat(80));
+console.log("ADDING point_on_surface COLUMN:");
+console.log("=".repeat(80));
+
+try {
+  await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "ALTER TABLE ${schemaName}.boundaries ADD COLUMN IF NOT EXISTS point_on_surface geometry(Point);"`;
+  await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "UPDATE ${schemaName}.boundaries SET point_on_surface = ST_PointOnSurface(geom) WHERE point_on_surface IS NULL;"`;
+  console.log("✅ Added and populated point_on_surface column");
+} catch (error) {
+  console.warn("⚠️  point_on_surface column may have failed:", error);
+}
+
 // Create indexes on raw tables for better performance
 console.log("\n" + "=".repeat(80));
 console.log("CREATING INDEXES ON RAW OSM TABLES:");
 console.log("=".repeat(80));
 
 try {
-  // Create B-tree index on admin_level (most important missing index)
+  // Create B-tree index on admin_level
   await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_${schemaName}_boundaries_admin_level ON ${schemaName}.boundaries (admin_level);"`;
   console.log("✅ Created B-tree index on boundaries.admin_level");
 
-  // Create composite index for better query performance (optional but recommended)
-  // await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_${schemaName}_boundaries_admin_level_geom ON ${schemaName}.boundaries (admin_level) INCLUDE (geom);"`;
-  // console.log("✅ Created composite index on boundaries.admin_level with geom");
+  // Create GIST spatial index on geom for ST_Contains lookups (boundary hierarchies, associations)
+  await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_${schemaName}_boundaries_geom ON ${schemaName}.boundaries USING GIST (geom);"`;
+  console.log("✅ Created GIST index on boundaries.geom");
 
   console.log(
     "\n🎉 OSM import and additional indexing completed successfully!",

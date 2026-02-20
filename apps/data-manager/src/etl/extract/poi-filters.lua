@@ -2,6 +2,7 @@
 -- Contains all the filtering logic for determining which OSM objects should be imported as POIs
 -- Implements 4-level filtering system: strict, standard, intermediaire, laxiste
 local M = {}
+local poi_categories = require("poi-categories")
 
 -- Filter level constants (lower number = higher filter level)
 local FILTER_LEVEL_STRICT = 1
@@ -46,104 +47,112 @@ local function should_exclude_name(tags)
   return false
 end
 
+-- Enriches poi_data with resolved category; each filter uses this before returning
+local function with_category(poi_data)
+  poi_data.category = poi_categories.resolve_category(poi_data)
+  return poi_data
+end
+
 -- Tourism filter handler
 local function filter_tourism(tags)
   -- Filter level STRICT: tourism = attraction + heritage=1 + (wikidata or wikipedia)
   if tags.tourism == "attraction" and tags.heritage == "1" and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "tourism",
       subclass = "attraction",
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
 
   -- Filter level STRICT: tourism = zoo, monument, tower, museum, aquarium + (wikidata or wikipedia)
   if (tags.tourism == "zoo" or tags.tourism == "monument" or tags.tourism == "tower" or tags.tourism == "museum" or tags.tourism == "aquarium") and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "tourism",
       subclass = tags.tourism,
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
 
   -- Filter level STRICT: tourism = artwork + artwork_type=(statue|sculpture|fountain) + (wikidata or wikipedia)
   if tags.tourism == "artwork" and (tags.artwork_type == "statue" or tags.artwork_type == "sculpture" or tags.artwork_type == "fountain") and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "tourism",
       subclass = "artwork",
+      artwork_type = tags.artwork_type,
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
 
   -- Filter level STRICT: tourism = bridge + (wikidata or wikipedia)
   if tags.tourism == "bridge" and has_wiki_reference(tags) then
-    return {
+    return with_category({
       class = "tourism",
       subclass = "bridge",
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
 
   -- Filter level STANDARD: tourism = attraction + heritage=2 + (wikidata or wikipedia)
   if tags.tourism == "attraction" and tags.heritage == "2" and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "tourism",
       subclass = "attraction",
       filter_level = FILTER_LEVEL_STANDARD,
-    }
+    })
   end
 
   -- Filter level STANDARD: tourism = museum, aquarium (no wikidata required)
   if tags.tourism == "museum" or tags.tourism == "aquarium" then
-    return {
+    return with_category({
       class = "tourism",
       subclass = tags.tourism,
       filter_level = FILTER_LEVEL_STANDARD,
-    }
+    })
   end
 
   -- Filter level INTERMEDIAIRE: tourism = attraction (no conditions)
   if tags.tourism == "attraction" then
-    return {
+    return with_category({
       class = "tourism",
       subclass = "attraction",
       filter_level = FILTER_LEVEL_INTERMEDIAIRE,
-    }
+    })
   end
 
   -- Filter level INTERMEDIAIRE: tourism = zoo, monument, tower, museum, aquarium (no conditions)
   if tags.tourism == "zoo" or tags.tourism == "monument" or tags.tourism == "tower" or tags.tourism == "museum" or tags.tourism == "aquarium" then
-    return {
+    return with_category({
       class = "tourism",
       subclass = tags.tourism,
       filter_level = FILTER_LEVEL_INTERMEDIAIRE,
-    }
+    })
   end
 
   -- Filter level INTERMEDIAIRE: tourism = artwork + artwork_type=(statue|sculpture|fountain) (no wikidata required)
   if tags.tourism == "artwork" and (tags.artwork_type == "statue" or tags.artwork_type == "sculpture" or tags.artwork_type == "fountain") then
-    return {
+    return with_category({
       class = "tourism",
       subclass = "artwork",
+      artwork_type = tags.artwork_type,
       filter_level = FILTER_LEVEL_INTERMEDIAIRE,
-    }
+    })
   end
 
   -- Filter level INTERMEDIAIRE: tourism = viewpoint
   if tags.tourism == "viewpoint" then
-    return {
+    return with_category({
       class = "tourism",
       subclass = "viewpoint",
       filter_level = FILTER_LEVEL_INTERMEDIAIRE,
-    }
+    })
   end
 
   return nil
@@ -155,78 +164,80 @@ local function filter_historic(tags)
   if (tags.historic == "castle" or tags.historic == "monument" or tags.historic == "memorial" or tags.historic == "city_gate" or tags.historic == "fort" or tags.historic == "citywalls" or tags.historic == "tower" or tags.historic == "yes") and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "historic",
       subclass = tags.historic,
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
 
   -- Filter level STRICT: historic = yes|building + heritage = 1|2 + (wikidata or wikipedia)
   if (tags.historic == "yes" or tags.historic == "building") and (tags.heritage == "1" or tags.heritage == "2") and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "historic",
       subclass = tags.historic,
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
 
   -- Filter level STANDARD: historic = building (no conditions)
   if tags.historic == "building" then
-    return {
+    return with_category({
       class = "historic",
       subclass = "building",
       filter_level = FILTER_LEVEL_STANDARD,
-    }
+    })
   end
 
   -- Filter level INTERMEDIAIRE: heritage = 1|2|3 + (wikidata or wikipedia)
   if (tags.heritage == "1" or tags.heritage == "2" or tags.heritage == "3") and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "historic",
       subclass = "heritage",
       filter_level = FILTER_LEVEL_INTERMEDIAIRE,
-    }
+      heritage_level = tonumber(tags.heritage),
+    })
   end
 
   -- Filter level INTERMEDIAIRE: historic = city_gate, fort, tower (no conditions)
   if tags.historic == "city_gate" or tags.historic == "fort" or tags.historic == "tower" then
-    return {
+    return with_category({
       class = "historic",
       subclass = tags.historic,
       filter_level = FILTER_LEVEL_INTERMEDIAIRE,
-    }
+    })
   end
 
   -- Filter level INTERMEDIAIRE: historic = yes, building (no conditions)
   if tags.historic == "yes" or tags.historic == "building" then
-    return {
+    return with_category({
       class = "historic",
       subclass = tags.historic,
       filter_level = FILTER_LEVEL_INTERMEDIAIRE,
-    }
+    })
   end
 
   -- Filter level LAXISTE: heritage = 1|2|3 (no wikidata required)
   if tags.heritage == "1" or tags.heritage == "2" or tags.heritage == "3" then
-    return {
+    return with_category({
       class = "historic",
       subclass = "heritage",
       filter_level = FILTER_LEVEL_LAXISTE,
-    }
+      heritage_level = tonumber(tags.heritage),
+    })
   end
 
   -- Filter level LAXISTE: historic = monument (no conditions)
   if tags.historic == "monument" then
-    return {
+    return with_category({
       class = "historic",
       subclass = "monument",
       filter_level = FILTER_LEVEL_LAXISTE,
-    }
+    })
   end
 
   return nil
@@ -245,31 +256,31 @@ local function filter_amenity(tags)
   if (tags.amenity == "place_of_worship" or tags.amenity == "townhall" or tags.amenity == "theatre") and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "amenity",
       subclass = tags.amenity,
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
 
   -- Filter level STRICT: amenity = fountain + heritage = 1|2 + (wikidata or wikipedia)
   if tags.amenity == "fountain" and (tags.heritage == "1" or tags.heritage == "2") and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "amenity",
       subclass = "fountain",
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
 
   -- Filter level INTERMEDIAIRE: amenity = fountain, townhall (no conditions)
   if tags.amenity == "fountain" or tags.amenity == "townhall" then
-    return {
+    return with_category({
       class = "amenity",
       subclass = tags.amenity,
       filter_level = FILTER_LEVEL_INTERMEDIAIRE,
-    }
+    })
   end
 
   return nil
@@ -279,11 +290,11 @@ end
 local function filter_bridge(tags)
   -- Filter level STRICT: bridge + (wikidata or wikipedia)
   if tags.bridge and has_wiki_reference(tags) then
-    return {
+    return with_category({
       class = "bridge",
       subclass = tags.bridge,
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
   return nil
 end
@@ -292,11 +303,11 @@ end
 local function filter_man_made(tags)
   -- Filter level STRICT: man_made = bridge + (wikidata or wikipedia)
   if tags.man_made == "bridge" and has_wiki_reference(tags) then
-    return {
+    return with_category({
       class = "man_made",
       subclass = "bridge",
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
   return nil
 end
@@ -306,11 +317,11 @@ local function filter_leisure(tags)
   -- Filter level STRICT: leisure = marina + (wikidata or wikipedia)
   -- Note: park is commented out to reduce volume
   if tags.leisure == "marina" and has_wiki_reference(tags) then
-    return {
+    return with_category({
       class = "leisure",
       subclass = tags.leisure,
       filter_level = FILTER_LEVEL_STRICT,
-    }
+    })
   end
 
   return nil
@@ -322,11 +333,11 @@ local function filter_government(tags)
   if tags.government and tags.heritage then
     local heritage_num = tonumber(tags.heritage)
     if heritage_num and heritage_num >= 1 and heritage_num <= 3 then
-      return {
+      return with_category({
         class = "government",
         subclass = "heritage",
         filter_level = FILTER_LEVEL_STRICT,
-      }
+      })
     end
   end
   return nil
@@ -340,24 +351,28 @@ end
 
 -- Heritage filter handler (cross-category)
 local function filter_heritage(tags)
+  local heritage_level = tonumber(tags.heritage)
+
   -- Filter level INTERMEDIAIRE: heritage = 1|2|3 + (wikidata or wikipedia)
   if (tags.heritage == "1" or tags.heritage == "2" or tags.heritage == "3") and has_wiki_reference(
     tags
   ) then
-    return {
+    return with_category({
       class = "heritage",
       subclass = "heritage",
       filter_level = FILTER_LEVEL_INTERMEDIAIRE,
-    }
+      heritage_level = heritage_level,
+    })
   end
 
   -- Filter level LAXISTE: heritage = 1|2|3 (no wikidata required)
   if tags.heritage == "1" or tags.heritage == "2" or tags.heritage == "3" then
-    return {
+    return with_category({
       class = "heritage",
       subclass = "heritage",
       filter_level = FILTER_LEVEL_LAXISTE,
-    }
+      heritage_level = heritage_level,
+    })
   end
 
   return nil
@@ -384,21 +399,45 @@ function M.get_poi_data(tags)
     return nil
   end
 
-  local best_poi_data = nil
-  local best_filter_level = 999
+  local best_filter_data = nil
+  local seen_categories = {}
+  local categories = {}
 
-  -- Check all category filters and find the one with best filter level (lowest number)
+  -- Single pass: collect matches, track best filter_level, build unique categories
+  -- Only call filter when its primary tag is present (avoids unnecessary work)
   for tag_type, filter_func in pairs(poi_filters) do
     if tags[tag_type] then
       local poi_data = filter_func(tags)
-      if poi_data and poi_data.filter_level and poi_data.filter_level < best_filter_level then
-        best_poi_data = poi_data
-        best_filter_level = poi_data.filter_level
+      if poi_data then
+        if not best_filter_data or poi_data.filter_level < best_filter_data.filter_level then
+          best_filter_data = poi_data
+        end
+        if poi_data.category and not seen_categories[poi_data.category] then
+          seen_categories[poi_data.category] = true
+          table.insert(categories, poi_data.category)
+        end
       end
     end
   end
 
-  return best_poi_data
+  if not best_filter_data then
+    return nil
+  end
+
+  -- Sort categories by priority
+  table.sort(categories, function(a, b)
+    return poi_categories.get_priority(a) < poi_categories.get_priority(b)
+  end)
+
+  local main_category = categories[1]
+
+  return {
+    class = best_filter_data.class,
+    subclass = best_filter_data.subclass,
+    filter_level = best_filter_data.filter_level,
+    categories = categories,
+    main_category = main_category,
+  }
 end
 
 return M

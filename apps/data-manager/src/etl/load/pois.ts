@@ -52,6 +52,8 @@ export async function loadPoisFromJsonl(filePath: string): Promise<void> {
             sourceId: sourceId,
             language: "FR",
             poiId: id,
+            mainCategory: item.main_category,
+            categories: item.categories,
           });
         }
 
@@ -102,6 +104,8 @@ export async function loadPoisFromJsonl(filePath: string): Promise<void> {
           sourceId: sourceId,
           language: "FR",
           poiId: id,
+          mainCategory: item.main_category,
+          categories: item.categories,
         });
       }
 

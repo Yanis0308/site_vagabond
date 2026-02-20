@@ -124,6 +124,8 @@ export const poiData = pgTable(
     language: languageEnum().notNull(),
     poiId: varchar("poi_id", { length: 1000 }).notNull(),
     nbOfTags: integer("nb_of_tags"),
+    mainCategory: varchar("main_category", { length: 100 }),
+    categories: jsonb("categories").$type<string[]>(),
   },
   (table) => [
     index("idx_poi_data_name_normalized").using(
