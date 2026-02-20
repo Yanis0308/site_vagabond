@@ -7,8 +7,6 @@ export const useMapImages = (): Record<string, ImageEntry> => {
   return useMemo<Record<string, ImageEntry>>(
     () => ({
       bearingImage: localImages.bearingImage,
-      checkmark: localImages.checkIcon,
-      questionMark: localImages.questionMarkIcon,
     }),
     [],
   );

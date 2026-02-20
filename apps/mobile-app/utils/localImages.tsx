@@ -16,11 +16,6 @@ export const localImages = {
   weNeedYou: require("@/assets/images/content/we-need-you.png") as number,
   // eslint-disable-next-line @typescript-eslint/no-require-imports -- required for React Native/Expo static asset bundling
   bearingImage: require("@/assets/images/bearing-icon.png") as number,
-  // eslint-disable-next-line @typescript-eslint/no-require-imports -- required for React Native/Expo static asset bundling
-  checkIcon: require("@/assets/images/icons/check.png") as number,
-  questionMarkIcon:
-    // eslint-disable-next-line @typescript-eslint/no-require-imports -- required for React Native/Expo static asset bundling
-    require("@/assets/images/icons/question-mark.png") as number,
   fullIconWithText:
     // eslint-disable-next-line @typescript-eslint/no-require-imports -- required for React Native/Expo static asset bundling
     require("@/assets/images/full-icon-with-text.png") as number,

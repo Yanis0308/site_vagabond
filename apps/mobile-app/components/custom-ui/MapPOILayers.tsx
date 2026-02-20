@@ -1,4 +1,4 @@
-import { CircleLayer, SymbolLayer } from "@rnmapbox/maps";
+import { SymbolLayer } from "@rnmapbox/maps";
 import { type ReactElement } from "react";
 
 import { MAP_LAYER_IDS } from "@/constants/MapLayerIds";
@@ -12,7 +12,7 @@ interface MapPOILayersProps {
 
 // Constants for zoom-based sizing
 const ZOOM_LEVELS = {
-  MIN: 11,
+  MIN: 10,
   // MID: 12.5,
   MAX: 13,
 } as const;
@@ -34,15 +34,9 @@ const createFilterLevelCondition = () =>
 
 // Size configurations by zoom level
 const SIZES = {
-  circleRadius: {
-    [ZOOM_LEVELS.MIN]: { selected: 10, important: 4, other: 3 },
-    // [ZOOM_LEVELS.MID]: { selected: 10, important: 8, other: 4 },
-    [ZOOM_LEVELS.MAX]: { selected: 10, important: 8, other: 6 },
-  },
   iconSize: {
-    [ZOOM_LEVELS.MIN]: { selected: 0.5, important: 0.3, other: 0.1 },
-    // [ZOOM_LEVELS.MID]: { selected: 0.6, important: 0.5, other: 0.3 },
-    [ZOOM_LEVELS.MAX]: { selected: 0.5, important: 0.4, other: 0.3 },
+    [ZOOM_LEVELS.MIN]: { selected: 0.07, important: 0.02, other: 0.01 },
+    [ZOOM_LEVELS.MAX]: { selected: 0.07, important: 0.06, other: 0.035 },
   },
   textSize: {
     [ZOOM_LEVELS.MIN]: { selected: 14, important: 8, other: 6 },
@@ -73,8 +67,7 @@ type SizeConfig = Record<
 const createSizeInterpolation = (sizeConfig: SizeConfig, selectedId: string) =>
   [
     "interpolate",
-    // interpolationType === "exponential" ? ["exponential", 1.5] : ["linear"],
-    ["linear"],
+    ["exponential", 2],
     ["zoom"],
     ZOOM_LEVELS.MIN,
     [
@@ -147,80 +140,6 @@ export const MapPOILayers = ({
 }: MapPOILayersProps): ReactElement => {
   return (
     <>
-      {/* Couche pour tous les points avec tailles selon filter_level */}
-      <CircleLayer
-        id={MAP_LAYER_IDS.POI_ALL_POINTS}
-        sourceID={sourceId}
-        sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
-        minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
-        // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
-        style={{
-          circleColor: [
-            "case",
-            // Place sélectionnée - orange vif
-            ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
-            "#f97316", // orange-500 - couleur distinctive pour la sélection
-            // Points visités - vert
-            ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
-            "#22c55e", // green-500 pour les POIs visités
-            // Points non visités - couleurs selon filter_level
-            [
-              "any",
-              ["==", ["get", "filterLevel"], "STRICT"],
-              ["==", ["get", "filterLevel"], "STANDARD"],
-            ],
-            "#7c3aed", // violet-600 - violet foncé pour les importants
-            [
-              "any",
-              ["==", ["get", "filterLevel"], "LAXIST"],
-              ["==", ["get", "filterLevel"], "INTERMEDIATE"],
-            ],
-            "#a855f7", // violet-500 - violet clair pour les moins importants
-            // Couleur par défaut pour UNKNOWN
-            "#6b7280", // gray-500 - gris pour les inconnus
-          ],
-          // Taille des points : priorité à la place sélectionnée, puis selon filter_level
-          // Varie avec le niveau de zoom pour une meilleure visibilité
-          circleRadius: createSizeInterpolation(
-            SIZES.circleRadius,
-            selectedPlace?.id ?? "",
-          ),
-          circleStrokeWidth: 1,
-          circleStrokeColor: "#fff",
-
-          // Priorité d'affichage : le point sélectionné a la priorité maximale
-          circleSortKey: [
-            "+",
-            // PRIORITÉ MAXIMALE : Point sélectionné (+1000 points)
-            [
-              "case",
-              ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
-              1000,
-              0,
-            ],
-            // Bonus pour les POI visités (+100 points)
-            [
-              "case",
-              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
-              100,
-              0,
-            ],
-            // Bonus pour les niveaux de filtrage importants
-            [
-              "case",
-              ["==", ["get", "filterLevel"], "STRICT"],
-              90,
-              ["==", ["get", "filterLevel"], "STANDARD"],
-              80,
-              ["==", ["get", "filterLevel"], "INTERMEDIATE"],
-              70,
-              ["==", ["get", "filterLevel"], "LAXIST"],
-              60,
-              0, // UNKNOWN ou autres
-            ],
-          ],
-        }}
-      />
       {/* Couche pour les icônes sur tous les points */}
       <SymbolLayer
         id={MAP_LAYER_IDS.POI_ICONS}
@@ -229,13 +148,29 @@ export const MapPOILayers = ({
         minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
         // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
         style={{
+          // Category icons from Mapbox Studio: {category}-bw-v1 (unvisited) / {category}-color-v1 (visited)
+          // Maps mainCategory to icon name: place_of_worship→religion, small_monument→small-monument, fallback→attraction
           iconImage: [
-            "case",
-            // Si le POI est visité, afficher checkmark
-            ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
-            "checkmark",
-            // Sinon afficher questionMark
-            "questionMark",
+            "concat",
+            [
+              "coalesce",
+              [
+                "match",
+                ["get", "mainCategory"],
+                "place_of_worship",
+                "religion",
+                "small_monument",
+                "small-monument",
+                ["get", "mainCategory"],
+              ],
+              "attraction",
+            ],
+            [
+              "case",
+              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+              "-color-v1",
+              "-bw-v1",
+            ],
           ],
           iconAllowOverlap: true,
           iconSize: createSizeInterpolation(
