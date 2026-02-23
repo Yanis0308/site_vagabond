@@ -2,7 +2,7 @@ import {
   type FastifyPluginCallbackTypebox,
   Type,
 } from "@fastify/type-provider-typebox";
-import { jsonSchemas } from "@vagabond/shared-utils";
+import { GetUserZoneStatsResponseSchema } from "@vagabond/shared-utils";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
@@ -12,7 +12,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         tags: ["zones"],
         security: [{ bearerAuth: [] }],
         response: {
-          200: jsonSchemas.GetUserZoneStatsResponseSchema,
+          200: GetUserZoneStatsResponseSchema,
         },
       },
     },
@@ -37,7 +37,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         }),
         security: [{ bearerAuth: [] }],
         response: {
-          200: jsonSchemas.GetUserZoneStatsResponseSchema,
+          200: GetUserZoneStatsResponseSchema,
         },
       },
     },

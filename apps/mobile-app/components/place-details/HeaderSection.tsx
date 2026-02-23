@@ -1,11 +1,10 @@
+import type { PoiEnrichedData, VisitedPoi } from "@vagabond/shared-utils";
 import { type PoiEnrichedPhoto } from "@vagabond/shared-utils/dist/schemas/processors/llm";
 import { type ReactElement } from "react";
 import Animated from "react-native-reanimated";
 
 import { Center } from "@/components/ui/center";
 import { config } from "@/constants/Config";
-import { type PoiEnrichedType } from "@/http/pois";
-import { type VisitedPoiType } from "@/http/visited-pois";
 import { localImages } from "@/utils/localImages";
 
 import { CustomImage } from "../custom-ui/CustomImage";
@@ -13,8 +12,8 @@ import { PhotosLoadingPlaceholder } from "./PhotosLoadingPlaceholder";
 import { PhotosSection } from "./PhotosSection";
 
 interface HeaderSectionProps {
-  enrichedData: PoiEnrichedType | undefined;
-  visitedPois: VisitedPoiType[];
+  enrichedData: PoiEnrichedData | undefined;
+  visitedPois: VisitedPoi[];
   isLoadingEnriched: boolean;
   imageBoxAnimatedStyle: {
     opacity: number;

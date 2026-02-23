@@ -1,7 +1,6 @@
-import { type jsonSchemas } from "@vagabond/shared-utils";
+import { type CreateVisitedPoiRequest } from "@vagabond/shared-utils";
 import { and, eq } from "drizzle-orm";
 import { sql } from "drizzle-orm";
-import { type Static } from "typebox";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import { users, visitedPois } from "../schema.js";
@@ -10,7 +9,7 @@ export class VisitedPoiRepository {
   constructor(private readonly db: DrizzleClient) {}
 
   async createCustom(
-    data: Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema> & {
+    data: CreateVisitedPoiRequest & {
       userId: string;
       poiId: string;
     },

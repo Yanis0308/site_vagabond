@@ -1,3 +1,4 @@
+import type { UserMe } from "@vagabond/shared-utils";
 import { getUserDisplayName } from "@vagabond/shared-utils";
 import { memo, type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,10 +9,9 @@ import { Box } from "@/components/ui/box";
 import { VStack } from "@/components/ui/vstack";
 import { getPlainTextDate } from "@/utils/date";
 import { localImages } from "@/utils/localImages";
-import type { UsersMeType } from "@/utils/types";
 
 interface ProfileHeaderProps {
-  userData?: Pick<UsersMeType, "fullName" | "email" | "createdAt"> | null;
+  userData?: Pick<UserMe, "fullName" | "email" | "createdAt"> | null;
 }
 
 export const ProfileHeader = memo(

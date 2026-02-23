@@ -1,4 +1,4 @@
-import { type BoundaryLevelEnumType } from "@/utils/types";
+import type { BoundaryLevelEnum } from "@vagabond/shared-utils";
 
 import { MAP_LAYER_IDS } from "./MapLayerIds";
 
@@ -7,7 +7,7 @@ import { MAP_LAYER_IDS } from "./MapLayerIds";
 // Ordre actuel : NEIGHBORHOOD (fond) → DISTRICT → CITY → COUNTY → REGION → COUNTRY (premier plan)
 // Cela permet aux zones plus petites d'être visibles par-dessus les zones plus grandes.
 export const layersInfos: Record<
-  BoundaryLevelEnumType,
+  BoundaryLevelEnum,
   {
     textAndPoint: {
       sourceLayerId: string;

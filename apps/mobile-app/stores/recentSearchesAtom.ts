@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  generateValidator,
-  type jsonSchemas,
+  type SearchResult,
   SearchResultSchema,
+  validateWithSchema,
 } from "@vagabond/shared-utils";
 import { useAtom, useSetAtom } from "jotai";
 import {
@@ -26,19 +26,11 @@ const RecentSearchesRecordSchema = Type.Record(
   RecentSearchSchema,
 );
 
-// SearchResult type inferred from schema
-export type SearchResultType = Static<typeof jsonSchemas.SearchResultSchema>;
-
 // RecentSearch type inferred from schema
 export type RecentSearch = Static<typeof RecentSearchSchema>;
 
 // Storage type inferred from schema
 export type RecentSearchesRecord = Static<typeof RecentSearchesRecordSchema>;
-
-// Validator function
-const validateRecentSearchesRecord = generateValidator(
-  RecentSearchesRecordSchema,
-);
 
 // Helper function to convert Record to sorted array
 const recordToSortedArray = (record: RecentSearchesRecord): RecentSearch[] => {
@@ -48,7 +40,7 @@ const recordToSortedArray = (record: RecentSearchesRecord): RecentSearch[] => {
 // Storage with validation using withStorageValidator - it's return default value if validation fails
 const storage = withStorageValidator<RecentSearchesRecord>(
   (value: unknown): value is RecentSearchesRecord => {
-    if (!validateRecentSearchesRecord(value)) {
+    if (!validateWithSchema(RecentSearchesRecordSchema, value)) {
       logger("Invalid recent searches data, atom should be cleared", value);
       return false;
     }
@@ -67,7 +59,7 @@ const recentSearchesAtom = atomWithStorage<RecentSearchesRecord>(
 
 export const useRecentSearches = (): {
   recentSearches: RecentSearch[];
-  addRecentSearch: (result: SearchResultType) => Promise<void>;
+  addRecentSearch: (result: SearchResult) => Promise<void>;
   removeRecentSearch: (id: string) => Promise<void>;
   clearAllRecentSearches: () => void;
 } => {
@@ -79,7 +71,7 @@ export const useRecentSearches = (): {
     recentSearchesRecord instanceof Promise ? {} : recentSearchesRecord;
   const recentSearches = recordToSortedArray(recentSearchesRecordResolved);
 
-  const addRecentSearch = async (result: SearchResultType): Promise<void> => {
+  const addRecentSearch = async (result: SearchResult): Promise<void> => {
     await setRecentSearchesRecord(async (prev) => {
       const prevRecord = await prev;
 

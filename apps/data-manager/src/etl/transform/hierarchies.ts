@@ -1,4 +1,9 @@
-import { generateValidator, jsonSchemas, logger } from "@vagabond/shared-utils";
+import {
+  type BoundaryHierarchyRow,
+  BoundaryHierarchyRowSchema,
+  logger,
+  validateWithSchema,
+} from "@vagabond/shared-utils";
 import * as fs from "fs";
 import { dirname } from "path";
 
@@ -7,14 +12,15 @@ import {
   getParentLevelMappings,
 } from "../boundary-mapping-config";
 import { JsonlFileWriter } from "../jsonl-utils";
-import { type BoundaryHierarchyRow, type JsonlHierarchyRecord } from "../types";
+import { type JsonlHierarchyRecord } from "../types";
 import { knexInstance } from "./stream-processor";
 
 const MAX_IDS_PER_QUERY = 2000;
 
-const validateBoundaryHierarchyRows = generateValidator(
-  jsonSchemas.BoundaryHierarchyRowSchema,
-);
+const validateBoundaryHierarchyRows = (
+  value: unknown,
+): value is BoundaryHierarchyRow =>
+  validateWithSchema(BoundaryHierarchyRowSchema, value);
 
 export async function processBoundaryHierarchies(
   schema: string,

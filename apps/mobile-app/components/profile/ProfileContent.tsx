@@ -1,4 +1,5 @@
 import { FlashList } from "@shopify/flash-list";
+import type { UserMe, ZoneUserStat } from "@vagabond/shared-utils";
 import { type ReactElement, useCallback, useMemo } from "react";
 
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
@@ -14,7 +15,6 @@ import type {
 import { Box } from "@/components/ui/box";
 import { Spinner } from "@/components/ui/spinner";
 import { useProfileComputedData } from "@/hooks/other/useProfileComputedData";
-import type { UsersMeType, ZoneUserStatType } from "@/utils/types";
 
 type ProfileSection =
   | { type: "header" }
@@ -24,8 +24,8 @@ type ProfileSection =
   | { type: "signOut" };
 
 interface ProfileContentProps {
-  userData?: Pick<UsersMeType, "fullName" | "email" | "createdAt"> | null;
-  zonesStats?: ZoneUserStatType[];
+  userData?: Pick<UserMe, "fullName" | "email" | "createdAt"> | null;
+  zonesStats?: ZoneUserStat[];
   showSignOutButton: boolean;
   allowVisitedPoiNavigation: boolean;
 }

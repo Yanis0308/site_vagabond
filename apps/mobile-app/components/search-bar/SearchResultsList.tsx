@@ -1,8 +1,8 @@
 import { FlashList } from "@shopify/flash-list";
+import type { SearchResult } from "@vagabond/shared-utils";
 import React, { type ReactElement } from "react";
 import { View } from "react-native";
 
-import type { SearchResultType } from "@/http/search";
 import type { RecentSearch } from "@/stores/recentSearchesAtom";
 
 import { CustomText } from "../custom-ui/CustomText";
@@ -24,8 +24,8 @@ interface RecentSearchesListProps extends BaseSearchResultsListProps {
 
 interface SearchResultsListProps extends BaseSearchResultsListProps {
   resultType: "searchResults";
-  data: SearchResultType[] | undefined;
-  onSelectResult: (result: SearchResultType) => void;
+  data: SearchResult[] | undefined;
+  onSelectResult: (result: SearchResult) => void;
 }
 
 type SearchResultsListPropsUnion =
@@ -66,7 +66,7 @@ export const SearchResultsList = (
   const renderItem = ({
     item,
   }: {
-    item: RecentSearch | SearchResultType;
+    item: RecentSearch | SearchResult;
   }): ReactElement | null => {
     if (resultType === "recentSearches") {
       return (
@@ -83,21 +83,21 @@ export const SearchResultsList = (
     } else {
       return (
         <SearchResultItem
-          result={item as SearchResultType}
+          result={item as SearchResult}
           onPress={() => {
-            props.onSelectResult(item as SearchResultType);
+            props.onSelectResult(item as SearchResult);
           }}
         />
       );
     }
   };
 
-  const keyExtractor = (item: SearchResultType | RecentSearch): string => {
+  const keyExtractor = (item: SearchResult | RecentSearch): string => {
     if (resultType === "recentSearches") {
       const recentSearch = item as RecentSearch;
       return `recent-${recentSearch.timestamp}`;
     }
-    const searchResult = item as SearchResultType;
+    const searchResult = item as SearchResult;
     return searchResult.id;
   };
 

@@ -1,19 +1,19 @@
-import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
+import {
+  GetUserZoneStatsResponseSchema,
+  validateWithSchema,
+  type ZoneUserStat,
+} from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
-import { type ZoneUserStatType } from "@/utils/types";
 
-const validateResponseUserZonesStats = generateValidator(
-  jsonSchemas.GetUserZoneStatsResponseSchema,
-);
 export const getUserZoneStats = async (
   userId?: string,
-): Promise<ZoneUserStatType[]> => {
+): Promise<ZoneUserStat[]> => {
   const rawResult = await apiClient
     .get(`api/zones/stats/${userId ?? "me"}`)
     .json();
 
-  if (!validateResponseUserZonesStats(rawResult)) {
+  if (!validateWithSchema(GetUserZoneStatsResponseSchema, rawResult)) {
     throw new Error("Invalid response");
   }
 

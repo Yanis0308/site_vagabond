@@ -3,22 +3,10 @@ import {
   AppInitializationStateSchema,
   type AppStateData,
   AppStateDataSchema,
-  generateValidator,
+  validateWithSchema,
 } from "@vagabond/shared-utils";
 
 import { logUtils } from "../utils/logging.js";
-
-/**
- * Compiled validator for APP_INITIALIZATION_STATE
- */
-export const validateAppInitializationState = generateValidator(
-  AppInitializationStateSchema,
-);
-
-/**
- * Compiled validator for APP_INITIALIZATION_STATE[3]
- */
-export const validateAppStateData = generateValidator(AppStateDataSchema);
 
 /**
  * Type guard to check if APP_INITIALIZATION_STATE is valid
@@ -26,14 +14,14 @@ export const validateAppStateData = generateValidator(AppStateDataSchema);
 export function isValidAppInitializationState(
   value: unknown,
 ): value is AppInitializationState {
-  return validateAppInitializationState(value);
+  return validateWithSchema(AppInitializationStateSchema, value);
 }
 
 /**
  * Type guard to check if APP_INITIALIZATION_STATE[3] is valid
  */
 export function isValidAppStateData(value: unknown): value is AppStateData {
-  return validateAppStateData(value);
+  return validateWithSchema(AppStateDataSchema, value);
 }
 
 /**

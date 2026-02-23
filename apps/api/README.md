@@ -225,7 +225,7 @@ Exemple :
 
 ```typescript
 import { type FastifyPluginCallbackTypebox } from "@fastify/type-provider-typebox";
-import { jsonSchemas } from "@vagabond/shared-utils";
+import { MyResponseSchema } from "@vagabond/shared-utils";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
@@ -235,7 +235,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         tags: ["my-route"],
         security: [{ bearerAuth: [] }],
         response: {
-          200: jsonSchemas.MyResponseSchema,
+          200: MyResponseSchema,
         },
       },
     },

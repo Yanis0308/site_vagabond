@@ -1,3 +1,4 @@
+import type { BriefVisitedPoi } from "@vagabond/shared-utils";
 import { router } from "expo-router";
 import { memo, type ReactElement } from "react";
 import { Pressable } from "react-native";
@@ -9,10 +10,10 @@ import { VStack } from "@/components/ui/vstack";
 import { config } from "@/constants/Config";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { mapService } from "@/services/MapService";
-import type { BriefVisitedPoiType, PoiType } from "@/utils/types";
+import type { PoiType } from "@/utils/types";
 
 interface ProfilePoiItemProps {
-  poi: BriefVisitedPoiType;
+  poi: BriefVisitedPoi;
   allowNavigation: boolean;
 }
 

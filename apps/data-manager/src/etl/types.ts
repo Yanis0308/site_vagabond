@@ -1,18 +1,8 @@
-import { type jsonSchemas } from "@vagabond/shared-utils";
-import { type Static } from "typebox";
-
-// Types exportés depuis les schemas
-export type ExtractedPoiDatabaseRow = Static<
-  typeof jsonSchemas.ExtractedPoiDatabaseRowSchema
->;
-
-export type PoiBoundaryAssociation = Static<
-  typeof jsonSchemas.PoiBoundaryAssociationSchema
->;
-
-export type BoundaryHierarchyRow = Static<
-  typeof jsonSchemas.BoundaryHierarchyRowSchema
->;
+import {
+  type BoundaryHierarchyRow,
+  type ExtractedPoiDatabaseRow,
+  type PoiBoundaryAssociation,
+} from "@vagabond/shared-utils";
 
 // Interface pour les données consolidées boundaries + admin_centres
 export interface ConsolidatedBoundaryRow {

@@ -1,10 +1,10 @@
-import { jsonSchemas } from "@vagabond/shared-utils";
+import { allJsonSchemas } from "@vagabond/shared-utils";
 import { type FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 
 export default fp(
   function schemasRegister(fastify: FastifyInstance) {
-    Object.values(jsonSchemas).forEach((schema) => {
+    Object.values(allJsonSchemas).forEach((schema) => {
       try {
         // Fastify need $id in Schema so we only
         if ("$id" in schema && typeof schema.$id === "string") {

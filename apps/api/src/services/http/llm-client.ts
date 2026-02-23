@@ -3,7 +3,7 @@ import {
   type GoogleGenerativeAIProviderOptions,
 } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
-import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
+import { PoiEnrichedSchema, validateWithSchema } from "@vagabond/shared-utils";
 import { generateText, jsonSchema, Output } from "ai";
 import type { FastifyInstance } from "fastify";
 
@@ -46,7 +46,7 @@ export async function generateEnrichedPoiWithGemini(
     });
 
     // Use jsonSchema helper from AI SDK to wrap the JSON schema
-    const schema = jsonSchema(jsonSchemas.PoiEnrichedSchema);
+    const schema = jsonSchema(PoiEnrichedSchema);
 
     fastify.log.info(
       {
@@ -79,8 +79,7 @@ export async function generateEnrichedPoiWithGemini(
     const parsedData: unknown = JSON.parse(text);
 
     // Validate the parsed data against the TypeBox schema
-    const validateData = generateValidator(jsonSchemas.PoiEnrichedSchema);
-    const isValid = validateData(parsedData);
+    const isValid = validateWithSchema(PoiEnrichedSchema, parsedData);
 
     if (!isValid) {
       return createValidationErrorResponse(fastify, parsedData, "Gemini");
@@ -136,7 +135,7 @@ export async function generateEnrichedPoiWithGroq(
     });
 
     // Use jsonSchema helper from AI SDK to wrap the JSON schema
-    const schema = jsonSchema(jsonSchemas.PoiEnrichedSchema);
+    const schema = jsonSchema(PoiEnrichedSchema);
 
     const { text, usage } = await generateText({
       model: groq("openai/gpt-oss-20b"),
@@ -155,8 +154,7 @@ export async function generateEnrichedPoiWithGroq(
     const parsedData: unknown = JSON.parse(text);
 
     // Validate the parsed data against the TypeBox schema
-    const validateData = generateValidator(jsonSchemas.PoiEnrichedSchema);
-    const isValid = validateData(parsedData);
+    const isValid = validateWithSchema(PoiEnrichedSchema, parsedData);
 
     if (!isValid) {
       return createValidationErrorResponse(fastify, parsedData, "Groq");

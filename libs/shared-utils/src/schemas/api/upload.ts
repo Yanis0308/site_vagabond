@@ -1,4 +1,4 @@
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 
 import { ApiResponseSchema } from "../utils.js";
 
@@ -14,3 +14,5 @@ export const UploadFileResponseSchema = ApiResponseSchema(
   FileInfoSchema,
   "UploadFileResponse",
 );
+
+export type FileInfo = Static<typeof FileInfoSchema>;

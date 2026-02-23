@@ -1,7 +1,10 @@
-import { jsonSchemas } from "@vagabond/shared-utils";
+import {
+  type BriefVisitedPoi,
+  BriefVisitedPoiSchema,
+} from "@vagabond/shared-utils";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { type Static, Type } from "typebox";
+import { Type } from "typebox";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import {
@@ -20,7 +23,7 @@ interface UserZoneStat {
   boundary_level: BoundaryLevelEnum;
   parent_id: string | null;
   validated_pois_count: number;
-  validated_pois: Array<Static<typeof jsonSchemas.BriefVisitedPoiSchema>>;
+  validated_pois: BriefVisitedPoi[];
   total_pois_count: number;
   total_subzones_count: number;
   completed_subzones_count: number;
@@ -122,7 +125,7 @@ export class BoundaryRepository {
           ) 
         `.mapWith(
           mapWithJsonSchema(
-            Type.Array(jsonSchemas.BriefVisitedPoiSchema, {
+            Type.Array(BriefVisitedPoiSchema, {
               $id: "ValidatedPoisArray",
             }),
           ),

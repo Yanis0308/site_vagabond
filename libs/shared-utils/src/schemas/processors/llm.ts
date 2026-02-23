@@ -469,4 +469,4 @@ export const PoiEnrichedSchema = Type.Object(
   },
 );
 
-export type PoiEnrichedData = Static<typeof PoiEnrichedSchema>;
+export type PoiEnriched = Static<typeof PoiEnrichedSchema>;

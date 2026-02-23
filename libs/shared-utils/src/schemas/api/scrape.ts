@@ -33,37 +33,3 @@ export const ScrapeDataScraperResponseSchema = Type.Object(
   },
   { $id: "ScrapeDataScraperResponse" },
 );
-
-// Schema for a single item in Jina AI Serp API data array
-export const JinaDataItemSchema = Type.Object(
-  {
-    title: Type.String(),
-    url: Type.String(),
-    description: Type.Optional(Type.String()),
-    content: Type.Optional(Type.String()),
-    images: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
-    metadata: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
-    external: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
-    usage: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
-  },
-  { $id: "JinaDataItem" },
-);
-
-// Response schema for Jina AI Serp API
-export const JinaApiResponseSchema = Type.Object(
-  {
-    code: Type.Number({ examples: [200] }),
-    status: Type.Number({ examples: [200] }),
-    data: Type.Optional(Type.Array(JinaDataItemSchema)),
-    meta: Type.Optional(
-      Type.Object({
-        usage: Type.Optional(
-          Type.Object({
-            tokens: Type.Optional(Type.Number()),
-          }),
-        ),
-      }),
-    ),
-  },
-  { $id: "JinaApiResponse" },
-);

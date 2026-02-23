@@ -1,15 +1,15 @@
+import type { SearchResult } from "@vagabond/shared-utils";
 import { Building2, Clock, MapPin, X } from "lucide-react-native";
 import { type ReactElement } from "react";
 import { TouchableOpacity } from "react-native";
 
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { View } from "@/components/ui/view";
-import type { SearchResultType } from "@/http/search";
 
 import { CustomText } from "../custom-ui/CustomText";
 
 interface SearchResultItemProps {
-  result: SearchResultType;
+  result: SearchResult;
   onPress: () => void;
   onRemove?: () => void;
 }

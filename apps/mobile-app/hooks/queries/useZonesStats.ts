@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
+import type { BriefVisitedPoi, ZoneUserStat } from "@vagabond/shared-utils";
 import { useMemo } from "react";
 
 import { getUserZoneStats } from "@/http/zones";
-import { type BriefVisitedPoiType, type ZoneUserStatType } from "@/utils/types";
 
 interface UseUserZoneStatsReturn {
   data:
     | {
-        zonesStats: ZoneUserStatType[];
-        visitedPoisByPoiIdMap: Map<string, BriefVisitedPoiType>;
+        zonesStats: ZoneUserStat[];
+        visitedPoisByPoiIdMap: Map<string, BriefVisitedPoi>;
       }
     | undefined;
   isSuccess: boolean;
@@ -31,12 +31,12 @@ export const useUserZoneStats = (userId?: string): UseUserZoneStatsReturn => {
     }
 
     // Extract all validated_pois from all zones and build a Map indexed by poiId for O(1) lookup
-    const visitedPoisByPoiIdMap = new Map<string, BriefVisitedPoiType>();
+    const visitedPoisByPoiIdMap = new Map<string, BriefVisitedPoi>();
 
     queryResult.data.forEach((zoneStat) => {
       // validated_pois is always an array (backend guarantees it in boundaryExtensions.ts)
       if (Array.isArray(zoneStat.validated_pois)) {
-        zoneStat.validated_pois.forEach((poi: BriefVisitedPoiType) => {
+        zoneStat.validated_pois.forEach((poi: BriefVisitedPoi) => {
           visitedPoisByPoiIdMap.set(poi.poiId, poi);
         });
       }

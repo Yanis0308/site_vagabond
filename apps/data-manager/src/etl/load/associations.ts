@@ -1,12 +1,9 @@
 import { getDrizzleClient, schema } from "@vagabond/database-client";
-import { logger } from "@vagabond/shared-utils";
+import { logger, type PoiBoundaryAssociation } from "@vagabond/shared-utils";
 
 import { getDbId, getSourceId } from "../id-utils";
 import { JsonlFileReader } from "../jsonl-utils";
-import {
-  type JsonlAssociationRecord,
-  type PoiBoundaryAssociation,
-} from "../types";
+import { type JsonlAssociationRecord } from "../types";
 
 export async function loadAssociationsFromJsonl(
   filePath: string,

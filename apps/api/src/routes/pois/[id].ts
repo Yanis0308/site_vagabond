@@ -3,10 +3,11 @@ import {
   Type,
 } from "@fastify/type-provider-typebox";
 import {
+  ErrorResponseSchema,
+  GetPoiEnrichedResponseSchema,
   type GoogleMapsPlaceStrict,
-  jsonSchemas,
+  type PoiEnriched,
 } from "@vagabond/shared-utils";
-import { type Static } from "typebox";
 
 import { PoiEnrichmentService } from "../../services/poi-enrichment.service.js";
 import { isProcessSuccess } from "../../services/processing/processing-result-orchestrator.js";
@@ -23,9 +24,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           id: Type.String(),
         }),
         response: {
-          200: jsonSchemas.GetPoiEnrichedResponseSchema,
-          404: jsonSchemas.ErrorResponseSchema,
-          500: jsonSchemas.ErrorResponseSchema,
+          200: GetPoiEnrichedResponseSchema,
+          404: ErrorResponseSchema,
+          500: ErrorResponseSchema,
         },
       },
     },
@@ -133,8 +134,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         };
 
         // 10. Process Gemini LLM enrichment
-        let enrichedData: Static<typeof jsonSchemas.PoiEnrichedSchema> | null =
-          null;
+        let enrichedData: PoiEnriched | null = null;
 
         try {
           enrichedData = await enrichmentService.processGeminiEnrichment(

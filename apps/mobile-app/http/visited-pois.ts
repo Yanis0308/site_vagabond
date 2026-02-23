@@ -1,32 +1,25 @@
-import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
-import { type Static } from "typebox";
+import {
+  GetVisitedPoisResponseSchema,
+  validateWithSchema,
+  type VisitedPoi,
+} from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
 
-const validateResponse = generateValidator(
-  jsonSchemas.GetVisitedPoisResponseSchema,
-);
-
-export type VisitedPoiType = Static<
-  typeof jsonSchemas.GetVisitedPoisResponseSchema.properties.data
->[0];
-
-export const getVisitedPois = async (
-  poiId: string,
-): Promise<VisitedPoiType[]> => {
+export const getVisitedPois = async (poiId: string): Promise<VisitedPoi[]> => {
   const rawResult = await apiClient.get(`api/visited-pois/${poiId}`).json();
 
-  if (!validateResponse(rawResult)) {
+  if (!validateWithSchema(GetVisitedPoisResponseSchema, rawResult)) {
     throw new Error("Invalid response");
   }
 
   return rawResult.data;
 };
 
-export const getUserVisitedPois = async (): Promise<VisitedPoiType[]> => {
+export const getUserVisitedPois = async (): Promise<VisitedPoi[]> => {
   const rawResult = await apiClient.get("api/visited-pois").json();
 
-  if (!validateResponse(rawResult)) {
+  if (!validateWithSchema(GetVisitedPoisResponseSchema, rawResult)) {
     throw new Error("Invalid response");
   }
 

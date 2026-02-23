@@ -1,4 +1,4 @@
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 
 import { RoleEnumSchema } from "../enums.js";
 import { ApiResponseSchema, DateSchema, Nullable } from "../utils.js";
@@ -35,3 +35,6 @@ export const UserPublicInfoResponseSchema = ApiResponseSchema(
   UserPublicInfoSchema,
   "UserPublicInfoResponse",
 );
+
+export type UserMe = Static<typeof UserMeSchema>;
+export type UserPublicInfo = Static<typeof UserPublicInfoSchema>;

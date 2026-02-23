@@ -1,19 +1,19 @@
 import {
-  generateValidator,
+  type ExtractedPoiDatabaseRow,
+  ExtractedPoiDatabaseRowSchema,
   getFilterLevelName,
-  jsonSchemas,
   logger,
+  validateWithSchema,
 } from "@vagabond/shared-utils";
 import { type Feature, type Point } from "geojson";
 
 import { getDbId, getSourceId } from "../id-utils";
 import { JsonlFileReader, JsonlFileWriter } from "../jsonl-utils";
-import { type ExtractedPoiDatabaseRow, type JsonlPoiRecord } from "../types";
+import { type JsonlPoiRecord } from "../types";
 import { processStreamInBatches } from "./stream-processor";
 
-const validateRows = generateValidator(
-  jsonSchemas.ExtractedPoiDatabaseRowSchema,
-);
+const validateRows = (value: unknown): value is ExtractedPoiDatabaseRow =>
+  validateWithSchema(ExtractedPoiDatabaseRowSchema, value);
 
 export async function processPois(
   schema: string,

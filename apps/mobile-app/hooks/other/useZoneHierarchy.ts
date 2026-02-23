@@ -1,3 +1,4 @@
+import type { ZoneUserStat } from "@vagabond/shared-utils";
 import { useMemo } from "react";
 
 import type {
@@ -6,10 +7,9 @@ import type {
   Departement,
   Region,
 } from "@/components/profile/utils";
-import type { ZoneUserStatType } from "@/utils/types";
 
-function buildZonesHierarchy(data: ZoneUserStatType[]): CountryType[] {
-  const byParent = new Map<string | null, ZoneUserStatType[]>();
+function buildZonesHierarchy(data: ZoneUserStat[]): CountryType[] {
+  const byParent = new Map<string | null, ZoneUserStat[]>();
   for (const z of data) {
     const bucket = byParent.get(z.parent_id) ?? [];
     bucket.push(z);
@@ -21,7 +21,7 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): CountryType[] {
   );
   if (roots.length === 0) return [];
 
-  const sortByName = (arr: ZoneUserStatType[]): ZoneUserStatType[] =>
+  const sortByName = (arr: ZoneUserStat[]): ZoneUserStat[] =>
     arr.sort((a, b) => a.name.localeCompare(b.name));
 
   for (const [k, arr] of byParent) {
@@ -29,7 +29,7 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): CountryType[] {
   }
 
   // Helper functions to map specific zone types with proper type safety
-  const mapToCity = (zone: ZoneUserStatType): City => {
+  const mapToCity = (zone: ZoneUserStat): City => {
     return {
       zoneId: zone.zone_id,
       name: zone.name,
@@ -39,7 +39,7 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): CountryType[] {
     };
   };
 
-  const mapToDepartement = (zone: ZoneUserStatType): Departement => {
+  const mapToDepartement = (zone: ZoneUserStat): Departement => {
     const children = byParent.get(zone.zone_id) ?? [];
     // Filter children to only include CITY level zones
     const cityChildren = children.filter(
@@ -56,7 +56,7 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): CountryType[] {
     };
   };
 
-  const mapToRegion = (zone: ZoneUserStatType): Region => {
+  const mapToRegion = (zone: ZoneUserStat): Region => {
     const children = byParent.get(zone.zone_id) ?? [];
     // Filter children to only include COUNTY level zones
     const countyChildren = children.filter(
@@ -73,7 +73,7 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): CountryType[] {
     };
   };
 
-  const mapToCountry = (zone: ZoneUserStatType): CountryType => {
+  const mapToCountry = (zone: ZoneUserStat): CountryType => {
     const children = byParent.get(zone.zone_id) ?? [];
     // Filter children to only include REGION level zones
     const regionChildren = children.filter(
@@ -92,7 +92,7 @@ function buildZonesHierarchy(data: ZoneUserStatType[]): CountryType[] {
   return roots.map(mapToCountry);
 }
 
-export const useZoneHierarchy = (data?: ZoneUserStatType[]): CountryType[] => {
+export const useZoneHierarchy = (data?: ZoneUserStat[]): CountryType[] => {
   const zoneHierarchy = useMemo(() => {
     if (data !== undefined) {
       return buildZonesHierarchy(data);

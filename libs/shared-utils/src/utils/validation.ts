@@ -1,4 +1,4 @@
-import { Ajv } from "ajv";
+import { Ajv, type ValidateFunction } from "ajv";
 import addFormats from "ajv-formats";
 import { type Static, type TSchema } from "typebox";
 
@@ -15,22 +15,53 @@ const customAjvInstance = addFormats.default(
   },
 );
 
-export const generateValidator = <T extends TSchema>(
-  schemaToCompile: T,
-): ((value: unknown) => value is Static<T>) => {
-  // We could need to set addUsedSchema option to false to avoid duplicate schema registration errors
-  const validate = customAjvInstance.compile(schemaToCompile);
+const validatorCache = new Map<string | TSchema, ValidateFunction>();
+
+/**
+ * Generate and cache a validator function for a schema.
+ * Use validateWithSchema for direct validation; use this when you need the validator function (e.g. mapWith).
+ * @param schema - The TypeBox schema to validate against
+ * @returns A function that validates a value against the schema
+ */
+export function generateValidator<T extends TSchema>(
+  schema: T,
+): (value: unknown) => value is Static<T> {
+  const cacheKey = (schema as { $id?: string }).$id ?? schema;
+  let validateFn: ValidateFunction;
+  const cached = validatorCache.get(cacheKey);
+  if (cached === undefined) {
+    const schemaId = (schema as { $id?: string }).$id ?? "anonymous";
+    logger.info(`Compiling schema: '${schemaId}'`);
+    validateFn = customAjvInstance.compile(schema);
+    validatorCache.set(cacheKey, validateFn);
+  } else {
+    validateFn = cached;
+  }
 
   return (value: unknown): value is Static<T> => {
-    const result = validate(value);
+    const result = validateFn(value);
     if (!result) {
-      const schemaId =
-        "$id" in schemaToCompile ? schemaToCompile.$id : "unknown";
+      const schemaId = (schema as TSchema & { $id?: string }).$id ?? "unknown";
+      const errors = validateFn.errors ?? [];
       logger.error(
-        `AJV validation failed: Invalid value: '${JSON.stringify(value)}' for schema: '${schemaId as string}'`,
-        JSON.stringify(validate.errors),
+        `AJV validation failed: Invalid value: '${JSON.stringify(value)}' for schema: '${schemaId}'`,
+        JSON.stringify(errors),
       );
     }
     return result;
   };
-};
+}
+
+/**
+ * Validate a value against a schema, using a cached generated validator
+ * @param schema - The TypeBox schema to validate against
+ * @param value - The value to validate
+ * @returns True if the value is valid, false otherwise
+ */
+export function validateWithSchema<T extends TSchema>(
+  schema: T,
+  value: unknown,
+): value is Static<T> {
+  const validate = generateValidator(schema);
+  return validate(value);
+}

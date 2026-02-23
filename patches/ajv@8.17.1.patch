@@ -1,23 +1,32 @@
 diff --git a/dist/compile/resolve.js b/dist/compile/resolve.js
-index f12f968dc07d94a435186b32108551f4d429f23a..cf783d282eb59b80d6b86c70bbdbbef7e342c165 100644
+index f12f968dc07d94a435186b32108551f4d429f23a..068f36c466f439c996a59330183cde99f20835ca 100644
 --- a/dist/compile/resolve.js
 +++ b/dist/compile/resolve.js
-@@ -115,7 +115,8 @@ function getSchemaRefs(schema, baseId) {
+@@ -94,6 +94,8 @@ const ANCHOR = /^[a-z_][-a-z0-9._]*$/i;
+ function getSchemaRefs(schema, baseId) {
+     if (typeof schema == "boolean")
+         return {};
++    const logger = this.logger;
++    const logWarn = (msg) => (logger ? logger.warn(msg) : console.log(msg));
+     const { schemaId, uriResolver } = this.opts;
+     const schId = normalizeId(schema[schemaId] || baseId);
+     const baseIds = { "": schId };
+@@ -115,7 +117,8 @@ function getSchemaRefs(schema, baseId) {
              const _resolve = this.opts.uriResolver.resolve;
              ref = normalizeId(innerBaseId ? _resolve(innerBaseId, ref) : ref);
              if (schemaRefs.has(ref))
 -                throw ambiguos(ref);
-+                this.logger.warn(`[CUSTOM VAGABOND PATCH]reference "${ref}" resolves to more than one schema - inside getSchemaRefs function`);
++                logWarn(`[CUSTOM VAGABOND PATCH]reference "${ref}" resolves to more than one schema - inside getSchemaRefs function`);
 +                //throw ambiguos(ref);
              schemaRefs.add(ref);
              let schOrRef = this.refs[ref];
              if (typeof schOrRef == "string")
-@@ -145,7 +146,8 @@ function getSchemaRefs(schema, baseId) {
+@@ -145,7 +148,8 @@ function getSchemaRefs(schema, baseId) {
      return localRefs;
      function checkAmbiguosRef(sch1, sch2, ref) {
          if (sch2 !== undefined && !equal(sch1, sch2))
 -            throw ambiguos(ref);
-+            this.logger.warn(`[CUSTOM VAGABOND PATCH]reference "${ref}" resolves to more than one schema - inside checkAmbiguosRef function`);
++            logWarn(`[CUSTOM VAGABOND PATCH]reference "${ref}" resolves to more than one schema - inside checkAmbiguosRef function`);
 +            //throw ambiguos(ref);
      }
      function ambiguos(ref) {

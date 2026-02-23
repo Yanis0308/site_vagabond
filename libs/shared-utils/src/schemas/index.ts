@@ -13,17 +13,21 @@ import * as appState from "./app-state.js";
 import * as enums from "./enums.js";
 import * as error from "./error.js";
 import * as etl from "./etl.js";
+import * as jinaReader from "./external/jina-reader.js";
+import * as jinaSearch from "./external/jina-search.js";
 import * as geo from "./geo.js";
 import * as metadata from "./metadata.js";
 import * as primitive from "./primitive.js";
 import * as llmProcessors from "./processors/llm.js";
 
-export const jsonSchemas = {
+export const allJsonSchemas = {
   ...enums,
   ...error,
   ...etl,
   ...geo,
   ...googleMapsPlace,
+  ...jinaReader,
+  ...jinaSearch,
   PoiCategoryTypesSchema,
   ...poiEnriched,
   ...visitedPoi,

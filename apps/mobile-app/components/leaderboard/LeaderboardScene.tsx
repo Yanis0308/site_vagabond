@@ -1,4 +1,5 @@
 import { FlashList } from "@shopify/flash-list";
+import { type LeaderboardUser } from "@vagabond/shared-utils";
 import React, { memo, type ReactElement, useCallback } from "react";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
@@ -7,7 +8,6 @@ import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { Spinner } from "@/components/ui/spinner";
 import { useLeaderboard } from "@/hooks/queries/useLeaderboard";
-import { type LeaderboardUser } from "@/http/leaderboard";
 
 interface LeaderboardSceneProps {
   currentUser: { id: string } | undefined;

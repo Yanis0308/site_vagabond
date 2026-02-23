@@ -1,8 +1,8 @@
+import type { JinaSearchParams } from "@vagabond/shared-utils";
 import type { FastifyInstance } from "fastify";
 
 import {
   type JinaScrapeResponse,
-  type JinaSearchParams,
   searchWithJina,
 } from "../../http/jina-client.js";
 import type {

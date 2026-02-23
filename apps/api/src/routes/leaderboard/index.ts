@@ -1,5 +1,8 @@
 import { type FastifyPluginCallbackTypebox } from "@fastify/type-provider-typebox";
-import { jsonSchemas } from "@vagabond/shared-utils";
+import {
+  LeaderboardQuerySchema,
+  LeaderboardResponseSchema,
+} from "@vagabond/shared-utils";
 import dayjs from "dayjs";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
@@ -8,9 +11,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     {
       schema: {
         tags: ["leaderboard"],
-        querystring: jsonSchemas.LeaderboardQuerySchema,
+        querystring: LeaderboardQuerySchema,
         response: {
-          200: jsonSchemas.LeaderboardResponseSchema,
+          200: LeaderboardResponseSchema,
         },
       },
     },

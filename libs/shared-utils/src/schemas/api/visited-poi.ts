@@ -1,4 +1,4 @@
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 
 import { CoordsSchema } from "../geo.js";
 import { ApiResponseSchema, Nullable } from "../utils.js";
@@ -46,3 +46,9 @@ export const GetVisitedPoisResponseSchema = ApiResponseSchema(
   Type.Array(VisitedPoiSchema),
   "GetVisitedPoisResponse",
 );
+
+export type VisitedPoi = Static<typeof VisitedPoiSchema>;
+export type BriefVisitedPoi = Static<typeof BriefVisitedPoiSchema>;
+export type CreateVisitedPoiRequest = Static<
+  typeof CreateVisitedPoiRequestSchema
+>;

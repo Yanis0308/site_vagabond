@@ -1,3 +1,4 @@
+import type { PoiEnrichedData } from "@vagabond/shared-utils";
 import { Facebook, Instagram, Twitter } from "lucide-react-native";
 import { memo, type ReactNode } from "react";
 import { Linking, Pressable } from "react-native";
@@ -5,11 +6,10 @@ import { Linking, Pressable } from "react-native";
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { Box } from "@/components/ui/box";
 import { Divider } from "@/components/ui/divider";
-import { type PoiEnrichedType } from "@/http/pois";
 import { cn } from "@/utils/cn";
 
 interface SocialMediaSectionProps {
-  socialMedia?: PoiEnrichedType["socialMedia"];
+  socialMedia?: PoiEnrichedData["socialMedia"];
   className?: string;
 }
 

@@ -1,10 +1,11 @@
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 
 import { ApiResponseSchema, DateSchema, Nullable } from "../utils.js";
 
 export const LeaderboardPeriodEnumSchema = Type.Enum(["all-time", "monthly"], {
   $id: "LeaderboardPeriodEnum",
 });
+export type LeaderboardPeriodEnum = Static<typeof LeaderboardPeriodEnumSchema>;
 
 export const LeaderboardQuerySchema = Type.Object(
   {
@@ -33,3 +34,7 @@ export const LeaderboardResponseSchema = ApiResponseSchema(
   }),
   "LeaderboardResponse",
 );
+
+export type LeaderboardQuery = Static<typeof LeaderboardQuerySchema>;
+export type LeaderboardUser = Static<typeof LeaderboardUserSchema>;
+export type LeaderboardResponse = Static<typeof LeaderboardResponseSchema>;

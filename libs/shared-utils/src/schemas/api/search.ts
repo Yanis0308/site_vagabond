@@ -1,4 +1,4 @@
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 
 import { CoordsSchema } from "../geo.js";
 import { ApiResponseSchema } from "../utils.js";
@@ -28,3 +28,6 @@ export const SearchResponseSchema = ApiResponseSchema(
   Type.Array(SearchResultSchema),
   "SearchResponse",
 );
+
+export type SearchQuery = Static<typeof SearchQuerySchema>;
+export type SearchResult = Static<typeof SearchResultSchema>;

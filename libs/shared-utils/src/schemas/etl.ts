@@ -1,4 +1,4 @@
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 
 import { Latitude, Longitude } from "./geo.js";
 
@@ -35,3 +35,11 @@ export const PoiBoundaryAssociationSchema = Type.Object(
   },
   { $id: "PoiBoundaryAssociation" },
 );
+
+export type ExtractedPoiDatabaseRow = Static<
+  typeof ExtractedPoiDatabaseRowSchema
+>;
+export type BoundaryHierarchyRow = Static<typeof BoundaryHierarchyRowSchema>;
+export type PoiBoundaryAssociation = Static<
+  typeof PoiBoundaryAssociationSchema
+>;

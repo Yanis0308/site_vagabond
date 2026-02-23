@@ -1,4 +1,4 @@
-import type { BriefVisitedPoiType } from "@/utils/types";
+import type { BriefVisitedPoi } from "@vagabond/shared-utils";
 
 // Types pour la hiérarchie des zones
 export interface City {
@@ -6,7 +6,7 @@ export interface City {
   name: string;
   totalPoisCount: number;
   validatedPoisCount: number;
-  pois: BriefVisitedPoiType[];
+  pois: BriefVisitedPoi[];
 }
 
 export interface Departement {
@@ -60,9 +60,7 @@ export interface ProgressData {
 }
 
 // Fonction pour trier les POIs par date décroissante
-export function sortPoisByDate(
-  pois: BriefVisitedPoiType[],
-): BriefVisitedPoiType[] {
+export function sortPoisByDate(pois: BriefVisitedPoi[]): BriefVisitedPoi[] {
   return [...pois].sort((a, b) => {
     const dateA = new Date(a.createdAt).getTime();
     const dateB = new Date(b.createdAt).getTime();
@@ -71,7 +69,7 @@ export function sortPoisByDate(
 }
 
 // Fonction pour obtenir la date du POI le plus récent dans une zone
-export function getLatestPoiDate(pois: BriefVisitedPoiType[]): number {
+export function getLatestPoiDate(pois: BriefVisitedPoi[]): number {
   if (pois.length === 0) return 0;
   return Math.max(...pois.map((poi) => new Date(poi.createdAt).getTime()));
 }
@@ -87,8 +85,8 @@ export function sortRegionsByLatestPoiDate(
     }))
     .sort((a, b) => {
       // Obtenir la date la plus récente parmi tous les POIs de la région
-      const getAllPoisFromRegion = (r: RegionType): BriefVisitedPoiType[] => {
-        const allPois: BriefVisitedPoiType[] = [];
+      const getAllPoisFromRegion = (r: RegionType): BriefVisitedPoi[] => {
+        const allPois: BriefVisitedPoi[] = [];
         for (const dept of r.departements) {
           for (const city of dept.cities) {
             allPois.push(...city.pois);
@@ -115,8 +113,8 @@ export function sortDepartementsByLatestPoiDate(
       // Obtenir la date la plus récente parmi tous les POIs du département
       const getAllPoisFromDepartement = (
         d: DepartementType,
-      ): BriefVisitedPoiType[] => {
-        const allPois: BriefVisitedPoiType[] = [];
+      ): BriefVisitedPoi[] => {
+        const allPois: BriefVisitedPoi[] = [];
         for (const city of d.cities) {
           allPois.push(...city.pois);
         }
@@ -152,7 +150,7 @@ export function calculateStats(zoneHierarchy: CountryType[]): Stats {
   let departements = 0;
   let cities = 0;
 
-  let latestPoi: BriefVisitedPoiType | null = null;
+  let latestPoi: BriefVisitedPoi | null = null;
   let latestPoiDate = 0;
 
   for (const country of zoneHierarchy) {

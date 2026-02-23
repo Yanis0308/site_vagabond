@@ -1,20 +1,17 @@
-import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
-import { type Static } from "typebox";
+import {
+  GetPoiEnrichedResponseSchema,
+  type PoiEnrichedData,
+  validateWithSchema,
+} from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
 
-const validateResponse = generateValidator(
-  jsonSchemas.GetPoiEnrichedResponseSchema,
-);
-
-export type PoiEnrichedType = Static<typeof jsonSchemas.PoiEnrichedDataSchema>;
-
 export const getPoiEnriched = async (
   poiId: string,
-): Promise<PoiEnrichedType> => {
+): Promise<PoiEnrichedData> => {
   const rawResult = await apiClient.get(`api/pois/${poiId}`).json();
 
-  if (!validateResponse(rawResult)) {
+  if (!validateWithSchema(GetPoiEnrichedResponseSchema, rawResult)) {
     throw new Error("Invalid response");
   }
 

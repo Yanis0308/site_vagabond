@@ -1,17 +1,18 @@
-import { generateValidator } from "@vagabond/shared-utils";
-import { jsonSchemas } from "@vagabond/shared-utils";
+import {
+  type PoiBoundaryAssociation,
+  PoiBoundaryAssociationSchema,
+  validateWithSchema,
+} from "@vagabond/shared-utils";
 
 import { getSupportedAdminLevelsSQL } from "../boundary-mapping-config";
 import { JsonlFileWriter } from "../jsonl-utils";
-import {
-  type JsonlAssociationRecord,
-  type PoiBoundaryAssociation,
-} from "../types";
+import { type JsonlAssociationRecord } from "../types";
 import { processStreamInBatches } from "./stream-processor";
 
-const validatePoiBoundaryAssociations = generateValidator(
-  jsonSchemas.PoiBoundaryAssociationSchema,
-);
+const validatePoiBoundaryAssociations = (
+  value: unknown,
+): value is PoiBoundaryAssociation =>
+  validateWithSchema(PoiBoundaryAssociationSchema, value);
 
 export async function processPoiBoundaryAssociations(
   schema: string,

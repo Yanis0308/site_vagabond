@@ -2,7 +2,11 @@ import {
   type FastifyPluginCallbackTypebox,
   Type,
 } from "@fastify/type-provider-typebox";
-import { jsonSchemas } from "@vagabond/shared-utils";
+import {
+  ErrorResponseSchema,
+  UserPublicInfoResponseSchema,
+  UsersMeResponseSchema,
+} from "@vagabond/shared-utils";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
@@ -12,7 +16,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         tags: ["users"],
         security: [{ bearerAuth: [] }],
         response: {
-          200: jsonSchemas.UsersMeResponseSchema,
+          200: UsersMeResponseSchema,
         },
       },
     },
@@ -40,8 +44,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         }),
         security: [{ bearerAuth: [] }],
         response: {
-          200: jsonSchemas.UserPublicInfoResponseSchema,
-          404: jsonSchemas.ErrorResponseSchema,
+          200: UserPublicInfoResponseSchema,
+          404: ErrorResponseSchema,
         },
       },
     },

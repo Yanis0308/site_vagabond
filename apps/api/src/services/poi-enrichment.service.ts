@@ -1,9 +1,10 @@
-import { type jsonSchemas } from "@vagabond/shared-utils";
-import { type GoogleMapsPlaceStrict } from "@vagabond/shared-utils";
+import {
+  type GoogleMapsPlaceStrict,
+  type PoiEnriched,
+} from "@vagabond/shared-utils";
 import { randomUUID } from "crypto";
 import type { FastifyInstance } from "fastify";
 import { getDistance } from "geolib";
-import type { Static } from "typebox";
 
 import { normalizeSearchText } from "../utils/text.js";
 import type { GoogleMapsScrapeResponse } from "./http/data-scraper-client.js";
@@ -23,9 +24,6 @@ import { isScrapingSuccess } from "./processing/scraping-processor.interface.js"
 //   WikidataProcessor,
 //   WikipediaProcessor,
 // } from "./processing/processors/wikimedia.processor.js";
-
-// Type for full enriched POI data
-type EnrichedPoiData = Static<typeof jsonSchemas.PoiEnrichedSchema>;
 
 interface PoiBasicInfo {
   name: string;
@@ -237,7 +235,7 @@ export class PoiEnrichmentService {
       wikipediaRawData: Record<string, unknown>;
     },
     osmTags: OsmTags | null,
-  ): Promise<EnrichedPoiData> {
+  ): Promise<PoiEnriched> {
     const orchestrator = new ProcessingResultOrchestrator(this.fastify);
     const batchId = randomUUID();
     const llmProcessor = new LlmProcessor();
@@ -313,7 +311,7 @@ export class PoiEnrichmentService {
       throw new Error(`LLM enrichment failed: ${errorMessage}`);
     }
 
-    return llmResponse.data as EnrichedPoiData;
+    return llmResponse.data as PoiEnriched;
   }
 
   /**

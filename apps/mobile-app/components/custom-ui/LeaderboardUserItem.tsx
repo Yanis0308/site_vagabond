@@ -1,4 +1,5 @@
 import { getUserDisplayName } from "@vagabond/shared-utils";
+import { type LeaderboardUser } from "@vagabond/shared-utils";
 import { router } from "expo-router";
 import React, { memo, type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,7 +10,6 @@ import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import { type LeaderboardUser } from "@/http/leaderboard";
 import { getPlainTextDate } from "@/utils/date";
 
 interface LeaderboardUserItemProps {

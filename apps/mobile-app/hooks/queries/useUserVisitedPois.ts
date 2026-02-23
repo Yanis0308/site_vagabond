@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import type { VisitedPoi } from "@vagabond/shared-utils";
 import { useMemo } from "react";
 
-import { getUserVisitedPois, type VisitedPoiType } from "@/http/visited-pois";
+import { getUserVisitedPois } from "@/http/visited-pois";
 
 export const useUserVisitedPois = (): {
   data: {
-    visitedPois: VisitedPoiType[] | undefined;
+    visitedPois: VisitedPoi[] | undefined;
     visitedPoiIds: string[];
   };
   isSuccess: boolean;

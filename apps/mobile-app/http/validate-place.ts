@@ -1,12 +1,11 @@
-import { type jsonSchemas } from "@vagabond/shared-utils";
-import { type Static } from "typebox";
+import { type CreateVisitedPoiRequest } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
 import { logger } from "@/utils/logger";
 
 export const validatePlace = async (
   placeId: string,
-  data: Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema>,
+  data: CreateVisitedPoiRequest,
 ): Promise<void> => {
   const rawResult = await apiClient
     .post(`api/visited-pois/${placeId}`, { json: data })

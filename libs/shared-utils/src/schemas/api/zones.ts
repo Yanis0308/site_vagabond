@@ -1,6 +1,6 @@
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 
-import { BoundaryLevelEnum } from "../enums.js";
+import { BoundaryLevelEnumSchema } from "../enums.js";
 import { CoordsSchema } from "../geo.js";
 import { ApiResponseSchema } from "../utils.js";
 import { BriefVisitedPoiSchema } from "./visited-poi.js";
@@ -9,7 +9,7 @@ export const ZoneBaseSchema = Type.Object(
   {
     zone_id: Type.String(),
     name: Type.String(),
-    boundary_level: BoundaryLevelEnum,
+    boundary_level: BoundaryLevelEnumSchema,
   },
   { $id: "ZoneBase" },
 );
@@ -20,7 +20,7 @@ export const ZoneStatSchema = Type.Object(
     name: Type.String(),
     point: CoordsSchema,
     total_pois: Type.Number({ minimum: 0 }),
-    boundary_level: BoundaryLevelEnum,
+    boundary_level: BoundaryLevelEnumSchema,
     parent_id: Type.Union([Type.Null(), Type.String()]),
     place_type: Type.Union([Type.Null(), Type.String()]),
     population: Type.Union([Type.Null(), Type.Number()]),
@@ -35,7 +35,7 @@ export const ZoneUserStatSchema = Type.Object(
   {
     zone_id: Type.String(),
     name: Type.String(),
-    boundary_level: BoundaryLevelEnum,
+    boundary_level: BoundaryLevelEnumSchema,
     parent_id: Type.Union([Type.Null(), Type.String()]),
     validated_pois_count: Type.Number({ minimum: 0 }),
     validated_pois: Type.Array(BriefVisitedPoiSchema),
@@ -55,3 +55,6 @@ export const GetUserZoneStatsResponseSchema = ApiResponseSchema(
   Type.Array(ZoneUserStatSchema),
   "GetUserZoneStatsResponse",
 );
+
+export type ZoneStat = Static<typeof ZoneStatSchema>;
+export type ZoneUserStat = Static<typeof ZoneUserStatSchema>;

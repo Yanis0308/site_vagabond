@@ -1,3 +1,4 @@
+import type { BriefVisitedPoi } from "@vagabond/shared-utils";
 import { getUserDisplayName } from "@vagabond/shared-utils";
 import { type FC, memo } from "react";
 
@@ -8,10 +9,9 @@ import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { config } from "@/constants/Config";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
-import { type BriefVisitedPoiType } from "@/utils/types";
 
 interface ValidatedPlaceCardProps {
-  visitedPoi: BriefVisitedPoiType;
+  visitedPoi: BriefVisitedPoi;
 }
 
 export const ValidatedPlaceCard: FC<ValidatedPlaceCardProps> = memo(

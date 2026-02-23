@@ -1,3 +1,4 @@
+import type { ZoneUserStat } from "@vagabond/shared-utils";
 import { useMemo } from "react";
 
 import {
@@ -6,7 +7,6 @@ import {
   sortRegionsByLatestPoiDate,
 } from "@/components/profile";
 import { useZoneHierarchy } from "@/hooks/other/useZoneHierarchy";
-import type { ZoneUserStatType } from "@/utils/types";
 
 interface UseProfileComputedDataReturn {
   sortedHierarchy: ReturnType<typeof useZoneHierarchy>;
@@ -15,7 +15,7 @@ interface UseProfileComputedDataReturn {
 }
 
 export const useProfileComputedData = (
-  zoneStats?: ZoneUserStatType[],
+  zoneStats?: ZoneUserStat[],
 ): UseProfileComputedDataReturn => {
   const zoneHierarchy = useZoneHierarchy(zoneStats);
 

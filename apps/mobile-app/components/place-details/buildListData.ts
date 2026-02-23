@@ -1,6 +1,6 @@
+import type { PoiEnrichedData } from "@vagabond/shared-utils";
 import { type EdgeInsets } from "react-native-safe-area-context";
 
-import { type PoiEnrichedType } from "@/http/pois";
 import { type PoiType } from "@/utils/types";
 
 export type ListItemType =
@@ -27,7 +27,7 @@ export type ListItemType =
 
 interface BuildListDataParams {
   place: PoiType | null;
-  enrichedData: PoiEnrichedType | undefined;
+  enrichedData: PoiEnrichedData | undefined;
   isVisited: boolean;
   rating: number;
   ratingCount: number;

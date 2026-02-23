@@ -1,5 +1,9 @@
-import { generateValidator, jsonSchemas, logger } from "@vagabond/shared-utils";
-import { type PoiEnrichedData } from "@vagabond/shared-utils/dist/schemas/processors/llm.js";
+import {
+  logger,
+  type PoiEnriched,
+  PoiEnrichedSchema,
+  validateWithSchema,
+} from "@vagabond/shared-utils";
 import { and, eq } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
@@ -8,7 +12,7 @@ import { POI_ENRICHED_VERSION } from "../versions.js";
 
 export interface CreatePoiEnrichedInput {
   poiId: string;
-  enrichedData: PoiEnrichedData;
+  enrichedData: PoiEnriched;
   source: string;
 }
 
@@ -17,16 +21,12 @@ export interface PoiEnrichedWithData {
   poiId: string;
   source: string;
   version: number;
-  enrichedData: PoiEnrichedData;
+  enrichedData: PoiEnriched;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export class PoiEnrichedRepository {
-  private readonly validateEnrichedData = generateValidator(
-    jsonSchemas.PoiEnrichedSchema,
-  );
-
   constructor(private readonly db: DrizzleClient) {}
 
   async findByPoiId(poiId: string): Promise<PoiEnrichedWithData | undefined> {
@@ -41,12 +41,10 @@ export class PoiEnrichedRepository {
       return undefined;
     }
 
-    const enrichedData: unknown | PoiEnrichedData = enriched.enrichedData;
+    const enrichedData = enriched.enrichedData;
 
     // Validate the JSON against PoiEnrichedSchema
-    const isValid = this.validateEnrichedData(enrichedData);
-
-    if (!isValid) {
+    if (!validateWithSchema(PoiEnrichedSchema, enrichedData)) {
       // Log validation errors but don't expose them to the user
       logger.error(
         `Invalid enriched data for POI ${poiId}:`,
@@ -70,7 +68,7 @@ export class PoiEnrichedRepository {
     data: CreatePoiEnrichedInput,
   ): Promise<PoiEnrichedWithData | undefined> {
     // Validate the enriched data before storing
-    const isValid = this.validateEnrichedData(data.enrichedData);
+    const isValid = validateWithSchema(PoiEnrichedSchema, data.enrichedData);
 
     if (!isValid) {
       throw new Error(

@@ -2,7 +2,7 @@ import type { Page } from "puppeteer";
 
 import {
   extractValidatedPlaceData,
-  validateAppInitializationState,
+  isValidAppInitializationState,
 } from "../validators/appStateValidator.js";
 
 interface WindowWithAppState extends Window {
@@ -72,7 +72,7 @@ export async function extractPlaceData(
       });
 
       // Use validator instead of manual check
-      if (validateAppInitializationState(appState)) {
+      if (isValidAppInitializationState(appState)) {
         break;
       }
     } catch (error) {

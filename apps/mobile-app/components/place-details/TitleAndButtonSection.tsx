@@ -1,16 +1,16 @@
+import type { PoiEnrichedData } from "@vagabond/shared-utils";
 import { type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable } from "react-native";
 import Animated from "react-native-reanimated";
 
-import { type PoiEnrichedType } from "@/http/pois";
 import { shadowStyles } from "@/styles/shadows";
 
 import { CustomText } from "../custom-ui/CustomText";
 import { Button, ButtonText } from "../ui/button";
 
 interface TitleAndButtonSectionProps {
-  enrichedData: PoiEnrichedType | undefined;
+  enrichedData: PoiEnrichedData | undefined;
   placeName: string;
   isVisited: boolean;
   onPressCamera: () => Promise<void>;

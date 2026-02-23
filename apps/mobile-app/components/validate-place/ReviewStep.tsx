@@ -1,11 +1,14 @@
 import { ajvResolver } from "@hookform/resolvers/ajv";
-import { jsonSchemas } from "@vagabond/shared-utils";
+import {
+  allJsonSchemas,
+  type CreateVisitedPoiRequest,
+  CreateVisitedPoiRequestSchema,
+} from "@vagabond/shared-utils";
 import { type JSONSchemaType } from "ajv";
 import { useSetAtom } from "jotai";
 import React, { useEffect } from "react";
 import { Controller, type ControllerProps, useForm } from "react-hook-form";
 import { View } from "react-native";
-import { type Static } from "typebox";
 
 import { StarRating } from "@/components/validate-place/StarRating";
 import { useValidatePlaceMutation } from "@/hooks/mutations/useValidatePlaceMutation";
@@ -47,14 +50,12 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
     setFocus,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema>>({
+  } = useForm<CreateVisitedPoiRequest>({
     resolver: ajvResolver(
-      jsonSchemas.CreateVisitedPoiRequestSchema as JSONSchemaType<
-        Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema>
-      >,
+      CreateVisitedPoiRequestSchema as JSONSchemaType<CreateVisitedPoiRequest>,
       {
         addUsedSchema: false,
-        schemas: jsonSchemas,
+        schemas: allJsonSchemas,
       },
     ),
     mode: "all",
@@ -102,9 +103,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
     }
   }, [register, setValue, userLocation]);
 
-  const onSubmit = async (
-    data: Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema>,
-  ): Promise<void> => {
+  const onSubmit = async (data: CreateVisitedPoiRequest): Promise<void> => {
     // Data is already validated by the resolver
     try {
       setDisplayingLoader(true);
@@ -131,10 +130,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
   const renderRating = ({
     field: { value, onChange },
   }: Parameters<
-    ControllerProps<
-      Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema>,
-      "rating"
-    >["render"]
+    ControllerProps<CreateVisitedPoiRequest, "rating">["render"]
   >[0]): React.ReactElement => (
     <Box className="flex flex-col items-center gap-2 pt-8">
       <CustomText type="rating" className="text-rust-600">
@@ -148,10 +144,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
     field,
     fieldState,
   }: Parameters<
-    ControllerProps<
-      Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema>,
-      "comment"
-    >["render"]
+    ControllerProps<CreateVisitedPoiRequest, "comment">["render"]
   >[0]): React.ReactElement => {
     return (
       <CustomTextarea

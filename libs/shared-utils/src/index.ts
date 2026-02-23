@@ -19,24 +19,113 @@ export {
   ReviewSchema,
 } from "./schemas/api/google-maps-place.js";
 export {
+  type LeaderboardPeriodEnum,
+  LeaderboardPeriodEnumSchema,
+  type LeaderboardQuery,
+  LeaderboardQuerySchema,
+  type LeaderboardResponse,
+  LeaderboardResponseSchema,
+  type LeaderboardUser,
+  LeaderboardUserSchema,
+} from "./schemas/api/leaderboard.js";
+export {
+  GetPoiEnrichedResponseSchema,
+  type PoiEnrichedData,
+  PoiEnrichedDataSchema,
+} from "./schemas/api/poi-enriched.js";
+export { EmptyResponseSchema } from "./schemas/api/response.js";
+export {
   ScrapeDataScraperQuerySchema,
   ScrapeDataScraperResponseSchema,
   ScrapeQuerySchema,
 } from "./schemas/api/scrape.js";
 export {
+  type SearchQuery,
   SearchQuerySchema,
   SearchResponseSchema,
+  type SearchResult,
   SearchResultSchema,
 } from "./schemas/api/search.js";
+export {
+  type FileInfo,
+  FileInfoSchema,
+  UploadFileResponseSchema,
+} from "./schemas/api/upload.js";
+export {
+  type UserMe,
+  UserMeSchema,
+  type UserPublicInfo,
+  UserPublicInfoResponseSchema,
+  UserPublicInfoSchema,
+  UsersMeResponseSchema,
+} from "./schemas/api/user.js";
+export {
+  type BriefVisitedPoi,
+  BriefVisitedPoiSchema,
+  type CreateVisitedPoiRequest,
+  CreateVisitedPoiRequestSchema,
+  GetVisitedPoisResponseSchema,
+  type VisitedPoi,
+  VisitedPoiSchema,
+} from "./schemas/api/visited-poi.js";
+export {
+  GetUserZoneStatsResponseSchema,
+  type ZoneStat,
+  type ZoneUserStat,
+  ZoneUserStatSchema,
+} from "./schemas/api/zones.js";
 export {
   type AppInitializationState,
   AppInitializationStateSchema,
   type AppStateData,
   AppStateDataSchema,
 } from "./schemas/app-state.js";
-export { jsonSchemas } from "./schemas/index.js";
-export { PoiEnrichedSchema } from "./schemas/processors/llm.js";
+export {
+  type BoundaryLevelEnum,
+  BoundaryLevelEnumSchema,
+  type ErrorEnum,
+  ErrorEnumSchema,
+  type LanguageEnum,
+  LanguageEnumSchema,
+  type PoiDataSourceEnum,
+  PoiDataSourceEnumSchema,
+  type PoiFilterLevelEnum,
+  PoiFilterLevelEnumSchema,
+  type PoiSourceEnum,
+  PoiSourceEnumSchema,
+  type RoleEnum,
+  RoleEnumSchema,
+  type VisitedPoiStatusEnum,
+  VisitedPoiStatusEnumSchema,
+} from "./schemas/enums.js";
+export { ErrorResponseSchema } from "./schemas/error.js";
+export {
+  type BoundaryHierarchyRow,
+  BoundaryHierarchyRowSchema,
+  type ExtractedPoiDatabaseRow,
+  ExtractedPoiDatabaseRowSchema,
+  type PoiBoundaryAssociation,
+  PoiBoundaryAssociationSchema,
+} from "./schemas/etl.js";
+export {
+  type JinaApiResponse,
+  JinaApiResponseSchema,
+  type JinaScrapeSuccessData,
+  type JinaSearchParams,
+  JinaSearchParamsSchema,
+  type JinaSearchResult,
+  JinaSearchResultSchema,
+  type SearchProviderEnum,
+  SearchProviderEnumSchema,
+  type SearchTypeEnum,
+  SearchTypeEnumSchema,
+} from "./schemas/external/jina-search.js";
+export { allJsonSchemas } from "./schemas/index.js";
+export {
+  type PoiEnriched,
+  PoiEnrichedSchema,
+} from "./schemas/processors/llm.js";
 export { logger } from "./utils/logger.js";
-export { getFilterLevelName, type PoiFilterLevel } from "./utils/poi.js";
+export { getFilterLevelName } from "./utils/poi.js";
 export { getUserDisplayName } from "./utils/user.js";
-export { generateValidator } from "./utils/validation.js";
+export { generateValidator, validateWithSchema } from "./utils/validation.js";

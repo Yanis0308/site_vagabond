@@ -2,7 +2,13 @@ import {
   type FastifyPluginCallbackTypebox,
   Type,
 } from "@fastify/type-provider-typebox";
-import { getUserDisplayName, jsonSchemas } from "@vagabond/shared-utils";
+import {
+  CreateVisitedPoiRequestSchema,
+  EmptyResponseSchema,
+  ErrorResponseSchema,
+  getUserDisplayName,
+  GetVisitedPoisResponseSchema,
+} from "@vagabond/shared-utils";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
@@ -12,7 +18,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         tags: ["visited-pois"],
         security: [{ bearerAuth: [] }],
         response: {
-          200: jsonSchemas.GetVisitedPoisResponseSchema,
+          200: GetVisitedPoisResponseSchema,
         },
       },
     },
@@ -35,7 +41,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           poiId: Type.String(),
         }),
         response: {
-          200: jsonSchemas.GetVisitedPoisResponseSchema,
+          200: GetVisitedPoisResponseSchema,
         },
       },
     },
@@ -58,10 +64,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         params: Type.Object({
           poiId: Type.String(),
         }),
-        body: jsonSchemas.CreateVisitedPoiRequestSchema,
+        body: CreateVisitedPoiRequestSchema,
         response: {
-          200: jsonSchemas.EmptyResponseSchema,
-          409: jsonSchemas.ErrorResponseSchema,
+          200: EmptyResponseSchema,
+          409: ErrorResponseSchema,
         },
       },
     },

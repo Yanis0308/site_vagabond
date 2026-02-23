@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { type jsonSchemas } from "@vagabond/shared-utils";
-import { type Static } from "typebox";
+import { type CreateVisitedPoiRequest } from "@vagabond/shared-utils";
 
 import { queryClient } from "@/constants/QueryClient";
 import { validatePlace } from "@/http/validate-place";
@@ -10,7 +9,7 @@ import { logger } from "@/utils/logger";
 export const useValidatePlaceMutation = () => {
   return useMutation({
     mutationFn: async (
-      body: Static<typeof jsonSchemas.CreateVisitedPoiRequestSchema> & {
+      body: CreateVisitedPoiRequest & {
         placeId: string;
       },
     ) => {

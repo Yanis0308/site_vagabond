@@ -1,11 +1,11 @@
-import type { ZoneUserStatType } from "@/utils/types";
+import type { ZoneUserStat } from "@vagabond/shared-utils";
 
 export type ZoneState = "unvisited" | "inProgress" | "completed";
 
 /**
  * Determines zone state based on user statistics
  */
-export function getZoneState(zone: ZoneUserStatType): ZoneState {
+export function getZoneState(zone: ZoneUserStat): ZoneState {
   const hasVisitedPois = zone.validated_pois_count > 0;
   const hasCompletedSubzones = zone.completed_subzones_count > 0;
 

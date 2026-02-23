@@ -1,3 +1,4 @@
+import type { SearchResult } from "@vagabond/shared-utils";
 import { router } from "expo-router";
 import { Trash2 } from "lucide-react-native";
 import { type ReactElement, useRef } from "react";
@@ -17,7 +18,7 @@ import { queryClient } from "@/constants/QueryClient";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { useSearch } from "@/hooks/queries/useSearch";
-import { searchPlaces, type SearchResultType } from "@/http/search";
+import { searchPlaces } from "@/http/search";
 import { mapService } from "@/services/MapService";
 import {
   type RecentSearch,
@@ -43,7 +44,7 @@ export default function SearchScreen(): ReactElement {
     searchHeaderRef.current?.blur();
   };
 
-  const handleSelectResult = (result: SearchResultType): void => {
+  const handleSelectResult = (result: SearchResult): void => {
     // Add to recent searches
     void addRecentSearch(result);
 

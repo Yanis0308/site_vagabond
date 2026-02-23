@@ -1,4 +1,4 @@
-import { Type } from "typebox";
+import { type Static, Type } from "typebox";
 
 import { PoiEnrichedSchema } from "../processors/llm.js";
 import { ApiResponseSchema, DateSchema } from "../utils.js";
@@ -32,3 +32,5 @@ export const GetPoiEnrichedResponseSchema = ApiResponseSchema(
   PoiEnrichedDataSchema,
   "GetPoiEnrichedResponse",
 );
+
+export type PoiEnrichedData = Static<typeof PoiEnrichedDataSchema>;

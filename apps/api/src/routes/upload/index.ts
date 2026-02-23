@@ -1,6 +1,6 @@
 import { Upload } from "@aws-sdk/lib-storage";
 import { type FastifyPluginCallbackTypebox } from "@fastify/type-provider-typebox";
-import { jsonSchemas } from "@vagabond/shared-utils";
+import { UploadFileResponseSchema } from "@vagabond/shared-utils";
 import crypto from "crypto";
 import sharp from "sharp";
 
@@ -16,7 +16,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         security: [{ bearerAuth: [] }],
         consumes: ["multipart/form-data"],
         response: {
-          200: jsonSchemas.UploadFileResponseSchema,
+          200: UploadFileResponseSchema,
         },
       },
     },

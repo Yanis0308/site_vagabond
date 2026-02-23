@@ -1,15 +1,16 @@
 import { useDebouncer } from "@tanstack/react-pacer";
 import { useQuery } from "@tanstack/react-query";
+import type { SearchResult } from "@vagabond/shared-utils";
 import { useEffect, useState } from "react";
 
-import { searchPlaces, type SearchResultType } from "@/http/search";
+import { searchPlaces } from "@/http/search";
 import { useSearchTerm } from "@/stores/searchTermAtom";
 
 const DEBOUNCE_DELAY = 250;
 const MIN_QUERY_LENGTH = 2;
 
 export const useSearch = (): {
-  data: SearchResultType[] | undefined;
+  data: SearchResult[] | undefined;
   isLoading: boolean;
   error: unknown;
 } => {

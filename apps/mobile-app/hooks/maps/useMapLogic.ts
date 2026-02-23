@@ -1,7 +1,7 @@
 import { type MapState, type MapView } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
-import { type PoiFilterLevel } from "@vagabond/shared-utils";
+import { type PoiFilterLevelEnum } from "@vagabond/shared-utils";
 import { type Feature, type Geometry } from "geojson";
 import { getDistance } from "geolib";
 import {
@@ -21,7 +21,7 @@ export interface OnPressEventPoi extends OnPressEvent {
   features: Array<
     Feature<
       Geometry,
-      { poiId: string; name: string; filterLevel: PoiFilterLevel }
+      { poiId: string; name: string; filterLevel: PoiFilterLevelEnum }
     >
   >;
 }

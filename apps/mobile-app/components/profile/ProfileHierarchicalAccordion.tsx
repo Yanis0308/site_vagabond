@@ -1,11 +1,11 @@
 import { FlashList } from "@shopify/flash-list";
+import type { BriefVisitedPoi } from "@vagabond/shared-utils";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react-native";
 import { memo, type ReactElement, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable } from "react-native";
 
 import { Box } from "@/components/ui/box";
-import type { BriefVisitedPoiType } from "@/utils/types";
 
 import { CustomText } from "../custom-ui/CustomText";
 import { ProfilePoiItem } from "./ProfilePoiItem";
@@ -26,7 +26,7 @@ type FlatItem =
   | { type: "region"; data: RegionType; level: 0; id: string }
   | { type: "dept"; data: DepartementType; level: 1; id: string }
   | { type: "city"; data: CityType; level: 2; id: string }
-  | { type: "poi"; data: BriefVisitedPoiType; level: 3; id: string };
+  | { type: "poi"; data: BriefVisitedPoi; level: 3; id: string };
 
 // Fonction pour aplatir la hiérarchie
 const flattenHierarchy = (

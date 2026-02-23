@@ -12,12 +12,10 @@ export function mapWithNullableString(v: unknown): string | null {
   return JSON.stringify(v);
 }
 
-const validatorCache = new Map<string, (value: unknown) => value is unknown>();
-
 /**
  * Creates a mapper for JSONB results validated via AJV against a JSON schema.
  * Use with .mapWith(mapWithJsonSchema(schema)) instead of sql<T>.
- * Validators are cached in memory by schema $id to avoid recompilation.
+ * Validators are cached in memory by schema reference to avoid recompilation.
  *
  * @param schema - TypeBox schema with $id (e.g. Type.Array(X, { $id: "MySchema" }))
  * @returns Mapper function for Drizzle's .mapWith()
@@ -25,15 +23,7 @@ const validatorCache = new Map<string, (value: unknown) => value is unknown>();
 export function mapWithJsonSchema<T extends TSchema>(
   schema: T,
 ): (v: unknown) => Static<T> {
-  const cacheKey = "$id" in schema ? (schema.$id as string) : undefined;
-  let validate =
-    cacheKey !== undefined ? validatorCache.get(cacheKey) : undefined;
-  if (validate === undefined) {
-    validate = generateValidator(schema);
-    if (cacheKey !== undefined) {
-      validatorCache.set(cacheKey, validate);
-    }
-  }
+  const validate = generateValidator(schema);
 
   return (v: unknown): Static<T> => {
     const parsed = parseJsonbValue(v);
@@ -42,11 +32,11 @@ export function mapWithJsonSchema<T extends TSchema>(
       return [] as Static<T>;
     }
     if (!validate(parsed)) {
-      const schemaId = cacheKey ?? "unknown";
+      const schemaId = (schema as { $id?: string }).$id ?? "unknown";
       throw new Error(`JSONB validation failed for schema ${schemaId}`);
     }
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- validated by AJV type guard
-    return parsed as Static<T>;
+    return parsed;
   };
 }
 

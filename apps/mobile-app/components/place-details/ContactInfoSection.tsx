@@ -1,20 +1,20 @@
+import type { PoiEnrichedData } from "@vagabond/shared-utils";
 import { memo, type ReactNode } from "react";
 import { Linking, Pressable } from "react-native";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { Box } from "@/components/ui/box";
 import { Divider } from "@/components/ui/divider";
-import { type PoiEnrichedType } from "@/http/pois";
 import { cn } from "@/utils/cn";
 
 import { OpeningHoursCompact } from "./OpeningHoursCompact";
 
 interface ContactInfoSectionProps {
-  address?: PoiEnrichedType["address"];
-  phone?: PoiEnrichedType["phone"];
-  website?: PoiEnrichedType["website"];
-  openingHours?: PoiEnrichedType["openingHours"];
-  price?: PoiEnrichedType["price"];
+  address?: PoiEnrichedData["address"];
+  phone?: PoiEnrichedData["phone"];
+  website?: PoiEnrichedData["website"];
+  openingHours?: PoiEnrichedData["openingHours"];
+  price?: PoiEnrichedData["price"];
   className?: string;
 }
 

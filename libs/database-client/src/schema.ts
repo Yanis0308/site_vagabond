@@ -54,7 +54,7 @@ export const visitedPoiStatus = pgEnum("VisitedPoiStatus", [
   "PENDING",
   "CONFIRMED",
 ]);
-export type VisitedPoiStatus = (typeof visitedPoiStatus.enumValues)[number];
+export type VisitedPoiStatusEnum = (typeof visitedPoiStatus.enumValues)[number];
 
 export const processingStatusEnum = pgEnum("ProcessingStatusEnum", [
   "pending",

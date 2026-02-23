@@ -1,4 +1,5 @@
 import { getUserDisplayName } from "@vagabond/shared-utils";
+import { type LeaderboardUser } from "@vagabond/shared-utils";
 import React, { memo, type ReactElement } from "react";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
@@ -33,7 +34,7 @@ export const LeaderboardHeader = memo(
 
     const totalParticipants = leaderboardData.users.length;
     const currentUserData = leaderboardData.users.find(
-      (user) => user.userId === currentUser?.id,
+      (user: LeaderboardUser) => user.userId === currentUser?.id,
     );
 
     const displayName = getUserDisplayName(

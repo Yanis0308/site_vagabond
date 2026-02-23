@@ -1,7 +1,6 @@
+import type { PoiEnrichedData, VisitedPoi } from "@vagabond/shared-utils";
 import { type ReactElement } from "react";
 
-import { type PoiEnrichedType } from "@/http/pois";
-import { type VisitedPoiType } from "@/http/visited-pois";
 import { cn } from "@/utils/cn";
 
 import { StarRating } from "../validate-place/StarRating";
@@ -26,7 +25,7 @@ import { TransportAccessSection } from "./TransportAccessSection";
 
 interface RenderListItemProps {
   item: ListItemType;
-  enrichedData: PoiEnrichedType | undefined;
+  enrichedData: PoiEnrichedData | undefined;
   onPressCamera: () => Promise<void>;
   onPressGallery: () => Promise<void>;
   imageBoxAnimatedStyle: {
@@ -37,7 +36,7 @@ interface RenderListItemProps {
   contentAnimatedStyle: {
     transform: Array<{ translateY: number }>;
   };
-  visitedPois: VisitedPoiType[];
+  visitedPois: VisitedPoi[];
   isLoadingEnriched: boolean;
 }
 

@@ -1,16 +1,15 @@
-import { generateValidator, jsonSchemas } from "@vagabond/shared-utils";
-import { type Static } from "typebox";
+import {
+  type FileInfo,
+  UploadFileResponseSchema,
+  validateWithSchema,
+} from "@vagabond/shared-utils";
 
 import { type UploadFileParams } from "@/hooks/mutations/useUploadFileMutation";
 import { apiClient } from "@/http/api-client";
 
-const validateResponse = generateValidator(
-  jsonSchemas.UploadFileResponseSchema,
-);
-
 export const uploadFile = async (
   params: UploadFileParams,
-): Promise<Static<typeof jsonSchemas.FileInfoSchema>> => {
+): Promise<FileInfo> => {
   const formData = new FormData();
   //@ts-expect-error fix this later
   formData.append("file", {
@@ -21,7 +20,7 @@ export const uploadFile = async (
   const rawResult = await apiClient
     .post("api/upload", { body: formData })
     .json();
-  if (!validateResponse(rawResult)) {
+  if (!validateWithSchema(UploadFileResponseSchema, rawResult)) {
     throw new Error("Invalid response");
   }
 

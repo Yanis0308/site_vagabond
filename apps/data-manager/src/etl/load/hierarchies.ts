@@ -1,10 +1,10 @@
 import { getDrizzleClient, schema } from "@vagabond/database-client";
-import { logger } from "@vagabond/shared-utils";
+import { type BoundaryHierarchyRow, logger } from "@vagabond/shared-utils";
 import { eq } from "drizzle-orm";
 
 import { getDbId, getSourceId } from "../id-utils";
 import { JsonlFileReader } from "../jsonl-utils";
-import { type BoundaryHierarchyRow, type JsonlHierarchyRecord } from "../types";
+import { type JsonlHierarchyRecord } from "../types";
 
 export async function loadHierarchiesFromJsonl(
   filePath: string,

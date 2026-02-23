@@ -1,10 +1,10 @@
 import { FlashList } from "@shopify/flash-list";
+import type { VisitedPoi } from "@vagabond/shared-utils";
 import { cssInterop } from "nativewind";
 import { memo, useCallback, useMemo } from "react";
 import { FlatList } from "react-native-gesture-handler";
 
 import { config } from "@/constants/Config";
-import { type VisitedPoiType } from "@/http/visited-pois";
 import { localImages } from "@/utils/localImages";
 
 import { PolaroidReview } from "../polaroid/PolaroidReview";
@@ -12,7 +12,7 @@ import { PolaroidReview } from "../polaroid/PolaroidReview";
 cssInterop(FlashList, { contentContainerClassName: "contentContainerStyle" });
 
 interface ReviewsListProps {
-  visitedPois: VisitedPoiType[];
+  visitedPois: VisitedPoi[];
 }
 
 interface ReviewItem {

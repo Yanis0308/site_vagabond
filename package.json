@@ -9,7 +9,8 @@
     "prepare": "husky",
     "prettier-write": "prettier . --write",
     "check-all": "pnpm -r run typescript-check && pnpm -r run lint-check && pnpm -r run prettier-check",
-    "fix-all": "pnpm -r run lint-fix && pnpm -r run prettier-fix"
+    "fix-all": "pnpm -r run lint-fix && pnpm -r run prettier-fix",
+    "clean-all": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' \\; -print"
   },
   "dependencies": {
     "dayjs": "catalog:",
@@ -26,7 +27,6 @@
     "@tanstack/eslint-plugin-query": "^5.91.4",
     "@ts-safeql/eslint-plugin": "^4.2.0",
     "@types/geojson": "catalog:",
-    "@types/geolib": "catalog:",
     "concurrently": "^9.1.2",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",

@@ -1,12 +1,12 @@
+import type { PoiEnrichedData } from "@vagabond/shared-utils";
 import { memo, type ReactNode } from "react";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { Box } from "@/components/ui/box";
-import { type PoiEnrichedType } from "@/http/pois";
 import { cn } from "@/utils/cn";
 
 interface CategoriesSectionProps {
-  categories?: PoiEnrichedType["categories"];
+  categories?: PoiEnrichedData["categories"];
   className?: string;
 }
 

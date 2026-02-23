@@ -1,12 +1,12 @@
+import type { PoiEnrichedData } from "@vagabond/shared-utils";
 import { memo, type ReactNode } from "react";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
-import { type PoiEnrichedType } from "@/http/pois";
 
 import { CollapsibleSection } from "./CollapsibleSection";
 
 interface PracticalTipsSectionProps {
-  practicalTips?: PoiEnrichedType["practicalTips"];
+  practicalTips?: PoiEnrichedData["practicalTips"];
   className?: string;
 }
 

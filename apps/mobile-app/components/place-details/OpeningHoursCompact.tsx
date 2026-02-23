@@ -1,13 +1,13 @@
+import type { PoiEnrichedData } from "@vagabond/shared-utils";
 import { memo, type ReactNode, useState } from "react";
 import { Pressable } from "react-native";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { Box } from "@/components/ui/box";
-import { type PoiEnrichedType } from "@/http/pois";
 import { cn } from "@/utils/cn";
 
 interface OpeningHoursCompactProps {
-  openingHours?: PoiEnrichedType["openingHours"];
+  openingHours?: PoiEnrichedData["openingHours"];
   className?: string;
 }
 

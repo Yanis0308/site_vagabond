@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
+import type { PoiEnrichedData } from "@vagabond/shared-utils";
 
-import { getPoiEnriched, type PoiEnrichedType } from "@/http/pois";
+import { getPoiEnriched } from "@/http/pois";
 
 export const usePoiEnriched = (
   poiId: string | null,
 ): {
-  data: PoiEnrichedType | undefined | null;
+  data: PoiEnrichedData | undefined | null;
   isSuccess: boolean;
   isFetching: boolean;
   isLoading: boolean;
