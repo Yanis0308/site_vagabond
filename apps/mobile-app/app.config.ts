@@ -132,7 +132,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         "expo-location",
         {
           locationWhenInUsePermission:
-            "Allow $(PRODUCT_NAME) to use your location.",
+            "Vagabond a besoin de votre position pour afficher votre emplacement sur la carte, suivre vos régions visitées en France et vérifier votre présence physique lors de la validation d'un lieu (par ex. confirmer que vous êtes bien devant un monument).",
           // App open but backgrounded
           // isAndroidForegroundServiceEnabled: true,
         },

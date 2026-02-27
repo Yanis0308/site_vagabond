@@ -6,6 +6,11 @@
     "loading_enriched_data": "Chargement des informations supplémentaires..."
   },
   "sign_out": "Se déconnecter",
+  "delete_account": "Supprimer mon compte",
+  "delete_account_confirm_title": "Supprimer mon compte ?",
+  "delete_account_confirm_message": "Cette action est irréversible. Toutes vos données seront supprimées.",
+  "delete_account_confirm_no": "Non",
+  "delete_account_confirm_yes": "Oui",
   "validated_places": "Mes lieux validés",
   "no_validated_places": "Aucun lieu validé pour le moment",
   "overall_progress": "Progression globale",

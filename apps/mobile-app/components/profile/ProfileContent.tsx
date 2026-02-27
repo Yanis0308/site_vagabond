@@ -2,6 +2,7 @@ import { FlashList } from "@shopify/flash-list";
 import type { UserMe, ZoneUserStat } from "@vagabond/shared-utils";
 import { type ReactElement, useCallback, useMemo } from "react";
 
+import { ProfileDeleteAccountButton } from "@/components/profile/ProfileDeleteAccountButton";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileOverallProgress } from "@/components/profile/ProfileOverallProgress";
 import { ProfileSignOutButton } from "@/components/profile/ProfileSignOutButton";
@@ -21,7 +22,8 @@ type ProfileSection =
   | { type: "progress"; data: ProgressData }
   | { type: "stats"; data: Stats }
   | { type: "validatedPlaces"; data: CountryType[] }
-  | { type: "signOut" };
+  | { type: "signOut" }
+  | { type: "deleteAccount" };
 
 interface ProfileContentProps {
   userData?: Pick<UserMe, "fullName" | "email" | "createdAt"> | null;
@@ -49,6 +51,7 @@ export function ProfileContent({
 
     if (showSignOutButton) {
       baseSections.push({ type: "signOut" });
+      baseSections.push({ type: "deleteAccount" });
     }
 
     return baseSections;
@@ -95,8 +98,14 @@ export function ProfileContent({
           );
         case "signOut":
           return (
-            <Box className="px-4 pb-4">
+            <Box className="px-4">
               <ProfileSignOutButton />
+            </Box>
+          );
+        case "deleteAccount":
+          return (
+            <Box className="px-4 pb-4">
+              <ProfileDeleteAccountButton />
             </Box>
           );
         default:
@@ -115,7 +124,7 @@ export function ProfileContent({
   }, []);
 
   return (
-    <Box className="flex-1">
+    <Box className="flex-1 pb-10">
       <FlashList
         data={sections}
         renderItem={renderItem}
