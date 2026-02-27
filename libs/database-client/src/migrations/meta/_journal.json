@@ -71,6 +71,13 @@
       "when": 1771411405150,
       "tag": "0009_absurd_silvermane",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1771941885000,
+      "tag": "0010_daily_jazinda",
+      "breakpoints": true
     }
   ]
 }

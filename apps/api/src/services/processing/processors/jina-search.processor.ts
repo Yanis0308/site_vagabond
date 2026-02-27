@@ -2,9 +2,9 @@ import type { JinaSearchParams } from "@vagabond/shared-utils";
 import type { FastifyInstance } from "fastify";
 
 import {
-  type JinaScrapeResponse,
-  searchWithJina,
-} from "../../http/jina-client.js";
+  type JinaSearchResponse,
+  searchWithJinaSearch,
+} from "../../http/jina-search-client.js";
 import type {
   ProcessingMetadata,
   ScrapingProcessor,
@@ -12,47 +12,52 @@ import type {
 import { isScrapingSuccess } from "../scraping-processor.interface.js";
 
 /**
- * Processor for web scraping using Jina AI Serp API
+ * Processor for web search using Jina AI Search API (s.jina.ai)
  */
-export class JinaWebScrapingProcessor implements ScrapingProcessor<
+export class JinaSearchProcessor implements ScrapingProcessor<
   JinaSearchParams,
-  JinaScrapeResponse
+  JinaSearchResponse
 > {
   execute(
     fastify: FastifyInstance,
     params: JinaSearchParams,
-  ): Promise<JinaScrapeResponse> {
-    return searchWithJina(fastify, params);
+  ): Promise<JinaSearchResponse> {
+    return searchWithJinaSearch(fastify, params);
   }
 
-  getType(): "scraper-web" {
-    return "scraper-web";
+  getType(): "jina-search" {
+    return "jina-search";
   }
 
   transformInput(params: JinaSearchParams): Record<string, unknown> {
     return {
       query: params.query,
       gl: params.gl,
-      // hl: params.hl,
       num: params.num,
     };
   }
 
-  transformOutput(response: JinaScrapeResponse): Record<string, unknown> {
-    if (!isScrapingSuccess(response)) {
+  transformOutput(response: JinaSearchResponse): Record<string, unknown> {
+    // Store full response as-is for JSONB (errorInstance serialized for JSON)
+    if (!response.success) {
       return {
+        success: false,
         error: response.error,
-      };
+        ...(response.errorInstance !== undefined && {
+          errorInstance: {
+            message: response.errorInstance.message,
+            stack: response.errorInstance.stack,
+            name: response.errorInstance.name,
+          },
+        }),
+      } as Record<string, unknown>;
     }
-
-    return {
-      data: response.data,
-    };
+    return { ...response } as Record<string, unknown>;
   }
 
   getMetadata(
     _params: JinaSearchParams,
-    response: JinaScrapeResponse,
+    response: JinaSearchResponse,
   ): ProcessingMetadata | undefined {
     if (!isScrapingSuccess(response)) {
       return undefined;

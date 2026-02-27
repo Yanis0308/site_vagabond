@@ -5,13 +5,10 @@ import {
 import {
   ErrorResponseSchema,
   GetPoiEnrichedResponseSchema,
-  type GoogleMapsPlaceStrict,
   type PoiEnriched,
 } from "@vagabond/shared-utils";
 
 import { PoiEnrichmentService } from "../../services/poi-enrichment.service.js";
-import { isProcessSuccess } from "../../services/processing/processing-result-orchestrator.js";
-import { isScrapingSuccess } from "../../services/processing/scraping-processor.interface.js";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
@@ -69,19 +66,15 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         const osmTags =
           await fastify.dbRepositories.poi.findOsmTagsByPoiId(poiId);
 
-        // 4. Extract Wikidata and Wikipedia IDs from OSM tags
-        // const { wikidataId, wikipediaTitle } =
-        //   enrichmentService.extractWikimediaIds(osmTags);
-
-        // 5. Build Jina query
-        const jinaQuery = enrichmentService.buildJinaQuery({
+        // 4. Build Jina Search query
+        const jinaSearchQuery = enrichmentService.buildJinaSearchQuery({
           name: poi.name,
           latitude: poi.latitude,
           longitude: poi.longitude,
           cityName: poi.cityName ?? null,
         });
 
-        // 6. Process all data sources in parallel
+        // 5. Process all data sources in parallel (Google Maps + Jina Search+Reader)
         const processingResults = await enrichmentService.processDataSources(
           poiId,
           {
@@ -90,50 +83,29 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             longitude: poi.longitude,
             cityName: poi.cityName ?? null,
           },
-          jinaQuery,
-          // wikidataId,
-          // wikipediaTitle,
+          jinaSearchQuery,
+          osmTags,
         );
 
-        // 7. Log processing results for monitoring
+        // 6. Log processing results for monitoring
         enrichmentService.logProcessingResults(poiId, processingResults);
 
-        // 8. Extract and validate Google Maps place
+        // 7. Extract and validate Google Maps place
         const googleMapsPlace = enrichmentService.getGoogleMapsPlaceIfNear(
           processingResults,
           poi.latitude,
           poi.longitude,
         );
 
-        // 9. Extract raw data from processing results
-        const rawData: {
-          googleMapsRawData: GoogleMapsPlaceStrict | null;
-          jinaRawData: Record<string, unknown>;
-          wikidataRawData: Record<string, unknown>;
-          wikipediaRawData: Record<string, unknown>;
-        } = {
+        // 8. Build raw data for LLM
+        const rawData = {
           googleMapsRawData: googleMapsPlace,
-          jinaRawData:
-            processingResults.jinaResult !== undefined &&
-            isProcessSuccess(processingResults.jinaResult) &&
-            isScrapingSuccess(processingResults.jinaResult.scrapeResponse)
-              ? processingResults.jinaResult.scrapeResponse.data
-              : {},
-          wikidataRawData:
-            processingResults.wikidataResult !== undefined &&
-            isProcessSuccess(processingResults.wikidataResult) &&
-            isScrapingSuccess(processingResults.wikidataResult.scrapeResponse)
-              ? processingResults.wikidataResult.scrapeResponse.data
-              : {},
-          wikipediaRawData:
-            processingResults.wikipediaResult !== undefined &&
-            isProcessSuccess(processingResults.wikipediaResult) &&
-            isScrapingSuccess(processingResults.wikipediaResult.scrapeResponse)
-              ? processingResults.wikipediaResult.scrapeResponse.data
-              : {},
+          wikipediaRawData: processingResults.jinaEnriched.wikipediaContent,
+          wikidataRawData: processingResults.jinaEnriched.wikidataContent,
+          webRawData: processingResults.jinaEnriched.webContent,
         };
 
-        // 10. Process Gemini LLM enrichment
+        // 9. Process Gemini LLM enrichment
         let enrichedData: PoiEnriched | null = null;
 
         try {
@@ -147,6 +119,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             },
             rawData,
             osmTags,
+            processingResults.batchId,
           );
         } catch (error) {
           const errorMessage =
@@ -166,7 +139,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           );
         }
 
-        // 11. Create enriched entry
+        // 10. Create enriched entry
         if (enrichedData === null) {
           return await reply.status(500).send({
             error: {
@@ -191,8 +164,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           });
         }
 
-        // 12. Return enriched data
-
+        // 11. Return enriched data
         return await reply.status(200).send({
           data: {
             ...enriched.enrichedData,

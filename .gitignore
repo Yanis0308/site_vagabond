@@ -34,3 +34,4 @@ cache/
 
 # Local user files (personal MD files, etc)
 local-user-files/
+.cursor/

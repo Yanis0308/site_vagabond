@@ -1,3 +1,5 @@
+import type { WebSourceItem } from "./llm-common.js";
+
 export interface BoundaryInfo {
   cityName?: string | null;
   regionName?: string | null;
@@ -6,9 +8,12 @@ export interface BoundaryInfo {
 
 export interface BuildGeminiPromptParams {
   googleMapsData: Record<string, unknown>;
-  jinaData: Record<string, unknown>;
-  wikidataData: Record<string, unknown>;
-  wikipediaData: Record<string, unknown>;
+  /** Wikipedia pages (before web data) */
+  wikipediaData: WebSourceItem[];
+  /** Wikidata pages (before web data) */
+  wikidataData: WebSourceItem[];
+  /** Web pages (hors wikipedia/wikidata), ordre de scraping */
+  webData: WebSourceItem[];
   poiName: string;
   latitude: number;
   longitude: number;
@@ -19,15 +24,20 @@ export interface BuildGeminiPromptParams {
 /**
  * Helper to build a comma-separated list of available sources
  */
-function getSourcesList(hasWikidata: boolean, hasWikipedia: boolean): string {
-  const sources = ["Google Maps", "résultats web"];
+function getSourcesList(
+  hasWikidata: boolean,
+  hasWikipedia: boolean,
+  hasWebData: boolean,
+): string {
+  const sources = ["Google Maps"];
   if (hasWikidata) sources.push("Wikidata");
   if (hasWikipedia) sources.push("Wikipedia");
+  if (hasWebData) sources.push("Web data");
   return sources.join(", ");
 }
 
 /**
- * Check if data object is non-empty
+ * Check if a data object is non-empty
  */
 function hasData(data: Record<string, unknown> | null | undefined): boolean {
   return (
@@ -36,6 +46,15 @@ function hasData(data: Record<string, unknown> | null | undefined): boolean {
     typeof data === "object" &&
     Object.keys(data).length > 0
   );
+}
+
+/**
+ * Check if a WebSourceItem array has items
+ */
+function hasWebSourceItems(
+  items: Array<{ url: string; content: string }> | null | undefined,
+): boolean {
+  return Array.isArray(items) && items.length > 0;
 }
 
 /**
@@ -50,7 +69,6 @@ function extractLocationInfo(boundaries: BoundaryInfo | undefined): {
   let regionName: string | null = null;
   let countryName: string | null = null;
 
-  // Priority 1: Use boundaries data if available
   if (boundaries !== undefined) {
     cityName = boundaries.cityName ?? null;
     regionName = boundaries.regionName ?? null;
@@ -66,9 +84,9 @@ function extractLocationInfo(boundaries: BoundaryInfo | undefined): {
 export function buildGeminiPrompt(params: BuildGeminiPromptParams): string {
   const {
     googleMapsData,
-    jinaData,
-    wikidataData,
     wikipediaData,
+    wikidataData,
+    webData,
     poiName,
     latitude,
     longitude,
@@ -77,13 +95,16 @@ export function buildGeminiPrompt(params: BuildGeminiPromptParams): string {
   } = params;
 
   const hasOsmTags = osmTags !== null;
-  const hasWikidataData = hasData(wikidataData);
-  const hasWikipediaData = hasData(wikipediaData);
+  const hasWikipediaData = hasWebSourceItems(wikipediaData);
+  const hasWikidataData = hasWebSourceItems(wikidataData);
   const hasGoogleMapsData = hasData(googleMapsData);
-  const hasJinaData = hasData(jinaData);
-  const sourcesList = getSourcesList(hasWikidataData, hasWikipediaData);
+  const hasWebData = hasWebSourceItems(webData);
+  const sourcesList = getSourcesList(
+    hasWikidataData,
+    hasWikipediaData,
+    hasWebData,
+  );
 
-  // Extract location info from data sources (priority: boundaries > OSM > Google Maps)
   const extractedLocation = extractLocationInfo(boundaries);
   const cityName = extractedLocation.cityName ?? "Non spécifiée";
   const regionName = extractedLocation.regionName ?? "Non spécifiée";
@@ -114,13 +135,13 @@ export function buildGeminiPrompt(params: BuildGeminiPromptParams): string {
     currentPriority++;
   }
 
-  if (hasJinaData) {
+  if (hasWebData) {
     hierarchyItems.push(
-      `${currentPriority}. **Résultats web** - À valider contre les sources prioritaires.`,
+      `${currentPriority}. **Web data** - À valider contre les sources prioritaires.`,
     );
   }
 
-  // Build data sections
+  // Build data sections (order: OSM → Wikipedia → Wikidata → Google Maps → Web data)
   const dataSections: string[] = [];
 
   if (hasOsmTags) {
@@ -128,14 +149,14 @@ export function buildGeminiPrompt(params: BuildGeminiPromptParams): string {
 ${JSON.stringify(osmTags, null, 2)}`);
   }
 
-  if (hasWikidataData) {
-    dataSections.push(`### Wikidata
-${JSON.stringify(wikidataData, null, 2)}`);
-  }
-
   if (hasWikipediaData) {
     dataSections.push(`### Wikipedia
 ${JSON.stringify(wikipediaData, null, 2)}`);
+  }
+
+  if (hasWikidataData) {
+    dataSections.push(`### Wikidata
+${JSON.stringify(wikidataData, null, 2)}`);
   }
 
   if (hasGoogleMapsData) {
@@ -143,9 +164,9 @@ ${JSON.stringify(wikipediaData, null, 2)}`);
 ${JSON.stringify(googleMapsData, null, 2)}`);
   }
 
-  if (hasJinaData) {
-    dataSections.push(`### Résultats web
-${JSON.stringify(jinaData, null, 2)}`);
+  if (hasWebData) {
+    dataSections.push(`### Web data
+${JSON.stringify(webData, null, 2)}`);
   }
 
   const prompt = `## RÔLE

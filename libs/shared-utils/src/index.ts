@@ -108,6 +108,16 @@ export {
   PoiBoundaryAssociationSchema,
 } from "./schemas/etl.js";
 export {
+  type CrawlResponse,
+  CrawlResponseSchema,
+  type FormattedPage,
+  FormattedPageSchema,
+  type PostCrawlBody,
+  PostCrawlBodySchema,
+  type ReaderHeaders,
+  ReaderHeadersSchema,
+} from "./schemas/external/jina-reader.js";
+export {
   type JinaApiResponse,
   JinaApiResponseSchema,
   type JinaScrapeSuccessData,

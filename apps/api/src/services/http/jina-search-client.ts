@@ -14,12 +14,12 @@ import type {
 } from "../processing/scraping-processor.interface.js";
 import { createBaseClient } from "./base-client.js";
 
-export type JinaScrapeResponse = ScrapingResponse<JinaScrapeSuccessData>;
+export type JinaSearchResponse = ScrapingResponse<JinaScrapeSuccessData>;
 
 /**
- * Create a Jina AI HTTP client with Bearer Auth
+ * Create a Jina AI Search HTTP client for s.jina.ai
  */
-export function createJinaClient(fastify: FastifyInstance): KyInstance {
+export function createJinaSearchClient(fastify: FastifyInstance): KyInstance {
   const { apiKey } = fastify.config.jina;
 
   const baseClient = createBaseClient(fastify);
@@ -30,29 +30,23 @@ export function createJinaClient(fastify: FastifyInstance): KyInstance {
       Accept: "application/json",
       Authorization: `Bearer ${apiKey}`,
       "X-Locale": "fr-FR",
-      // "X-Respond-With": "readerlm-v2",
-      "X-With-Images-Summary": "true",
-      "X-Retain-Images": "none",
-      "X-With-Generated-Alt": "true",
-      "X-Engine": "direct",
+      "X-Respond-With": "no-content",
     },
   });
 }
 
 /**
- * Call Jina AI Serp API to scrape search results
+ * Call Jina AI Search API (s.jina.ai) to get search results
  */
-export async function searchWithJina(
+export async function searchWithJinaSearch(
   fastify: FastifyInstance,
   params: JinaSearchParams,
-): Promise<JinaScrapeResponse> {
-  const client = createJinaClient(fastify);
+): Promise<JinaSearchResponse> {
+  const client = createJinaSearchClient(fastify);
 
-  // Build query parameters
   const searchParams = new URLSearchParams({
     q: params.query,
     gl: params.gl,
-    // hl: params.hl,
     num: String(params.num),
   });
 
@@ -63,25 +57,24 @@ export async function searchWithJina(
       })
       .json<unknown>();
 
-    // Validate the response against the JSON schema
     if (!validateWithSchema(JinaApiResponseSchema, rawResult)) {
       fastify.log.error(
         { rawResult },
-        "Jina AI API returned invalid response structure",
+        "Jina Search API returned invalid response structure",
       );
       const errorResponse: ScrapingErrorResponse = {
         success: false,
-        error: "Jina AI API returned invalid response structure",
+        error: "Jina Search API returned invalid response structure",
       };
       return errorResponse;
     }
-    // Transform Jina API response to JinaScrapeResponse format
-    const success = rawResult.code === 200 && rawResult.status === 200;
+
+    const success = rawResult.code === 200;
 
     if (!success) {
       const errorResponse: ScrapingErrorResponse = {
         success: false,
-        error: `Jina AI API returned code ${rawResult.code}, status ${rawResult.status}`,
+        error: `Jina Search API returned code ${rawResult.code}, status ${rawResult.status}`,
       };
       return errorResponse;
     }
@@ -108,7 +101,7 @@ export async function searchWithJina(
 
     return successResponse;
   } catch (error) {
-    fastify.log.error({ error, params }, "Jina AI request failed");
+    fastify.log.error({ error, params }, "Jina Search request failed");
 
     const errorResponse: ScrapingErrorResponse = {
       success: false,

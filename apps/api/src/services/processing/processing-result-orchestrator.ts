@@ -12,6 +12,11 @@ export interface ProcessInput<TInput> {
   targetId: string;
   params: TInput;
   batchId?: string | null;
+  /**
+   * When set, the cache lookup is done by this URL (across all POIs) instead of by targetId.
+   * Used for jina-reader to share cached results across different POIs.
+   */
+  cacheByUrl?: string;
 }
 
 /**
@@ -72,17 +77,25 @@ export class ProcessingResultOrchestrator {
     processor: ScrapingProcessor<TInput, TResponse>,
     input: ProcessInput<TInput>,
   ): Promise<ProcessResult<TResponse>> {
-    const { targetId, params, batchId } = input;
+    const { targetId, params, batchId, cacheByUrl } = input;
     const processorType = processor.getType();
     const version = getProcessingResultVersion(processorType);
 
-    // Check if a successful result already exists for this targetId, type, and version
+    // Check if a successful result already exists
+    // For jina-reader: cache by URL across all POIs
+    // For others: cache by targetId
     const existingResult =
-      await this.fastify.dbRepositories.processingResult.findExistingSuccessResult(
-        targetId,
-        processorType,
-        version,
-      );
+      cacheByUrl !== undefined
+        ? await this.fastify.dbRepositories.processingResult.findExistingSuccessResultByUrl(
+            processorType,
+            version,
+            cacheByUrl,
+          )
+        : await this.fastify.dbRepositories.processingResult.findExistingSuccessResult(
+            targetId,
+            processorType,
+            version,
+          );
 
     if (existingResult !== undefined && existingResult.output !== null) {
       // Reuse existing result

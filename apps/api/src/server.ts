@@ -7,24 +7,11 @@ dotenv.config();
 import closeWithGrace from "close-with-grace";
 import Fastify from "fastify";
 
-import { isDev } from "./plugins/config.js";
+import { loggerConfig } from "./lib/logger.js";
 
-const envToLogger = {
-  development: {
-    transport: {
-      target: "pino-pretty",
-      options: {
-        translateTime: "HH:MM:ss Z",
-        ignore: "pid,hostname",
-      },
-    },
-  },
-  production: true,
-};
-
-// Instantiate Fastify with some config
+// Instantiate Fastify with shared logger config (Fastify 5 does not accept pre-instantiated logger)
 const app = Fastify({
-  logger: isDev ? envToLogger.development : envToLogger.production,
+  logger: loggerConfig,
 });
 
 // Register your application as a normal plugin.

@@ -1,4 +1,4 @@
-import type { schema } from "@vagabond/database-client";
+import type { ProcessingType } from "@vagabond/database-client";
 import type { FastifyInstance } from "fastify";
 
 /**
@@ -60,7 +60,7 @@ export interface ScrapingProcessor<
   /**
    * Get the type identifier for the processing result
    */
-  getType(): schema.ProcessingTypeEnum;
+  getType(): ProcessingType;
 
   /**
    * Transform input parameters into the format stored in processing result input

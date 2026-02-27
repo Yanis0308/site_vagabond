@@ -7,13 +7,26 @@ import type {
 } from "../processing/scraping-processor.interface.js";
 
 /**
+ * Structured item for web/Wikipedia/Wikidata sources (url, title, content)
+ */
+export interface WebSourceItem {
+  url: string;
+  content: string;
+  title?: string;
+  images?: Array<{ alt: string; url: string }>;
+}
+
+/**
  * Common interface for LLM generate enriched POI parameters
  */
 export interface LLMGenerateEnrichedPoiParams {
   googleMapsData: Record<string, unknown>;
-  jinaData: Record<string, unknown>;
-  wikidataData: Record<string, unknown>;
-  wikipediaData: Record<string, unknown>;
+  /** Wikipedia pages (before web data, order: Wikipedia first) */
+  wikipediaData: WebSourceItem[];
+  /** Wikidata pages (before web data) */
+  wikidataData: WebSourceItem[];
+  /** Web pages (hors wikipedia/wikidata), ordre de scraping */
+  webData: WebSourceItem[];
   poiName: string;
   latitude: number;
   longitude: number;

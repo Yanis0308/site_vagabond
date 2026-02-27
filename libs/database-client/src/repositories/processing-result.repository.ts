@@ -1,11 +1,8 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
-import {
-  processingResults,
-  type ProcessingStatusEnum,
-  type ProcessingTypeEnum,
-} from "../schema.js";
+import { processingResults, type ProcessingStatusEnum } from "../schema.js";
+import type { ProcessingType } from "../types.js";
 
 export interface CreateProcessingResultInput {
   targetId: string;
@@ -13,7 +10,7 @@ export interface CreateProcessingResultInput {
   input: Record<string, unknown>;
   output?: Record<string, unknown> | null;
   batchId?: string | null;
-  type: ProcessingTypeEnum;
+  type: ProcessingType;
   distance?: number | null;
   isValid?: boolean | null;
   cost?: number | null;
@@ -81,7 +78,7 @@ export class ProcessingResultRepository {
 
   async findExistingSuccessResult(
     targetId: string,
-    type: ProcessingTypeEnum,
+    type: ProcessingType,
     version: number,
   ): Promise<typeof processingResults.$inferSelect | undefined> {
     const result = await this.db.query.processingResults.findFirst({
@@ -90,6 +87,28 @@ export class ProcessingResultRepository {
         eq(processingResults.type, type),
         eq(processingResults.status, "success"),
         eq(processingResults.version, version),
+      ),
+      orderBy: (results, { desc }) => [desc(results.updatedAt)],
+    });
+
+    return result;
+  }
+
+  /**
+   * Find an existing successful jina-reader result for a given URL (across all POIs).
+   * Used to cache Reader results by URL to avoid redundant API calls.
+   */
+  async findExistingSuccessResultByUrl(
+    type: ProcessingType,
+    version: number,
+    url: string,
+  ): Promise<typeof processingResults.$inferSelect | undefined> {
+    const result = await this.db.query.processingResults.findFirst({
+      where: and(
+        eq(processingResults.type, type),
+        eq(processingResults.status, "success"),
+        eq(processingResults.version, version),
+        sql`${processingResults.input}->>'url' = ${url}`,
       ),
       orderBy: (results, { desc }) => [desc(results.updatedAt)],
     });

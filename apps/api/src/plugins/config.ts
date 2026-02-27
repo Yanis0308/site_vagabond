@@ -29,8 +29,6 @@ const RawConfigSchema = z.object({
   JINA_API_KEY: z.string(),
   GEMINI_API_KEY: z.string(),
   GROQ_API_KEY: z.string(),
-  WIKIMEDIA_OAUTH2_CLIENT_ID: z.string(),
-  WIKIMEDIA_OAUTH2_CLIENT_SECRET: z.string(),
 });
 
 // Type d'inférence pour TypeScript
@@ -59,12 +57,6 @@ export interface Config {
   };
   groq: {
     apiKey: string;
-  };
-  wikimedia: {
-    oauth2: {
-      clientId: string;
-      clientSecret: string;
-    };
   };
 }
 
@@ -122,12 +114,6 @@ export default fp(
         },
         groq: {
           apiKey: rawConfig.GROQ_API_KEY,
-        },
-        wikimedia: {
-          oauth2: {
-            clientId: rawConfig.WIKIMEDIA_OAUTH2_CLIENT_ID,
-            clientSecret: rawConfig.WIKIMEDIA_OAUTH2_CLIENT_SECRET,
-          },
         },
       };
 

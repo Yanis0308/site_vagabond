@@ -51,9 +51,17 @@
     "fastify-plugin": "^5.0.0",
     "firebase-admin": "^13.0.1",
     "geolib": "catalog:",
+    "gpt-tokenizer": "^3.4.0",
     "ky": "^1.14.2",
-    "mwn": "^3.0.1",
+    "pino": "^10.3.1",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-stringify": "^11.0.0",
     "sharp": "^0.34.2",
+    "unified": "^11.0.5",
+    "unist-util-map": "^4.0.0",
+    "unist-util-remove": "^4.0.0",
+    "unist-util-visit": "^5.1.0",
     "zod": "catalog:"
   },
   "devDependencies": {

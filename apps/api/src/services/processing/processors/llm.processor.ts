@@ -38,9 +38,9 @@ export class LlmProcessor implements ScrapingProcessor<
       latitude: params.latitude,
       longitude: params.longitude,
       googleMapsData: params.googleMapsData,
-      jinaData: params.jinaData,
-      wikidataData: params.wikidataData,
       wikipediaData: params.wikipediaData,
+      wikidataData: params.wikidataData,
+      webData: params.webData,
       osmTags: params.osmTags,
     };
   }

@@ -64,15 +64,6 @@ export const processingStatusEnum = pgEnum("ProcessingStatusEnum", [
 export type ProcessingStatusEnum =
   (typeof processingStatusEnum.enumValues)[number];
 
-export const processingTypeEnum = pgEnum("ProcessingTypeEnum", [
-  "scraper-maps",
-  "scraper-web",
-  "llm",
-  "wikidata",
-  "wikipedia",
-]);
-export type ProcessingTypeEnum = (typeof processingTypeEnum.enumValues)[number];
-
 const created_at = timestamp("created_at", { precision: 3 })
   .defaultNow()
   .notNull();
@@ -271,7 +262,7 @@ export const processingResults = pgTable("processing_results", {
   createdAt: created_at,
   updatedAt: updated_at,
   batchId: varchar("batch_id", { length: 1000 }),
-  type: processingTypeEnum().notNull(),
+  type: varchar("type", { length: 100 }).notNull(),
   version: integer().default(1).notNull(),
   duration: integer(),
   distance: integer(),

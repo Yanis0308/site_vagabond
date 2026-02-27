@@ -8,22 +8,17 @@ import { getDistance } from "geolib";
 
 import { normalizeSearchText } from "../utils/text.js";
 import type { GoogleMapsScrapeResponse } from "./http/data-scraper-client.js";
-import type { JinaScrapeResponse } from "./http/jina-client.js";
-import type { WikimediaResponse } from "./http/wikimedia-client.js";
+import type { JinaEnrichedResult } from "./jina-enrichment.service.js";
+import { JinaEnrichmentService } from "./jina-enrichment.service.js";
 import type { ProcessResult } from "./processing/processing-result-orchestrator.js";
 import {
   isProcessSuccess,
   ProcessingResultOrchestrator,
 } from "./processing/processing-result-orchestrator.js";
-import { GoogleMapsScrapingProcessor } from "./processing/processors/google-maps-scraping.processor.js";
-import { JinaWebScrapingProcessor } from "./processing/processors/jina-web-scraping.processor.js";
+// import { GoogleMapsScrapingProcessor } from "./processing/processors/google-maps-scraping.processor.js";
 import { LlmProcessor } from "./processing/processors/llm.processor.js";
 import { isScrapingSuccess } from "./processing/scraping-processor.interface.js";
-// Temporarily disabled: WikidataProcessor, WikipediaProcessor
-// import {
-//   WikidataProcessor,
-//   WikipediaProcessor,
-// } from "./processing/processors/wikimedia.processor.js";
+import type { TruncatedSourceItem } from "./utils/content-truncation.js";
 
 interface PoiBasicInfo {
   name: string;
@@ -39,10 +34,9 @@ interface OsmTags {
 }
 
 interface ProcessingResults {
+  batchId: string;
   googleMapsResult: ProcessResult<GoogleMapsScrapeResponse> | undefined;
-  jinaResult: ProcessResult<JinaScrapeResponse> | undefined;
-  wikidataResult?: ProcessResult<WikimediaResponse> | undefined;
-  wikipediaResult?: ProcessResult<WikimediaResponse> | undefined;
+  jinaEnriched: JinaEnrichedResult;
 }
 
 /**
@@ -52,10 +46,10 @@ export class PoiEnrichmentService {
   constructor(private readonly fastify: FastifyInstance) {}
 
   /**
-   * Build Jina query: add city name only if not already in POI name
+   * Build Jina Search query: add city name only if not already in POI name
    */
-  buildJinaQuery(poi: PoiBasicInfo): string {
-    let jinaQuery = poi.name;
+  buildJinaSearchQuery(poi: PoiBasicInfo): string {
+    let jinaSearchQuery = poi.name;
     if (
       poi.cityName !== null &&
       poi.cityName !== undefined &&
@@ -63,113 +57,78 @@ export class PoiEnrichmentService {
     ) {
       const poiNameNormalized = normalizeSearchText(poi.name);
       const cityNameNormalized = normalizeSearchText(poi.cityName);
-      // Check if city name is not already in POI name (ignoring accents, spaces, special chars)
       if (!poiNameNormalized.includes(cityNameNormalized)) {
-        jinaQuery = `${poi.name} ${poi.cityName}`;
+        jinaSearchQuery = `${poi.name} ${poi.cityName}`;
       }
     }
-    return jinaQuery;
+    return jinaSearchQuery;
   }
 
   /**
-   * Extract Wikidata and Wikipedia IDs from OSM tags
-   */
-  extractWikimediaIds(osmTags: OsmTags | null): {
-    wikidataId?: string | undefined;
-    wikipediaTitle?: string | undefined;
-  } {
-    const wikidataId =
-      osmTags !== null &&
-      typeof osmTags === "object" &&
-      "wikidata" in osmTags &&
-      typeof osmTags.wikidata === "string"
-        ? osmTags.wikidata
-        : undefined;
-
-    const wikipediaTitle =
-      osmTags !== null &&
-      typeof osmTags === "object" &&
-      "wikipedia" in osmTags &&
-      typeof osmTags.wikipedia === "string"
-        ? osmTags.wikipedia
-        : undefined;
-
-    return {
-      ...(wikidataId !== undefined && { wikidataId }),
-      ...(wikipediaTitle !== undefined && { wikipediaTitle }),
-    };
-  }
-
-  /**
-   * Process all data sources in parallel (Google Maps, Jina, Wikidata, Wikipedia)
+   * Process all data sources in parallel (Google Maps + Jina Search+Reader)
    */
   async processDataSources(
     poiId: string,
-    poi: PoiBasicInfo,
-    jinaQuery: string,
-    // wikidataId?: string,
-    // wikipediaTitle?: string,
+    _poi: PoiBasicInfo,
+    jinaSearchQuery: string,
+    osmTags: OsmTags | null,
   ): Promise<ProcessingResults> {
     const batchId = randomUUID();
-    const orchestrator = new ProcessingResultOrchestrator(this.fastify);
-    const geoCoordinates = `${poi.latitude},${poi.longitude}`;
+    // const orchestrator = new ProcessingResultOrchestrator(this.fastify);
+    // const geoCoordinates = `${poi.latitude},${poi.longitude}`;
+    const jinaService = new JinaEnrichmentService(this.fastify);
 
-    // Execute all 4 tasks as a typed tuple
-    // Temporarily disabled: WikidataProcessor and WikipediaProcessor
-    const results = await Promise.allSettled([
-      orchestrator.process(new GoogleMapsScrapingProcessor(), {
-        targetId: poiId,
-        params: {
-          query: poi.name,
-          geoCoordinates,
-          zoom: 15,
-          langCode: "fr",
-        },
-        batchId,
-      }),
-      orchestrator.process(new JinaWebScrapingProcessor(), {
-        targetId: poiId,
-        params: {
-          query: jinaQuery,
-          gl: "FR",
-          // hl: "fr",
-          num: 5,
-        },
-        batchId,
-      }),
-      // Temporarily disabled: Wikidata processor
-      // wikidataId !== undefined && wikidataId !== ""
-      //   ? orchestrator.process(new WikidataProcessor(), {
-      //       targetId: poiId,
-      //       params: { wikidataId },
-      //       batchId,
-      //     })
-      //   : undefined,
+    const [googleMapsSettled, jinaSettled] = await Promise.allSettled([
+      // orchestrator.process(new GoogleMapsScrapingProcessor(), {
+      //   targetId: poiId,
+      //   params: {
+      //     query: poi.name,
+      //     geoCoordinates,
+      //     zoom: 15,
+      //     langCode: "fr",
+      //   },
+      //   batchId,
+      // }),
       Promise.resolve(undefined),
-      // Temporarily disabled: Wikipedia processor
-      // wikipediaTitle !== undefined && wikipediaTitle !== ""
-      //   ? orchestrator.process(new WikipediaProcessor(), {
-      //       targetId: poiId,
-      //       params: { wikipediaTitle },
-      //       batchId,
-      //     })
-      //   : undefined,
-      Promise.resolve(undefined),
+      jinaService.enrich(
+        poiId,
+        { query: jinaSearchQuery, gl: "FR", num: 10 },
+        osmTags !== null
+          ? {
+              ...(typeof osmTags.wikidata === "string" && {
+                wikidata: osmTags.wikidata,
+              }),
+              ...(typeof osmTags.wikipedia === "string" && {
+                wikipedia: osmTags.wikipedia,
+              }),
+            }
+          : null,
+        batchId,
+      ),
     ]);
 
-    // Build result object, only including optional properties if they are defined
-    const result: ProcessingResults = {
-      googleMapsResult:
-        results[0].status === "fulfilled" ? results[0].value : undefined,
-      jinaResult:
-        results[1].status === "fulfilled" ? results[1].value : undefined,
-      wikidataResult:
-        results[2].status === "fulfilled" ? results[2].value : undefined,
-      wikipediaResult:
-        results[3].status === "fulfilled" ? results[3].value : undefined,
-    };
+    if (jinaSettled.status === "rejected") {
+      this.fastify.log.warn(
+        { poiId, reason: jinaSettled.reason },
+        "Jina enrichment failed (Promise rejected), using empty fallback",
+      );
+    }
 
-    return result;
+    return {
+      batchId,
+      googleMapsResult:
+        googleMapsSettled.status === "fulfilled"
+          ? googleMapsSettled.value
+          : undefined,
+      jinaEnriched:
+        jinaSettled.status === "fulfilled"
+          ? jinaSettled.value
+          : {
+              webContent: [],
+              wikipediaContent: [],
+              wikidataContent: [],
+            },
+    };
   }
 
   /**
@@ -207,7 +166,6 @@ export class PoiEnrichmentService {
       },
     );
 
-    // Distance is in meters, 1km = 1000m
     if (distance > 1000) {
       this.fastify.log.info(
         {
@@ -230,23 +188,23 @@ export class PoiEnrichmentService {
     poi: PoiBasicInfo,
     rawData: {
       googleMapsRawData: GoogleMapsPlaceStrict | null;
-      jinaRawData: Record<string, unknown>;
-      wikidataRawData: Record<string, unknown>;
-      wikipediaRawData: Record<string, unknown>;
+      wikipediaRawData: TruncatedSourceItem[];
+      wikidataRawData: TruncatedSourceItem[];
+      webRawData: TruncatedSourceItem[];
     },
     osmTags: OsmTags | null,
+    batchId: string,
   ): Promise<PoiEnriched> {
     const orchestrator = new ProcessingResultOrchestrator(this.fastify);
-    const batchId = randomUUID();
     const llmProcessor = new LlmProcessor();
 
     const llmResult = await orchestrator.process(llmProcessor, {
       targetId: poiId,
       params: {
         googleMapsData: rawData.googleMapsRawData ?? {},
-        jinaData: rawData.jinaRawData,
-        wikidataData: rawData.wikidataRawData,
         wikipediaData: rawData.wikipediaRawData,
+        wikidataData: rawData.wikidataRawData,
+        webData: rawData.webRawData,
         poiName: poi.name,
         latitude: poi.latitude,
         longitude: poi.longitude,
@@ -255,7 +213,6 @@ export class PoiEnrichmentService {
       batchId,
     });
 
-    // Check if orchestrator failed (exception, failed to create processing result, or processor returned success=false)
     if (!isProcessSuccess(llmResult)) {
       const errorMessage = llmResult.error;
 
@@ -271,10 +228,8 @@ export class PoiEnrichmentService {
       throw new Error(`LLM enrichment failed: ${errorMessage}`);
     }
 
-    // If we reach here, orchestrator succeeded and processor response indicates success
     const llmResponse = llmResult.scrapeResponse;
 
-    // Validate that we have the expected data
     if (!isScrapingSuccess(llmResponse)) {
       const errorMessage = llmResponse.error;
 
@@ -292,9 +247,6 @@ export class PoiEnrichmentService {
       throw new Error(`LLM enrichment failed: ${errorMessage}`);
     }
 
-    // llmResponse is ScrapingSuccessResponse<LLMGenerateEnrichedPoiSuccessData> here
-    // data is required in LLMGenerateEnrichedPoiSuccessData, so it should always be defined
-    // But we check anyway for safety
     if (llmResponse.data === undefined) {
       const errorMessage = "LLM response missing data";
 
@@ -318,19 +270,6 @@ export class PoiEnrichmentService {
    * Log processing results for monitoring
    */
   logProcessingResults(poiId: string, results: ProcessingResults): void {
-    if (results.jinaResult !== undefined) {
-      if (!isProcessSuccess(results.jinaResult)) {
-        this.fastify.log.warn(
-          {
-            webScrapeResult: results.jinaResult,
-            errorInstance: results.jinaResult.errorInstance,
-            poiId,
-          },
-          "Web scraping with Jina AI failed, continuing without Jina data",
-        );
-      }
-    }
-
     if (results.googleMapsResult !== undefined) {
       if (!isProcessSuccess(results.googleMapsResult)) {
         this.fastify.log.warn(
@@ -344,30 +283,27 @@ export class PoiEnrichmentService {
       }
     }
 
-    if (results.wikidataResult !== undefined) {
-      if (!isProcessSuccess(results.wikidataResult)) {
-        this.fastify.log.warn(
-          {
-            wikidataResult: results.wikidataResult,
-            errorInstance: results.wikidataResult.errorInstance,
-            poiId,
-          },
-          "Wikidata fetch failed, continuing without Wikidata data",
-        );
-      }
-    }
+    const { jinaEnriched } = results;
+    const hasAnyJinaContent =
+      jinaEnriched.webContent.length > 0 ||
+      jinaEnriched.wikipediaContent.length > 0 ||
+      jinaEnriched.wikidataContent.length > 0;
 
-    if (results.wikipediaResult !== undefined) {
-      if (!isProcessSuccess(results.wikipediaResult)) {
-        this.fastify.log.warn(
-          {
-            wikipediaResult: results.wikipediaResult,
-            errorInstance: results.wikipediaResult.errorInstance,
-            poiId,
-          },
-          "Wikipedia fetch failed, continuing without Wikipedia data",
-        );
-      }
+    if (!hasAnyJinaContent) {
+      this.fastify.log.warn(
+        {
+          poiId,
+          ...(jinaEnriched.diagnostic !== undefined && {
+            searchUrlCount: jinaEnriched.diagnostic.searchUrlCount,
+            tagUrlCount: jinaEnriched.diagnostic.tagUrlCount,
+            filteredCount: jinaEnriched.diagnostic.filteredCount,
+            readerSuccessCount: jinaEnriched.diagnostic.readerSuccessCount,
+            readerWithContentCount:
+              jinaEnriched.diagnostic.readerWithContentCount,
+          }),
+        },
+        "Jina enrichment returned no content for any source",
+      );
     }
   }
 }

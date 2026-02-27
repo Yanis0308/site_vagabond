@@ -36,9 +36,9 @@ export async function generateEnrichedPoiWithGemini(
     // Build the prompt
     const prompt = buildGeminiPrompt({
       googleMapsData: params.googleMapsData,
-      jinaData: params.jinaData,
-      wikidataData: params.wikidataData,
       wikipediaData: params.wikipediaData,
+      wikidataData: params.wikidataData,
+      webData: params.webData,
       poiName: params.poiName,
       latitude: params.latitude,
       longitude: params.longitude,
@@ -125,9 +125,9 @@ export async function generateEnrichedPoiWithGroq(
     // Build the prompt
     const prompt = buildGeminiPrompt({
       googleMapsData: params.googleMapsData,
-      jinaData: params.jinaData,
-      wikidataData: params.wikidataData,
       wikipediaData: params.wikipediaData,
+      wikidataData: params.wikidataData,
+      webData: params.webData,
       poiName: params.poiName,
       latitude: params.latitude,
       longitude: params.longitude,
