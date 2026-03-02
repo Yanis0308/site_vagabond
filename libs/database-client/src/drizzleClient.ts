@@ -1,3 +1,4 @@
+import { logger } from "@vagabond/shared-utils";
 import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
 import { dirname, join } from "path";
@@ -5,9 +6,12 @@ import pg, { type Pool } from "pg";
 import { fileURLToPath } from "url";
 
 import * as schema from "./schema.js";
+import { SUPABASE_SSL_CERT } from "./supabase-cert.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+const isDev = process.env.NODE_ENV === "development";
 
 export const getDrizzleClient = async (): Promise<
   NodePgDatabase<typeof schema> & {
@@ -23,6 +27,20 @@ export const getDrizzleClient = async (): Promise<
 
   const pool = new pg.Pool({
     connectionString: databaseUrl,
+    ssl: isDev
+      ? false
+      : {
+          rejectUnauthorized: true,
+          ca: SUPABASE_SSL_CERT,
+        },
+    connectionTimeoutMillis: 10000,
+    idleTimeoutMillis: 30000,
+    keepAlive: true,
+    keepAliveInitialDelayMillis: 10000,
+  });
+
+  pool.on("error", (err) => {
+    logger.error({ err }, "PG pool connection error");
   });
 
   const db = drizzle(pool, { schema, casing: "snake_case" });
