@@ -14,6 +14,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
+import { useBottomSheetBack } from "@/hooks/other/useBottomSheetBack";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { usePoiEnriched } from "@/hooks/queries/usePoiEnriched";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
@@ -98,6 +99,8 @@ export const PlaceDetailsSheet = ({
       bottomSheetRef.current?.close();
     }
   }, [place?.id]);
+
+  useBottomSheetBack(place !== null, bottomSheetRef, onClose);
 
   const snapPoints = ["15%", "60%", "100%"];
 

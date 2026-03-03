@@ -1,3 +1,4 @@
+import type BottomSheet from "@gorhom/bottom-sheet";
 import { type BottomSheetModal } from "@gorhom/bottom-sheet";
 import { useFocusEffect } from "@react-navigation/native";
 import { type RefObject, useCallback } from "react";
@@ -5,14 +6,14 @@ import { BackHandler } from "react-native";
 
 export const useBottomSheetBack = (
   bottomSheetOpen: boolean,
-  bottomSheetModalRef: RefObject<BottomSheetModal | null>,
+  bottomSheetRef: RefObject<BottomSheet | BottomSheetModal | null>,
   onClose?: () => void,
 ): void => {
   useFocusEffect(
     useCallback(() => {
       const onBackPress = (): boolean => {
-        if (bottomSheetOpen && bottomSheetModalRef.current !== null) {
-          bottomSheetModalRef.current.close();
+        if (bottomSheetOpen && bottomSheetRef.current !== null) {
+          bottomSheetRef.current.close();
           onClose?.();
           return true;
         }
@@ -25,6 +26,6 @@ export const useBottomSheetBack = (
       return (): void => {
         subscription.remove();
       };
-    }, [bottomSheetModalRef, bottomSheetOpen, onClose]),
+    }, [bottomSheetRef, bottomSheetOpen, onClose]),
   );
 };
