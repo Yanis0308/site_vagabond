@@ -18,7 +18,7 @@ export async function compressImage(uri: string): Promise<string> {
     const startTime = Date.now();
 
     const compressedUri = await Image.compress(uri, {
-      compressionMethod: "manual",
+      compressionMethod: "auto",
       ...DEFAULT_CONFIG,
       input: "uri",
       output: "jpg",
