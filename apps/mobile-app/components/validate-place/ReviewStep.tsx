@@ -183,12 +183,10 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
             </CustomText>
           </Box>
         )}
-        {(errors.imageKey !== undefined || errors.coords !== undefined) && (
+        {errors.coords !== undefined && (
           <Box className="flex flex-row items-center gap-2 rounded-lg bg-red-100 px-4 py-3">
             <CustomText className="text-sm text-red-600">
-              {errors.imageKey !== undefined
-                ? "Photo requise"
-                : "Position GPS requise"}
+              {"Position GPS requise"}
             </CustomText>
           </Box>
         )}

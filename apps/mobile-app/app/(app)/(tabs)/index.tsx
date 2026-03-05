@@ -1,8 +1,7 @@
-import { useFocusEffect } from "@react-navigation/native";
 import * as Device from "expo-device";
 import * as ImagePicker from "expo-image-picker";
-import { router } from "expo-router";
-import { useSetAtom } from "jotai";
+import { router, useFocusEffect } from "expo-router";
+import { useAtomValue, useSetAtom } from "jotai";
 import { type ReactElement, useEffect } from "react";
 import { Alert, Platform } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
@@ -18,6 +17,8 @@ import { useMapLogic } from "@/hooks/maps/useMapLogic";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { mapService } from "@/services/MapService";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
+import { logger } from "@/utils/logger";
+import { waitForFile } from "@/utils/waitForFile";
 
 export default function MapsTab(): ReactElement {
   // Utilisation du hook personnalisé pour toute la logique de la carte
@@ -35,6 +36,7 @@ export default function MapsTab(): ReactElement {
   } = useMapLogic();
 
   const { selectedPlace, setSelectedPlace } = usePlaceSelection();
+  const currentPhoto = useAtomValue(currentPhotoAtom);
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
 
   // Register moveToPlace function in MapService so it's available to the search screen
@@ -59,9 +61,53 @@ export default function MapsTab(): ReactElement {
   };
 
   const handlePhotoSelected = (imageUri: string): void => {
-    setCurrentPhoto({ imageUri, fileId: null });
-    router.push("/validate-place/review-form");
+    setCurrentPhoto({ imageUri });
   };
+
+  // Navigate to review form when a photo is selected (decoupled from picker flow)
+  useEffect(() => {
+    if (currentPhoto !== null && currentPhoto.imageUri !== "") {
+      router.push("/validate-place/review-form");
+    }
+  }, [currentPhoto]);
+
+  // Recover pending ImagePicker result on Android when MainActivity was killed
+  useEffect(() => {
+    const recoverPendingResult = async (): Promise<void> => {
+      logger("[recoverPendingResult] start");
+      const pending = await ImagePicker.getPendingResultAsync();
+      if (pending === null) {
+        logger("[recoverPendingResult] pending is null");
+        return;
+      }
+      const result = pending;
+      if ("code" in result) {
+        logger("[recoverPendingResult] error result:", result);
+        return;
+      }
+      if (result.canceled) {
+        logger("[recoverPendingResult] user canceled");
+      }
+      const asset = result.assets?.[0];
+      if (asset === undefined) {
+        logger("[recoverPendingResult] no asset in result");
+        return;
+      }
+      try {
+        logger("[recoverPendingResult] recovering photo:", asset.uri);
+        await waitForFile(asset.uri);
+        setCurrentPhoto({ imageUri: asset.uri });
+        logger("[recoverPendingResult] success");
+      } catch (error) {
+        logger("[recoverPendingResult] waitForFile error:", error);
+        Alert.alert(
+          "Erreur",
+          "La photo n'a pas pu être chargée. Veuillez réessayer.",
+        );
+      }
+    };
+    void recoverPendingResult();
+  }, [setCurrentPhoto]);
 
   const openCamera = async (): Promise<void> => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
@@ -84,13 +130,21 @@ export default function MapsTab(): ReactElement {
       result = await ImagePicker.launchCameraAsync({
         mediaTypes: ["images"],
         allowsEditing: false,
-        quality: 1,
+        quality: 0.7, // recommended quality
       });
     }
 
     if (result !== null && !result.canceled && result.assets[0] !== undefined) {
       const asset = result.assets[0];
-      handlePhotoSelected(asset.uri);
+      try {
+        await waitForFile(asset.uri);
+        handlePhotoSelected(asset.uri);
+      } catch {
+        Alert.alert(
+          "Erreur",
+          "La photo n'a pas pu être chargée. Veuillez réessayer.",
+        );
+      }
     }
   };
 
@@ -106,11 +160,21 @@ export default function MapsTab(): ReactElement {
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ["images"],
+      allowsEditing: false,
+      quality: 0.7, // recommended quality
     });
 
     if (!result.canceled && result.assets[0] !== undefined) {
       const asset = result.assets[0];
-      handlePhotoSelected(asset.uri);
+      try {
+        await waitForFile(asset.uri);
+        handlePhotoSelected(asset.uri);
+      } catch {
+        Alert.alert(
+          "Erreur",
+          "La photo n'a pas pu être chargée. Veuillez réessayer.",
+        );
+      }
     }
   };
 

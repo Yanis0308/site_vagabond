@@ -7,21 +7,12 @@ settings:
 
 catalogs:
   default:
-    '@eslint/js':
-      specifier: ^9.39.2
-      version: 9.39.3
     '@turf/turf':
       specifier: ^7.2.0
       version: 7.3.4
-    '@types/geojson':
-      specifier: ^7946.0.14
-      version: 7946.0.16
     '@types/node':
       specifier: ^22.9.0
       version: 22.19.11
-    '@types/pg':
-      specifier: ^8.11.11
-      version: 8.16.0
     ajv-errors:
       specifier: 3.0.0
       version: 3.0.0
@@ -31,48 +22,15 @@ catalogs:
     dayjs:
       specifier: ^1.11.13
       version: 1.11.19
-    dotenv:
-      specifier: ^16.4.5
-      version: 16.6.1
-    drizzle-orm:
-      specifier: ^0.45.0
-      version: 0.45.1
     eslint:
       specifier: ^9.39.2
       version: 9.39.3
     eslint-config-expo:
       specifier: ^10.0.0
       version: 10.0.0
-    eslint-config-next:
-      specifier: ^16.0.0
-      version: 16.1.6
-    eslint-config-prettier:
-      specifier: ^10.1.8
-      version: 10.1.8
     eslint-plugin-i18next:
       specifier: ^6.1.3
       version: 6.1.3
-    eslint-plugin-prettier:
-      specifier: ^5.5.5
-      version: 5.5.5
-    eslint-plugin-react-you-might-not-need-an-effect:
-      specifier: ^0.8.5
-      version: 0.8.5
-    eslint-plugin-simple-import-sort:
-      specifier: ^12.1.1
-      version: 12.1.1
-    eslint-plugin-tailwindcss:
-      specifier: ^3.18.2
-      version: 3.18.2
-    geojson:
-      specifier: ^0.5.0
-      version: 0.5.0
-    geolib:
-      specifier: ^3.3.4
-      version: 3.3.4
-    pg:
-      specifier: ^8.13.1
-      version: 8.18.0
     prettier:
       specifier: ^3.3.3
       version: 3.8.1
@@ -82,15 +40,6 @@ catalogs:
     react-dom:
       specifier: 19.1.0
       version: 19.1.0
-    typebox:
-      specifier: ^1.0.77
-      version: 1.1.0
-    typescript:
-      specifier: ^5.9.2
-      version: 5.9.3
-    typescript-eslint:
-      specifier: ^8.55.0
-      version: 8.56.0
     zod:
       specifier: ^3.23.8
       version: 3.25.76
@@ -557,7 +506,7 @@ importers:
         version: 7.1.3
       '@vagabond/shared-utils':
         specifier: workspace:*
-        version: link:../../libs/shared-utils
+        version: file:libs/shared-utils
       ajv:
         specifier: 8.17.1
         version: 8.17.1(patch_hash=46f83a15b64b6a057edbfbc182a5011d89ad5d1b93b698155600f290d84801e0)
@@ -588,9 +537,6 @@ importers:
       expo-build-properties:
         specifier: ~1.0.9
         version: 1.0.10(expo@54.0.33)
-      expo-camera:
-        specifier: ~17.0.9
-        version: 17.0.10(expo@54.0.33)(react-native-web@0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       expo-constants:
         specifier: ~18.0.10
         version: 18.0.13(expo@54.0.33)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))
@@ -600,6 +546,9 @@ importers:
       expo-device:
         specifier: ~8.0.9
         version: 8.0.10(expo@54.0.33)
+      expo-file-system:
+        specifier: ~19.0.0
+        version: 19.0.21(expo@54.0.33)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))
       expo-font:
         specifier: ~14.0.9
         version: 14.0.11(expo@54.0.33)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -7393,17 +7342,6 @@ packages:
     resolution: {integrity: sha512-mFCZbrbrv0AP5RB151tAoRzwRJelqM7bCJzCkxpu+owOyH+p/rFC/q7H5q8B9EpVWj8etaIuszR+gKwohpmu1Q==}
     peerDependencies:
       expo: '*'
-
-  expo-camera@17.0.10:
-    resolution: {integrity: sha512-w1RBw83mAGVk4BPPwNrCZyFop0VLiVSRE3c2V9onWbdFwonpRhzmB4drygG8YOUTl1H3wQvALJHyMPTbgsK1Jg==}
-    peerDependencies:
-      expo: '*'
-      react: '*'
-      react-native: '*'
-      react-native-web: '*'
-    peerDependenciesMeta:
-      react-native-web:
-        optional: true
 
   expo-constants@18.0.13:
     resolution: {integrity: sha512-FnZn12E1dRYKDHlAdIyNFhBurKTS3F9CrfrBDJI5m3D7U17KBHMQ6JEfYlSj7LG7t+Ulr+IKaj58L1k5gBwTcQ==}
@@ -21441,15 +21379,6 @@ snapshots:
       ajv: 8.17.1(patch_hash=46f83a15b64b6a057edbfbc182a5011d89ad5d1b93b698155600f290d84801e0)
       expo: 54.0.33(@babel/core@7.29.0)(@expo/metro-runtime@6.1.2)(expo-router@6.0.23)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       semver: 7.7.4
-
-  expo-camera@17.0.10(expo@54.0.33)(react-native-web@0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0):
-    dependencies:
-      expo: 54.0.33(@babel/core@7.29.0)(@expo/metro-runtime@6.1.2)(expo-router@6.0.23)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-      invariant: 2.2.4
-      react: 19.1.0
-      react-native: 0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)
-    optionalDependencies:
-      react-native-web: 0.21.2(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
 
   expo-constants@18.0.13(expo@54.0.33)(react-native@0.81.5(@babel/core@7.29.0)(@types/react@19.1.17)(react@19.1.0)):
     dependencies:

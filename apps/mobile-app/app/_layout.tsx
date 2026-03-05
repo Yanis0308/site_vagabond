@@ -7,6 +7,7 @@ import Mapbox from "@rnmapbox/maps";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { Stack, usePathname } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import * as SystemUI from "expo-system-ui";
 import { useAtom } from "jotai";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -97,6 +98,11 @@ export default function RootLayout(): ReactElement | null {
       .catch((_error: unknown) => {
         logger("Error setting Mapbox access token:", _error);
       });
+  }, []);
+
+  // Trying to fix the transparency problem on Android
+  useEffect(() => {
+    void SystemUI.setBackgroundColorAsync("transparent");
   }, []);
 
   if (initializing.userLoading) {

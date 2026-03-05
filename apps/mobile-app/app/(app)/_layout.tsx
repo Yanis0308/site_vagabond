@@ -4,8 +4,6 @@ import { type ReactElement } from "react";
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
 
 export default function RootLayout(): ReactElement | null {
-  // We have removed custom chosed fade animation for now
-  // because on a Samsung Android device that provokes transparency problem after place review form
   return (
     <Stack screenOptions={defaultScreenOptions}>
       <Stack.Screen name="(tabs)" />

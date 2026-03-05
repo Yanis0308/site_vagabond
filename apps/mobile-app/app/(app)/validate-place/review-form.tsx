@@ -1,10 +1,6 @@
-import {
-  useFocusEffect,
-  useNavigation,
-  usePreventRemove,
-} from "@react-navigation/native";
+import { usePreventRemove } from "@react-navigation/native";
 import { useIsMutating } from "@tanstack/react-query";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import React, { type ReactElement, useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -30,6 +26,7 @@ export default function ReviewForm(): ReactElement {
   const { selectedPlace } = usePlaceSelection();
   const currentPhoto = useAtomValue(currentPhotoAtom);
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
+  const [fileId, setFileId] = useState<string | null>(null);
   const navigation = useNavigation();
   const router = useRouter();
   const uploadFileMutation = useUploadFileMutation();
@@ -41,7 +38,7 @@ export default function ReviewForm(): ReactElement {
   const uploadAttemptedRef = useRef(false);
 
   const uploadPhoto = useCallback(async (): Promise<void> => {
-    if (currentPhoto?.fileId !== null) return;
+    if (currentPhoto === null || fileId !== null) return;
 
     try {
       logger("Starting photo upload...");
@@ -54,12 +51,7 @@ export default function ReviewForm(): ReactElement {
       });
 
       logger("Upload complete, fileId:", result.key);
-      setCurrentPhoto((prev) => {
-        if (prev !== null) {
-          return { ...prev, fileId: result.key };
-        }
-        return null;
-      });
+      setFileId(result.key);
       uploadAttemptedRef.current = false;
     } catch (error) {
       logger("Error uploading photo:", error);
@@ -88,14 +80,14 @@ export default function ReviewForm(): ReactElement {
         ],
       );
     }
-  }, [currentPhoto, uploadFileMutation, setCurrentPhoto, navigation]);
+  }, [currentPhoto, fileId, uploadFileMutation, setCurrentPhoto, navigation]);
 
   // Upload photo when screen gains focus with a photo to upload (event: user navigated here)
   useFocusEffect(
     useCallback(() => {
       if (
         currentPhoto !== null &&
-        currentPhoto.fileId === null &&
+        fileId === null &&
         !isUploading &&
         !uploadError &&
         !uploadAttemptedRef.current
@@ -103,7 +95,7 @@ export default function ReviewForm(): ReactElement {
         uploadAttemptedRef.current = true;
         void uploadPhoto();
       }
-    }, [currentPhoto, isUploading, uploadError, uploadPhoto]),
+    }, [currentPhoto, fileId, isUploading, uploadError, uploadPhoto]),
   );
 
   const handleReviewFormEnd = (): void => {
@@ -165,7 +157,7 @@ export default function ReviewForm(): ReactElement {
         <ReviewStep
           place={selectedPlace}
           capturedImage={currentPhoto.imageUri}
-          imageKey={currentPhoto.fileId}
+          imageKey={fileId}
           isUploading={isUploading}
           setReviewFormEnded={handleReviewFormEnd}
         />

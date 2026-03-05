@@ -1,6 +1,6 @@
 import type BottomSheet from "@gorhom/bottom-sheet";
 import { type BottomSheetModal } from "@gorhom/bottom-sheet";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect } from "expo-router";
 import { type RefObject, useCallback } from "react";
 import { BackHandler } from "react-native";
 

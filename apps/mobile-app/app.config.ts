@@ -144,16 +144,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
             "The app accesses your photos to let you share them with your friends.",
         },
       ],
-      [
-        // actually unused since we use the camera from the expo-image-picker
-        "expo-camera",
-        {
-          cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
-          microphonePermission:
-            "Allow $(PRODUCT_NAME) to access your microphone",
-          recordAudioAndroid: true,
-        },
-      ],
       "@react-native-google-signin/google-signin",
       [
         "expo-secure-store",
@@ -195,6 +185,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         },
       ],
       "react-native-compressor",
+      [
+        "expo-file-system",
+        {
+          supportsOpeningDocumentsInPlace: false,
+          enableFileSharing: false,
+        },
+      ],
+      "expo-system-ui",
       "./custom.plugin.js",
     ],
     experiments: {
