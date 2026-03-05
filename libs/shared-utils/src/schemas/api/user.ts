@@ -7,7 +7,7 @@ export const UserMeSchema = Type.Object(
   {
     id: Type.String(),
     email: Nullable(Type.String()),
-    fullName: Nullable(Type.String()),
+    fullName: Type.String(),
     oauthProviders: Type.Array(Type.String()),
     lastLogin: DateSchema,
     createdAt: DateSchema,
@@ -24,8 +24,7 @@ export const UsersMeResponseSchema = ApiResponseSchema(
 export const UserPublicInfoSchema = Type.Object(
   {
     id: Type.String(),
-    email: Nullable(Type.String()),
-    fullName: Nullable(Type.String()),
+    fullName: Type.String(),
     createdAt: DateSchema,
   },
   { $id: "UserPublicInfo" },

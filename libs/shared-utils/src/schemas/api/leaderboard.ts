@@ -17,8 +17,7 @@ export const LeaderboardQuerySchema = Type.Object(
 export const LeaderboardUserSchema = Type.Object(
   {
     userId: Type.String(),
-    fullName: Nullable(Type.String()),
-    email: Nullable(Type.String()),
+    fullName: Type.String(),
     visitedPoisCount: Type.Number(),
     rank: Type.Number(),
     registrationDate: DateSchema,

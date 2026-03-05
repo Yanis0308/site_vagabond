@@ -9,7 +9,7 @@ declare module "fastify" {
       db: {
         userId: string;
         email: string | null;
-        fullName: string | null;
+        fullName: string;
         oauthProviders: string[] | null;
         lastLogin: Date;
         role: "ADMIN" | "USER";

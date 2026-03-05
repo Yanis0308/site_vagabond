@@ -1,4 +1,3 @@
-import { getUserDisplayName } from "@vagabond/shared-utils";
 import { type LeaderboardUser } from "@vagabond/shared-utils";
 import { router } from "expo-router";
 import React, { memo, type ReactElement } from "react";
@@ -20,7 +19,6 @@ interface LeaderboardUserItemProps {
 export const LeaderboardUserItem = memo(
   ({ user, isCurrentUser }: LeaderboardUserItemProps): ReactElement => {
     const { i18n } = useTranslation();
-    const displayName = getUserDisplayName(user.fullName, user.email);
 
     const registrationDate = getPlainTextDate({
       locale: i18n.language,
@@ -79,13 +77,13 @@ export const LeaderboardUserItem = memo(
 
             {/* Avatar */}
             <Avatar size="sm" className="bg-primary-200">
-              <AvatarFallbackText>{displayName}</AvatarFallbackText>
+              <AvatarFallbackText>{user.fullName}</AvatarFallbackText>
             </Avatar>
 
             {/* User Info */}
             <VStack className="flex-1 gap-0.5">
               <CustomText className="text-sm font-semibold text-gray-900">
-                {displayName}
+                {user.fullName}
               </CustomText>
               <CustomText className="text-xs text-gray-600">
                 {`${user.visitedPoisCount} ${user.visitedPoisCount > 1 ? "lieux visités" : "lieu visité"}`}

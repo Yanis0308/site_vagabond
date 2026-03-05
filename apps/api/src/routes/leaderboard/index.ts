@@ -11,6 +11,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     {
       schema: {
         tags: ["leaderboard"],
+        security: [{ bearerAuth: [] }],
         querystring: LeaderboardQuerySchema,
         response: {
           200: LeaderboardResponseSchema,

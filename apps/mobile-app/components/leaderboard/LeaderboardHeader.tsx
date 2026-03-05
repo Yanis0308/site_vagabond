@@ -1,4 +1,3 @@
-import { getUserDisplayName } from "@vagabond/shared-utils";
 import { type LeaderboardUser } from "@vagabond/shared-utils";
 import React, { memo, type ReactElement } from "react";
 
@@ -37,11 +36,6 @@ export const LeaderboardHeader = memo(
       (user: LeaderboardUser) => user.userId === currentUser?.id,
     );
 
-    const displayName = getUserDisplayName(
-      currentUser?.fullName,
-      currentUser?.email,
-    );
-
     const periodLabel = period === "all-time" ? "Global" : "Mensuel";
 
     return (
@@ -59,7 +53,9 @@ export const LeaderboardHeader = memo(
                 size="md"
                 style={{ backgroundColor: themeColors.primary[200].hex }}
               >
-                <AvatarFallbackText>{displayName}</AvatarFallbackText>
+                <AvatarFallbackText>
+                  {currentUserData?.fullName}
+                </AvatarFallbackText>
               </Avatar>
               {currentUserData !== undefined ? (
                 <VStack className="gap-0.5">

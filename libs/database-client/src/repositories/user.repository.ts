@@ -1,4 +1,4 @@
-import { logger } from "@vagabond/shared-utils";
+import { getUserDisplayName, logger } from "@vagabond/shared-utils";
 import { and, count, desc, eq, gte, max } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
@@ -13,17 +13,17 @@ export interface UserInfo {
 
 export interface PublicUserInfo {
   id: string;
-  email: string | null;
-  fullName: string | null;
+  fullName: string;
   createdAt: Date;
 }
 
-export type DbUser = typeof users.$inferSelect;
+export type DbUser = Omit<typeof users.$inferSelect, "fullName"> & {
+  fullName: string;
+};
 
 type LeaderboardResult = Array<{
   userId: string;
-  fullName: string | null;
-  email: string | null;
+  fullName: string;
   visitedPoisCount: number;
   registrationDate: string;
   lastVisitedPoiDate: string | null;
@@ -62,8 +62,7 @@ export class UserRepository {
     return usersWithCounts
       .map((user) => ({
         userId: user.userId,
-        fullName: user.fullName,
-        email: user.email,
+        fullName: getUserDisplayName(user.fullName, user.email),
         visitedPoisCount: user.visitedPoisCount,
         registrationDate: user.createdAt.toISOString(),
         lastVisitedPoiDate:
@@ -124,7 +123,13 @@ export class UserRepository {
             throw new Error("Failed to upsert user");
           }
 
-          return { user: dbUser, isNew };
+          return {
+            user: {
+              ...dbUser,
+              fullName: getUserDisplayName(dbUser.fullName, dbUser.email),
+            },
+            isNew,
+          };
         },
         {
           isolationLevel: "serializable",
@@ -172,7 +177,16 @@ export class UserRepository {
           );
         }
 
-        return { user: existingUser, isNew: false };
+        return {
+          user: {
+            ...existingUser,
+            fullName: getUserDisplayName(
+              existingUser.fullName,
+              existingUser.email,
+            ),
+          },
+          isNew: false,
+        };
       }
 
       // Re-throw any other errors
@@ -183,7 +197,7 @@ export class UserRepository {
   async getPublicUserInfo(userId: string): Promise<PublicUserInfo | null> {
     const retrievedUser = await this.db.query.users.findFirst({
       where: eq(users.userId, userId),
-      columns: { userId: true, email: true, fullName: true, createdAt: true },
+      columns: { userId: true, fullName: true, email: true, createdAt: true },
     });
 
     if (retrievedUser === undefined) {
@@ -192,8 +206,7 @@ export class UserRepository {
 
     return {
       id: retrievedUser.userId,
-      email: retrievedUser.email,
-      fullName: retrievedUser.fullName,
+      fullName: getUserDisplayName(retrievedUser.fullName, retrievedUser.email),
       createdAt: retrievedUser.createdAt,
     };
   }

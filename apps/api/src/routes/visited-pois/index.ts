@@ -6,7 +6,6 @@ import {
   CreateVisitedPoiRequestSchema,
   EmptyResponseSchema,
   ErrorResponseSchema,
-  getUserDisplayName,
   GetVisitedPoisResponseSchema,
 } from "@vagabond/shared-utils";
 
@@ -109,16 +108,12 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
           if (poiName !== undefined) {
             const displayName = poiName.length > 0 ? poiName : "Lieu inconnu";
-            const username = getUserDisplayName(
-              request.user.db.fullName,
-              request.user.email,
-            );
 
             const imageUrl = `${fastify.config.cdnUrl}/${imageKey}`;
 
             await fastify.slack.sendPoiValidationMessage(
               `🏆 *Nouveau lieu validé !*\n` +
-                `👤 *Utilisateur:* ${username} (${request.user.email})\n` +
+                `👤 *Utilisateur:* ${request.user.db.fullName} (${request.user.email})\n` +
                 `📍 *Lieu:* ${displayName}\n` +
                 `⭐ *Note:* ${rating}/5\n` +
                 `💬 *Commentaire:* ${
@@ -129,7 +124,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             );
 
             fastify.log.info(
-              `Place validated: ${displayName} by ${username} (${request.user.uid})`,
+              `Place validated: ${displayName} by ${request.user.db.fullName} (${request.user.uid})`,
             );
           }
         } catch (error) {

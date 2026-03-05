@@ -1,7 +1,7 @@
 import type { UserMe } from "@vagabond/shared-utils";
-import { getUserDisplayName } from "@vagabond/shared-utils";
 import { memo, type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
+import type { Optional } from "utility-types";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { CustomText } from "@/components/custom-ui/CustomText";
@@ -11,14 +11,16 @@ import { getPlainTextDate } from "@/utils/date";
 import { localImages } from "@/utils/localImages";
 
 interface ProfileHeaderProps {
-  userData?: Pick<UserMe, "fullName" | "email" | "createdAt"> | null;
+  userData?: Optional<
+    Pick<UserMe, "fullName" | "email" | "createdAt">,
+    "email"
+  > | null;
 }
 
 export const ProfileHeader = memo(
   ({ userData }: ProfileHeaderProps): ReactElement => {
     const { i18n } = useTranslation();
 
-    const displayName = getUserDisplayName(userData?.fullName, userData?.email);
     const registrationDate =
       userData?.createdAt !== undefined && userData.createdAt.length > 0
         ? getPlainTextDate({
@@ -41,7 +43,7 @@ export const ProfileHeader = memo(
         </Box>
         <VStack className="items-center gap-1">
           <CustomText className="text-xl font-bold text-gray-900">
-            {displayName}
+            {userData?.fullName}
           </CustomText>
           {registrationDate !== undefined && (
             <CustomText className="text-sm text-gray-600">

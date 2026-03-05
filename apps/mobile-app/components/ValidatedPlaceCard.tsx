@@ -1,5 +1,4 @@
 import type { BriefVisitedPoi } from "@vagabond/shared-utils";
-import { getUserDisplayName } from "@vagabond/shared-utils";
 import { type FC, memo } from "react";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
@@ -17,10 +16,6 @@ interface ValidatedPlaceCardProps {
 export const ValidatedPlaceCard: FC<ValidatedPlaceCardProps> = memo(
   ({ visitedPoi }) => {
     const { data: currentUser } = useUsersMe();
-    const username = getUserDisplayName(
-      currentUser?.fullName,
-      currentUser?.email,
-    );
 
     return (
       <Box className="mb-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
@@ -44,7 +39,9 @@ export const ValidatedPlaceCard: FC<ValidatedPlaceCardProps> = memo(
             )}
 
             <HStack className="items-center gap-2">
-              <CustomText className="font-semibold">{username}</CustomText>
+              <CustomText className="font-semibold">
+                {currentUser?.fullName}
+              </CustomText>
               <CustomText className="text-yellow-500">
                 {"⭐".repeat(visitedPoi.rating)}
               </CustomText>

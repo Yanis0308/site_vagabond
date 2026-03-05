@@ -1,6 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 import type { UserMe, ZoneUserStat } from "@vagabond/shared-utils";
 import { type ReactElement, useCallback, useMemo } from "react";
+import { type Optional } from "utility-types";
 
 import { ProfileDeleteAccountButton } from "@/components/profile/ProfileDeleteAccountButton";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
@@ -26,7 +27,10 @@ type ProfileSection =
   | { type: "deleteAccount" };
 
 interface ProfileContentProps {
-  userData?: Pick<UserMe, "fullName" | "email" | "createdAt"> | null;
+  userData?: Optional<
+    Pick<UserMe, "fullName" | "email" | "createdAt">,
+    "email"
+  > | null;
   zonesStats?: ZoneUserStat[];
   showSignOutButton: boolean;
   allowVisitedPoiNavigation: boolean;

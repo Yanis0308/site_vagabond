@@ -189,7 +189,6 @@ Tous les endpoints (sauf `/api/leaderboard`) nécessitent une authentification v
 - **GET** `/api/leaderboard?period=<all|month>` - Classement des utilisateurs
   - `period=all` : Classement global
   - `period=month` : Classement du mois en cours
-  - **Note** : Cet endpoint ne nécessite pas d'authentification
 
 ## Documentation API
 
