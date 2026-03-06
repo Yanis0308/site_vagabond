@@ -7,9 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
-import { CustomText } from "@/components/custom-ui/CustomText";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
-import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { ReviewStep } from "@/components/validate-place";
 import {
@@ -21,7 +19,7 @@ import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { compressImage } from "@/utils/imageCompressor";
 import { logger } from "@/utils/logger";
 
-export default function ReviewForm(): ReactElement {
+export default function ReviewForm(): ReactElement | null {
   const { t } = useTranslation("common");
   const { selectedPlace } = usePlaceSelection();
   const currentPhoto = useAtomValue(currentPhotoAtom);
@@ -58,11 +56,11 @@ export default function ReviewForm(): ReactElement {
       setUploadError(true);
       uploadAttemptedRef.current = false;
       Alert.alert(
-        "Erreur",
-        "Impossible d'envoyer la photo. Voulez-vous réessayer ?",
+        t("review_form.upload_error_title"),
+        t("review_form.upload_error_message"),
         [
           {
-            text: "Reprendre une photo",
+            text: t("review_form.upload_error_retake"),
             style: "cancel",
             onPress: (): void => {
               setCurrentPhoto(null);
@@ -71,7 +69,7 @@ export default function ReviewForm(): ReactElement {
             },
           },
           {
-            text: "Réessayer",
+            text: t("review_form.upload_error_retry"),
             onPress: (): void => {
               setUploadError(false);
               void uploadPhoto();
@@ -80,7 +78,14 @@ export default function ReviewForm(): ReactElement {
         ],
       );
     }
-  }, [currentPhoto, fileId, uploadFileMutation, setCurrentPhoto, navigation]);
+  }, [
+    currentPhoto,
+    fileId,
+    uploadFileMutation,
+    t,
+    setCurrentPhoto,
+    navigation,
+  ]);
 
   // Upload photo when screen gains focus with a photo to upload (event: user navigated here)
   useFocusEffect(
@@ -109,18 +114,18 @@ export default function ReviewForm(): ReactElement {
   usePreventRemove(currentPhoto !== null, ({ data }) => {
     // Prompt the user before leaving the screen
     Alert.alert(
-      "Refaire la photo ?",
-      "Vous n'avez pas encore envoyé votre photo. Souhaitez-vous revenir en arrière pour en prendre une nouvelle ?",
+      t("review_form.prevent_remove_title"),
+      t("review_form.prevent_remove_message"),
       [
         {
-          text: "Non",
+          text: t("review_form.prevent_remove_cancel"),
           style: "cancel",
           onPress: (): void => {
             // Do nothing
           },
         },
         {
-          text: "Oui",
+          text: t("review_form.prevent_remove_confirm"),
           style: "destructive",
           onPress: (): void => {
             setCurrentPhoto(null);
@@ -132,13 +137,7 @@ export default function ReviewForm(): ReactElement {
   });
 
   if (selectedPlace === null || currentPhoto === null) {
-    return (
-      <Box className="flex-1 items-center justify-center p-4">
-        <CustomText className="text-lg text-gray-600">
-          {"review form" + t("error_missing_place")}
-        </CustomText>
-      </Box>
-    );
+    return null;
   }
 
   return (

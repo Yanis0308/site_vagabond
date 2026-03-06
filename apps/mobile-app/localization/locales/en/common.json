@@ -22,7 +22,6 @@
   },
   "app_name": "Vagabond",
   "welcome_to_the_neo-tourism": "Welcome to the neo-tourism !",
-  "error_missing_place": "Error - Missing place",
   "your_current_location_is": "Your current location is {{position}}",
   "your_position_is_needed": "Your position is needed",
   "your_photo_is_needed": "Your photo is needed",
@@ -48,6 +47,16 @@
   "img_queue": "Img queue: {{queueLength}}",
   "img_loading": "Img loading: {{pendingRequests}}",
   "clustering": "Clustering: {{enabled}}",
+  "review_form": {
+    "upload_error_title": "Error",
+    "upload_error_message": "Failed to upload the photo. Would you like to try again?",
+    "upload_error_retake": "Retake photo",
+    "upload_error_retry": "Retry",
+    "prevent_remove_title": "Retake the photo?",
+    "prevent_remove_message": "You haven't submitted your photo yet. Would you like to go back and take a new one?",
+    "prevent_remove_cancel": "No",
+    "prevent_remove_confirm": "Yes"
+  },
   "auth": {
     "sign_in_with_apple": "Sign in with Apple",
     "sign_in_with_google": "Sign in with Google",

@@ -20,6 +20,16 @@
   "last_place_visited_on_no_name": "Dernier lieu visité le {{date}}",
   "cities": "villes",
   "departements": "départements",
+  "review_form": {
+    "upload_error_title": "Erreur",
+    "upload_error_message": "Impossible d'envoyer la photo. Voulez-vous réessayer ?",
+    "upload_error_retake": "Reprendre une photo",
+    "upload_error_retry": "Réessayer",
+    "prevent_remove_title": "Refaire la photo ?",
+    "prevent_remove_message": "Vous n'avez pas encore envoyé votre photo. Souhaitez-vous revenir en arrière pour en prendre une nouvelle ?",
+    "prevent_remove_cancel": "Non",
+    "prevent_remove_confirm": "Oui"
+  },
   "auth": {
     "sign_in_with_apple": "Connexion avec Apple",
     "sign_in_with_google": "Connexion avec Google",
