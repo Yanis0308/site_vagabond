@@ -69,7 +69,11 @@ export async function generateEnrichedPoiWithGemini(
         schema,
       }),
       providerOptions: {
-        google: {} satisfies GoogleGenerativeAIProviderOptions,
+        google: {
+          thinkingConfig: {
+            thinkingBudget: 0,
+          },
+        } satisfies GoogleGenerativeAIProviderOptions,
       },
     });
 
