@@ -108,7 +108,7 @@ export function ProfileContent({
           );
         case "deleteAccount":
           return (
-            <Box className="px-4 pb-4">
+            <Box className="px-4">
               <ProfileDeleteAccountButton />
             </Box>
           );
@@ -128,7 +128,7 @@ export function ProfileContent({
   }, []);
 
   return (
-    <Box className="flex-1 pb-10">
+    <Box className="flex-1">
       <FlashList
         data={sections}
         renderItem={renderItem}

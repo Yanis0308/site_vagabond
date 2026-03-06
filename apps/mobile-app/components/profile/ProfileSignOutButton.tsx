@@ -27,7 +27,7 @@ export const ProfileSignOutButton = memo((): ReactElement => {
   }, []);
 
   return (
-    <Box className="items-center justify-center py-4">
+    <Box className="items-center justify-center py-2">
       <Button
         onPress={signOut}
         isDisabled={isSigningOut}

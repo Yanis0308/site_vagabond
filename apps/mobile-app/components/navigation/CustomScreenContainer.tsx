@@ -3,6 +3,8 @@ import { memo, type ReactNode, useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { type Edge, SafeAreaView } from "react-native-safe-area-context";
 
+import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
+import { TABS_BAR_SPACING } from "@/styles/spacing";
 import { cn } from "@/utils/cn";
 
 import { Box } from "../ui/box";
@@ -25,10 +27,9 @@ export const CustomScreenContainer = memo(
     bgColor,
     withHeader,
     withTopSafeArea = true,
-    //isTabScreen,
+    isTabScreen,
   }: CustomScreenContainerProps): ReactNode => {
     const navigation = useNavigation();
-    //const insets = useSafeAreaCustom();
 
     useEffect(() => {
       if (withHeader) {
@@ -59,7 +60,7 @@ export const CustomScreenContainer = memo(
           edges={edges}
           style={{
             backgroundColor: bgColor,
-            //paddingBottom: isTabScreen ? TAB_BAR_HEIGHT + insets.bottom : 0,
+            paddingBottom: isTabScreen ? TAB_BAR_HEIGHT + TABS_BAR_SPACING : 0,
           }}
         >
           {/* <StatusBar hidden={true} /> */}

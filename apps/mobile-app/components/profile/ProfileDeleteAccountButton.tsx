@@ -45,7 +45,7 @@ export const ProfileDeleteAccountButton = memo((): ReactElement => {
   }, [t, signOut]);
 
   return (
-    <Box className="items-center justify-center pb-4">
+    <Box className="items-center justify-center py-2">
       <Button
         onPress={handlePress}
         isDisabled={isSigningOut}
