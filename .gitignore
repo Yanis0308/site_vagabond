@@ -25,7 +25,6 @@ cache/
 # IDE files
 .vscode/
 .idea/
-.claude/
 
 # Build and release
 **/builds-and-releases/
@@ -33,5 +32,7 @@ cache/
 **/.DS_Store
 
 # Local user files (personal MD files, etc)
-local-user-files/
+.claude/
 .cursor/
+local-user-files/
+.mcp.json
