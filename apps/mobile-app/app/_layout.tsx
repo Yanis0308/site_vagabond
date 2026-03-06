@@ -1,5 +1,4 @@
 import "@/global.css";
-import "react-native-reanimated";
 import "@/localization";
 
 import { getAuth } from "@react-native-firebase/auth";
@@ -12,6 +11,10 @@ import { useAtom } from "jotai";
 import { type ReactElement, useCallback, useEffect, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from "react-native-reanimated";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { FullScreenLoader } from "@/components/validate-place/FullScreenLoader";
@@ -27,6 +30,14 @@ void UnifiedAnalyticsService.getInstance().initialize();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 void SplashScreen.preventAutoHideAsync();
+
+// Configure Reanimated logger to reduce noise during development
+if (__DEV__) {
+  configureReanimatedLogger({
+    level: ReanimatedLogLevel.warn, // or error
+    strict: false, // 🔕 disable strict warnings
+  });
+}
 
 export default function RootLayout(): ReactElement | null {
   // void Location.enableNetworkProviderAsync();
@@ -48,7 +59,7 @@ export default function RootLayout(): ReactElement | null {
     authenticatedUserAtom,
   );
   useEffect(() => {
-    const subscriber = getAuth().onAuthStateChanged((user) => {
+    return getAuth().onAuthStateChanged((user) => {
       logger("onAuthStateChanged user:", JSON.stringify(user));
 
       if (user !== null) {
@@ -85,8 +96,7 @@ export default function RootLayout(): ReactElement | null {
       }
 
       setInitializing((prev) => ({ ...prev, userLoading: false }));
-    });
-    return subscriber; // unsubscribe on unmount
+    }); // unsubscribe on unmount
   }, [setAuthenticatedUser]);
 
   // Mapbox init

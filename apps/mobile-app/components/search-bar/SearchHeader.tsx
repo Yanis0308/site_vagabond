@@ -18,7 +18,6 @@ import { View } from "@/components/ui/view";
 import { useSearchTerm } from "@/stores/searchTermAtom";
 import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
-import { logger } from "@/utils/logger";
 
 interface SearchHeaderProps {
   onBack?: () => void;
@@ -162,7 +161,6 @@ export const SearchHeader = forwardRef<SearchHeaderRef, SearchHeaderProps>(
             onSubmitEditing={onSubmitEditing}
             onPress={() => {
               if (!editable) {
-                logger("SearchHeader: onPress");
                 onPress?.();
               }
             }}

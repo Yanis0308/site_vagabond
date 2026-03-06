@@ -8,18 +8,19 @@ interface PhotosSectionProps {
   photos: PoiEnrichedPhoto[];
 }
 
-export const PhotosSection = ({ photos }: PhotosSectionProps): ReactNode => {
-  const sortedPhotos = [...photos].sort((a, b) => {
-    if (a.isPrimary) {
-      return -1;
-    }
-    if (b.isPrimary) {
-      return 1;
-    }
-    return 0;
-  });
+const photosSorter = (a: PoiEnrichedPhoto, b: PoiEnrichedPhoto): number => {
+  if (a.isPrimary) {
+    return -1;
+  }
+  if (b.isPrimary) {
+    return 1;
+  }
+  return 0;
+};
 
-  const isSinglePhoto = sortedPhotos.length === 1;
+export const PhotosSection = ({ photos }: PhotosSectionProps): ReactNode => {
+  const sortedPhotos = [...photos].sort(photosSorter);
+  const isSinglePhoto = photos.length === 1;
 
   const keyExtractor = (item: PoiEnrichedPhoto): string => item.url;
   const renderItem = ({

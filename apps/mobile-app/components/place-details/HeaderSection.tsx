@@ -10,6 +10,7 @@ import { localImages } from "@/utils/localImages";
 import { CustomImage } from "../custom-ui/CustomImage";
 import { PhotosLoadingPlaceholder } from "./PhotosLoadingPlaceholder";
 import { PhotosSection } from "./PhotosSection";
+import { usePlaceDetailsImages } from "./PlaceDetailsImagesContext";
 
 interface HeaderSectionProps {
   enrichedData: PoiEnrichedData | undefined;
@@ -22,12 +23,10 @@ interface HeaderSectionProps {
   };
 }
 
-export function HeaderSection({
-  enrichedData,
-  visitedPois,
-  isLoadingEnriched,
-  imageBoxAnimatedStyle,
-}: HeaderSectionProps): ReactElement {
+const consolidatePhotos = (
+  enrichedData: PoiEnrichedData | undefined,
+  visitedPois: VisitedPoi[],
+): PoiEnrichedPhoto[] => {
   const photos: PoiEnrichedPhoto[] = [];
   const hasEnrichedPhotos =
     enrichedData?.photos !== undefined && enrichedData.photos.length > 0;
@@ -47,14 +46,29 @@ export function HeaderSection({
     });
   }
 
+  return photos;
+};
+
+export const HeaderSection = ({
+  isLoadingEnriched,
+  imageBoxAnimatedStyle,
+  enrichedData,
+  visitedPois,
+}: HeaderSectionProps): ReactElement => {
+  const photos = consolidatePhotos(enrichedData, visitedPois);
+  const { hasNoVisibleImages } = usePlaceDetailsImages();
+
+  const hasEnrichedPhotos =
+    enrichedData?.photos !== undefined && enrichedData.photos.length > 0;
+
   // Show loading placeholder if enriched data is loading and we don't have enriched photos yet
   const showLoadingPlaceholder =
     isLoadingEnriched && !hasEnrichedPhotos && visitedPois.length === 0;
 
   return (
-    <Center className={"z-20 px-2"}>
+    <Center className={`z-20 px-2 ${!hasNoVisibleImages ? "pb-4" : ""}`}>
       <Animated.View style={[imageBoxAnimatedStyle]} className="w-full">
-        {!showLoadingPlaceholder && (
+        {!showLoadingPlaceholder && !hasNoVisibleImages && (
           <CustomImage
             sources={localImages.starStruck}
             useAppleWebpCodec={false}
@@ -73,4 +87,4 @@ export function HeaderSection({
       </Animated.View>
     </Center>
   );
-}
+};

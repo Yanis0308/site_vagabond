@@ -14,6 +14,7 @@ export interface CustomImageProps extends Omit<
   showLoader: boolean;
   containerClassName?: string;
   maxWidthPercentage?: number;
+  onLoadError?: () => void;
 }
 
 export interface ImageStyleResult extends Pick<

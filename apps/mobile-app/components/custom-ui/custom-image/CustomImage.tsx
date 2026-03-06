@@ -1,5 +1,8 @@
-import { type ReactElement } from "react";
+import { type ImageRef } from "expo-image";
+import { type ReactElement, useEffect, useMemo } from "react";
 import { useWindowDimensions } from "react-native";
+
+import { useImageFromMultipleSources } from "@/hooks/queries/useImageFromMultipleSources";
 
 import {
   calculateMaxImageSize,
@@ -10,8 +13,26 @@ import {
 import { ImageWithBlurBackground } from "./ImageWithBlurBackground";
 import { SimpleImage } from "./SimpleImage";
 import { type CustomImageProps } from "./types";
-import { useImageAspectRatio } from "./useImageAspectRatio";
-import { useOptimizedImageSource } from "./useOptimizedImageSource";
+
+/**
+ * Extracts aspect ratio from a loaded ImageRef
+ */
+const getAspectRatioFromImageRef = (
+  imageLoaded: ImageRef | number | null | undefined,
+): number | undefined => {
+  if (
+    imageLoaded !== null &&
+    typeof imageLoaded === "object" &&
+    "width" in imageLoaded &&
+    "height" in imageLoaded
+  ) {
+    const { width, height } = imageLoaded as { width: number; height: number };
+    if (height > 0) {
+      return width / height;
+    }
+  }
+  return undefined;
+};
 
 /**
  * CustomImage component - Main orchestrator for image display
@@ -26,6 +47,7 @@ export const CustomImage = ({
   contentFit,
   containerClassName,
   maxWidthPercentage,
+  onLoadError,
   ...props
 }: CustomImageProps): ReactElement => {
   const { width: windowWidth } = useWindowDimensions();
@@ -39,16 +61,24 @@ export const CustomImage = ({
   const maxImageSize = calculateMaxImageSize(width, height, windowWidth);
 
   // 2. Load image using optimized strategy
-  const { imageLoaded, isLoading } = useOptimizedImageSource({
-    sources: allSources,
-    maxWidth: maxImageSize,
-  });
+  const { data: imageLoaded, isLoading } = useImageFromMultipleSources(
+    allSources,
+    { maxImageSize },
+  );
 
-  // 3. Calculate aspect ratio if contentFit is "aspectRatio"
-  const firstSource = allSources[0];
-  const imageUrl = typeof firstSource === "string" ? firstSource : null;
-  const aspectRatio = useImageAspectRatio(
-    contentFit === "aspectRatio" ? imageUrl : null,
+  useEffect(() => {
+    if (!isLoading && (imageLoaded === null || imageLoaded === undefined)) {
+      onLoadError?.();
+    }
+  }, [imageLoaded, isLoading, onLoadError]);
+
+  // 3. Calculate aspect ratio from loaded ImageRef (no extra network call)
+  const aspectRatio = useMemo(
+    () =>
+      contentFit === "aspectRatio"
+        ? getAspectRatioFromImageRef(imageLoaded)
+        : undefined,
+    [contentFit, imageLoaded],
   );
 
   // 4. Determine optimal content fit

@@ -5,6 +5,7 @@ import {
   type ImageRef,
 } from "expo-image";
 
+import { USER_AGENT } from "@/constants/Http";
 import { logger } from "@/utils/logger";
 
 export type ImageLoadAsyncSource = Parameters<typeof Image.loadAsync>[0];
@@ -25,7 +26,13 @@ export const useImageFromMultipleSources = (
           if (typeof source === "number") {
             return source;
           }
-          return await Image.loadAsync(source);
+          return await Image.loadAsync({
+            ...(typeof source === "string" ? { uri: source } : source),
+            headers: {
+              "User-Agent": USER_AGENT,
+            },
+            ...options,
+          });
         } catch (error) {
           logger("Erreur lors du chargement de l'image:", error);
         }

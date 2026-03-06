@@ -26,6 +26,10 @@ import { type PoiType } from "@/utils/types";
 import { themeColors } from "../ui/gluestack-ui-provider/config";
 import { buildListData } from "./buildListData";
 import { Handle } from "./Handle";
+import {
+  PlaceDetailsImagesProvider,
+  usePlaceDetailsImagesContext,
+} from "./PlaceDetailsImagesContext";
 import { RenderListItem } from "./RenderListItem";
 
 interface PlaceDetailsSheetV2Props {
@@ -112,6 +116,19 @@ export const PlaceDetailsSheet = ({
     borderTopRightRadius: 40,
   };
 
+  const visitedPois = visitedPoisData ?? [];
+
+  const imageCount =
+    enrichedData?.photos !== undefined
+      ? enrichedData.photos.length
+      : visitedPois.length;
+
+  const placeDetailsImagesContext = usePlaceDetailsImagesContext(
+    place?.id ?? "",
+    imageCount,
+  );
+  const { hasNoVisibleImages } = placeDetailsImagesContext;
+
   const imageBoxAnimatedStyle = useAnimatedStyle(() => {
     const opacity = interpolate(
       bottomSheetAnimatedIndex.value,
@@ -142,15 +159,13 @@ export const PlaceDetailsSheet = ({
     const translateY = interpolate(
       bottomSheetAnimatedIndex.value,
       [0, 1],
-      [-260, 0], // Remonte pour combler l'espace de l'image
+      hasNoVisibleImages ? [0, 0] : [-260, 0],
       Extrapolation.CLAMP,
     );
     return {
       transform: [{ translateY }],
     };
   });
-
-  const visitedPois = visitedPoisData ?? [];
 
   // prettier-ignore
   const rating = Math.round(
@@ -203,39 +218,41 @@ export const PlaceDetailsSheet = ({
   const stickyHeaderIndices = [1];
 
   return (
-    <BottomSheet
-      ref={bottomSheetRef}
-      index={-1}
-      snapPoints={snapPoints}
-      animatedIndex={bottomSheetAnimatedIndex}
-      enablePanDownToClose={false}
-      enableDynamicSizing={false}
-      backgroundStyle={backgroundStyle}
-      handleComponent={handleComponent}
-      backdropComponent={SheetBackdrop}
-      bottomInset={TAB_BAR_HEIGHT + insets.bottom}
-      onChange={onSheetChange}
-      topInset={insets.top}
-    >
-      <FlashList
-        data={listData}
-        renderItem={({ item }) => (
-          <RenderListItem
-            item={item}
-            enrichedData={enrichedData ?? undefined}
-            onPressCamera={onPressCamera}
-            onPressGallery={onPressGallery}
-            imageBoxAnimatedStyle={imageBoxAnimatedStyle}
-            contentAnimatedStyle={contentAnimatedStyle}
-            visitedPois={visitedPois}
-            isLoadingEnriched={isLoadingEnriched}
-          />
-        )}
-        keyExtractor={keyExtractor}
-        stickyHeaderIndices={stickyHeaderIndices}
-        renderScrollComponent={BottomSheetScrollable}
-        style={{ paddingBottom: TABS_BAR_SPACING }}
-      />
-    </BottomSheet>
+    <PlaceDetailsImagesProvider value={placeDetailsImagesContext}>
+      <BottomSheet
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        animatedIndex={bottomSheetAnimatedIndex}
+        enablePanDownToClose={false}
+        enableDynamicSizing={false}
+        backgroundStyle={backgroundStyle}
+        handleComponent={handleComponent}
+        backdropComponent={SheetBackdrop}
+        bottomInset={TAB_BAR_HEIGHT}
+        onChange={onSheetChange}
+        topInset={insets.top}
+      >
+        <FlashList
+          data={listData}
+          renderItem={({ item }) => (
+            <RenderListItem
+              item={item}
+              enrichedData={enrichedData ?? undefined}
+              onPressCamera={onPressCamera}
+              onPressGallery={onPressGallery}
+              imageBoxAnimatedStyle={imageBoxAnimatedStyle}
+              contentAnimatedStyle={contentAnimatedStyle}
+              visitedPois={visitedPois}
+              isLoadingEnriched={isLoadingEnriched}
+            />
+          )}
+          keyExtractor={keyExtractor}
+          stickyHeaderIndices={stickyHeaderIndices}
+          renderScrollComponent={BottomSheetScrollable}
+          style={{ paddingBottom: TABS_BAR_SPACING }}
+        />
+      </BottomSheet>
+    </PlaceDetailsImagesProvider>
   );
 };

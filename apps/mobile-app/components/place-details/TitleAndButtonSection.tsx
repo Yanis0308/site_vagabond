@@ -35,7 +35,7 @@ export function TitleAndButtonSection({
       style={[contentAnimatedStyle, shadowStyles.contentLarge]}
       className="bg-background-200 pb-2"
     >
-      <CustomText type="placeTitle" className={"px-4 pt-4 text-plum-700"}>
+      <CustomText type="placeTitle" className={"px-4 text-plum-700"}>
         {isVisited ? " ✅ " : ""}
         {t("place_details_sheet.title", {
           name: enrichedData?.name ?? placeName,

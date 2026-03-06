@@ -145,8 +145,6 @@ export const useMapLogic = (): UseMapLogicReturn => {
   };
 
   const onPress = (event: OnPressEventPoi): void => {
-    logger("onPress");
-
     try {
       if (
         Array.isArray(event.features) &&
