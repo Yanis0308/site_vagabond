@@ -1,8 +1,8 @@
 import { getUserDisplayName, logger } from "@vagabond/shared-utils";
-import { and, count, desc, eq, gte, max } from "drizzle-orm";
+import { and, countDistinct, desc, eq, gte, max } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
-import { users, visitedPois } from "../schema.js";
+import { poiBoundaries, users, visitedPois } from "../schema.js";
 
 export interface UserInfo {
   email: string;
@@ -43,7 +43,7 @@ export class UserRepository {
         fullName: users.fullName,
         email: users.email,
         createdAt: users.createdAt,
-        visitedPoisCount: count(visitedPois.id),
+        visitedPoisCount: countDistinct(visitedPois.poiId),
         lastVisitedPoiDate: max(visitedPois.createdAt),
       })
       .from(users)
@@ -56,8 +56,9 @@ export class UserRepository {
             : undefined,
         ),
       )
+      .innerJoin(poiBoundaries, eq(visitedPois.poiId, poiBoundaries.poiId))
       .groupBy(users.userId)
-      .orderBy(desc(count(visitedPois.id)));
+      .orderBy(desc(countDistinct(visitedPois.poiId)));
 
     return usersWithCounts
       .map((user) => ({
