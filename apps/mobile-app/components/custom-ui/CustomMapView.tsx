@@ -72,7 +72,8 @@ export const CustomMapView = function CustomMapView({
       <LocationPuck
         puckBearingEnabled
         puckBearing="heading"
-        bearingImage="bearingImage"
+        topImage="bearingImage"
+        scale={1.25}
         pulsing={pulsing}
       />
       <Images images={images} />
