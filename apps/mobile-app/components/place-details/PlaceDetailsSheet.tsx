@@ -4,7 +4,14 @@ import BottomSheet, {
   useBottomSheetScrollableCreator,
 } from "@gorhom/bottom-sheet";
 import { FlashList } from "@shopify/flash-list";
-import React, { type ReactElement, useEffect, useRef } from "react";
+import { useFocusEffect } from "expo-router";
+import React, {
+  type MutableRefObject,
+  type ReactElement,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -39,6 +46,7 @@ interface PlaceDetailsSheetV2Props {
   onClose: () => void;
   onSheetChange?: (index: number) => void;
   animatedIndex?: SharedValue<number>;
+  scrollRepairNeededRef?: MutableRefObject<boolean>;
 }
 
 const SheetBackdrop = ({
@@ -77,10 +85,17 @@ export const PlaceDetailsSheet = ({
   onClose,
   onSheetChange,
   animatedIndex,
+  scrollRepairNeededRef,
 }: PlaceDetailsSheetV2Props): ReactElement => {
   const DEFAULT_SNAP_POINT = 1;
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const BottomSheetScrollable = useBottomSheetScrollableCreator();
+  const [flashListKey, setFlashListKey] = useState(0);
+
+  const BottomSheetScrollable = useBottomSheetScrollableCreator({
+    //@ts-expect-error -- type are similar but not exactly the same
+    //eslint-disable-next-line react-compiler/react-compiler -- needed by bottom-sheet
+    focusHook: useFocusEffect,
+  });
 
   const user = useUsersMe();
   const {
@@ -104,6 +119,16 @@ export const PlaceDetailsSheet = ({
       bottomSheetRef.current?.close();
     }
   }, [place?.id]);
+
+  // Force FlashList remount when returning from validation to fix iOS scroll corruption
+  useFocusEffect(
+    React.useCallback(() => {
+      if (scrollRepairNeededRef?.current === true && place?.id !== undefined) {
+        scrollRepairNeededRef.current = false;
+        setFlashListKey((prev) => prev + 1);
+      }
+    }, [place?.id, scrollRepairNeededRef]),
+  );
 
   useBottomSheetBack(place !== null, bottomSheetRef, onClose);
 
@@ -234,6 +259,7 @@ export const PlaceDetailsSheet = ({
         topInset={insets.top}
       >
         <FlashList
+          key={flashListKey}
           data={listData}
           renderItem={({ item }) => (
             <RenderListItem

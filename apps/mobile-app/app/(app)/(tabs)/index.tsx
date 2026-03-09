@@ -2,7 +2,7 @@ import * as Device from "expo-device";
 import * as ImagePicker from "expo-image-picker";
 import { router, useFocusEffect } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import { type ReactElement, useEffect } from "react";
+import { type ReactElement, useEffect, useRef } from "react";
 import { Alert, Platform } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
@@ -55,6 +55,7 @@ export default function MapsTab(): ReactElement {
   });
 
   const bottomSheetAnimatedIndex = useSharedValue(-1);
+  const scrollRepairNeededRef = useRef(false);
 
   const onBottomSheetClose = (): void => {
     setSelectedPlace(null);
@@ -67,6 +68,7 @@ export default function MapsTab(): ReactElement {
   // Navigate to review form when a photo is selected (decoupled from picker flow)
   useEffect(() => {
     if (currentPhoto !== null && currentPhoto.imageUri !== "") {
+      scrollRepairNeededRef.current = true;
       router.push("/validate-place/review-form");
     }
   }, [currentPhoto]);
@@ -214,6 +216,7 @@ export default function MapsTab(): ReactElement {
           onPressGallery={openGallery}
           onClose={onBottomSheetClose}
           animatedIndex={bottomSheetAnimatedIndex}
+          scrollRepairNeededRef={scrollRepairNeededRef}
         />
       </Box>
     </CustomScreenContainer>
