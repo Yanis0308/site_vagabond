@@ -1,0 +1,5 @@
+{
+  "NSCameraUsageDescription": "Vagabond a besoin d'accéder à votre appareil photo pour prendre des photos des lieux que vous visitez.",
+  "NSPhotoLibraryUsageDescription": "L'application accède à vos photos pour vous permettre de partager les photos des lieux que vous visitez.",
+  "NSLocationWhenInUseUsageDescription": "Vagabond a besoin de votre position pour afficher votre emplacement sur la carte, suivre vos régions visitées en France et vérifier votre présence physique lors de la validation d'un lieu."
+}

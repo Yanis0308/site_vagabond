@@ -1,0 +1,5 @@
+{
+  "NSCameraUsageDescription": "Vagabond needs access to your camera to take photos of places you visit.",
+  "NSPhotoLibraryUsageDescription": "The app accesses your photos to let you share photos of places you visit.",
+  "NSLocationWhenInUseUsageDescription": "Vagabond needs your location to display your position on the map, track your visited regions in France and verify your physical presence when validating a place."
+}

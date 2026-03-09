@@ -90,6 +90,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ios: {
       bundleIdentifier: parsedConfig.data.packageAndBundleIdentifier,
       supportsTablet: true,
+      infoPlist: {
+        CFBundleDevelopmentRegion: "en",
+        CFBundleLocalizations: ["en", "fr"],
+        CFBundleAllowMixedLocalizations: true,
+      },
       // indicate to Expo to configure apple-sign-in in our Apple developer account
       // but after that we manage it with the non expo library @invertase/react-native-apple-authentication
       usesAppleSignIn: true,
@@ -128,22 +133,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
           fonts: ["assets/fonts/SpaceMono-Regular.ttf"],
         },
       ],
-      [
-        "expo-location",
-        {
-          locationWhenInUsePermission:
-            "Vagabond a besoin de votre position pour afficher votre emplacement sur la carte, suivre vos régions visitées en France et vérifier votre présence physique lors de la validation d'un lieu (par ex. confirmer que vous êtes bien devant un monument).",
-          // App open but backgrounded
-          // isAndroidForegroundServiceEnabled: true,
-        },
-      ],
-      [
-        "expo-image-picker",
-        {
-          photosPermission:
-            "The app accesses your photos to let you share them with your friends.",
-        },
-      ],
+      "expo-location",
+      "expo-image-picker",
       "@react-native-google-signin/google-signin",
       [
         "expo-secure-store",
@@ -195,6 +186,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       "expo-system-ui",
       "./custom.plugin.js",
     ],
+    locales: {
+      en: "./assets/locales/en.json",
+      fr: "./assets/locales/fr.json",
+    },
     experiments: {
       typedRoutes: true,
       reactCompiler: true,
