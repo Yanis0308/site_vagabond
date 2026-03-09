@@ -101,6 +101,7 @@ export async function readUrlWithJinaReader(
       return {
         success: false,
         error: `Jina Reader API error: ${envelope.code}`,
+        rawResult,
       };
     }
 
@@ -114,6 +115,7 @@ export async function readUrlWithJinaReader(
       return {
         success: false,
         error: "Jina Reader API returned invalid response structure",
+        rawResult,
       };
     }
 

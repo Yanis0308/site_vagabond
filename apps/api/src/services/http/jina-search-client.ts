@@ -66,6 +66,7 @@ export async function searchWithJinaSearch(
       const errorResponse: ScrapingErrorResponse = {
         success: false,
         error: "Jina Search API returned invalid response structure",
+        rawResult,
       };
       return errorResponse;
     }
@@ -76,6 +77,7 @@ export async function searchWithJinaSearch(
       const errorResponse: ScrapingErrorResponse = {
         success: false,
         error: `Jina Search API returned code ${rawResult.code}, status ${rawResult.status}`,
+        rawResult,
       };
       return errorResponse;
     }

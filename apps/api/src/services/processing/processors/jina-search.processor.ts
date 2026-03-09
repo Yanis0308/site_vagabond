@@ -50,6 +50,9 @@ export class JinaSearchProcessor implements ScrapingProcessor<
             name: response.errorInstance.name,
           },
         }),
+        ...(response.rawResult !== undefined && {
+          rawResult: response.rawResult,
+        }),
       } as Record<string, unknown>;
     }
     return { ...response } as Record<string, unknown>;

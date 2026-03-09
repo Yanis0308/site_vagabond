@@ -52,6 +52,9 @@ export class LlmProcessor implements ScrapingProcessor<
     if (!isScrapingSuccess(response)) {
       return {
         error: response.error,
+        ...(response.rawResult !== undefined && {
+          rawResult: response.rawResult,
+        }),
       };
     }
 

@@ -116,6 +116,7 @@ export function createValidationErrorResponse(
   const errorResponse: ScrapingErrorResponse = {
     success: false,
     error: `${providerName} JSON schema response validation failed`,
+    rawResult: data,
   };
 
   return errorResponse;

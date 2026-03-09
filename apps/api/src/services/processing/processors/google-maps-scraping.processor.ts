@@ -43,6 +43,9 @@ export class GoogleMapsScrapingProcessor implements ScrapingProcessor<
     if (!isScrapingSuccess(response)) {
       return {
         error: response.error,
+        ...(response.rawResult !== undefined && {
+          rawResult: response.rawResult,
+        }),
       };
     }
 

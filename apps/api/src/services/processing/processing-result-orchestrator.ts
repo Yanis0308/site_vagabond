@@ -193,9 +193,7 @@ export class ProcessingResultOrchestrator {
           processingResultId,
           {
             status: "error",
-            output: {
-              error: errorResponse.error,
-            },
+            output: processor.transformOutput(scrapeResponse),
             duration,
           },
         );

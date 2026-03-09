@@ -79,7 +79,16 @@ export async function scrapeGoogleMaps(
       .json<unknown>();
 
     if (!validateWithSchema(ScrapeDataScraperResponseSchema, rawResult)) {
-      throw new Error("Invalid response from data-scraper service");
+      getLogger(fastify).error(
+        { rawResult },
+        "Invalid response from data-scraper service",
+      );
+      const errorResponse: ScrapingErrorResponse = {
+        success: false,
+        error: "Invalid response from data-scraper service",
+        rawResult,
+      };
+      return errorResponse;
     }
 
     const validatedResult = rawResult as {
@@ -108,6 +117,7 @@ export async function scrapeGoogleMaps(
         success: false,
         error:
           validatedResult.error ?? "Unknown error from data-scraper service",
+        rawResult,
       };
       return errorResponse;
     }

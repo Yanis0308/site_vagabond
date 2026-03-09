@@ -15,6 +15,7 @@ export interface ScrapingErrorResponse {
   success: false;
   error: string;
   errorInstance?: Error;
+  rawResult?: unknown;
 }
 
 /**
