@@ -6,6 +6,10 @@
     "loading_enriched_data": "Chargement des informations supplémentaires..."
   },
   "sign_out": "Se déconnecter",
+  "sign_out_confirm_title": "Se déconnecter ?",
+  "sign_out_confirm_message": "Êtes-vous sûr de vouloir vous déconnecter ?",
+  "sign_out_confirm_no": "Annuler",
+  "sign_out_confirm_yes": "Se déconnecter",
   "delete_account": "Supprimer mon compte",
   "delete_account_confirm_title": "Supprimer mon compte ?",
   "delete_account_confirm_message": "Cette action est irréversible. Toutes vos données seront supprimées.",
