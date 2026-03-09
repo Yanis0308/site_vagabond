@@ -6,6 +6,7 @@ import { randomUUID } from "crypto";
 import type { FastifyInstance } from "fastify";
 import { getDistance } from "geolib";
 
+import { getLogger } from "../utils/logger.js";
 import { normalizeSearchText } from "../utils/text.js";
 import type { GoogleMapsScrapeResponse } from "./http/data-scraper-client.js";
 import type { JinaEnrichedResult } from "./jina-enrichment.service.js";
@@ -108,7 +109,7 @@ export class PoiEnrichmentService {
     ]);
 
     if (jinaSettled.status === "rejected") {
-      this.fastify.log.warn(
+      getLogger(this.fastify).warn(
         { poiId, reason: jinaSettled.reason },
         "Jina enrichment failed (Promise rejected), using empty fallback",
       );
@@ -167,7 +168,7 @@ export class PoiEnrichmentService {
     );
 
     if (distance > 1000) {
-      this.fastify.log.info(
+      getLogger(this.fastify).info(
         {
           distance,
           placeTitle: place.title,
@@ -216,7 +217,7 @@ export class PoiEnrichmentService {
     if (!isProcessSuccess(llmResult)) {
       const errorMessage = llmResult.error;
 
-      this.fastify.log.error(
+      getLogger(this.fastify).error(
         {
           poiId,
           llmResult,
@@ -233,7 +234,7 @@ export class PoiEnrichmentService {
     if (!isScrapingSuccess(llmResponse)) {
       const errorMessage = llmResponse.error;
 
-      this.fastify.log.error(
+      getLogger(this.fastify).error(
         {
           poiId,
           llmResult,
@@ -250,7 +251,7 @@ export class PoiEnrichmentService {
     if (llmResponse.data === undefined) {
       const errorMessage = "LLM response missing data";
 
-      this.fastify.log.error(
+      getLogger(this.fastify).error(
         {
           poiId,
           llmResult,
@@ -272,7 +273,7 @@ export class PoiEnrichmentService {
   logProcessingResults(poiId: string, results: ProcessingResults): void {
     if (results.googleMapsResult !== undefined) {
       if (!isProcessSuccess(results.googleMapsResult)) {
-        this.fastify.log.warn(
+        getLogger(this.fastify).warn(
           {
             processResult: results.googleMapsResult,
             errorInstance: results.googleMapsResult.errorInstance,
@@ -290,7 +291,7 @@ export class PoiEnrichmentService {
       jinaEnriched.wikidataContent.length > 0;
 
     if (!hasAnyJinaContent) {
-      this.fastify.log.warn(
+      getLogger(this.fastify).warn(
         {
           poiId,
           ...(jinaEnriched.diagnostic !== undefined && {

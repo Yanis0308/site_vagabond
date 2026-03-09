@@ -127,7 +127,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           const errorStack = error instanceof Error ? error.stack : undefined;
           const errorName = error instanceof Error ? error.name : typeof error;
 
-          fastify.log.warn(
+          request.log.warn(
             {
               errorMessage,
               errorStack,
@@ -176,7 +176,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           },
         });
       } catch (error) {
-        fastify.log.error(error);
+        request.log.error(error);
         return await reply.status(500).send({
           error: {
             type: "INTERNAL_SERVER_ERROR",

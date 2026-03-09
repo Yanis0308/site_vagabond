@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 
+import { getLogger } from "../../utils/logger.js";
 import type {
   ScrapingErrorResponse,
   ScrapingResponse,
@@ -79,7 +80,13 @@ export function createErrorResponse(
   params: LLMGenerateEnrichedPoiParams,
   providerName: string,
 ): LLMGenerateEnrichedPoiResponse {
-  fastify.log.error({ error, params }, `${providerName} API request failed`);
+  getLogger(fastify).error(
+    { error, params },
+    `${providerName} API request failed`,
+
+    { error, params },
+    `${providerName} API request failed`,
+  );
 
   const errorResponse: ScrapingErrorResponse = {
     success: false,
@@ -101,7 +108,7 @@ export function createValidationErrorResponse(
   data: unknown,
   providerName: string,
 ): LLMGenerateEnrichedPoiResponse {
-  fastify.log.warn(
+  getLogger(fastify).warn(
     { data },
     `${providerName} JSON schema response validation failed`,
   );

@@ -1,3 +1,4 @@
+import { requestContext } from "@fastify/request-context";
 import { type FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
 import { type auth } from "firebase-admin";
@@ -75,6 +76,10 @@ export default fp(
         // Attach DB user to request.user
         request.user = Object.assign(decodedToken, { db: dbUser });
 
+        // Enrich request.log with userId for all subsequent logs in this request
+        request.log = request.log.child({ userId });
+        requestContext.set("log", request.log);
+
         // Fire-and-forget Slack notification for new user
         if (isNew) {
           void (async (): Promise<void> => {
@@ -86,22 +91,28 @@ export default fp(
                   `🔑 *Provider:* ${currentUserInfo.oauthProviders.join(", ")}\n` +
                   `📅 *Date:* ${new Date().toLocaleString("fr-FR")}`,
               );
-              fastify.log.info(
+              request.log.info(
                 `New user created: ${currentUserInfo.email} (${userId})`,
               );
             } catch (error) {
-              fastify.log.error(error);
+              request.log.error(error);
             }
           })();
         }
       } catch (error) {
-        fastify.log.error(error);
+        request.log.error(error);
         throw fastify.httpErrors.unauthorized("Non autorisé");
       }
     });
   },
   {
     name: "auth",
-    dependencies: ["sensible", "firebase-admin", "fastify-drizzle", "slack"],
+    dependencies: [
+      "sensible",
+      "firebase-admin",
+      "fastify-drizzle",
+      "slack",
+      "request-context",
+    ],
   },
 );

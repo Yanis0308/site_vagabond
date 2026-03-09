@@ -160,12 +160,12 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
                 `🖼️ *Image:* ${imageUrl}`,
             );
 
-            fastify.log.info(
+            request.log.info(
               `Place validated: ${displayName} by ${request.user.db.fullName} (${request.user.uid})`,
             );
           }
         } catch (error) {
-          fastify.log.error(
+          request.log.error(
             { err: error },
             "Failed to send Slack notification for place validation:",
           );

@@ -7,12 +7,21 @@ settings:
 
 catalogs:
   default:
+    '@eslint/js':
+      specifier: ^9.39.2
+      version: 9.39.3
     '@turf/turf':
       specifier: ^7.2.0
       version: 7.3.4
+    '@types/geojson':
+      specifier: ^7946.0.14
+      version: 7946.0.16
     '@types/node':
       specifier: ^22.9.0
       version: 22.19.11
+    '@types/pg':
+      specifier: ^8.11.11
+      version: 8.16.0
     ajv-errors:
       specifier: 3.0.0
       version: 3.0.0
@@ -22,15 +31,48 @@ catalogs:
     dayjs:
       specifier: ^1.11.13
       version: 1.11.19
+    dotenv:
+      specifier: ^16.4.5
+      version: 16.6.1
+    drizzle-orm:
+      specifier: ^0.45.0
+      version: 0.45.1
     eslint:
       specifier: ^9.39.2
       version: 9.39.3
     eslint-config-expo:
       specifier: ^10.0.0
       version: 10.0.0
+    eslint-config-next:
+      specifier: ^16.0.0
+      version: 16.1.6
+    eslint-config-prettier:
+      specifier: ^10.1.8
+      version: 10.1.8
     eslint-plugin-i18next:
       specifier: ^6.1.3
       version: 6.1.3
+    eslint-plugin-prettier:
+      specifier: ^5.5.5
+      version: 5.5.5
+    eslint-plugin-react-you-might-not-need-an-effect:
+      specifier: ^0.8.5
+      version: 0.8.5
+    eslint-plugin-simple-import-sort:
+      specifier: ^12.1.1
+      version: 12.1.1
+    eslint-plugin-tailwindcss:
+      specifier: ^3.18.2
+      version: 3.18.2
+    geojson:
+      specifier: ^0.5.0
+      version: 0.5.0
+    geolib:
+      specifier: ^3.3.4
+      version: 3.3.4
+    pg:
+      specifier: ^8.13.1
+      version: 8.18.0
     prettier:
       specifier: ^3.3.3
       version: 3.8.1
@@ -40,6 +82,15 @@ catalogs:
     react-dom:
       specifier: 19.1.0
       version: 19.1.0
+    typebox:
+      specifier: ^1.0.77
+      version: 1.1.0
+    typescript:
+      specifier: ^5.9.2
+      version: 5.9.3
+    typescript-eslint:
+      specifier: ^8.55.0
+      version: 8.56.0
     zod:
       specifier: ^3.23.8
       version: 3.25.76
@@ -171,6 +222,9 @@ importers:
       '@fastify/multipart':
         specifier: ^9.0.3
         version: 9.4.0
+      '@fastify/request-context':
+        specifier: ^6.2.1
+        version: 6.2.1
       '@fastify/sensible':
         specifier: ^6.0.0
         version: 6.0.4
@@ -506,7 +560,7 @@ importers:
         version: 7.1.3
       '@vagabond/shared-utils':
         specifier: workspace:*
-        version: file:libs/shared-utils
+        version: link:../../libs/shared-utils
       ajv:
         specifier: 8.17.1
         version: 8.17.1(patch_hash=46f83a15b64b6a057edbfbc182a5011d89ad5d1b93b698155600f290d84801e0)
@@ -2404,6 +2458,9 @@ packages:
 
   '@fastify/proxy-addr@5.1.0':
     resolution: {integrity: sha512-INS+6gh91cLUjB+PVHfu1UqcB76Sqtpyp7bnL+FYojhjygvOPA9ctiD/JDKsyD9Xgu4hUhCSJBPig/w7duNajw==}
+
+  '@fastify/request-context@6.2.1':
+    resolution: {integrity: sha512-WJTWXI59ViguS/JFgVck6mnwpv+5UrvMLb711pOGIlyN6ghV4Pb/eEbJG01XvQsTAr/AbjMETjk7Jq9ARIxKnQ==}
 
   '@fastify/send@4.1.0':
     resolution: {integrity: sha512-TMYeQLCBSy2TOFmV95hQWkiTYgC/SEx7vMdV+wnZVX4tt8VBLKzmH8vV9OzJehV0+XBfg+WxPMt5wp+JBUKsVw==}
@@ -13965,6 +14022,10 @@ snapshots:
       '@fastify/forwarded': 3.0.1
       ipaddr.js: 2.3.0
 
+  '@fastify/request-context@6.2.1':
+    dependencies:
+      fastify-plugin: 5.1.0
+
   '@fastify/send@4.1.0':
     dependencies:
       '@lukeed/ms': 2.0.2
@@ -20892,7 +20953,7 @@ snapshots:
       '@next/eslint-plugin-next': 16.1.6
       eslint: 9.39.3(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.3(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.3(jiti@2.4.2)))(eslint@9.39.3(jiti@2.4.2))
       eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.3(jiti@2.4.2))
       eslint-plugin-jsx-a11y: 6.10.2(eslint@9.39.3(jiti@2.4.2))
       eslint-plugin-react: 7.37.5(eslint@9.39.3(jiti@2.4.2))
@@ -20919,6 +20980,21 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.3(jiti@2.4.2)))(eslint@9.39.3(jiti@2.4.2)):
+    dependencies:
+      '@nolyfill/is-core-module': 1.0.39
+      debug: 4.4.3
+      eslint: 9.39.3(jiti@2.4.2)
+      get-tsconfig: 4.13.6
+      is-bun-module: 2.0.0
+      stable-hash: 0.0.5
+      tinyglobby: 0.2.15
+      unrs-resolver: 1.11.1
+    optionalDependencies:
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.3(jiti@2.4.2))
+    transitivePeerDependencies:
+      - supports-color
+
   eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.3(jiti@1.21.7)):
     dependencies:
       '@nolyfill/is-core-module': 1.0.39
@@ -20934,21 +21010,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.3(jiti@2.4.2)):
-    dependencies:
-      '@nolyfill/is-core-module': 1.0.39
-      debug: 4.4.3
-      eslint: 9.39.3(jiti@2.4.2)
-      get-tsconfig: 4.13.6
-      is-bun-module: 2.0.0
-      stable-hash: 0.0.5
-      tinyglobby: 0.2.15
-      unrs-resolver: 1.11.1
-    optionalDependencies:
-      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.3(jiti@2.4.2))
-    transitivePeerDependencies:
-      - supports-color
-
   eslint-module-utils@2.12.1(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@1.21.7))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.3(jiti@1.21.7)):
     dependencies:
       debug: 3.2.7
@@ -20960,14 +21021,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.3(jiti@2.4.2)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.3(jiti@2.4.2)))(eslint@9.39.3(jiti@2.4.2)))(eslint@9.39.3(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
       '@typescript-eslint/parser': 8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3)
       eslint: 9.39.3(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0)(eslint@9.39.3(jiti@2.4.2))
+      eslint-import-resolver-typescript: 3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.3(jiti@2.4.2)))(eslint@9.39.3(jiti@2.4.2))
     transitivePeerDependencies:
       - supports-color
 
@@ -21029,7 +21090,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.3(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1)(eslint@9.39.3(jiti@2.4.2))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.10.1(eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.56.0(eslint@9.39.3(jiti@2.4.2))(typescript@5.9.3))(eslint@9.39.3(jiti@2.4.2)))(eslint@9.39.3(jiti@2.4.2)))(eslint@9.39.3(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3

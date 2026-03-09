@@ -1,6 +1,7 @@
 import { getProcessingResultVersion } from "@vagabond/database-client";
 import type { FastifyInstance } from "fastify";
 
+import { getLogger } from "../../utils/logger.js";
 import type {
   ScrapingErrorResponse,
   ScrapingProcessor,
@@ -113,7 +114,7 @@ export class ProcessingResultOrchestrator {
         };
         return result;
       } catch (error) {
-        this.fastify.log.warn(
+        getLogger(this.fastify).warn(
           {
             error,
             existingResultId: existingResult.id,

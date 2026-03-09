@@ -11,6 +11,7 @@ import authPlugin from "./plugins/auth.js";
 import configPlugin from "./plugins/config.js";
 import firebasePlugin from "./plugins/firebase.js";
 import multipartPlugin from "./plugins/multipart.js";
+import requestContextPlugin from "./plugins/request-context.js";
 import s3Plugin from "./plugins/s3.js";
 import securityPlugin from "./plugins/security.js";
 import slackPlugin from "./plugins/slack.js";
@@ -56,15 +57,18 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   await fastify.register(compressPlugin, opts);
   await fastify.register(sensiblePlugin, opts);
 
-  // 8. Other plugins
+  // 8. Request context (AsyncLocalStorage for request-scoped logger)
+  await fastify.register(requestContextPlugin, opts);
+
+  // 9. Other plugins
   await fastify.register(multipartPlugin, opts);
   await fastify.register(s3Plugin, opts);
   await fastify.register(slackPlugin, opts);
 
-  // 9. Auth (must be after firebase and database)
+  // 10. Auth (must be after firebase, database, and request-context)
   await fastify.register(authPlugin, opts);
 
-  // 10. Routes
+  // 11. Routes
   await fastify.register(leaderboardRoute, { prefix: "api/leaderboard" });
   await fastify.register(poisIdRoute, { prefix: "api/pois" });
   await fastify.register(searchRoute, { prefix: "api/search" });

@@ -1,5 +1,6 @@
 import type { FastifyInstance } from "fastify";
 
+import { getLogger } from "../../utils/logger.js";
 import { createBaseClient } from "./base-client.js";
 
 interface HubDestination {
@@ -40,7 +41,7 @@ export async function resolveWikidataToWikipediaUrl(
 
     return fallbackUrl;
   } catch (error) {
-    fastify.log.warn(
+    getLogger(fastify).warn(
       { error, wikidataId },
       "hub.toolforge.org failed, falling back to wikidata.org URL",
     );

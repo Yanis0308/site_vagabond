@@ -5,6 +5,7 @@ import {
 import type { FastifyInstance } from "fastify";
 import type { KyInstance } from "ky";
 
+import { getLogger } from "../../utils/logger.js";
 import type {
   ScrapingErrorResponse,
   ScrapingResponse,
@@ -93,7 +94,7 @@ export async function readUrlWithJinaReader(
     };
 
     if (envelope.code !== undefined && envelope.code >= 400) {
-      fastify.log.error(
+      getLogger(fastify).error(
         { rawResult, url, code: envelope.code },
         "Jina Reader API returned error",
       );
@@ -106,7 +107,7 @@ export async function readUrlWithJinaReader(
     const pageData = envelope.data;
 
     if (!validateWithSchema(FormattedPageSchema, pageData)) {
-      fastify.log.error(
+      getLogger(fastify).error(
         { rawResult, url },
         "Jina Reader API returned invalid response structure",
       );
@@ -141,7 +142,7 @@ export async function readUrlWithJinaReader(
 
     return successResponse;
   } catch (error) {
-    fastify.log.error({ error, url }, "Jina Reader request failed");
+    getLogger(fastify).error({ error, url }, "Jina Reader request failed");
 
     const errorResponse: ScrapingErrorResponse = {
       success: false,

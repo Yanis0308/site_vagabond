@@ -7,6 +7,7 @@ import {
 import type { FastifyInstance } from "fastify";
 import type { KyInstance } from "ky";
 
+import { getLogger } from "../../utils/logger.js";
 import type {
   ScrapingErrorResponse,
   ScrapingResponse,
@@ -58,7 +59,7 @@ export async function searchWithJinaSearch(
       .json<unknown>();
 
     if (!validateWithSchema(JinaApiResponseSchema, rawResult)) {
-      fastify.log.error(
+      getLogger(fastify).error(
         { rawResult },
         "Jina Search API returned invalid response structure",
       );
@@ -101,7 +102,7 @@ export async function searchWithJinaSearch(
 
     return successResponse;
   } catch (error) {
-    fastify.log.error({ error, params }, "Jina Search request failed");
+    getLogger(fastify).error({ error, params }, "Jina Search request failed");
 
     const errorResponse: ScrapingErrorResponse = {
       success: false,

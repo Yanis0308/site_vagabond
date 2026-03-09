@@ -7,6 +7,7 @@ import {
 import type { FastifyInstance } from "fastify";
 import type { KyInstance } from "ky";
 
+import { getLogger } from "../../utils/logger.js";
 import type {
   ScrapingErrorResponse,
   ScrapingResponse,
@@ -95,7 +96,7 @@ export async function scrapeGoogleMaps(
       ) {
         validatedPlace = validatedResult.place;
       } else {
-        fastify.log.warn(
+        getLogger(fastify).warn(
           { place: validatedResult.place },
           "Invalid Google Maps place, returning null",
         );
@@ -119,7 +120,7 @@ export async function scrapeGoogleMaps(
 
     return successResponse;
   } catch (error) {
-    fastify.log.error({ error, params }, "Data scraper request failed");
+    getLogger(fastify).error({ error, params }, "Data scraper request failed");
 
     const errorResponse: ScrapingErrorResponse = {
       success: false,

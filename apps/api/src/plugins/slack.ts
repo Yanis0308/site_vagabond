@@ -1,6 +1,8 @@
 import { WebClient } from "@slack/web-api";
 import fp from "fastify-plugin";
 
+import { getLogger } from "../utils/logger.js";
+
 declare module "fastify" {
   interface FastifyInstance {
     slack: {
@@ -28,9 +30,9 @@ export default fp(
           username: "Vagabond API",
           icon_emoji: ":robot_face:",
         });
-        fastify.log.info(`Slack message sent to ${channel}: ${message}`);
+        getLogger(fastify).info(`Slack message sent to ${channel}: ${message}`);
       } catch (err) {
-        fastify.log.error({ err }, "Failed to send Slack message:");
+        getLogger(fastify).error({ err }, "Failed to send Slack message:");
       }
     };
 

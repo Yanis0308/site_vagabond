@@ -4,6 +4,7 @@ import type {
 } from "@vagabond/shared-utils";
 import type { FastifyInstance } from "fastify";
 
+import { getLogger } from "../utils/logger.js";
 import { resolveWikidataToWikipediaUrl } from "./http/hub-client.js";
 import { JINA_READER_CONFIG } from "./http/jina-reader-config.js";
 import type { JinaSearchResponse } from "./http/jina-search-client.js";
@@ -164,7 +165,7 @@ export class JinaEnrichmentService {
       }
     }
 
-    this.fastify.log.info(
+    getLogger(this.fastify).info(
       {
         poiId,
         searchUrlCount: jinaSearchUrls.length,
@@ -189,7 +190,7 @@ export class JinaEnrichmentService {
       tagUrls.push(resolvedUrl);
     }
 
-    this.fastify.log.info(
+    getLogger(this.fastify).info(
       {
         poiId,
         tagUrlCount: tagUrls.length,
@@ -227,7 +228,7 @@ export class JinaEnrichmentService {
       isBlacklisted(u, urlBlacklist),
     ).length;
 
-    this.fastify.log.info(
+    getLogger(this.fastify).info(
       {
         poiId,
         filteredCount: filteredUrls.length,
@@ -257,7 +258,7 @@ export class JinaEnrichmentService {
       const url = filteredUrls[i] ?? "";
 
       if (settled === undefined || settled.status === "rejected") {
-        this.fastify.log.warn(
+        getLogger(this.fastify).warn(
           { url, reason: settled?.reason },
           "Jina Reader call rejected",
         );
@@ -266,7 +267,7 @@ export class JinaEnrichmentService {
 
       const processResult = settled.value;
       if (!isProcessSuccess(processResult)) {
-        this.fastify.log.warn(
+        getLogger(this.fastify).warn(
           { url, error: processResult.error },
           "Jina Reader processing failed, skipping",
         );
@@ -275,7 +276,7 @@ export class JinaEnrichmentService {
 
       const scrapeResponse = processResult.scrapeResponse;
       if (!isScrapingSuccess(scrapeResponse)) {
-        this.fastify.log.warn(
+        getLogger(this.fastify).warn(
           { url, error: scrapeResponse.error },
           "Jina Reader returned error, skipping",
         );
@@ -298,7 +299,7 @@ export class JinaEnrichmentService {
       (p) => typeof p.content === "string" && p.content.length > 0,
     ).length;
 
-    this.fastify.log.info(
+    getLogger(this.fastify).info(
       {
         poiId,
         totalUrls: filteredUrls.length,

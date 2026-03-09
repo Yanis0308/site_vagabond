@@ -7,6 +7,7 @@ import { PoiEnrichedSchema, validateWithSchema } from "@vagabond/shared-utils";
 import { generateText, jsonSchema, Output } from "ai";
 import type { FastifyInstance } from "fastify";
 
+import { getLogger } from "../../utils/logger.js";
 import {
   createErrorResponse,
   createSuccessResponse,
@@ -48,7 +49,7 @@ export async function generateEnrichedPoiWithGemini(
     // Use jsonSchema helper from AI SDK to wrap the JSON schema
     const schema = jsonSchema(PoiEnrichedSchema);
 
-    fastify.log.info(
+    getLogger(fastify).info(
       {
         poiName: params.poiName,
         model: "gemini-2.5-flash",
@@ -77,7 +78,7 @@ export async function generateEnrichedPoiWithGemini(
       },
     });
 
-    fastify.log.info({ text, usage }, "Gemini response");
+    getLogger(fastify).info({ text, usage }, "Gemini response");
 
     // Parse and validate the response
     const parsedData: unknown = JSON.parse(text);
@@ -152,7 +153,7 @@ export async function generateEnrichedPoiWithGroq(
       }),
     });
 
-    fastify.log.info({ text, usage }, "Groq response");
+    getLogger(fastify).info({ text, usage }, "Groq response");
 
     // Parse and validate the response
     const parsedData: unknown = JSON.parse(text);
