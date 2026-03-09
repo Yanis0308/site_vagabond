@@ -14,6 +14,7 @@ interface PolaroidBaseProps {
   maintainAspectRatio: boolean;
   isSmall: boolean;
   className?: string;
+  topRightAction?: ReactNode;
 }
 
 export const PolaroidBase = memo(
@@ -24,6 +25,7 @@ export const PolaroidBase = memo(
     imageWithBorder,
     maintainAspectRatio,
     isSmall,
+    topRightAction,
   }: PolaroidBaseProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
@@ -35,11 +37,14 @@ export const PolaroidBase = memo(
       <Box
         style={isSmall ? shadowStyles.ratingBlock : shadowStyles.polaroidBlock}
         className={cn(
-          "rotate-[-2.85deg] rounded-2xl bg-background-50",
+          "relative rotate-[-2.85deg] rounded-2xl bg-background-50",
           isSmall ? "p-2 w-[60vw]" : "p-4 w-[90%]",
           className,
         )}
       >
+        {topRightAction !== undefined && (
+          <Box className="absolute right-3 top-3 z-10">{topRightAction}</Box>
+        )}
         <Box
           className={cn(
             "w-full self-center",

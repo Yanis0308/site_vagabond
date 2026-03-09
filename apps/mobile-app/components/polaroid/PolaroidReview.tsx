@@ -1,7 +1,10 @@
+import { Trash2 } from "lucide-react-native";
 import { memo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable } from "react-native";
 
+import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
+import { useDeleteVisitedPoiWithConfirm } from "@/hooks/mutations/useDeleteVisitedPoiWithConfirm";
 import { type ImageLoadAsyncSource } from "@/hooks/queries/useImageFromMultipleSources";
 import { getPlainTextDate } from "@/utils/date";
 
@@ -12,28 +15,48 @@ import { StarRating } from "../validate-place/StarRating";
 import { PolaroidBase } from "./PolaroidBase";
 
 interface PolaroidReviewProps {
+  id: number;
+  poiId: string;
   imageUrl: ImageLoadAsyncSource;
   username: string;
   rating: number | undefined;
   dateString: string;
   comment: string;
   className?: string;
+  deletable: boolean;
 }
 
 export const PolaroidReview = memo(
   ({
+    id,
+    poiId,
     imageUrl,
     username,
     rating,
     dateString,
     comment,
     className,
+    deletable,
   }: PolaroidReviewProps) => {
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation("common");
+    const handleDeleteVisitedPoi = useDeleteVisitedPoiWithConfirm(poiId);
     const [isExpanded, setIsExpanded] = useState(false);
-    const commentText = comment.trim() !== "" ? comment : "Aucun commentaire";
+    const commentText =
+      comment.trim() !== "" ? comment : t("reviews_list.no_comment");
     const needsTruncation = commentText.length > 100;
     const shouldShowReadMore = needsTruncation && !isExpanded;
+
+    const topRightAction = deletable ? (
+      <Pressable
+        onPress={() => {
+          handleDeleteVisitedPoi(id);
+        }}
+        className="rounded-full bg-white p-1"
+        hitSlop={8}
+      >
+        <Trash2 size={14} color={themeColors.warning["600"].hex} />
+      </Pressable>
+    ) : undefined;
 
     return (
       <PolaroidBase
@@ -42,6 +65,7 @@ export const PolaroidReview = memo(
         imageWithBorder={false}
         maintainAspectRatio={false}
         isSmall={true}
+        topRightAction={topRightAction}
       >
         <Box className="p-2">
           {/* Grille à 2 colonnes */}
@@ -80,7 +104,9 @@ export const PolaroidReview = memo(
                 }}
               >
                 <Text className="mt-1 text-xs text-primary-500">
-                  {isExpanded ? "...Lire moins" : "...Lire plus"}
+                  {isExpanded
+                    ? t("reviews_list.read_less")
+                    : t("reviews_list.read_more")}
                 </Text>
               </Pressable>
             )}

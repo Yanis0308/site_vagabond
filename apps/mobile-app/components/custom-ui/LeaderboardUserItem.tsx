@@ -18,7 +18,7 @@ interface LeaderboardUserItemProps {
 
 export const LeaderboardUserItem = memo(
   ({ user, isCurrentUser }: LeaderboardUserItemProps): ReactElement => {
-    const { i18n } = useTranslation();
+    const { i18n } = useTranslation("common");
 
     const registrationDate = getPlainTextDate({
       locale: i18n.language,

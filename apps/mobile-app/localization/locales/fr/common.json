@@ -11,6 +11,17 @@
   "delete_account_confirm_message": "Cette action est irréversible. Toutes vos données seront supprimées.",
   "delete_account_confirm_no": "Non",
   "delete_account_confirm_yes": "Oui",
+  "delete_review_confirm_title": "Supprimer cet avis ?",
+  "delete_review_confirm_message": "Cette action est irréversible. Votre avis sera définitivement supprimé.",
+  "delete_review_confirm_no": "Annuler",
+  "delete_review_confirm_yes": "Supprimer",
+  "reviews_list": {
+    "placeholder_username": "Jane Doe",
+    "placeholder_comment": "Ajoutez votre propre avis ✍🏻\nC'est très simple !\nIl suffit d'appuyer sur le bouton \"Valider le lieu\" ci-dessus ☝",
+    "no_comment": "Aucun commentaire",
+    "read_more": "...Lire plus",
+    "read_less": "...Lire moins"
+  },
   "validated_places": "Mes lieux validés",
   "no_validated_places": "Aucun lieu validé pour le moment",
   "overall_progress": "Progression globale",

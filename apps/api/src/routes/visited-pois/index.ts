@@ -54,6 +54,43 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     },
   );
 
+  fastify.delete(
+    "/:id",
+    {
+      schema: {
+        tags: ["visited-pois"],
+        security: [{ bearerAuth: [] }],
+        params: Type.Object({
+          id: Type.Number(),
+        }),
+        response: {
+          200: EmptyResponseSchema,
+          404: ErrorResponseSchema,
+        },
+      },
+    },
+    async function (request, reply) {
+      const { id } = request.params;
+
+      const deletedVisitedPois =
+        await fastify.dbRepositories.visitedPoi.deleteByIdAndUser(
+          id,
+          request.user.uid,
+        );
+
+      if (deletedVisitedPois.length === 0) {
+        return await reply.status(404).send({
+          error: {
+            type: "NOT_FOUND",
+            message: "Visited POI not found",
+          },
+        });
+      }
+
+      return await reply.status(200).send({ data: {} });
+    },
+  );
+
   fastify.post(
     "/:poiId",
     {

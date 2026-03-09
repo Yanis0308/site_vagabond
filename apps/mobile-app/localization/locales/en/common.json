@@ -33,6 +33,17 @@
   "delete_account_confirm_message": "This action is irreversible. All your data will be deleted.",
   "delete_account_confirm_no": "No",
   "delete_account_confirm_yes": "Yes",
+  "delete_review_confirm_title": "Delete this review?",
+  "delete_review_confirm_message": "This action is irreversible. Your review will be permanently deleted.",
+  "delete_review_confirm_no": "Cancel",
+  "delete_review_confirm_yes": "Delete",
+  "reviews_list": {
+    "placeholder_username": "Jane Doe",
+    "placeholder_comment": "Add your own review ✍🏻\nIt's very simple!\nJust tap the \"Validate place\" button above ☝",
+    "no_comment": "No comment",
+    "read_more": "...Read more",
+    "read_less": "...Read less"
+  },
   "validated_places": "My validated places",
   "no_validated_places": "No validated places yet",
   "overall_progress": "Overall Progress",

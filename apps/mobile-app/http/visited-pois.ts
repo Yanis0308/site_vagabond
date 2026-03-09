@@ -25,3 +25,7 @@ export const getUserVisitedPois = async (): Promise<VisitedPoi[]> => {
 
   return rawResult.data;
 };
+
+export const deleteVisitedPoi = async (visitedPoiId: number): Promise<void> => {
+  await apiClient.delete(`api/visited-pois/${visitedPoiId}`);
+};

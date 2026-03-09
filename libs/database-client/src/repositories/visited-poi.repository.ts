@@ -107,4 +107,14 @@ export class VisitedPoiRepository {
 
     return result;
   }
+
+  async deleteByIdAndUser(
+    id: number,
+    userId: string,
+  ): Promise<Array<{ id: number }>> {
+    return await this.db
+      .delete(visitedPois)
+      .where(and(eq(visitedPois.id, id), eq(visitedPois.userId, userId)))
+      .returning({ id: visitedPois.id });
+  }
 }

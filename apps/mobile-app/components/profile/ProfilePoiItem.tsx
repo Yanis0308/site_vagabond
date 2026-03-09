@@ -1,13 +1,16 @@
 import type { BriefVisitedPoi } from "@vagabond/shared-utils";
 import { router } from "expo-router";
+import { Trash2 } from "lucide-react-native";
 import { memo, type ReactElement } from "react";
 import { Pressable } from "react-native";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { CustomText } from "@/components/custom-ui/CustomText";
+import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
 import { config } from "@/constants/Config";
+import { useDeleteVisitedPoiWithConfirm } from "@/hooks/mutations/useDeleteVisitedPoiWithConfirm";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { mapService } from "@/services/MapService";
 import type { PoiType } from "@/utils/types";
@@ -20,6 +23,7 @@ interface ProfilePoiItemProps {
 export const ProfilePoiItem = memo(
   ({ poi, allowNavigation }: ProfilePoiItemProps): ReactElement => {
     const { setSelectedPlace } = usePlaceSelection();
+    const handleDeleteVisitedPoi = useDeleteVisitedPoiWithConfirm(poi.poiId);
     const visitDate = new Date(poi.createdAt).toLocaleDateString("fr-FR", {
       day: "2-digit",
       month: "2-digit",
@@ -55,16 +59,27 @@ export const ProfilePoiItem = memo(
             contentFit="cover"
             showLoader={true}
           />
-          <VStack className="flex-1 gap-1 p-2">
-            {poi.name !== undefined && (
-              <CustomText className="font-semibold text-gray-900">
-                {poi.name}
+          <HStack className="flex-1 items-center justify-between p-2">
+            <VStack className="shrink gap-1">
+              {poi.name !== undefined && (
+                <CustomText className="font-semibold text-gray-900">
+                  {poi.name}
+                </CustomText>
+              )}
+              <CustomText className="text-sm text-gray-600">
+                {visitDate}
               </CustomText>
-            )}
-            <CustomText className="text-sm text-gray-600">
-              {visitDate}
-            </CustomText>
-          </VStack>
+            </VStack>
+            <Pressable
+              onPress={() => {
+                handleDeleteVisitedPoi(poi.id);
+              }}
+              className="ml-2 rounded-full bg-tertiary-100/40 p-1"
+              hitSlop={8}
+            >
+              <Trash2 size={14} color={themeColors.warning["600"].hex} />
+            </Pressable>
+          </HStack>
         </HStack>
       </Pressable>
     );

@@ -19,7 +19,7 @@ interface ProfileHeaderProps {
 
 export const ProfileHeader = memo(
   ({ userData }: ProfileHeaderProps): ReactElement => {
-    const { i18n } = useTranslation();
+    const { i18n } = useTranslation("common");
 
     const registrationDate =
       userData?.createdAt !== undefined && userData.createdAt.length > 0

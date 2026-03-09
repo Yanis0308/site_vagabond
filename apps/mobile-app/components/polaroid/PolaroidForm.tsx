@@ -19,7 +19,7 @@ interface PolaroidFormProps {
 
 export const PolaroidForm = memo(
   ({ imageUrl, title, className }: PolaroidFormProps) => {
-    const { i18n } = useTranslation();
+    const { i18n } = useTranslation("common");
 
     return (
       <PolaroidBase
