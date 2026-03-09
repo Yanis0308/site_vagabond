@@ -82,7 +82,9 @@ export default function SignInScreen(): ReactElement {
         className="w-full"
       >
         {appleIcon}
-        <ButtonText>{t("auth.sign_in_with_apple")}</ButtonText>
+        <ButtonText adjustsFontSizeToFit numberOfLines={1}>
+          {t("auth.sign_in_with_apple")}
+        </ButtonText>
       </Button>
     ),
     [t, appleLogin, loginPending, appleIcon],
@@ -97,7 +99,9 @@ export default function SignInScreen(): ReactElement {
         className="w-full"
       >
         {googleIcon}
-        <ButtonText>{t("auth.sign_in_with_google")}</ButtonText>
+        <ButtonText adjustsFontSizeToFit numberOfLines={1}>
+          {t("auth.sign_in_with_google")}
+        </ButtonText>
       </Button>
     ),
     [t, googleLogin, loginPending, googleIcon],
