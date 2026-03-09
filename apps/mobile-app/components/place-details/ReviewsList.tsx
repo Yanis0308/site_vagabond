@@ -1,7 +1,7 @@
 import { FlashList } from "@shopify/flash-list";
 import type { VisitedPoi } from "@vagabond/shared-utils";
 import { cssInterop } from "nativewind";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList } from "react-native-gesture-handler";
 
@@ -28,32 +28,40 @@ interface ReviewItem {
   comment: string | null;
 }
 
+const visitedPoiSorter = (a: VisitedPoi, b: VisitedPoi): number => {
+  const dateA = new Date(a.createdAt).getTime();
+  const dateB = new Date(b.createdAt).getTime();
+  return dateB - dateA; // Sort in descending order (newest first)
+};
+
 export const ReviewsList = memo(({ visitedPois }: ReviewsListProps) => {
   const { t } = useTranslation("common");
   const { data: currentUser } = useUsersMe();
 
-  const reviewsData: ReviewItem[] = [
-    ...visitedPois.map((visitedPoi) => ({
-      id: visitedPoi.id,
-      poiId: visitedPoi.poiId,
-      imageUrl: `${config.cdnUrl}/${visitedPoi.imageKey}`,
-      username: visitedPoi.username,
-      deletable: currentUser?.id === visitedPoi.userId,
-      rating: visitedPoi.rating,
-      createdAt: visitedPoi.createdAt,
-      comment: visitedPoi.comment,
-    })),
-    {
-      id: 123,
-      poiId: "",
-      imageUrl: localImages.weNeedYou,
-      username: t("reviews_list.placeholder_username"),
-      deletable: false,
-      rating: 0,
-      createdAt: new Date().toISOString(),
-      comment: t("reviews_list.placeholder_comment"),
-    },
-  ];
+  const reviewsData: ReviewItem[] = useMemo(() => {
+    return [
+      ...visitedPois.toSorted(visitedPoiSorter).map((visitedPoi) => ({
+        id: visitedPoi.id,
+        poiId: visitedPoi.poiId,
+        imageUrl: `${config.cdnUrl}/${visitedPoi.imageKey}`,
+        username: visitedPoi.username,
+        deletable: currentUser?.id === visitedPoi.userId,
+        rating: visitedPoi.rating,
+        createdAt: visitedPoi.createdAt,
+        comment: visitedPoi.comment,
+      })),
+      {
+        id: 123,
+        poiId: "",
+        imageUrl: localImages.weNeedYou,
+        username: t("reviews_list.placeholder_username"),
+        deletable: false,
+        rating: 0,
+        createdAt: new Date().toISOString(),
+        comment: t("reviews_list.placeholder_comment"),
+      },
+    ];
+  }, [visitedPois, currentUser, t]);
 
   const renderItem = useCallback(
     ({ item }: { item: ReviewItem }) => (
