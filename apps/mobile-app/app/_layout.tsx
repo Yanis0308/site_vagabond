@@ -21,6 +21,7 @@ import { FullScreenLoader } from "@/components/validate-place/FullScreenLoader";
 import { config } from "@/constants/Config";
 import { PERSIST_OPTIONS, queryClient } from "@/constants/QueryClient";
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
+import { useReactQueryFocusManager } from "@/hooks/other/useReactQueryFocusManager";
 import { UnifiedAnalyticsService } from "@/lib/analytics/UnifiedAnalyticsService";
 import { authenticatedUserAtom } from "@/stores/authenticatedUserAtom";
 import { logger } from "@/utils/logger";
@@ -43,6 +44,9 @@ export default function RootLayout(): ReactElement | null {
   // void Location.enableNetworkProviderAsync();
   const pathname = usePathname();
   logger("= root layout pathname:", pathname);
+
+  // React Query refetch on focus (tab switch + app foreground)
+  useReactQueryFocusManager();
 
   // Splash screen management
   const [initializing, setInitializing] = useState({

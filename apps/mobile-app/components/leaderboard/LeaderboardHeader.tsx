@@ -11,9 +11,11 @@ import { VStack } from "@/components/ui/vstack";
 import { useLeaderboard } from "@/hooks/queries/useLeaderboard";
 
 interface LeaderboardHeaderProps {
-  currentUser:
-    | { id: string; fullName?: string | null; email?: string | null }
-    | undefined;
+  currentUser?: {
+    id: string;
+    fullName?: string | null;
+    email?: string | null;
+  };
   period: "all-time" | "monthly";
 }
 

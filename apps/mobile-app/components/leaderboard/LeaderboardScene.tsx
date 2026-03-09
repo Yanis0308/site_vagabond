@@ -17,6 +17,7 @@ interface LeaderboardSceneProps {
 export const LeaderboardScene = memo(
   ({ currentUser, period }: LeaderboardSceneProps): ReactElement => {
     const { data: leaderboardData, isLoading } = useLeaderboard(period);
+
     const keyExtractor = useCallback(
       (item: LeaderboardUser) => item.userId,
       [],
