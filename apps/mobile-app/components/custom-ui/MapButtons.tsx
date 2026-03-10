@@ -25,7 +25,7 @@ export const MapButtons = memo(
     const safeAreaInsets = useSafeAreaCustom();
     const { height: displayHeight } = useWindowDimensions();
     const bottomMargin =
-      Math.ceil(displayHeight / 4) + safeAreaInsets.bottomWithTabBar;
+      Math.ceil(displayHeight / 4) + safeAreaInsets.tabBarTotalHeight;
 
     const compassAction = useMemo(
       () => ({

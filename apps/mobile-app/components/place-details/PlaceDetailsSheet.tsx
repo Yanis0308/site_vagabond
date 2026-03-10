@@ -20,14 +20,12 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
 import { useBottomSheetBack } from "@/hooks/other/useBottomSheetBack";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { usePoiEnriched } from "@/hooks/queries/usePoiEnriched";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { useUserVisitedPois } from "@/hooks/queries/useUserVisitedPois";
 import { useVisitedPois } from "@/hooks/queries/useVisitedPois";
-import { TABS_BAR_SPACING } from "@/styles/spacing";
 import { type PoiType } from "@/utils/types";
 
 import { themeColors } from "../ui/gluestack-ui-provider/config";
@@ -229,7 +227,6 @@ export const PlaceDetailsSheet = ({
     rating,
     ratingCount,
     userRole: user.data?.role,
-    insets,
     isLoadingEnriched,
   });
 
@@ -254,7 +251,7 @@ export const PlaceDetailsSheet = ({
         backgroundStyle={backgroundStyle}
         handleComponent={handleComponent}
         backdropComponent={SheetBackdrop}
-        bottomInset={TAB_BAR_HEIGHT}
+        bottomInset={insets.tabBarTotalHeight}
         onChange={onSheetChange}
         topInset={insets.top}
       >
@@ -276,7 +273,6 @@ export const PlaceDetailsSheet = ({
           keyExtractor={keyExtractor}
           stickyHeaderIndices={stickyHeaderIndices}
           renderScrollComponent={BottomSheetScrollable}
-          style={{ paddingBottom: TABS_BAR_SPACING }}
         />
       </BottomSheet>
     </PlaceDetailsImagesProvider>

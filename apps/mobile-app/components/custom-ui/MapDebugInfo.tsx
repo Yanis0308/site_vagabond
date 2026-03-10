@@ -1,7 +1,6 @@
 import React, { memo, type ReactElement } from "react";
 import { View } from "react-native";
 
-import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 
@@ -18,7 +17,7 @@ export const MapDebugInfo = memo(
         style={{
           position: "absolute",
           right: 10,
-          bottom: TAB_BAR_HEIGHT + safeAreaInsets.bottom + 10,
+          bottom: safeAreaInsets.tabBarTotalHeight + 10,
           padding: 5,
           borderRadius: 5,
           backgroundColor: "rgba(0, 0, 0, 0.5)",

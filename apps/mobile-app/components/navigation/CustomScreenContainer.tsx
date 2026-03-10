@@ -3,8 +3,7 @@ import { memo, type ReactNode, useEffect, useMemo } from "react";
 import { View } from "react-native";
 import { type Edge, SafeAreaView } from "react-native-safe-area-context";
 
-import { TAB_BAR_HEIGHT } from "@/app/(app)/(tabs)/_layout";
-import { TABS_BAR_SPACING } from "@/styles/spacing";
+import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { cn } from "@/utils/cn";
 
 import { Box } from "../ui/box";
@@ -30,6 +29,7 @@ export const CustomScreenContainer = memo(
     isTabScreen,
   }: CustomScreenContainerProps): ReactNode => {
     const navigation = useNavigation();
+    const safeArea = useSafeAreaCustom();
 
     useEffect(() => {
       if (withHeader) {
@@ -44,14 +44,19 @@ export const CustomScreenContainer = memo(
       }
     }, [navigation, withHeader, bgColor, isLightScreen]);
 
+    // Tab screens: never include "bottom" in edges — we handle bottom spacing
+    // manually via paddingBottom that accounts for the full tab bar height.
+    // Non-tab screens: include "bottom" so SafeAreaView handles the device inset.
     const edges: Edge[] = useMemo(() => {
-      if (withHeader) {
-        return ["left", "right", "bottom"];
-      } else if (withTopSafeArea) {
-        return ["top", "left", "right", "bottom"];
-      }
-      return ["left", "right"];
-    }, [withHeader, withTopSafeArea]);
+      const includeBottom = !isTabScreen;
+      const includeTop = !withHeader && withTopSafeArea;
+
+      const result: Edge[] = ["left", "right"];
+      if (includeTop) result.push("top");
+      if (includeBottom && (withHeader || withTopSafeArea))
+        result.push("bottom");
+      return result;
+    }, [withHeader, withTopSafeArea, isTabScreen]);
 
     return (
       <Box className="flex-1" style={{ backgroundColor: bgColor }}>
@@ -60,7 +65,7 @@ export const CustomScreenContainer = memo(
           edges={edges}
           style={{
             backgroundColor: bgColor,
-            paddingBottom: isTabScreen ? TAB_BAR_HEIGHT + TABS_BAR_SPACING : 0,
+            paddingBottom: isTabScreen ? safeArea.tabBarTotalHeight : 0,
           }}
         >
           {/* <StatusBar hidden={true} /> */}

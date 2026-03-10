@@ -26,8 +26,8 @@ export default function TabLayout(): ReactElement {
       <TabSlot />
       <TabList
         style={{
-          height: TAB_BAR_HEIGHT + insets.bottom,
-          paddingBottom: insets.bottom,
+          height: insets.tabBarTotalHeight,
+          paddingBottom: insets.tabBarBottomInset,
         }}
         className={cn(
           "absolute bottom-0 flex w-full flex-row items-end justify-between",

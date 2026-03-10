@@ -1,5 +1,4 @@
 import type { PoiEnrichedData } from "@vagabond/shared-utils";
-import { type EdgeInsets } from "react-native-safe-area-context";
 
 import { type PoiType } from "@/utils/types";
 
@@ -32,7 +31,6 @@ interface BuildListDataParams {
   rating: number;
   ratingCount: number;
   userRole: string | undefined;
-  insets: EdgeInsets;
   isLoadingEnriched: boolean;
 }
 
