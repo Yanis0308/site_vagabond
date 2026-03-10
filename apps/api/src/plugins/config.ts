@@ -29,6 +29,8 @@ const RawConfigSchema = z.object({
   JINA_API_KEY: z.string(),
   GEMINI_API_KEY: z.string(),
   GROQ_API_KEY: z.string(),
+  SENTRY_DSN: z.string(),
+  SENTRY_ENVIRONMENT: z.string(),
 });
 
 // Type d'inférence pour TypeScript

@@ -19,7 +19,7 @@
     "clean": "rimraf dist",
     "prebuild": "pnpm run clean",
     "test": "pnpm run build && tsc -p test/tsconfig.json && node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts",
-    "start": "node dist/server.js",
+    "start": "node --import ./instrument.mjs dist/server.js",
     "build": "tsc",
     "develop": "NODE_ENV=development tsc-watch --onSuccess 'node ./dist/server.js'"
   },
@@ -39,6 +39,7 @@
     "@fastify/swagger": "^9.4.0",
     "@fastify/swagger-ui": "^5.1.0",
     "@fastify/type-provider-typebox": "^6.1.0",
+    "@sentry/node": "^10.43.0",
     "@slack/web-api": "^7.12.0",
     "@vagabond/api-utils": "workspace:*",
     "@vagabond/database-client": "workspace:*",

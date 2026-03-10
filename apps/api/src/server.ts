@@ -2,6 +2,7 @@
 import * as dotenv from "dotenv";
 dotenv.config();
 
+import * as Sentry from "@sentry/node";
 // Require the framework
 // Require library to exit fastify process, gracefully (if possible)
 import closeWithGrace from "close-with-grace";
@@ -13,6 +14,8 @@ import { loggerConfig } from "./lib/logger.js";
 const app = Fastify({
   logger: loggerConfig,
 });
+
+Sentry.setupFastifyErrorHandler(app);
 
 // Register your application as a normal plugin.
 app.register(import("./app.js"));
