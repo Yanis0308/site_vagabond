@@ -1,1 +1,4 @@
 **/expo-env.d.ts
+
+# Firebase config (auto-generated)
+firebase/

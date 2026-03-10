@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "145804893029",
+    "project_id": "vagabond-prd",
+    "storage_bucket": "vagabond-prd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:145804893029:android:8a2d8aa03453d8e3d31f8c",
+        "android_client_info": {
+          "package_name": "com.vagabond.explore.tourism"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "145804893029-ba0libg28laqs0euc531ih8o2uo5v0ve.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vagabond.explore.tourism",
+            "certificate_hash": "3776e81f6477c9c59f788a38c224a47d8566b97e"
+          }
+        },
+        {
+          "client_id": "145804893029-carb170q5saahmbtpmp1cfgcu6lrr2iv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBllCCdv2pSuooXg5WXVHuou5kvqENFgCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "145804893029-carb170q5saahmbtpmp1cfgcu6lrr2iv.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "145804893029-9i691br92l03pvt324bc777n7hv8nk04.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.vagabond.explore.tourism",
+                "app_store_id": "6737132413"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
