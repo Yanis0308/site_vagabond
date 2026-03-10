@@ -40,16 +40,19 @@ export const ReviewsList = memo(({ visitedPois }: ReviewsListProps) => {
 
   const reviewsData: ReviewItem[] = useMemo(() => {
     return [
-      ...visitedPois.toSorted(visitedPoiSorter).map((visitedPoi) => ({
-        id: visitedPoi.id,
-        poiId: visitedPoi.poiId,
-        imageUrl: `${config.cdnUrl}/${visitedPoi.imageKey}`,
-        username: visitedPoi.username,
-        deletable: currentUser?.id === visitedPoi.userId,
-        rating: visitedPoi.rating,
-        createdAt: visitedPoi.createdAt,
-        comment: visitedPoi.comment,
-      })),
+      ...visitedPois
+        .slice()
+        .sort(visitedPoiSorter)
+        .map((visitedPoi) => ({
+          id: visitedPoi.id,
+          poiId: visitedPoi.poiId,
+          imageUrl: `${config.cdnUrl}/${visitedPoi.imageKey}`,
+          username: visitedPoi.username,
+          deletable: currentUser?.id === visitedPoi.userId,
+          rating: visitedPoi.rating,
+          createdAt: visitedPoi.createdAt,
+          comment: visitedPoi.comment,
+        })),
       {
         id: 123,
         poiId: "",
