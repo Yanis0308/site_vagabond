@@ -1,0 +1,11 @@
+# Dependencies
+**/node_modules
+
+# Environment files needed by apps
+**/.env*
+
+# Built library outputs (gitignored but required by apps)
+**/dist
+
+# Claude local settings
+.claude/settings.local.json
