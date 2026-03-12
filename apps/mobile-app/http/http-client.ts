@@ -12,11 +12,26 @@ export const httpClient: KyInstance = ky.create({
   retry: 0, // Désactiver le retry par défaut - TanStack Query will handle retries
   hooks: {
     beforeRequest: [
-      (request: Request): Promise<void> => {
-        // Log de début de requête (sera personnalisé par chaque client)
-        const url = new URL(request.url);
-        logger("HTTP Call", url.pathname + url.search, request.method);
+      (_, options): Promise<void> => {
+        options.context.startTime = performance.now();
         return Promise.resolve();
+      },
+    ],
+    afterResponse: [
+      (request: Request, options, response: Response): Response => {
+        let duration = -1;
+        const url = new URL(request.url);
+        if (typeof options.context.startTime === "number") {
+          duration = Math.round(performance.now() - options.context.startTime);
+        }
+
+        logger(
+          "HTTP Done",
+          request.method,
+          url.pathname + url.search,
+          `${response.status} — ${duration}ms`,
+        );
+        return response;
       },
     ],
     beforeError: [

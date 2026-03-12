@@ -1,4 +1,5 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
+import { type ZoneUserStat } from "@vagabond/shared-utils";
 
 import { queryClient } from "@/constants/QueryClient";
 import { deleteVisitedPoi } from "@/http/visited-pois";
@@ -17,17 +18,30 @@ export const useDeleteVisitedPoi = (
         throw error;
       }
     },
-    onSuccess: () => {
-      return void Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: ["user-zone-stats"],
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["visited-pois", poiId],
-        }),
-        queryClient.invalidateQueries({
-          queryKey: ["user-visited-pois"],
-        }),
+    onSuccess: (_, visitedPoiId) => {
+      queryClient.setQueriesData<ZoneUserStat[]>(
+        { queryKey: ["user-zone-stats", "me"] },
+        (old) =>
+          old?.map((zone) => {
+            const newPois = zone.validated_pois.filter(
+              (p) => p.id !== visitedPoiId,
+            );
+            if (newPois.length === zone.validated_pois.length) return zone;
+            return {
+              ...zone,
+              validated_pois: newPois,
+              validated_pois_count:
+                zone.validated_pois_count -
+                (zone.validated_pois.length - newPois.length),
+            };
+          }) ?? old,
+      );
+    },
+    onSettled: () => {
+      return Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["user-zone-stats"] }),
+        queryClient.invalidateQueries({ queryKey: ["visited-pois", poiId] }),
+        queryClient.invalidateQueries({ queryKey: ["user-visited-pois"] }),
       ]);
     },
   });
