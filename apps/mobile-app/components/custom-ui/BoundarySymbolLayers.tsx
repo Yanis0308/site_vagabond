@@ -3,6 +3,7 @@ import { type ReactElement } from "react";
 
 import {
   CITIES_WITH_MANAGED_DISTRICTS,
+  combineBoundaryFilter,
   getBoundaryFilter,
   shouldDisplayBoundaryLevel,
 } from "@/components/custom-ui/BoundaryFilters";
@@ -222,27 +223,37 @@ export const BoundarySymbolLayers = ({
 
   const textLayers = Object.entries(layersInfos)
     .filter(([boundaryLevel]) => shouldDisplayBoundaryLevel(boundaryLevel))
-    .map(([boundaryLevel, layer]) => {
-      const filter = getBoundaryFilter(boundaryLevel);
+    .flatMap(([boundaryLevel, layer]) => {
+      const baseFilter = getBoundaryFilter(boundaryLevel);
+      const allowOverlap =
+        boundaryLevel === "REGION" || boundaryLevel === "COUNTY";
 
-      return (
-        <SymbolLayer
-          key={layer.textAndPoint.symbolLayerId}
-          id={layer.textAndPoint.symbolLayerId}
-          sourceID={sourceId}
-          sourceLayerID={layer.textAndPoint.sourceLayerId}
-          minZoomLevel={layer.textAndPoint.minZoomLevel}
-          maxZoomLevel={layer.textAndPoint.maxZoomLevel}
-          filter={filter}
-          style={{
-            ...textStyleWithCompletionData,
-            textAllowOverlap:
-              boundaryLevel === "REGION" || boundaryLevel === "COUNTY",
-            textIgnorePlacement:
-              boundaryLevel === "REGION" || boundaryLevel === "COUNTY",
-          }}
-        />
-      );
+      const tapConfigs = [layer.textAndPoint].flat();
+
+      return tapConfigs.map((tap) => {
+        const layerId =
+          tap.layerKey !== undefined
+            ? `${tap.symbolLayerId}-${tap.layerKey}`
+            : tap.symbolLayerId;
+        const filter = combineBoundaryFilter(baseFilter, tap.filter);
+
+        return (
+          <SymbolLayer
+            key={layerId}
+            id={layerId}
+            sourceID={sourceId}
+            sourceLayerID={tap.sourceLayerId}
+            minZoomLevel={tap.minZoomLevel}
+            maxZoomLevel={tap.maxZoomLevel}
+            filter={filter}
+            style={{
+              ...textStyleWithCompletionData,
+              textAllowOverlap: allowOverlap,
+              textIgnorePlacement: allowOverlap,
+            }}
+          />
+        );
+      });
     });
 
   return <>{textLayers}</>;

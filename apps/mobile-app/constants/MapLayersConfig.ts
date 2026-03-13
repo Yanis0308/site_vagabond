@@ -2,19 +2,31 @@ import type { BoundaryLevelEnum } from "@vagabond/shared-utils";
 
 import { MAP_LAYER_IDS } from "./MapLayerIds";
 
+// Seuil de POIs : villes avec >= CITY_POI_COUNT_THRESHOLD POIs apparaissent dès CITY_LOW_POI_MIN_ZOOM.
+// Les autres attendent CITY_ALL_POIS_MIN_ZOOM. Utiliser minZoomLevel (prop natif float) plutôt
+const CITY_POI_COUNT_THRESHOLD = 10;
+const CITY_HIGH_POI_MIN_ZOOM = 8; // villes avec >= 10 POIs : dès le zoom 8
+const CITY_LOW_POI_MIN_ZOOM = 9.5; // villes avec < 10 POIs (> 0) : dès le zoom 9.5
+
 // IMPORTANT: L'ordre des propriétés dans cet objet détermine l'ordre de rendu des couches.
 // Les premières propriétés sont rendues en arrière-plan, les dernières au premier plan.
 // Ordre actuel : NEIGHBORHOOD (fond) → DISTRICT → CITY → COUNTY → REGION → COUNTRY (premier plan)
 // Cela permet aux zones plus petites d'être visibles par-dessus les zones plus grandes.
+interface TextAndPointLayerConfig {
+  sourceLayerId: string;
+  symbolLayerId: string;
+  minZoomLevel: number;
+  maxZoomLevel: number;
+  /** Filtre Mapbox optionnel appliqué en plus du filtre de base du boundary level */
+  filter?: unknown[];
+  /** Suffixe ajouté à symbolLayerId pour former un ID de layer unique lors de la duplication */
+  layerKey?: string;
+}
+
 export const layersInfos: Record<
   BoundaryLevelEnum,
   {
-    textAndPoint: {
-      sourceLayerId: string;
-      symbolLayerId: string;
-      minZoomLevel: number;
-      maxZoomLevel: number;
-    };
+    textAndPoint: TextAndPointLayerConfig | TextAndPointLayerConfig[];
     polygon: {
       sourceLayerId: string;
       polygonLayerId: string;
@@ -70,12 +82,28 @@ export const layersInfos: Record<
     },
   },
   CITY: {
-    textAndPoint: {
-      sourceLayerId: "city-data-layer-v1",
-      symbolLayerId: MAP_LAYER_IDS.CITY_LABELS,
-      minZoomLevel: 8, // start after county
-      maxZoomLevel: 22, // never
-    },
+    textAndPoint: [
+      {
+        sourceLayerId: "city-data-layer-v1",
+        symbolLayerId: MAP_LAYER_IDS.CITY_LABELS,
+        minZoomLevel: CITY_HIGH_POI_MIN_ZOOM, // villes avec >= 10 POIs (dès le zoom 8)
+        maxZoomLevel: 22,
+        filter: [">=", ["get", "pois_count"], CITY_POI_COUNT_THRESHOLD],
+        layerKey: "all-pois",
+      },
+      {
+        sourceLayerId: "city-data-layer-v1",
+        symbolLayerId: MAP_LAYER_IDS.CITY_LABELS,
+        minZoomLevel: CITY_LOW_POI_MIN_ZOOM, // villes avec < 10 POIs (dès le zoom 9.5)
+        maxZoomLevel: 22,
+        filter: [
+          "all",
+          [">", ["get", "pois_count"], 0],
+          ["<", ["get", "pois_count"], CITY_POI_COUNT_THRESHOLD],
+        ],
+        layerKey: "low-pois",
+      },
+    ],
     polygon: {
       sourceLayerId: "city-polygon-layer-v1",
       polygonLayerId: MAP_LAYER_IDS.CITY_LINES,
