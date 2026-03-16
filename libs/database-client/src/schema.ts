@@ -148,6 +148,7 @@ export const users = pgTable("users", {
   updatedAt: updated_at,
   email: varchar({ length: 1000 }),
   fullName: varchar("full_name", { length: 1000 }),
+  nickname: varchar({ length: 1000 }),
   oauthProviders: varchar("oauth_providers", { length: 1000 }).array(),
   lastLogin: timestamp("last_login", { precision: 3 }).defaultNow().notNull(),
   role: roleEnum().default("USER").notNull(),

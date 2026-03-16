@@ -17,6 +17,7 @@ import type {
 import { Box } from "@/components/ui/box";
 import { Spinner } from "@/components/ui/spinner";
 import { useProfileComputedData } from "@/hooks/other/useProfileComputedData";
+import { useUsersMe } from "@/hooks/queries/useUsersMe";
 
 type ProfileSection =
   | { type: "header" }
@@ -28,7 +29,7 @@ type ProfileSection =
 
 interface ProfileContentProps {
   userData?: Optional<
-    Pick<UserMe, "fullName" | "email" | "createdAt">,
+    Pick<UserMe, "id" | "fullName" | "nickname" | "email" | "createdAt">,
     "email"
   > | null;
   zonesStats?: ZoneUserStat[];
@@ -42,6 +43,7 @@ export function ProfileContent({
   showSignOutButton,
   allowVisitedPoiNavigation,
 }: ProfileContentProps): ReactElement {
+  const { data: currentUser } = useUsersMe();
   const { sortedHierarchy, stats, progress } =
     useProfileComputedData(zonesStats);
 
@@ -67,7 +69,10 @@ export function ProfileContent({
         case "header":
           return (
             <Box className="px-4 pt-4">
-              <ProfileHeader userData={userData} />
+              <ProfileHeader
+                userData={userData}
+                enableNicknameEdit={userData?.id === currentUser?.id}
+              />
             </Box>
           );
         case "progress":
@@ -116,7 +121,7 @@ export function ProfileContent({
           return null;
       }
     },
-    [userData, zonesStats, allowVisitedPoiNavigation],
+    [userData, currentUser?.id, zonesStats, allowVisitedPoiNavigation],
   );
 
   const keyExtractor = useCallback((item: ProfileSection, index: number) => {

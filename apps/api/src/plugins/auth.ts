@@ -11,6 +11,7 @@ declare module "fastify" {
         userId: string;
         email: string | null;
         fullName: string;
+        nickname: string | null;
         oauthProviders: string[] | null;
         lastLogin: Date;
         role: "ADMIN" | "USER";

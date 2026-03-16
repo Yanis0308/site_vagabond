@@ -77,13 +77,15 @@ export const LeaderboardUserItem = memo(
 
             {/* Avatar */}
             <Avatar size="sm" className="bg-primary-200">
-              <AvatarFallbackText>{user.fullName}</AvatarFallbackText>
+              <AvatarFallbackText>
+                {user.nickname ?? user.fullName}
+              </AvatarFallbackText>
             </Avatar>
 
             {/* User Info */}
             <VStack className="flex-1 gap-0.5">
               <CustomText className="text-sm font-semibold text-gray-900">
-                {user.fullName}
+                {user.nickname ?? user.fullName}
               </CustomText>
               <CustomText className="text-xs text-gray-600">
                 {`${user.visitedPoisCount} ${user.visitedPoisCount > 1 ? "lieux visités" : "lieu visité"}`}

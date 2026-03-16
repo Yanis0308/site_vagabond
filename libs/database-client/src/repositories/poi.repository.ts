@@ -37,20 +37,14 @@ export class PoiRepository {
       .where(inArray(pois.id, ids));
   }
 
-  async findPoiName(poiId: string): Promise<string | undefined> {
-    const result = await this.db.query.poiData.findFirst({
-      where: eq(poiData.poiId, poiId),
-      columns: { name: true },
-    });
-    return result?.name;
-  }
-
   async findByIdWithNameAndCoords(poiId: string): Promise<{
     poiId: string;
     latitude: number;
     longitude: number;
     name: string;
     cityName: string | null;
+    countyName: string | null;
+    regionName: string | null;
   } | null> {
     const result = await this.db
       .select({
@@ -72,6 +66,26 @@ export class PoiRepository {
         )`
           .mapWith(mapWithNullableString)
           .as("cityName"),
+        countyName: sql`(
+          SELECT county_b.name
+          FROM ${poiBoundaries} pb2
+          INNER JOIN ${boundaries} county_b ON pb2.boundary_id = county_b.id
+          WHERE pb2.poi_id = ${pois.id}
+            AND county_b.boundary_level = 'COUNTY'
+          LIMIT 1
+        )`
+          .mapWith(mapWithNullableString)
+          .as("countyName"),
+        regionName: sql`(
+          SELECT region_b.name
+          FROM ${poiBoundaries} pb2
+          INNER JOIN ${boundaries} region_b ON pb2.boundary_id = region_b.id
+          WHERE pb2.poi_id = ${pois.id}
+            AND region_b.boundary_level = 'REGION'
+          LIMIT 1
+        )`
+          .mapWith(mapWithNullableString)
+          .as("regionName"),
       })
       .from(pois)
       .innerJoin(poiData, eq(pois.id, poiData.poiId))
@@ -89,7 +103,9 @@ export class PoiRepository {
       latitude: resultPoi.latitude,
       longitude: resultPoi.longitude,
       name: resultPoi.name,
-      cityName: resultPoi.cityName ?? null,
+      cityName: resultPoi.cityName,
+      countyName: resultPoi.countyName,
+      regionName: resultPoi.regionName,
     };
   }
 

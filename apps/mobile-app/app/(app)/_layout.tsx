@@ -10,6 +10,10 @@ export default function RootLayout(): ReactElement | null {
       <Stack.Screen name="validate-place/review-form" />
       <Stack.Screen name="search" />
       <Stack.Screen name="user/[userId]" />
+      <Stack.Screen
+        name="user/edit-nickname"
+        options={{ animation: "slide_from_bottom" }}
+      />
     </Stack>
   );
 }

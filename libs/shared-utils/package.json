@@ -17,6 +17,7 @@
     "postinstall": "pnpm run build"
   },
   "dependencies": {
+    "@sindresorhus/slugify": "^3.0.0",
     "ajv": "catalog:",
     "ajv-formats": "^3.0.1",
     "dotenv": "catalog:"

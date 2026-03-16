@@ -1,6 +1,9 @@
 import type { UserMe } from "@vagabond/shared-utils";
+import { router } from "expo-router";
+import { PencilLine } from "lucide-react-native";
 import { memo, type ReactElement } from "react";
 import { useTranslation } from "react-i18next";
+import { Pressable } from "react-native";
 import type { Optional } from "utility-types";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
@@ -11,14 +14,15 @@ import { getPlainTextDate } from "@/utils/date";
 import { localImages } from "@/utils/localImages";
 
 interface ProfileHeaderProps {
+  enableNicknameEdit?: boolean;
   userData?: Optional<
-    Pick<UserMe, "fullName" | "email" | "createdAt">,
+    Pick<UserMe, "fullName" | "nickname" | "email" | "createdAt">,
     "email"
   > | null;
 }
 
 export const ProfileHeader = memo(
-  ({ userData }: ProfileHeaderProps): ReactElement => {
+  ({ enableNicknameEdit, userData }: ProfileHeaderProps): ReactElement => {
     const { i18n } = useTranslation("common");
 
     const registrationDate =
@@ -28,6 +32,12 @@ export const ProfileHeader = memo(
             date: new Date(userData.createdAt),
           })
         : undefined;
+
+    const handleEditNickname = (): void => {
+      router.push({
+        pathname: "/user/edit-nickname",
+      });
+    };
 
     return (
       <VStack className="items-center gap-4 py-4">
@@ -42,9 +52,16 @@ export const ProfileHeader = memo(
           />
         </Box>
         <VStack className="items-center gap-1">
-          <CustomText className="text-xl font-bold text-gray-900">
-            {userData?.fullName}
-          </CustomText>
+          <VStack className="flex flex-row items-center gap-3">
+            <CustomText className="text-xl font-bold text-gray-900">
+              {userData?.nickname ?? userData?.fullName}
+            </CustomText>
+            {enableNicknameEdit === true && (
+              <Pressable onPress={handleEditNickname}>
+                <PencilLine size={14} />
+              </Pressable>
+            )}
+          </VStack>
           {registrationDate !== undefined && (
             <CustomText className="text-sm text-gray-600">
               {`Vagabond depuis le ${registrationDate}`}

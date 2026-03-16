@@ -76,5 +76,13 @@
     "sign_in_with_apple": "Sign in with Apple",
     "sign_in_with_google": "Sign in with Google",
     "sign_in_to_start": "Your next adventure starts here"
+  },
+  "edit_nickname": {
+    "title": "Nickname",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "placeholder": "Your nickname",
+    "error": "Nickname must be between 1 and 50 characters",
+    "format_hint": "Letters, digits, underscores, dashes and dots only."
   }
 }

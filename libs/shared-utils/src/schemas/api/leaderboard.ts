@@ -18,6 +18,7 @@ export const LeaderboardUserSchema = Type.Object(
   {
     userId: Type.String(),
     fullName: Type.String(),
+    nickname: Nullable(Type.String()),
     visitedPoisCount: Type.Number(),
     rank: Type.Number(),
     registrationDate: DateSchema,

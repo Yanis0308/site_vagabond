@@ -49,5 +49,13 @@
     "sign_in_with_apple": "Connexion avec Apple",
     "sign_in_with_google": "Connexion avec Google",
     "sign_in_to_start": "Votre prochaine aventure commence ici"
+  },
+  "edit_nickname": {
+    "title": "Pseudo",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "placeholder": "Votre pseudo",
+    "error": "Le pseudo doit contenir entre 1 et 50 caractères",
+    "format_hint": "Lettres, chiffres, tirets bas, tirets et points uniquement."
   }
 }

@@ -142,17 +142,28 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       // Envoyer notification Slack en arrière-plan (sans await)
       void (async (): Promise<void> => {
         try {
-          const poiName = await fastify.dbRepositories.poi.findPoiName(poiId);
+          const poiInfo =
+            await fastify.dbRepositories.poi.findByIdWithNameAndCoords(poiId);
 
-          if (poiName !== undefined) {
-            const displayName = poiName.length > 0 ? poiName : "Lieu inconnu";
+          if (poiInfo !== null) {
+            const displayName =
+              poiInfo.name.length > 0 ? poiInfo.name : "Lieu inconnu";
+            const nicknameDisplay = request.user.db.nickname;
+            const locationParts = [
+              poiInfo.cityName,
+              poiInfo.countyName,
+              poiInfo.regionName,
+            ].filter((x): x is string => x !== null && x.length > 0);
+            const displayLocation =
+              locationParts.length > 0 ? locationParts.join(", ") : "—";
 
             const imageUrl = `${fastify.config.cdnUrl}/${imageKey}`;
 
             await fastify.slack.sendPoiValidationMessage(
               `🏆 *Nouveau lieu validé !*\n` +
-                `👤 *Utilisateur:* ${request.user.db.fullName} (${request.user.email})\n` +
+                `👤 *Utilisateur:* ${nicknameDisplay} (${request.user.db.fullName} - ${request.user.email})\n` +
                 `📍 *Lieu:* ${displayName}\n` +
+                `🏙️ *Localisation:* ${displayLocation}\n` +
                 `⭐ *Note:* ${rating}/5\n` +
                 `💬 *Commentaire:* ${
                   comment.length > 0 ? comment : "Aucun commentaire"

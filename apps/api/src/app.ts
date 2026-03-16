@@ -8,6 +8,7 @@ import { type FastifyPluginAsync } from "fastify";
 
 // Plugins
 import authPlugin from "./plugins/auth.js";
+import bodyDecodePlugin from "./plugins/body-decode.js";
 import configPlugin from "./plugins/config.js";
 import firebasePlugin from "./plugins/firebase.js";
 import multipartPlugin from "./plugins/multipart.js";
@@ -40,6 +41,9 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
 
   // 2. Add schemas (needed by routes)
   await fastify.register(addSchemasPlugin, opts);
+
+  // 2b. Body decode (Type.Transform via Value.Decode)
+  await fastify.register(bodyDecodePlugin, opts);
 
   // 3. Security (helmet, cors)
   await fastify.register(securityPlugin, opts);

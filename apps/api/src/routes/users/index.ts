@@ -3,7 +3,9 @@ import {
   Type,
 } from "@fastify/type-provider-typebox";
 import {
+  EmptyResponseSchema,
   ErrorResponseSchema,
+  UpdateUserMeRequestSchema,
   UserPublicInfoResponseSchema,
   UsersMeResponseSchema,
 } from "@vagabond/shared-utils";
@@ -32,6 +34,30 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           oauthProviders: user.oauthProviders ?? [],
         },
       });
+    },
+  );
+  fastify.patch(
+    "/me",
+    {
+      schema: {
+        tags: ["users"],
+        security: [{ bearerAuth: [] }],
+        body: UpdateUserMeRequestSchema,
+        response: {
+          200: EmptyResponseSchema,
+        },
+      },
+    },
+    async function (request, reply) {
+      const user = request.user.db;
+      const { nickname } = request.body;
+
+      await fastify.dbRepositories.user.updateUserNickname(
+        user.userId,
+        nickname,
+      );
+
+      return await reply.status(200).send({ data: {} });
     },
   );
   fastify.get(

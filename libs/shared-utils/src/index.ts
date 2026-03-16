@@ -1,3 +1,4 @@
+export { NICKNAME_MAX_LENGTH } from "./constants.js";
 export {
   type AboutItem,
   AboutItemSchema,
@@ -52,6 +53,8 @@ export {
   UploadFileResponseSchema,
 } from "./schemas/api/upload.js";
 export {
+  type UpdateUserMeRequest,
+  UpdateUserMeRequestSchema,
   type UserMe,
   UserMeSchema,
   type UserPublicInfo,
@@ -139,5 +142,6 @@ export {
 } from "./schemas/processors/llm.js";
 export { logger } from "./utils/logger.js";
 export { getFilterLevelName } from "./utils/poi.js";
+export { slugifyNickname } from "./utils/slug.js";
 export { getUserDisplayName } from "./utils/user.js";
 export { generateValidator, validateWithSchema } from "./utils/validation.js";
