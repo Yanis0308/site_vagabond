@@ -18,6 +18,7 @@ export class VisitedPoiRepository {
       poiId: data.poiId,
       userId: data.userId,
       imageKey: data.imageKey,
+      imageSource: data.imageSource,
       rating: data.rating,
       comment: data.comment,
       coords: [data.coords.longitude, data.coords.latitude],
@@ -43,6 +44,7 @@ export class VisitedPoiRepository {
       createdAt: string;
       comment: string;
       imageKey: string;
+      imageSource: "CAMERA" | "GALLERY";
       rating: number;
     }>
   > {
@@ -62,6 +64,7 @@ export class VisitedPoiRepository {
           ),
         comment: visitedPois.comment,
         imageKey: visitedPois.imageKey,
+        imageSource: visitedPois.imageSource,
         rating: visitedPois.rating,
       })
       .from(visitedPois)
@@ -80,6 +83,7 @@ export class VisitedPoiRepository {
       createdAt: string;
       comment: string;
       imageKey: string;
+      imageSource: "CAMERA" | "GALLERY";
       rating: number;
     }>
   > {
@@ -99,6 +103,7 @@ export class VisitedPoiRepository {
           ),
         comment: visitedPois.comment,
         imageKey: visitedPois.imageKey,
+        imageSource: visitedPois.imageSource,
         rating: visitedPois.rating,
       })
       .from(visitedPois)

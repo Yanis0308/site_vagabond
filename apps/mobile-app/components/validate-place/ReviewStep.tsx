@@ -1,14 +1,11 @@
 import { ajvResolver } from "@hookform/resolvers/ajv";
-import {
-  allJsonSchemas,
-  type CreateVisitedPoiRequest,
-  CreateVisitedPoiRequestSchema,
-} from "@vagabond/shared-utils";
+import { allJsonSchemas, type ImageSource } from "@vagabond/shared-utils";
 import { type JSONSchemaType } from "ajv";
 import { useSetAtom } from "jotai";
-import React, { useEffect } from "react";
+import React from "react";
 import { Controller, type ControllerProps, useForm } from "react-hook-form";
 import { View } from "react-native";
+import { type Static, Type } from "typebox";
 
 import { StarRating } from "@/components/validate-place/StarRating";
 import { useValidatePlaceMutation } from "@/hooks/mutations/useValidatePlaceMutation";
@@ -23,9 +20,17 @@ import { PolaroidForm } from "../polaroid/PolaroidForm";
 import { Box } from "../ui/box";
 import { Button, ButtonText } from "../ui/button";
 
+const ReviewFormDataSchema = Type.Object({
+  rating: Type.Number({ minimum: 1, maximum: 5 }),
+  comment: Type.String(),
+});
+
+type ReviewFormData = Static<typeof ReviewFormDataSchema>;
+
 interface ReviewStepProps {
   place: PoiType;
   capturedImage: string;
+  imageSource: ImageSource;
   imageKey: string | null;
   setReviewFormEnded: (value: boolean) => void;
   isUploading: boolean;
@@ -34,6 +39,7 @@ interface ReviewStepProps {
 export const ReviewStep: React.FC<ReviewStepProps> = ({
   place,
   capturedImage,
+  imageSource,
   imageKey,
   isUploading,
   setReviewFormEnded,
@@ -44,15 +50,13 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
 
   const {
     control,
-    setValue,
-    register,
     watch,
     setFocus,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<CreateVisitedPoiRequest>({
+  } = useForm<ReviewFormData>({
     resolver: ajvResolver(
-      CreateVisitedPoiRequestSchema as JSONSchemaType<CreateVisitedPoiRequest>,
+      ReviewFormDataSchema as JSONSchemaType<ReviewFormData>,
       {
         addUsedSchema: false,
         schemas: allJsonSchemas,
@@ -62,11 +66,6 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
     defaultValues: {
       rating: 0,
       comment: "",
-      imageKey: "",
-      coords: {
-        latitude: 0,
-        longitude: 0,
-      },
     },
   });
 
@@ -74,7 +73,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
   const ratingValue = watch("rating");
 
   // Auto focus comment field when rating is selected
-  useEffect(() => {
+  React.useEffect(() => {
     if (ratingValue > 0) {
       setTimeout(() => {
         setFocus("comment");
@@ -82,37 +81,18 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
     }
   }, [ratingValue, setFocus]);
 
-  useEffect(() => {
-    register("imageKey");
-    if (imageKey !== null && imageKey !== "") {
-      setValue("imageKey", imageKey, { shouldValidate: true });
-    }
-  }, [register, setValue, imageKey]);
+  const onSubmit = async (data: ReviewFormData): Promise<void> => {
+    if (imageKey === null || imageKey === "") return;
 
-  useEffect(() => {
-    register("coords");
-    if (userLocation !== null) {
-      setValue(
-        "coords",
-        {
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
-        },
-        { shouldValidate: true },
-      );
-    }
-  }, [register, setValue, userLocation]);
-
-  const onSubmit = async (data: CreateVisitedPoiRequest): Promise<void> => {
-    // Data is already validated by the resolver
     try {
       setDisplayingLoader(true);
       await validatePlace.mutateAsync({
         placeId: place.id,
-        imageKey: data.imageKey,
+        imageKey,
+        imageSource,
         rating: data.rating,
         comment: data.comment,
-        coords: data.coords,
+        coords: userLocation ?? { latitude: 0, longitude: 0 },
       });
 
       setReviewFormEnded(true);
@@ -130,7 +110,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
   const renderRating = ({
     field: { value, onChange },
   }: Parameters<
-    ControllerProps<CreateVisitedPoiRequest, "rating">["render"]
+    ControllerProps<ReviewFormData, "rating">["render"]
   >[0]): React.ReactElement => (
     <Box className="flex flex-col items-center gap-2 pt-8">
       <CustomText type="rating" className="text-rust-600">
@@ -144,7 +124,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
     field,
     fieldState,
   }: Parameters<
-    ControllerProps<CreateVisitedPoiRequest, "comment">["render"]
+    ControllerProps<ReviewFormData, "comment">["render"]
   >[0]): React.ReactElement => {
     return (
       <CustomTextarea
@@ -156,6 +136,8 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
       />
     );
   };
+
+  const isSubmitDisabled = isSubmitting || imageKey === null;
 
   return (
     <View className="flex flex-1">
@@ -183,17 +165,10 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
             </CustomText>
           </Box>
         )}
-        {errors.coords !== undefined && (
-          <Box className="flex flex-row items-center gap-2 rounded-lg bg-red-100 px-4 py-3">
-            <CustomText className="text-sm text-red-600">
-              {"Position GPS requise"}
-            </CustomText>
-          </Box>
-        )}
         <Button
           onPress={handleSubmit(onSubmit, onError)}
           action="submit"
-          isDisabled={isSubmitting}
+          isDisabled={isSubmitDisabled}
         >
           <ButtonText>
             {isSubmitting ? "⏳ Envoi en cours..." : "✨ Valider le lieu"}

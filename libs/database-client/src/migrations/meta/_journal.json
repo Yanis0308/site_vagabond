@@ -78,6 +78,13 @@
       "when": 1771941885000,
       "tag": "0010_daily_jazinda",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1773332959025,
+      "tag": "0011_cynical_major_mapleleaf",
+      "breakpoints": true
     }
   ]
 }

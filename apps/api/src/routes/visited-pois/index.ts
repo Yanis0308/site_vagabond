@@ -109,7 +109,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     },
     async function (request, reply) {
       const { poiId } = request.params;
-      const { imageKey, rating, comment, coords } = request.body;
+      const { imageKey, imageSource, rating, comment, coords } = request.body;
 
       const visitedPoi =
         await fastify.dbRepositories.visitedPoi.findByPoiAndUser(
@@ -129,6 +129,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       await fastify.dbRepositories.visitedPoi.createCustom({
         poiId,
         imageKey,
+        imageSource,
         rating,
         comment,
         coords,

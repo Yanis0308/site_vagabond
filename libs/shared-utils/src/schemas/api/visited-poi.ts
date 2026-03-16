@@ -3,6 +3,12 @@ import { type Static, Type } from "typebox";
 import { CoordsSchema } from "../geo.js";
 import { ApiResponseSchema, Nullable } from "../utils.js";
 
+export const ImageSourceSchema = Type.Union(
+  [Type.Literal("CAMERA"), Type.Literal("GALLERY")],
+  { $id: "ImageSource" },
+);
+export type ImageSource = Static<typeof ImageSourceSchema>;
+
 export const VisitedPoiSchema = Type.Object(
   {
     id: Type.Number(),
@@ -14,6 +20,7 @@ export const VisitedPoiSchema = Type.Object(
     comment: Nullable(Type.String()),
     rating: Type.Number(),
     imageKey: Type.String(),
+    imageSource: ImageSourceSchema,
   },
   { $id: "VisitedPoi" },
 );
@@ -35,6 +42,7 @@ export const BriefVisitedPoiSchema = Type.Object(
 export const CreateVisitedPoiRequestSchema = Type.Object(
   {
     imageKey: Type.String({ minLength: 1 }),
+    imageSource: ImageSourceSchema,
     rating: Type.Number({ minimum: 1, maximum: 5 }),
     comment: Type.String(),
     coords: CoordsSchema,

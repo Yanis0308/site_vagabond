@@ -64,6 +64,9 @@ export const processingStatusEnum = pgEnum("ProcessingStatusEnum", [
 export type ProcessingStatusEnum =
   (typeof processingStatusEnum.enumValues)[number];
 
+export const imageSourceEnum = pgEnum("ImageSourceEnum", ["CAMERA", "GALLERY"]);
+export type ImageSourceEnum = (typeof imageSourceEnum.enumValues)[number];
+
 const created_at = timestamp("created_at", { precision: 3 })
   .defaultNow()
   .notNull();
@@ -83,6 +86,7 @@ export const visitedPois = pgTable(
     userId: varchar("user_id", { length: 1000 }).notNull(),
     comment: varchar({ length: 10000 }).notNull(),
     imageKey: varchar("image_key", { length: 1000 }).notNull(),
+    imageSource: imageSourceEnum("image_source").default("CAMERA").notNull(),
     rating: integer().notNull(),
   },
   (table) => [

@@ -156,6 +156,7 @@ export default function ReviewForm(): ReactElement | null {
         <ReviewStep
           place={selectedPlace}
           capturedImage={currentPhoto.imageUri}
+          imageSource={currentPhoto.imageSource}
           imageKey={fileId}
           isUploading={isUploading}
           setReviewFormEnded={handleReviewFormEnd}

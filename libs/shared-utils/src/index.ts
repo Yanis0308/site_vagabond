@@ -65,6 +65,8 @@ export {
   type CreateVisitedPoiRequest,
   CreateVisitedPoiRequestSchema,
   GetVisitedPoisResponseSchema,
+  type ImageSource,
+  ImageSourceSchema,
   type VisitedPoi,
   VisitedPoiSchema,
 } from "./schemas/api/visited-poi.js";

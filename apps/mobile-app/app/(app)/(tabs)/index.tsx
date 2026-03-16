@@ -1,3 +1,4 @@
+import { type ImageSource } from "@vagabond/shared-utils";
 import * as Device from "expo-device";
 import * as ImagePicker from "expo-image-picker";
 import { router, useFocusEffect } from "expo-router";
@@ -61,8 +62,11 @@ export default function MapsTab(): ReactElement {
     setSelectedPlace(null);
   };
 
-  const handlePhotoSelected = (imageUri: string): void => {
-    setCurrentPhoto({ imageUri });
+  const handlePhotoSelected = (
+    imageUri: string,
+    imageSource: ImageSource,
+  ): void => {
+    setCurrentPhoto({ imageUri, imageSource });
   };
 
   // Navigate to review form when a photo is selected (decoupled from picker flow)
@@ -98,7 +102,7 @@ export default function MapsTab(): ReactElement {
       try {
         logger("[recoverPendingResult] recovering photo:", asset.uri);
         await waitForFile(asset.uri);
-        setCurrentPhoto({ imageUri: asset.uri });
+        setCurrentPhoto({ imageUri: asset.uri, imageSource: "CAMERA" });
         logger("[recoverPendingResult] success");
       } catch (error) {
         logger("[recoverPendingResult] waitForFile error:", error);
@@ -140,7 +144,7 @@ export default function MapsTab(): ReactElement {
       const asset = result.assets[0];
       try {
         await waitForFile(asset.uri);
-        handlePhotoSelected(asset.uri);
+        handlePhotoSelected(asset.uri, "CAMERA");
       } catch {
         Alert.alert(
           "Erreur",
@@ -170,7 +174,7 @@ export default function MapsTab(): ReactElement {
       const asset = result.assets[0];
       try {
         await waitForFile(asset.uri);
-        handlePhotoSelected(asset.uri);
+        handlePhotoSelected(asset.uri, "GALLERY");
       } catch {
         Alert.alert(
           "Erreur",
