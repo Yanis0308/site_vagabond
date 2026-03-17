@@ -44,6 +44,7 @@ export function ProfileContent({
   allowVisitedPoiNavigation,
 }: ProfileContentProps): ReactElement {
   const { data: currentUser } = useUsersMe();
+  const allowProfileEdit = userData?.id === currentUser?.id;
   const { sortedHierarchy, stats, progress } =
     useProfileComputedData(zonesStats);
 
@@ -71,7 +72,7 @@ export function ProfileContent({
             <Box className="px-4 pt-4">
               <ProfileHeader
                 userData={userData}
-                enableNicknameEdit={userData?.id === currentUser?.id}
+                allowProfileEdit={allowProfileEdit}
               />
             </Box>
           );
@@ -102,6 +103,7 @@ export function ProfileContent({
               <ProfileValidatedPlaces
                 countries={item.data}
                 allowVisitedPoiNavigation={allowVisitedPoiNavigation}
+                allowProfileEdit={allowProfileEdit}
               />
             </Box>
           );
@@ -121,7 +123,7 @@ export function ProfileContent({
           return null;
       }
     },
-    [userData, currentUser?.id, zonesStats, allowVisitedPoiNavigation],
+    [userData, allowProfileEdit, zonesStats, allowVisitedPoiNavigation],
   );
 
   const keyExtractor = useCallback((item: ProfileSection, index: number) => {

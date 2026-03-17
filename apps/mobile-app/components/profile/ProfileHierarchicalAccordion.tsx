@@ -19,6 +19,7 @@ import type {
 interface ProfileHierarchicalAccordionProps {
   countries: CountryType[];
   allowVisitedPoiNavigation: boolean;
+  allowProfileEdit: boolean;
 }
 
 // Types pour les items plats
@@ -197,6 +198,7 @@ const FlatItemRenderer = memo(
     toggleDepartement,
     toggleCity,
     allowVisitedPoiNavigation,
+    allowProfileEdit,
   }: {
     item: FlatItem;
     expandedRegions: Set<string>;
@@ -206,6 +208,7 @@ const FlatItemRenderer = memo(
     toggleDepartement: (id: string) => void;
     toggleCity: (id: string) => void;
     allowVisitedPoiNavigation: boolean;
+    allowProfileEdit: boolean;
   }): ReactElement => {
     // Create callbacks before switch to avoid hook rule violations
     const regionToggle = useCallback(() => {
@@ -257,6 +260,7 @@ const FlatItemRenderer = memo(
             <ProfilePoiItem
               poi={item.data}
               allowNavigation={allowVisitedPoiNavigation}
+              allowProfileEdit={allowProfileEdit}
             />
           </Box>
         );
@@ -272,6 +276,7 @@ export const ProfileHierarchicalAccordion = memo(
   ({
     countries,
     allowVisitedPoiNavigation,
+    allowProfileEdit,
   }: ProfileHierarchicalAccordionProps): ReactElement => {
     // Initialize all cities as expanded by default
     const defaultExpandedCities = useMemo(() => {
@@ -361,6 +366,7 @@ export const ProfileHierarchicalAccordion = memo(
           toggleDepartement={toggleDepartement}
           toggleCity={toggleCity}
           allowVisitedPoiNavigation={allowVisitedPoiNavigation}
+          allowProfileEdit={allowProfileEdit}
         />
       ),
       [
@@ -371,6 +377,7 @@ export const ProfileHierarchicalAccordion = memo(
         toggleDepartement,
         toggleCity,
         allowVisitedPoiNavigation,
+        allowProfileEdit,
       ],
     );
 

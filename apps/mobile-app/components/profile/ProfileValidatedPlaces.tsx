@@ -10,12 +10,14 @@ import type { CountryType } from "./utils";
 interface ProfileValidatedPlacesProps {
   countries: CountryType[];
   allowVisitedPoiNavigation: boolean;
+  allowProfileEdit: boolean;
 }
 
 export const ProfileValidatedPlaces = memo(
   ({
     countries,
     allowVisitedPoiNavigation,
+    allowProfileEdit,
   }: ProfileValidatedPlacesProps): ReactElement => {
     const { t } = useTranslation("common");
 
@@ -35,6 +37,7 @@ export const ProfileValidatedPlaces = memo(
           <ProfileHierarchicalAccordion
             countries={countries}
             allowVisitedPoiNavigation={allowVisitedPoiNavigation}
+            allowProfileEdit={allowProfileEdit}
           />
         )}
       </Box>

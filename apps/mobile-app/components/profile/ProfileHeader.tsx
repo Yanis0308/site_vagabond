@@ -14,7 +14,7 @@ import { getPlainTextDate } from "@/utils/date";
 import { localImages } from "@/utils/localImages";
 
 interface ProfileHeaderProps {
-  enableNicknameEdit?: boolean;
+  allowProfileEdit?: boolean;
   userData?: Optional<
     Pick<UserMe, "fullName" | "nickname" | "email" | "createdAt">,
     "email"
@@ -22,7 +22,7 @@ interface ProfileHeaderProps {
 }
 
 export const ProfileHeader = memo(
-  ({ enableNicknameEdit, userData }: ProfileHeaderProps): ReactElement => {
+  ({ allowProfileEdit, userData }: ProfileHeaderProps): ReactElement => {
     const { i18n } = useTranslation("common");
 
     const registrationDate =
@@ -56,7 +56,7 @@ export const ProfileHeader = memo(
             <CustomText className="text-xl font-bold text-gray-900">
               {userData?.nickname ?? userData?.fullName}
             </CustomText>
-            {enableNicknameEdit === true && (
+            {allowProfileEdit === true && (
               <Pressable onPress={handleEditNickname}>
                 <PencilLine size={14} />
               </Pressable>

@@ -18,10 +18,15 @@ import type { PoiType } from "@/utils/types";
 interface ProfilePoiItemProps {
   poi: BriefVisitedPoi;
   allowNavigation: boolean;
+  allowProfileEdit: boolean;
 }
 
 export const ProfilePoiItem = memo(
-  ({ poi, allowNavigation }: ProfilePoiItemProps): ReactElement => {
+  ({
+    poi,
+    allowNavigation,
+    allowProfileEdit,
+  }: ProfilePoiItemProps): ReactElement => {
     const { setSelectedPlace } = usePlaceSelection();
     const handleDeleteVisitedPoi = useDeleteVisitedPoiWithConfirm(poi.poiId);
     const visitDate = new Date(poi.createdAt).toLocaleDateString("fr-FR", {
@@ -70,15 +75,17 @@ export const ProfilePoiItem = memo(
                 {visitDate}
               </CustomText>
             </VStack>
-            <Pressable
-              onPress={() => {
-                handleDeleteVisitedPoi(poi.id);
-              }}
-              className="ml-2 rounded-full bg-tertiary-100/40 p-1"
-              hitSlop={8}
-            >
-              <Trash2 size={14} color={themeColors.warning["600"].hex} />
-            </Pressable>
+            {allowProfileEdit && (
+              <Pressable
+                onPress={() => {
+                  handleDeleteVisitedPoi(poi.id);
+                }}
+                className="ml-2 rounded-full bg-tertiary-100/40 p-1"
+                hitSlop={8}
+              >
+                <Trash2 size={14} color={themeColors.warning["600"].hex} />
+              </Pressable>
+            )}
           </HStack>
         </HStack>
       </Pressable>
