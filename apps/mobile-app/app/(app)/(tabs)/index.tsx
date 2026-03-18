@@ -18,6 +18,8 @@ import { useMapLogic } from "@/hooks/maps/useMapLogic";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { mapService } from "@/services/MapService";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
+import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
+import { compressImage } from "@/utils/imageCompressor";
 import { logger } from "@/utils/logger";
 import { waitForFile } from "@/utils/waitForFile";
 
@@ -39,6 +41,7 @@ export default function MapsTab(): ReactElement {
   const { selectedPlace, setSelectedPlace } = usePlaceSelection();
   const currentPhoto = useAtomValue(currentPhotoAtom);
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
+  const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
 
   // Register moveToPlace function in MapService so it's available to the search screen
   useEffect(() => {
@@ -62,11 +65,12 @@ export default function MapsTab(): ReactElement {
     setSelectedPlace(null);
   };
 
-  const handlePhotoSelected = (
+  const handlePhotoSelected = async (
     imageUri: string,
     imageSource: ImageSource,
-  ): void => {
-    setCurrentPhoto({ imageUri, imageSource });
+  ): Promise<void> => {
+    const compressedUri = await compressImage(imageUri);
+    setCurrentPhoto({ imageUri: compressedUri, imageSource });
   };
 
   // Navigate to review form when a photo is selected (decoupled from picker flow)
@@ -143,9 +147,11 @@ export default function MapsTab(): ReactElement {
     if (result !== null && !result.canceled && result.assets[0] !== undefined) {
       const asset = result.assets[0];
       try {
+        setDisplayingLoader(true);
         await waitForFile(asset.uri);
-        handlePhotoSelected(asset.uri, "CAMERA");
+        await handlePhotoSelected(asset.uri, "CAMERA");
       } catch {
+        setDisplayingLoader(false);
         Alert.alert(
           "Erreur",
           "La photo n'a pas pu être chargée. Veuillez réessayer.",
@@ -173,9 +179,11 @@ export default function MapsTab(): ReactElement {
     if (!result.canceled && result.assets[0] !== undefined) {
       const asset = result.assets[0];
       try {
+        setDisplayingLoader(true);
         await waitForFile(asset.uri);
-        handlePhotoSelected(asset.uri, "GALLERY");
+        await handlePhotoSelected(asset.uri, "GALLERY");
       } catch {
+        setDisplayingLoader(false);
         Alert.alert(
           "Erreur",
           "La photo n'a pas pu être chargée. Veuillez réessayer.",

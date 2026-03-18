@@ -2,7 +2,13 @@ import { usePreventRemove } from "@react-navigation/native";
 import { useIsMutating } from "@tanstack/react-query";
 import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import React, { type ReactElement, useCallback, useRef, useState } from "react";
+import React, {
+  type ReactElement,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -16,7 +22,7 @@ import {
 } from "@/hooks/mutations/useUploadFileMutation";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
-import { compressImage } from "@/utils/imageCompressor";
+import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { logger } from "@/utils/logger";
 
 export default function ReviewForm(): ReactElement | null {
@@ -33,17 +39,21 @@ export default function ReviewForm(): ReactElement | null {
   });
   const isUploading = isMutating > 0;
   const [uploadError, setUploadError] = useState(false);
+  const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
   const uploadAttemptedRef = useRef(false);
+
+  useEffect(() => {
+    setDisplayingLoader(false);
+  }, [setDisplayingLoader]);
 
   const uploadPhoto = useCallback(async (): Promise<void> => {
     if (currentPhoto === null || fileId !== null) return;
 
     try {
       logger("Starting photo upload...");
-      const compressedUri = await compressImage(currentPhoto.imageUri);
 
       const result = await uploadFileMutation.mutateAsync({
-        uri: compressedUri,
+        uri: currentPhoto.imageUri,
         fileName: `photo_${Date.now()}.jpg`,
         mimeType: "image/jpeg",
       });
