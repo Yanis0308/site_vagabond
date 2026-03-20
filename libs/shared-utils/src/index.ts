@@ -30,6 +30,10 @@ export {
   LeaderboardUserSchema,
 } from "./schemas/api/leaderboard.js";
 export {
+  type UserLocationRequest,
+  UserLocationRequestSchema,
+} from "./schemas/api/location.js";
+export {
   GetPoiEnrichedResponseSchema,
   type PoiEnrichedData,
   PoiEnrichedDataSchema,

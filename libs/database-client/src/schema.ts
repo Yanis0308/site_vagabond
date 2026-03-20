@@ -75,6 +75,55 @@ const updated_at = timestamp("updated_at", { precision: 3 })
   .notNull()
   .$onUpdate(() => new Date());
 
+export const userLocations = pgTable(
+  "user_locations",
+  {
+    id: serial().primaryKey().notNull(),
+    createdAt: created_at,
+    updatedAt: updated_at,
+    userId: varchar("user_id", { length: 1000 }).notNull(),
+    coords: geometry({ type: "point", srid: 4326 }).notNull(),
+    accuracy: doublePrecision(),
+    altitude: doublePrecision(),
+    altitudeAccuracy: doublePrecision("altitude_accuracy"),
+    heading: doublePrecision(),
+    speed: doublePrecision(),
+    timestamp: timestamp({ precision: 3 }).notNull(),
+  },
+  (table) => [
+    // Index composite B-tree : accélère les requêtes filtrant par utilisateur puis triant par date
+    // Ex: "les N dernières positions de l'utilisateur X"
+    index("user_locations_user_id_timestamp_idx").using(
+      "btree",
+      // op("text_ops") : classe d'opérateurs pour les comparaisons de texte (=, <, >, LIKE)
+      table.userId.asc().nullsLast().op("text_ops"),
+      // op("timestamp_ops") : classe d'opérateurs pour les comparaisons de timestamps (=, <, >)
+      table.timestamp.desc().nullsLast().op("timestamp_ops"),
+    ),
+    // Index spatial GiST : accélère les requêtes géographiques (ST_DWithin, ST_Contains, ST_Distance, etc.)
+    index("user_locations_coords_idx").using(
+      "gist",
+      // op("gist_geometry_ops_2d") : classe d'opérateurs GiST pour les géométries 2D (intersection, contenance, proximité)
+      table.coords.asc().nullsLast().op("gist_geometry_ops_2d"),
+    ),
+    // Index B-tree sur timestamp seul : accélère les requêtes par date sans filtre utilisateur
+    // Ex: "toutes les positions des dernières 24h" (l'index composite ci-dessus ne couvre pas ce cas)
+    index("user_locations_timestamp_idx").using(
+      "btree",
+      // op("timestamp_ops") : classe d'opérateurs pour les comparaisons de timestamps
+      table.timestamp.desc().nullsLast().op("timestamp_ops"),
+    ),
+    // Clé étrangère vers la table users, avec suppression / mise à jour en cascade
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.userId],
+      name: "user_locations_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+  ],
+);
+
 export const visitedPois = pgTable(
   "visited_pois",
   {
@@ -309,8 +358,16 @@ export const visitedPoisRelations = relations(visitedPois, ({ one }) => ({
   }),
 }));
 
+export const userLocationsRelations = relations(userLocations, ({ one }) => ({
+  user: one(users, {
+    fields: [userLocations.userId],
+    references: [users.userId],
+  }),
+}));
+
 export const usersRelations = relations(users, ({ many }) => ({
   visitedPois: many(visitedPois),
+  userLocations: many(userLocations),
 }));
 
 export const poiBoundariesRelations = relations(poiBoundaries, ({ one }) => ({

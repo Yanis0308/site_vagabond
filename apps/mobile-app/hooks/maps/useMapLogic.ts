@@ -13,7 +13,10 @@ import {
 } from "react";
 
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
-import { useUserLocation } from "@/hooks/queries/useUserLocation";
+import {
+  type UserLocationReturn,
+  useUserLocation,
+} from "@/hooks/queries/useUserLocation";
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
@@ -28,7 +31,7 @@ export interface OnPressEventPoi extends OnPressEvent {
 
 interface UseMapLogicReturn {
   // Data
-  userLocation: { latitude: number; longitude: number } | undefined | null;
+  simplifiedLocation: UserLocationReturn["simplifiedLocation"] | null;
 
   // Realtime states
   headingRealtime: number;
@@ -53,7 +56,7 @@ interface UseMapLogicReturn {
 }
 
 export const useMapLogic = (): UseMapLogicReturn => {
-  const userLocation = useUserLocation();
+  const { simplifiedLocation } = useUserLocation();
   const firstCenteringDone = useRef(false);
 
   // États pour le zoom et heading (uniquement pour affichage en temps réel)
@@ -68,16 +71,19 @@ export const useMapLogic = (): UseMapLogicReturn => {
   const { setSelectedPlace } = usePlaceSelection();
 
   const moveToUserLocation = useCallback(() => {
-    if (userLocation !== null && cameraRef.current !== null) {
+    if (simplifiedLocation !== null && cameraRef.current !== null) {
       cameraRef.current.setCamera({
-        centerCoordinate: [userLocation.longitude, userLocation.latitude],
+        centerCoordinate: [
+          simplifiedLocation.longitude,
+          simplifiedLocation.latitude,
+        ],
         zoomLevel: 14,
         heading: 0, // reset orientation
         animationMode: "flyTo",
         animationDuration: 1000,
       });
     }
-  }, [userLocation]);
+  }, [simplifiedLocation]);
 
   const resetMapOrientation = (): void => {
     if (cameraRef.current !== null) {
@@ -121,23 +127,23 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
   // Centrer la caméra sur la position de l'utilisateur
   useEffect(() => {
-    if (userLocation !== null && !firstCenteringDone.current) {
+    if (simplifiedLocation !== null && !firstCenteringDone.current) {
       moveToUserLocation();
       firstCenteringDone.current = true;
     }
-  }, [userLocation, moveToUserLocation]);
+  }, [simplifiedLocation, moveToUserLocation]);
 
   // Gestion des événements de la carte
   const onCameraChanged = (mapState: MapState): void => {
     const { center, heading } = mapState.properties;
     setHeadingRealtime(heading);
     setZoomRealtime(mapState.properties.zoom);
-    if (userLocation !== null) {
+    if (simplifiedLocation !== null) {
       const distance = getDistance(
         { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
         {
-          latitude: userLocation.latitude,
-          longitude: userLocation.longitude,
+          latitude: simplifiedLocation.latitude,
+          longitude: simplifiedLocation.longitude,
         },
       );
       setIsCentered(distance < 20); // 20 meters of tolerance
@@ -187,7 +193,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
   return {
     // Data
-    userLocation,
+    simplifiedLocation,
 
     // Realtime states
     headingRealtime,

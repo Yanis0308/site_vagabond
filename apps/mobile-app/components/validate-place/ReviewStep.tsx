@@ -44,7 +44,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
   isUploading,
   setReviewFormEnded,
 }) => {
-  const userLocation = useUserLocation();
+  const { simplifiedLocation } = useUserLocation();
   const validatePlace = useValidatePlaceMutation();
   const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
 
@@ -92,7 +92,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
         imageSource,
         rating: data.rating,
         comment: data.comment,
-        coords: userLocation ?? { latitude: 0, longitude: 0 },
+        coords: simplifiedLocation ?? { latitude: 0, longitude: 0 },
       });
 
       setReviewFormEnded(true);

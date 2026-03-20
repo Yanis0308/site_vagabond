@@ -1,47 +1,31 @@
-import * as Location from "expo-location";
-import { useEffect, useState } from "react";
+import { type LocationObject } from "expo-location";
+import { useAtomValue } from "jotai";
 
-interface UserLocation {
+import { userLocationAtom } from "@/stores/userLocationAtom";
+
+interface SimplifiedLocation {
   latitude: number;
   longitude: number;
 }
 
-export const useUserLocation = (): UserLocation | null => {
-  const [location, setLocation] = useState<UserLocation | null>(null);
+export interface UserLocationReturn {
+  simplifiedLocation: SimplifiedLocation | null;
+  userLocation: LocationObject | null;
+}
 
-  useEffect(() => {
-    let subscription: { remove: () => void } | null = null;
+export const useUserLocation = (): UserLocationReturn => {
+  const userLocation = useAtomValue(userLocationAtom);
 
-    const setupLocation = async (): Promise<void> => {
-      let { status } = await Location.getForegroundPermissionsAsync();
-      if (status !== Location.PermissionStatus.GRANTED) {
-        status = (await Location.requestForegroundPermissionsAsync()).status;
-      }
+  const simplifiedLocation: SimplifiedLocation | null =
+    userLocation !== null
+      ? {
+          latitude: userLocation.coords.latitude,
+          longitude: userLocation.coords.longitude,
+        }
+      : null;
 
-      if (status === Location.PermissionStatus.GRANTED) {
-        subscription = await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.BestForNavigation,
-            timeInterval: 1000 * 10, // 10s
-          },
-          (position) => {
-            setLocation({
-              latitude: position.coords.latitude,
-              longitude: position.coords.longitude,
-            });
-          },
-        );
-      }
-    };
-
-    void setupLocation();
-
-    return (): void => {
-      if (subscription !== null) {
-        subscription.remove();
-      }
-    };
-  }, []);
-
-  return location;
+  return {
+    simplifiedLocation,
+    userLocation,
+  };
 };

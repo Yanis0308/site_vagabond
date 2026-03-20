@@ -92,6 +92,13 @@
       "when": 1773676659535,
       "tag": "0012_zippy_dreaming_celestial",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1773761992858,
+      "tag": "0013_rare_silver_sable",
+      "breakpoints": true
     }
   ]
 }

@@ -2,8 +2,15 @@ import { Stack } from "expo-router";
 import { type ReactElement } from "react";
 
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
+import { useUserLocationTracking } from "@/hooks/other/useUserLocationTracking";
+import { useUserLocationWatcher } from "@/hooks/other/useUserLocationWatcher";
 
 export default function RootLayout(): ReactElement | null {
+  // GPS watcher unique — alimente l'atom partagé
+  useUserLocationWatcher();
+  // Sauvegarder automatiquement la position de l'utilisateur
+  useUserLocationTracking();
+
   return (
     <Stack screenOptions={defaultScreenOptions}>
       <Stack.Screen name="(tabs)" />

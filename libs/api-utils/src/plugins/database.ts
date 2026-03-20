@@ -5,6 +5,7 @@ import {
   PoiRepository,
   ProcessingResultRepository,
   SearchRepository,
+  UserLocationRepository,
   UserRepository,
   VisitedPoiRepository,
 } from "@vagabond/database-client";
@@ -17,6 +18,7 @@ export interface DbRepositories {
   boundary: BoundaryRepository;
   search: SearchRepository;
   user: UserRepository;
+  location: UserLocationRepository;
   visitedPoi: VisitedPoiRepository;
   processingResult: ProcessingResultRepository;
 }
@@ -40,6 +42,7 @@ export default fp(
         boundary: new BoundaryRepository(db),
         search: new SearchRepository(db),
         user: new UserRepository(db),
+        location: new UserLocationRepository(db),
         visitedPoi: new VisitedPoiRepository(db),
         processingResult: new ProcessingResultRepository(db),
       };

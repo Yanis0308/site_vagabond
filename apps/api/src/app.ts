@@ -19,6 +19,7 @@ import slackPlugin from "./plugins/slack.js";
 import swaggerPlugin from "./plugins/swagger.js";
 // Routes
 import leaderboardRoute from "./routes/leaderboard/index.js";
+import locationRoute from "./routes/location/index.js";
 import poisIdRoute from "./routes/pois/[id].js";
 import searchRoute from "./routes/search/index.js";
 import uploadRoute from "./routes/upload/index.js";
@@ -74,6 +75,7 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
 
   // 11. Routes
   await fastify.register(leaderboardRoute, { prefix: "api/leaderboard" });
+  await fastify.register(locationRoute, { prefix: "api/location" });
   await fastify.register(poisIdRoute, { prefix: "api/pois" });
   await fastify.register(searchRoute, { prefix: "api/search" });
   await fastify.register(uploadRoute, { prefix: "api/upload" });
