@@ -2,15 +2,32 @@ import {
   type FastifyPluginCallbackTypebox,
   Type,
 } from "@fastify/type-provider-typebox";
+import { type PoiEnrichedWithData } from "@vagabond/database-client";
 import {
   ErrorResponseSchema,
   GetPoiEnrichedResponseSchema,
   type PoiEnriched,
+  type PoiEnrichedData,
 } from "@vagabond/shared-utils";
 
 import { PoiEnrichmentService } from "../../services/poi-enrichment.service.js";
 
+const serializePoiEnriched = (row: PoiEnrichedWithData): PoiEnrichedData => ({
+  ...row.enrichedData,
+  id: row.id,
+  poiId: row.poiId,
+  version: row.version,
+  createdAt: row.createdAt.toISOString(),
+  updatedAt: row.updatedAt.toISOString(),
+});
+
+type EnrichmentOutcome =
+  | { enriched: PoiEnrichedWithData }
+  | { httpStatus: 404 | 500; message: string };
+
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
+  const enrichmentInProgress = new Map<string, Promise<EnrichmentOutcome>>();
+
   fastify.get(
     "/:id",
     {
@@ -30,6 +47,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     async function (request, reply) {
       const { id: poiId } = request.params;
       const enrichmentService = new PoiEnrichmentService(fastify);
+      let resolveEnrichment: ((outcome: EnrichmentOutcome) => void) | undefined;
+      let enrichmentOutcome: EnrichmentOutcome | undefined;
 
       try {
         // 1. Check if enriched data already exists (version is already filtered in SQL query)
@@ -38,22 +57,48 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
         if (existingEnriched !== undefined) {
           return await reply.status(200).send({
-            data: {
-              ...existingEnriched.enrichedData,
-              id: existingEnriched.id,
-              poiId: existingEnriched.poiId,
-              version: existingEnriched.version,
-              createdAt: existingEnriched.createdAt.toISOString(),
-              updatedAt: existingEnriched.updatedAt.toISOString(),
+            data: serializePoiEnriched(existingEnriched),
+          });
+        }
+
+        // Déduplication : si un enrichissement est déjà en cours pour ce POI, on attend et on retourne le résultat
+        const inProgress = enrichmentInProgress.get(poiId);
+        if (inProgress !== undefined) {
+          request.log.info(
+            { poiId },
+            "Enrichment already in progress, waiting for result",
+          );
+          const outcome = await inProgress;
+          if ("enriched" in outcome) {
+            return await reply.status(200).send({
+              data: serializePoiEnriched(outcome.enriched),
+            });
+          }
+          return await reply.status(outcome.httpStatus).send({
+            error: {
+              type:
+                outcome.httpStatus === 404
+                  ? "NOT_FOUND"
+                  : "INTERNAL_SERVER_ERROR",
+              message: outcome.message,
             },
           });
         }
+
+        // Enregistrement du verrou pour les requêtes concurrentes
+        enrichmentInProgress.set(
+          poiId,
+          new Promise<EnrichmentOutcome>((resolve) => {
+            resolveEnrichment = resolve;
+          }),
+        );
 
         // 2. Verify POI exists and get basic info
         const poi =
           await fastify.dbRepositories.poi.findByIdWithNameAndCoords(poiId);
 
         if (poi === null) {
+          enrichmentOutcome = { httpStatus: 404, message: "POI not found" };
           return await reply.status(404).send({
             error: {
               type: "NOT_FOUND",
@@ -141,6 +186,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
         // 10. Create enriched entry
         if (enrichedData === null) {
+          enrichmentOutcome = {
+            httpStatus: 500,
+            message: "Failed to create enriched POI data",
+          };
           return await reply.status(500).send({
             error: {
               type: "INTERNAL_SERVER_ERROR",
@@ -156,6 +205,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         });
 
         if (enriched === undefined) {
+          enrichmentOutcome = {
+            httpStatus: 500,
+            message: "Failed to create enriched POI data",
+          };
           return await reply.status(500).send({
             error: {
               type: "INTERNAL_SERVER_ERROR",
@@ -165,24 +218,30 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         }
 
         // 11. Return enriched data
+        enrichmentOutcome = { enriched };
         return await reply.status(200).send({
-          data: {
-            ...enriched.enrichedData,
-            id: enriched.id,
-            poiId: enriched.poiId,
-            version: enriched.version,
-            createdAt: enriched.createdAt.toISOString(),
-            updatedAt: enriched.updatedAt.toISOString(),
-          },
+          data: serializePoiEnriched(enriched),
         });
       } catch (error) {
         request.log.error(error);
+        const message = error instanceof Error ? error.message : String(error);
+        enrichmentOutcome = { httpStatus: 500, message };
         return await reply.status(500).send({
           error: {
             type: "INTERNAL_SERVER_ERROR",
-            message: error instanceof Error ? error.message : String(error),
+            message,
           },
         });
+      } finally {
+        if (resolveEnrichment !== undefined) {
+          enrichmentInProgress.delete(poiId);
+          resolveEnrichment(
+            enrichmentOutcome ?? {
+              httpStatus: 500,
+              message: "Unexpected error during enrichment",
+            },
+          );
+        }
       }
     },
   );
