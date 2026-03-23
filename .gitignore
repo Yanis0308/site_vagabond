@@ -36,3 +36,4 @@ cache/
 .cursor/
 local-user-files/
 .mcp.json
+firebase-debug.log

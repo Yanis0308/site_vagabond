@@ -15,7 +15,23 @@ const app = Fastify({
   logger: loggerConfig,
 });
 
-Sentry.setupFastifyErrorHandler(app);
+const CLIENT_DISCONNECT_MESSAGES = ["Premature close", "aborted", "ECONNRESET"];
+
+function isClientDisconnectError(error: unknown): boolean {
+  const result =
+    error instanceof Error &&
+    CLIENT_DISCONNECT_MESSAGES.some((msg) => error.message.includes(msg));
+  if (result) {
+    app.log.warn(error, "Client disconnected");
+  }
+  return result;
+}
+
+Sentry.setupFastifyErrorHandler(app, {
+  shouldHandleError(error) {
+    return !isClientDisconnectError(error);
+  },
+});
 
 // Register your application as a normal plugin.
 app.register(import("./app.js"));
