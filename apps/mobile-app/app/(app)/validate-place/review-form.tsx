@@ -41,9 +41,15 @@ export default function ReviewForm(): ReactElement | null {
   const [uploadError, setUploadError] = useState(false);
   const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
   const uploadAttemptedRef = useRef(false);
+  const dismissTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setDisplayingLoader(false);
+    return (): void => {
+      if (dismissTimeoutRef.current !== null) {
+        clearTimeout(dismissTimeoutRef.current);
+      }
+    };
   }, [setDisplayingLoader]);
 
   const uploadPhoto = useCallback(async (): Promise<void> => {
@@ -116,7 +122,8 @@ export default function ReviewForm(): ReactElement | null {
   const handleReviewFormEnd = (): void => {
     setCurrentPhoto(null);
     // Small delay to ensure usePreventRemove is properly disabled
-    setTimeout(() => {
+    dismissTimeoutRef.current = setTimeout(() => {
+      dismissTimeoutRef.current = null;
       router.dismissAll();
     }, 0);
   };

@@ -9,6 +9,7 @@ import { Avatar, AvatarFallbackText } from "@/components/ui/avatar";
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
+import { cn } from "@/utils/cn";
 import { getPlainTextDate } from "@/utils/date";
 
 interface LeaderboardUserItemProps {
@@ -57,11 +58,12 @@ export const LeaderboardUserItem = memo(
     return (
       <Pressable onPress={handlePress}>
         <Box
-          className={`rounded-lg border bg-white p-2 shadow-sm ${
+          className={cn(
+            "rounded-lg p-2 shadow-sm",
             isCurrentUser
               ? "border-2 border-primary-500 bg-primary-50"
-              : "border-gray-200"
-          }`}
+              : "border border-gray-200 bg-white",
+          )}
         >
           <HStack className="items-center gap-2">
             {/* Rank */}

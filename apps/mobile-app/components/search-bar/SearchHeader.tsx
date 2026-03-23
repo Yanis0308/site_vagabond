@@ -2,6 +2,7 @@ import { ArrowLeft, Search, X } from "lucide-react-native";
 import React, {
   forwardRef,
   type ReactElement,
+  useEffect,
   useImperativeHandle,
   useLayoutEffect,
   useRef,
@@ -41,6 +42,17 @@ export const SearchHeader = forwardRef<SearchHeaderRef, SearchHeaderProps>(
     const inputRef = useRef<TextInput>(null);
     const { searchTerm, setSearchTerm } = useSearchTerm();
     const hasFocusedRef = useRef(false);
+    const inputLayoutTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+      null,
+    );
+
+    useEffect(() => {
+      return (): void => {
+        if (inputLayoutTimeoutRef.current !== null) {
+          clearTimeout(inputLayoutTimeoutRef.current);
+        }
+      };
+    }, []);
 
     useImperativeHandle(ref, () => ({
       blur: (): void => {
@@ -93,8 +105,12 @@ export const SearchHeader = forwardRef<SearchHeaderRef, SearchHeaderProps>(
     const handleInputLayout = (): void => {
       const current = inputRef.current;
       if (editable && !hasFocusedRef.current && current !== null) {
+        if (inputLayoutTimeoutRef.current !== null) {
+          clearTimeout(inputLayoutTimeoutRef.current);
+        }
         // Small delay to ensure input is ready
-        setTimeout(() => {
+        inputLayoutTimeoutRef.current = setTimeout(() => {
+          inputLayoutTimeoutRef.current = null;
           const currentInput = inputRef.current;
           if (currentInput !== null) {
             currentInput.focus();
