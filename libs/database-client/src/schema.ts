@@ -351,6 +351,28 @@ export const poiEnriched = pgTable(
   ],
 );
 
+export const appReview = pgTable(
+  "app_review",
+  {
+    id: serial().primaryKey().notNull(),
+    userId: varchar("user_id", { length: 1000 }).notNull(),
+    positive: boolean().notNull(),
+    comment: varchar({ length: 1000 }),
+    createdAt: created_at,
+    updatedAt: updated_at,
+  },
+  (table) => [
+    uniqueIndex("app_review_user_id_key").on(table.userId),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.userId],
+      name: "app_review_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+  ],
+);
+
 export const visitedPoisRelations = relations(visitedPois, ({ one }) => ({
   user: one(users, {
     fields: [visitedPois.userId],
@@ -365,9 +387,13 @@ export const userLocationsRelations = relations(userLocations, ({ one }) => ({
   }),
 }));
 
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
   visitedPois: many(visitedPois),
   userLocations: many(userLocations),
+  appReview: one(appReview, {
+    fields: [users.userId],
+    references: [appReview.userId],
+  }),
 }));
 
 export const poiBoundariesRelations = relations(poiBoundaries, ({ one }) => ({
@@ -393,5 +419,12 @@ export const poiEnrichedRelations = relations(poiEnriched, ({ one }) => ({
   poi: one(pois, {
     fields: [poiEnriched.poiId],
     references: [pois.id],
+  }),
+}));
+
+export const appReviewRelations = relations(appReview, ({ one }) => ({
+  user: one(users, {
+    fields: [appReview.userId],
+    references: [users.userId],
   }),
 }));

@@ -1,5 +1,5 @@
 import { usePreventRemove } from "@react-navigation/native";
-import { useIsMutating } from "@tanstack/react-query";
+import { useIsMutating, useQueryClient } from "@tanstack/react-query";
 import { useFocusEffect, useNavigation, useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import React, {
@@ -23,6 +23,7 @@ import {
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
+import { shouldShowAppReviewAtom } from "@/stores/shouldShowAppReviewAtom";
 import { logger } from "@/utils/logger";
 
 export default function ReviewForm(): ReactElement | null {
@@ -30,6 +31,8 @@ export default function ReviewForm(): ReactElement | null {
   const { selectedPlace } = usePlaceSelection();
   const currentPhoto = useAtomValue(currentPhotoAtom);
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
+  const setShouldShowAppReview = useSetAtom(shouldShowAppReviewAtom);
+  const queryClient = useQueryClient();
   const [fileId, setFileId] = useState<string | null>(null);
   const navigation = useNavigation();
   const router = useRouter();
@@ -120,6 +123,13 @@ export default function ReviewForm(): ReactElement | null {
   );
 
   const handleReviewFormEnd = (): void => {
+    // Explicitly wait for the user-visited-pois refetch to complete before
+    // setting the flag, so useAppReviewModal always evaluates with fresh data.
+    void queryClient
+      .refetchQueries({ queryKey: ["user-visited-pois"] })
+      .then(() => {
+        setShouldShowAppReview(true);
+      });
     setCurrentPhoto(null);
     // Small delay to ensure usePreventRemove is properly disabled
     dismissTimeoutRef.current = setTimeout(() => {

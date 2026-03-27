@@ -102,6 +102,7 @@ CDN_URL=https://dev-vagabond-public.t3.storage.dev
 SLACK_BOT_AUTH_TOKEN=<slack-bot-token>
 SLACK_CHANNEL_SIGNUPS=<channel-id>
 SLACK_CHANNEL_POI_VALIDATIONS=<channel-id>
+SLACK_CHANNEL_APP_REVIEWS=<channel-id>
 
 # Data scraper config
 DATA_SCRAPER_URL=http://localhost:3234

@@ -13,6 +13,7 @@ export const UserMeSchema = Type.Object(
     nickname: Nullable(Type.String()),
     oauthProviders: Type.Array(Type.String()),
     lastLogin: DateSchema,
+    hasAppReview: Type.Boolean(),
     createdAt: DateSchema,
     role: RoleEnumSchema,
   },
@@ -61,6 +62,21 @@ export const UserPublicInfoResponseSchema = ApiResponseSchema(
   "UserPublicInfoResponse",
 );
 
+export const UserAppReviewRequestSchema = Type.Union(
+  [
+    Type.Object({
+      positive: Type.Literal(true),
+      comment: Type.Optional(Nullable(Type.String())),
+    }),
+    Type.Object({
+      positive: Type.Literal(false),
+      comment: Type.String({ minLength: 10 }),
+    }),
+  ],
+  { $id: "UserAppReviewRequest" },
+);
+
 export type UserMe = Static<typeof UserMeSchema>;
 export type UpdateUserMeRequest = Static<typeof UpdateUserMeRequestSchema>;
 export type UserPublicInfo = Static<typeof UserPublicInfoSchema>;
+export type UserAppReviewRequest = Static<typeof UserAppReviewRequestSchema>;

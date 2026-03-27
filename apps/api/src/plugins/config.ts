@@ -23,6 +23,7 @@ const RawConfigSchema = z.object({
   SLACK_BOT_AUTH_TOKEN: z.string(),
   SLACK_CHANNEL_SIGNUPS: z.string(),
   SLACK_CHANNEL_POI_VALIDATIONS: z.string(),
+  SLACK_CHANNEL_APP_REVIEWS: z.string(),
   DATA_SCRAPER_URL: z.string(),
   DATA_SCRAPER_BASIC_AUTH_USER: z.string(),
   DATA_SCRAPER_BASIC_AUTH_PASSWORD: z.string(),
@@ -45,6 +46,7 @@ export interface Config {
     botToken: string;
     channelSignups: string;
     channelPoiValidations: string;
+    channelAppReviews: string;
   };
   dataScraper: {
     url: string;
@@ -102,6 +104,7 @@ export default fp(
           botToken: rawConfig.SLACK_BOT_AUTH_TOKEN,
           channelSignups: rawConfig.SLACK_CHANNEL_SIGNUPS,
           channelPoiValidations: rawConfig.SLACK_CHANNEL_POI_VALIDATIONS,
+          channelAppReviews: rawConfig.SLACK_CHANNEL_APP_REVIEWS,
         },
         dataScraper: {
           url: rawConfig.DATA_SCRAPER_URL,

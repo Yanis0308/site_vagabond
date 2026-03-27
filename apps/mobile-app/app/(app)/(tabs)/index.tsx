@@ -7,6 +7,7 @@ import { type ReactElement, useEffect, useRef } from "react";
 import { Alert, Platform } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
+import { AppReviewModal } from "@/components/app-review/AppReviewModal";
 import { CustomMapView } from "@/components/custom-ui/CustomMapView";
 import { MapButtons } from "@/components/custom-ui/MapButtons";
 import { MapDebugInfo } from "@/components/custom-ui/MapDebugInfo";
@@ -15,6 +16,7 @@ import { PlaceDetailsSheet } from "@/components/place-details/PlaceDetailsSheet"
 import { SearchHeaderButton } from "@/components/SearchHeaderButton";
 import { Box } from "@/components/ui/box";
 import { useMapLogic } from "@/hooks/maps/useMapLogic";
+import { useAppReviewModal } from "@/hooks/other/useAppReviewModal";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { mapService } from "@/services/MapService";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
@@ -42,6 +44,10 @@ export default function MapsTab(): ReactElement {
   const currentPhoto = useAtomValue(currentPhotoAtom);
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
   const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
+
+  // App review modal
+  const { isVisible: isAppReviewModalVisible, onClose: onAppReviewClose } =
+    useAppReviewModal();
 
   // Register moveToPlace function in MapService so it's available to the search screen
   useEffect(() => {
@@ -229,6 +235,11 @@ export default function MapsTab(): ReactElement {
           onClose={onBottomSheetClose}
           animatedIndex={bottomSheetAnimatedIndex}
           scrollRepairNeededRef={scrollRepairNeededRef}
+        />
+
+        <AppReviewModal
+          visible={isAppReviewModalVisible}
+          onClose={onAppReviewClose}
         />
       </Box>
     </CustomScreenContainer>

@@ -59,6 +59,8 @@ export {
 export {
   type UpdateUserMeRequest,
   UpdateUserMeRequestSchema,
+  type UserAppReviewRequest,
+  UserAppReviewRequestSchema,
   type UserMe,
   UserMeSchema,
   type UserPublicInfo,

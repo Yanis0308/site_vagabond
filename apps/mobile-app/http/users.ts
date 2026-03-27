@@ -33,3 +33,12 @@ export const getUserPublicInfo = async (
 
   return rawResult.data;
 };
+
+export const submitAppReview = async (
+  positive: boolean,
+  comment: string | null,
+): Promise<void> => {
+  await apiClient
+    .post("api/users/me/app-review", { json: { positive, comment } })
+    .json();
+};

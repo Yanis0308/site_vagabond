@@ -8,6 +8,7 @@ declare module "fastify" {
     slack: {
       sendSignupMessage: (message: string) => Promise<void>;
       sendPoiValidationMessage: (message: string) => Promise<void>;
+      sendAppReviewMessage: (message: string) => Promise<void>;
     };
   }
 }
@@ -18,6 +19,7 @@ export default fp(
     const client = new WebClient(slackConfig.botToken);
     const channelSignups = slackConfig.channelSignups;
     const channelPoiValidations = slackConfig.channelPoiValidations;
+    const channelAppReviews = slackConfig.channelAppReviews;
 
     const sendMessage = async (
       message: string,
@@ -30,7 +32,7 @@ export default fp(
           username: "Vagabond API",
           icon_emoji: ":robot_face:",
         });
-        getLogger(fastify).info(`Slack message sent to ${channel}: ${message}`);
+        getLogger(fastify).info(`Slack message sent to ${channel}`);
       } catch (err) {
         getLogger(fastify).error({ err }, "Failed to send Slack message:");
       }
@@ -39,11 +41,14 @@ export default fp(
     const slackService: {
       sendSignupMessage: (message: string) => Promise<void>;
       sendPoiValidationMessage: (message: string) => Promise<void>;
+      sendAppReviewMessage: (message: string) => Promise<void>;
     } = {
       sendSignupMessage: (message: string) =>
         sendMessage(message, channelSignups),
       sendPoiValidationMessage: (message: string) =>
         sendMessage(message, channelPoiValidations),
+      sendAppReviewMessage: (message: string) =>
+        sendMessage(message, channelAppReviews),
     };
 
     fastify.decorate("slack", slackService);

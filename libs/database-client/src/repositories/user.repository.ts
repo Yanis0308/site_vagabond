@@ -2,7 +2,8 @@ import { getUserDisplayName, logger } from "@vagabond/shared-utils";
 import { and, countDistinct, desc, eq, gte, max } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
-import { poiBoundaries, users, visitedPois } from "../schema.js";
+import { appReview, poiBoundaries, users, visitedPois } from "../schema.js";
+import { isUniqueConstraintViolationError } from "../utils.js";
 
 export interface UserInfo {
   email: string;
@@ -32,6 +33,13 @@ type LeaderboardResult = Array<{
   lastVisitedPoiDate: string | null;
   rank: number;
 }>;
+
+export class AppReviewAlreadyExistsError extends Error {
+  constructor() {
+    super("App review already exists for this user");
+    this.name = "AppReviewAlreadyExistsError";
+  }
+}
 
 export class UserRepository {
   constructor(private readonly db: DrizzleClient) {}
@@ -229,5 +237,33 @@ export class UserRepository {
       .update(users)
       .set({ nickname })
       .where(eq(users.userId, userId));
+  }
+
+  async hasUserAppReview(userId: string): Promise<boolean> {
+    const retrievedAppReview = await this.db.query.appReview.findFirst({
+      where: eq(appReview.userId, userId),
+      columns: { id: true },
+    });
+
+    return retrievedAppReview !== undefined;
+  }
+
+  async createAppReview(
+    userId: string,
+    positive: boolean,
+    comment: string | null,
+  ): Promise<void> {
+    try {
+      await this.db.insert(appReview).values({
+        userId,
+        positive,
+        comment,
+      });
+    } catch (error) {
+      if (isUniqueConstraintViolationError(error)) {
+        throw new AppReviewAlreadyExistsError();
+      }
+      throw error;
+    }
   }
 }

@@ -16,7 +16,7 @@ import { logger } from "@/utils/logger";
 export const useUserLocationTracking = (): void => {
   const [authenticatedUser] = useAtom(authenticatedUserAtom);
   const { userLocation } = useUserLocation(); // updated every 30 seconds by useUserLocationWatcher
-  const saveUserLocationMutation = useSaveUserLocation();
+  const { mutate: saveUserLocationMutation } = useSaveUserLocation();
 
   useEffect(() => {
     if (authenticatedUser === null) {
@@ -31,7 +31,7 @@ export const useUserLocationTracking = (): void => {
 
     logger("[LocationTracking] Saving user location");
 
-    saveUserLocationMutation.mutate(
+    saveUserLocationMutation(
       {
         coords: {
           latitude: userLocation.coords.latitude,

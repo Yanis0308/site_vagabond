@@ -1,4 +1,5 @@
 import { requestContext } from "@fastify/request-context";
+import { type DbUser } from "@vagabond/database-client";
 import { type FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
 import { type auth } from "firebase-admin";
@@ -7,17 +8,7 @@ import { getAuth } from "firebase-admin/auth";
 declare module "fastify" {
   interface FastifyRequest {
     user: auth.DecodedIdToken & {
-      db: {
-        userId: string;
-        email: string | null;
-        fullName: string;
-        nickname: string | null;
-        oauthProviders: string[] | null;
-        lastLogin: Date;
-        role: "ADMIN" | "USER";
-        createdAt: Date;
-        updatedAt: Date;
-      };
+      db: DbUser;
     };
   }
 }

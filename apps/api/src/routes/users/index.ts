@@ -2,13 +2,16 @@ import {
   type FastifyPluginCallbackTypebox,
   Type,
 } from "@fastify/type-provider-typebox";
+import { AppReviewAlreadyExistsError } from "@vagabond/database-client";
 import {
   EmptyResponseSchema,
   ErrorResponseSchema,
   UpdateUserMeRequestSchema,
+  UserAppReviewRequestSchema,
   UserPublicInfoResponseSchema,
   UsersMeResponseSchema,
 } from "@vagabond/shared-utils";
+import escapeHtml from "escape-html";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
@@ -24,6 +27,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     },
     async function (request, reply) {
       const user = request.user.db;
+      const hasAppReview = await fastify.dbRepositories.user.hasUserAppReview(
+        user.userId,
+      );
 
       return await reply.status(200).send({
         data: {
@@ -32,6 +38,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           lastLogin: user.lastLogin.toISOString(),
           createdAt: user.createdAt.toISOString(),
           oauthProviders: user.oauthProviders ?? [],
+          hasAppReview,
         },
       });
     },
@@ -94,6 +101,66 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           createdAt: user.createdAt.toISOString(),
         },
       });
+    },
+  );
+  fastify.post(
+    "/me/app-review",
+    {
+      schema: {
+        tags: ["users"],
+        body: UserAppReviewRequestSchema,
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: EmptyResponseSchema,
+          409: ErrorResponseSchema,
+        },
+      },
+    },
+    async function (request, reply) {
+      const { userId } = request.user.db;
+      const { positive, comment } = request.body;
+
+      try {
+        await fastify.dbRepositories.user.createAppReview(
+          userId,
+          positive,
+          comment ?? null,
+        );
+      } catch (error) {
+        if (error instanceof AppReviewAlreadyExistsError) {
+          return await reply.status(409).send({
+            error: {
+              type: "RESOURCE_ALREADY_EXISTS",
+              message: "A review already exists",
+            },
+          });
+        }
+        throw error;
+      }
+
+      if (!positive) {
+        void (async (): Promise<void> => {
+          try {
+            const safeFullName = escapeHtml(request.user.db.fullName);
+            const safeEmail = escapeHtml(request.user.email);
+            const safeComment = escapeHtml(comment);
+
+            await fastify.slack.sendAppReviewMessage(
+              `👎 *Avis négatif reçu !*\n` +
+                `👤 *Utilisateur:* ${safeFullName} (${safeEmail})\n` +
+                `💬 *Commentaire :* ${safeComment}\n` +
+                `📅 *Date:* ${new Date().toLocaleString("fr-FR")}`,
+            );
+          } catch (slackError) {
+            request.log.error(
+              slackError,
+              "Failed to send app review Slack message",
+            );
+          }
+        })();
+      }
+
+      return await reply.status(200).send({ data: {} });
     },
   );
 };

@@ -57,5 +57,18 @@
     "placeholder": "Votre pseudo",
     "error": "Le pseudo doit contenir entre 1 et 50 caractères",
     "format_hint": "Lettres, chiffres, tirets bas, tirets et points uniquement."
+  },
+  "app_review": {
+    "initial": {
+      "title": "Tu aimes l'application ? 🧡",
+      "subtitle": "Ton avis nous aide à nous améliorer !"
+    },
+    "negative": {
+      "title": "Dis-nous ce qui ne va pas 🙏",
+      "subtitle": "Ton retour nous aide vraiment à progresser.",
+      "placeholder": "Qu'est-ce qu'on pourrait améliorer ?",
+      "submit": "Envoyer mon retour",
+      "cancel": "Annuler"
+    }
   }
 }
