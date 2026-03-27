@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "develop": "next dev --turbopack",
-    "build": "next build",
+    "build": "NODE_OPTIONS='--conditions react-server' payload generate:importmap && next build",
     "ci": "payload migrate && pnpm build",
     "start": "next start",
     "typescript-check": "tsc --noEmit",
