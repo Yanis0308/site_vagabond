@@ -29,8 +29,12 @@ yarn-error.log*
 pnpm-debug.log*
 
 # env files
-.env*.local
+.env*
+!.env.example
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# payload
+app/(payload)/admin/importMap.js

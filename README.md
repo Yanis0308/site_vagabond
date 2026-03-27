@@ -27,7 +27,8 @@ Monorepo pour l'application Vagabond - plateforme de découverte de points d'int
 
 - **Backend** : Fastify, TypeScript, PostgreSQL (Drizzle ORM), Firebase Admin, AWS S3
 - **Mobile** : React Native, Expo, Expo Router, NativeWind, React Query, Mapbox, Jotai
-- **Validation** : TypeBox, AJV
+- **Web** : Next.js 16, Payload CMS 3, next-intl, Tailwind CSS 4, shadcn/ui, Motion
+- **Validation** : TypeBox, AJV, Zod
 - **Base de données** : PostgreSQL, Drizzle ORM
 - **Infrastructure** : Fly.io, pnpm workspaces, Expo EAS (Expo Application Services)
 - **LLM** : Google AI, Groq
@@ -58,13 +59,9 @@ API de scraping Google Maps utilisant **Puppeteer** et **Fastify**. Extrait les 
 
 Pipeline ETL pour traiter les données **OpenStreetMap** (PBF) et les préparer pour l'API et **Mapbox**. Utilise **osm2pgsql**, **PostgreSQL**, **Knex**, et génère des fichiers JSONL pour l'import en base et l'upload vers Mapbox Tilesets.
 
-#### [Web Dashboard](./apps/web-dashboard/README.md) (non maintenu)
+#### [Website](./apps/website/README.md)
 
-Dashboard web **Next.js** avec **React Query** et **MapLibre GL** pour la visualisation et la gestion des POIs et boundaries. Utilise **Supercluster** pour le clustering de points sur la carte.
-
-#### [Website](./apps/website/README.md) (non maintenu)
-
-Site web marketing **Next.js** avec **i18next** pour le multilinguisme, **React Email** pour les emails transactionnels, **Supabase**, **Vercel Analytics**, et intégration **Facebook Pixel**.
+Site web marketing **Next.js 16** avec **Payload CMS 3** pour la gestion de contenu, **next-intl** pour l'internationalisation (11 langues), et **Tailwind CSS 4** pour le styling. Intègre **Vercel Analytics**, des pages SEO dynamiques (sitemap, robots, JSON-LD), un blog, et des pages d'exploration géographique (régions, départements, villes).
 
 ### Bibliothèques (`/libs`)
 

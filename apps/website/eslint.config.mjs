@@ -34,8 +34,24 @@ export default [
     },
   },
 
+  // Seed scripts — console output is expected, return types not required
+  {
+    files: ["scripts/**/*.ts"],
+    rules: {
+      "no-console": "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+    },
+  },
+
   // Ignores website-specific
   {
-    ignores: [".next/", "out/", "build/", "next-env.d.ts"],
+    ignores: [
+      ".next/",
+      "out/",
+      "build/",
+      "next-env.d.ts",
+      "payload-types.ts",
+      "app/(payload)/",
+    ],
   },
 ];

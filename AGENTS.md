@@ -13,7 +13,7 @@ vagagond-poc/
 │   ├── mobile-app/       # React Native + Expo mobile app
 │   ├── data-scraper/     # Google Maps scraper (Puppeteer)
 │   ├── data-manager/     # ETL pipeline (OSM/Mapbox)
-│   └── website/          # Next.js marketing site (unmaintained)
+│   └── website/          # Next.js 16 marketing site + Payload CMS
 ├── libs/
 │   ├── api-utils/        # Fastify plugins (shared between api & data-scraper)
 │   ├── database-client/  # Drizzle ORM + PostgreSQL schemas, migrations, repositories
@@ -28,7 +28,7 @@ vagagond-poc/
 - **Language**: TypeScript 5.9 (strict mode)
 - **Backend**: Fastify 5, Drizzle ORM, PostgreSQL, Firebase Admin, AWS S3
 - **Mobile**: React Native 19.1, Expo 54, Expo Router, NativeWind (Tailwind), Mapbox, Jotai, React Query, Gluestack UI
-- **Web**: Next.js 15 (unmaintained)
+- **Web**: Next.js 16, Payload CMS 3, next-intl, Tailwind CSS 4, shadcn/ui, Motion
 - **Validation**: TypeBox, Zod, AJV
 - **AI/LLM**: @ai-sdk/google, @ai-sdk/groq
 - **Deployment**: Fly.io (API, scraper)
@@ -53,6 +53,9 @@ cd apps/api && pnpm run develop
 
 # Mobile development
 cd apps/mobile-app && pnpm run develop
+
+# Website development (requires Docker for PostgreSQL)
+cd apps/website && pnpm docker:up && pnpm run develop
 ```
 
 **Important**: After modifying any file in `libs/`, run `pnpm install` to rebuild the libraries so apps pick up the changes.
@@ -120,6 +123,9 @@ Pre-commit hook (husky) runs `pnpm check-all`. CI runs the same on push/PR to ma
 - **Schemas** are shared from `libs/shared-utils/src/schemas/`
 - **Mobile hooks** are organized by concern in `apps/mobile-app/hooks/` (queries, mutations, maps, other)
 - **Mobile components** are feature-based in `apps/mobile-app/components/`
+- **Website routes** are internationalized via `apps/website/app/[locale]/`
+- **Website CMS** uses Payload collections in `apps/website/collections/`
+- **Website translations** are in `apps/website/messages/{locale}.json` (11 languages)
 
 ## Git Conventions
 
@@ -131,7 +137,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 type(scope): description
 
 Types: feat, fix, docs, style, refactor, perf, test, chore, ci
-Scopes: api, mobile, scraper, db, ui, deps (optional)
+Scopes: api, mobile, website, scraper, db, ui, deps (optional)
 Example: feat(api): add endpoint for POI filtering by category
 ```
 

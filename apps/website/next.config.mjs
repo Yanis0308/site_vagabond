@@ -1,4 +1,13 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
+import { withPayload } from "@payloadcms/next/withPayload";
+import createNextIntlPlugin from "next-intl/plugin";
 
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin();
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    formats: ["image/avif", "image/webp"],
+  },
+};
+
+export default withPayload(withNextIntl(nextConfig));

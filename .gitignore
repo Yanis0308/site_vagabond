@@ -36,4 +36,5 @@ cache/
 .cursor/
 local-user-files/
 .mcp.json
-firebase-debug.log
+**/firebase-debug.log
+solo.yml

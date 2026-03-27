@@ -1,0 +1,28 @@
+# Local Postgres for Payload CMS. From apps/website:
+#   docker compose -f dev/docker-compose.yml up -d
+# Stop: docker compose -f dev/docker-compose.yml down
+# Reset data: add -v to down
+version: "3.8"
+name: vagabond-website
+services:
+  db:
+    container_name: postgresql-website
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: vagabond_website
+    volumes:
+      - website-db-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - backend
+
+volumes:
+  website-db-data:
+
+networks:
+  backend:
+    driver: bridge
