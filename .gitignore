@@ -41,3 +41,7 @@ local-user-files/
 .mcp.json
 **/firebase-debug.log
 solo.yml
+
+# RTK (token optimizer — local tooling)
+.github/hooks/rtk-rewrite.json
+.github/copilot-instructions.md
