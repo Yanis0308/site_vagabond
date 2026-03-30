@@ -8,9 +8,11 @@
   "scripts": {
     "prepare": "husky",
     "prettier-write": "prettier . --write",
-    "check-all": "pnpm -r run typescript-check && pnpm -r run lint-check && pnpm -r run prettier-check",
-    "fix-all": "pnpm -r run lint-fix && pnpm -r run prettier-fix",
-    "clean-all": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' \\; -print"
+    "build": "turbo run build",
+    "check-all": "turbo run typescript-check lint-check prettier-check",
+    "check-affected": "turbo run typescript-check lint-check prettier-check --filter=[HEAD]",
+    "fix-all": "turbo run lint-fix prettier-fix",
+    "clean-all": "turbo run clean && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' \\; -print"
   },
   "dependencies": {
     "dayjs": "catalog:",
@@ -40,6 +42,7 @@
     "prettier": "catalog:",
     "tailwindcss": "catalog:",
     "tsx": "^4.21.0",
+    "turbo": "^2.8.20",
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
     "utility-types": "^3.11.0"

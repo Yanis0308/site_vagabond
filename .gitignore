@@ -3,6 +3,9 @@
 **/node_modules
 **/DS_store
 
+# Turborepo
+.turbo/
+
 # Nx files
 .nx/cache
 .nx/workspace-data
