@@ -32,6 +32,15 @@ interface UserZoneStat {
 export class BoundaryRepository {
   constructor(private readonly db: DrizzleClient) {}
 
+  /**
+   * Query numbering (see index comments in schema.ts):
+   * - Query 1: recursive CTE `relevant_zones` (zone IDs from visits + parents).
+   * - Query 2: main aggregated stats (`GROUP BY` boundary).
+   *   - Subquery 2.1: `totalPoisSubquery` — COUNT(DISTINCT poi_id) on poi_boundaries by boundary_id (idx_poi_boundaries_boundary_id).
+   *   - Subquery 2.2: `totalSubzonesSubquery` — direct child boundaries count.
+   *   - Subquery 2.3: `completedSubzonesSubquery` — completed subzones in relevantZoneIds.
+   *   - Subquery 2.4: scalar poi_data name — WHERE poi_id = … ORDER BY language DESC, id LIMIT 1 (idx_poi_data_poi_id_lang_id).
+   */
   async findUserZoneStats(
     userId: string,
     boundaryLevels: BoundaryLevelEnum[] = [
@@ -43,7 +52,7 @@ export class BoundaryRepository {
       "NEIGHBORHOOD",
     ],
   ): Promise<UserZoneStat[]> {
-    // 1. Get relevant zone IDs using recursive CTE (raw SQL as Drizzle doesn't support recursive CTEs natively yet)
+    // Query 1: relevant zone IDs (recursive CTE; raw SQL — Drizzle has no native recursive CTE support yet)
     const relevantZonesResult = await this.db.execute<{ zone_id: string }>(sql`
       WITH RECURSIVE relevant_zones AS (
         SELECT DISTINCT pb.boundary_id as zone_id
@@ -67,7 +76,8 @@ export class BoundaryRepository {
       return [];
     }
 
-    // 2. Fetch stats for these zones using Drizzle Query Builder
+    // Query 2: stats for these zones (Drizzle). Subqueries 2.1–2.3 are correlated; 2.4 is inline in validated_pois.
+    // Subquery 2.1: total POIs per zone (COUNT DISTINCT poi_id WHERE boundary_id = outer boundary)
     const totalPoisSubquery = this.db
       .select({
         count: sql`count(distinct ${poiBoundaries.poiId})`.mapWith(Number),
@@ -76,12 +86,14 @@ export class BoundaryRepository {
       .where(eq(poiBoundaries.boundaryId, boundaries.id));
 
     const b2 = alias(boundaries, "b2");
+    // Subquery 2.2: count direct child boundaries
     const totalSubzonesSubquery = this.db
       .select({ count: count() })
       .from(b2)
       .where(eq(b2.parentId, boundaries.id));
 
     const b3 = alias(boundaries, "b3");
+    // Subquery 2.3: child zones that appear in relevantZoneIds ("completed" subzones)
     const completedSubzonesSubquery = this.db
       .select({ count: count() })
       .from(b3)
@@ -89,6 +101,7 @@ export class BoundaryRepository {
         and(eq(b3.parentId, boundaries.id), inArray(b3.id, relevantZoneIds)),
       );
 
+    // Main SELECT for Query 2 (aggregates + embedded subqueries 2.1–2.4)
     const stats = await this.db
       .select({
         zone_id: boundaries.id,
@@ -106,6 +119,7 @@ export class BoundaryRepository {
                   'id', ${visitedPois.id},
                   'poiId', ${visitedPois.poiId},
                   'name', (
+                    -- Subquery 2.4: best display name per POI (idx_poi_data_poi_id_lang_id)
                     SELECT pd.name FROM ${poiData} pd 
                     WHERE pd.poi_id = ${visitedPois.poiId} 
                     ORDER BY pd.language DESC, pd.id LIMIT 1

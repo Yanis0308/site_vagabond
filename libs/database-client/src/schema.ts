@@ -176,6 +176,15 @@ export const poiData = pgTable(
       "btree",
       sql`normalize_search_text((name)::text)`,
     ),
+    // Index composite (poi_id, language DESC, id) pour la sous-requête scalaire 2.4 de findUserZoneStats :
+    // WHERE poi_id = … ORDER BY language DESC, id LIMIT 1 (meilleur nom par POI).
+    // Permet un Index Only Scan et supprime le Sort step (l'ordre du B-tree matche le ORDER BY).
+    index("idx_poi_data_poi_id_lang_id").using(
+      "btree",
+      table.poiId.asc().nullsLast().op("text_ops"),
+      table.language.desc().nullsLast().op("enum_ops"),
+      table.id.asc().nullsLast(),
+    ),
     uniqueIndex("poi_data_source_poi_id_language_key").using(
       "btree",
       table.source.asc().nullsLast().op("text_ops"),
@@ -288,6 +297,13 @@ export const poiBoundaries = pgTable(
     uniqueIndex("poi_boundaries_poi_id_boundary_id_key").using(
       "btree",
       table.poiId.asc().nullsLast().op("text_ops"),
+      table.boundaryId.asc().nullsLast().op("text_ops"),
+    ),
+    // Index sur boundary_id seul : permet les lookups par zone sans scanner les 554K lignes
+    // Ex: "combien de POIs dans cette zone ?" (sous-requête 2.1 / totalPoisSubquery dans findUserZoneStats)
+    // L'index composite (poi_id, boundary_id) ne couvre pas ce cas car boundary_id n'est pas en tête
+    index("idx_poi_boundaries_boundary_id").using(
+      "btree",
       table.boundaryId.asc().nullsLast().op("text_ops"),
     ),
     foreignKey({
