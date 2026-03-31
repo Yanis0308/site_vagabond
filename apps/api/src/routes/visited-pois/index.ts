@@ -9,6 +9,8 @@ import {
   GetVisitedPoisResponseSchema,
 } from "@vagabond/shared-utils";
 
+import { captureAndLog } from "../../utils/logger.js";
+
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
     "/",
@@ -177,9 +179,14 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             );
           }
         } catch (error) {
-          request.log.error(
-            { err: error },
-            "Failed to send Slack notification for place validation:",
+          captureAndLog(
+            fastify,
+            error,
+            "Failed to send Slack notification for place validation",
+            {
+              level: "warning",
+              tags: { operation: "slack-poi-validation" },
+            },
           );
         }
       })();

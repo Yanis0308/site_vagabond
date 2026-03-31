@@ -5,6 +5,8 @@ import {
   UserLocationRequestSchema,
 } from "@vagabond/shared-utils";
 
+import { captureAndLog } from "../../utils/logger.js";
+
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.post(
     "/",
@@ -33,13 +35,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
         return await reply.status(200).send({ data: {} });
       } catch (error) {
-        request.log.error(
-          {
-            userId: user.userId,
-            error,
-          },
-          "Error saving user location",
-        );
+        captureAndLog(fastify, error, "Error saving user location", {
+          tags: { operation: "location-save" },
+          extra: { userId: user.userId },
+        });
 
         return await reply.status(500).send({
           error: {

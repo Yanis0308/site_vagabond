@@ -1,9 +1,45 @@
 import { requestContext } from "@fastify/request-context";
+import * as Sentry from "@sentry/node";
+import { type User as SentryUser } from "@sentry/node";
 import { type DbUser } from "@vagabond/database-client";
 import { type FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
 import { type auth } from "firebase-admin";
 import { getAuth } from "firebase-admin/auth";
+
+import { captureAndLog } from "../utils/logger.js";
+
+function buildSentryUserFromDecodedToken(
+  userId: string,
+  decodedToken: auth.DecodedIdToken,
+): SentryUser {
+  const email = decodedToken.email;
+
+  return {
+    id: userId,
+    ...(email !== undefined ? { email } : {}),
+  };
+}
+
+function buildSentryUserFromDbAndToken(params: {
+  userId: string;
+  tokenEmail: string | undefined;
+  dbEmail: string | null;
+  nickname: string | null;
+  fullName: string;
+}): SentryUser {
+  const { userId, tokenEmail, dbEmail, nickname, fullName } = params;
+
+  const email = tokenEmail ?? dbEmail;
+
+  const username = nickname ?? fullName;
+
+  return {
+    id: userId,
+    ...(email !== null ? { email } : {}),
+    username,
+  };
+}
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -61,12 +97,33 @@ export default fp(
           lastLogin: new Date(),
         };
 
+        Sentry.setUser(buildSentryUserFromDecodedToken(userId, decodedToken));
+
         // Ensure user exists and get the fresh DB record
         const { user: dbUser, isNew } =
           await fastify.dbRepositories.user.upsertUser(userId, currentUserInfo);
 
         // Attach DB user to request.user
         request.user = Object.assign(decodedToken, { db: dbUser });
+
+        Sentry.setUser(
+          buildSentryUserFromDbAndToken({
+            userId,
+            tokenEmail: decodedToken.email,
+            dbEmail: dbUser.email,
+            nickname: dbUser.nickname,
+            fullName: dbUser.fullName,
+          }),
+        );
+
+        Sentry.addBreadcrumb({
+          category: "auth",
+          message: isNew ? "New user signup" : "User authenticated",
+          data: {
+            userId,
+            provider: decodedToken.firebase.sign_in_provider,
+          },
+        });
 
         // Enrich request.log with userId for all subsequent logs in this request
         request.log = request.log.child({ userId });
@@ -87,7 +144,15 @@ export default fp(
                 `New user created: ${currentUserInfo.email} (${userId})`,
               );
             } catch (error) {
-              request.log.error(error);
+              captureAndLog(
+                fastify,
+                error,
+                "Failed to send signup Slack notification",
+                {
+                  level: "warning",
+                  tags: { operation: "slack-signup-notification" },
+                },
+              );
             }
           })();
         }

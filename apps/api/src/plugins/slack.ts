@@ -1,7 +1,7 @@
 import { WebClient } from "@slack/web-api";
 import fp from "fastify-plugin";
 
-import { getLogger } from "../utils/logger.js";
+import { captureAndLog, getLogger } from "../utils/logger.js";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -34,7 +34,10 @@ export default fp(
         });
         getLogger(fastify).info(`Slack message sent to ${channel}`);
       } catch (err) {
-        getLogger(fastify).error({ err }, "Failed to send Slack message:");
+        captureAndLog(fastify, err, "Failed to send Slack message", {
+          level: "warning",
+          tags: { operation: "slack-send-message" },
+        });
       }
     };
 

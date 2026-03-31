@@ -13,6 +13,8 @@ import {
 } from "@vagabond/shared-utils";
 import escapeHtml from "escape-html";
 
+import { captureAndLog } from "../../utils/logger.js";
+
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
     "/me",
@@ -152,9 +154,14 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
                 `📅 *Date:* ${new Date().toLocaleString("fr-FR")}`,
             );
           } catch (slackError) {
-            request.log.error(
+            captureAndLog(
+              fastify,
               slackError,
               "Failed to send app review Slack message",
+              {
+                level: "warning",
+                tags: { operation: "slack-app-review" },
+              },
             );
           }
         })();

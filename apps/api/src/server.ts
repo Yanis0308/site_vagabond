@@ -9,6 +9,7 @@ import closeWithGrace from "close-with-grace";
 import Fastify from "fastify";
 
 import { loggerConfig } from "./lib/logger.js";
+import { captureAndLog } from "./utils/logger.js";
 
 // Instantiate Fastify with shared logger config (Fastify 5 does not accept pre-instantiated logger)
 const app = Fastify({
@@ -39,8 +40,9 @@ app.register(import("./app.js"));
 // delay is the number of milliseconds for the graceful close to finish
 closeWithGrace({ delay: 500 }, async function ({ err }) {
   if (err !== undefined) {
-    app.log.error(err);
+    captureAndLog(app, err, "Server shutdown error");
   }
+  await Sentry.close(2000);
   await app.close();
 } as closeWithGrace.CloseWithGraceAsyncCallback);
 

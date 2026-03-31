@@ -6,7 +6,7 @@ import { randomUUID } from "crypto";
 import type { FastifyInstance } from "fastify";
 import { getDistance } from "geolib";
 
-import { getLogger } from "../utils/logger.js";
+import { captureAndLog, getLogger } from "../utils/logger.js";
 import { normalizeSearchText } from "../utils/text.js";
 import type { GoogleMapsScrapeResponse } from "./http/data-scraper-client.js";
 import type { JinaEnrichedResult } from "./jina-enrichment.service.js";
@@ -109,9 +109,17 @@ export class PoiEnrichmentService {
     ]);
 
     if (jinaSettled.status === "rejected") {
-      getLogger(this.fastify).warn(
-        { poiId, reason: jinaSettled.reason },
+      captureAndLog(
+        this.fastify,
+        jinaSettled.reason instanceof Error
+          ? jinaSettled.reason
+          : new Error(String(jinaSettled.reason)),
         "Jina enrichment failed (Promise rejected), using empty fallback",
+        {
+          level: "warning",
+          tags: { operation: "jina-enrichment" },
+          extra: { poiId },
+        },
       );
     }
 

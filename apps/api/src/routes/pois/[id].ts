@@ -2,6 +2,7 @@ import {
   type FastifyPluginCallbackTypebox,
   Type,
 } from "@fastify/type-provider-typebox";
+import * as Sentry from "@sentry/node";
 import { type PoiEnrichedWithData } from "@vagabond/database-client";
 import {
   ErrorResponseSchema,
@@ -11,6 +12,7 @@ import {
 } from "@vagabond/shared-utils";
 
 import { PoiEnrichmentService } from "../../services/poi-enrichment.service.js";
+import { captureAndLog } from "../../utils/logger.js";
 
 const serializePoiEnriched = (row: PoiEnrichedWithData): PoiEnrichedData => ({
   ...row.enrichedData,
@@ -107,6 +109,17 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           });
         }
 
+        Sentry.setContext("poi", {
+          poiId,
+          name: poi.name,
+          cityName: poi.cityName,
+        });
+        Sentry.addBreadcrumb({
+          category: "enrichment",
+          message: "POI lookup",
+          data: { poiId, name: poi.name },
+        });
+
         // 3. Get OSM tags for this POI (source of truth for filtering)
         const osmTags =
           await fastify.dbRepositories.poi.findOsmTagsByPoiId(poiId);
@@ -132,6 +145,17 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           osmTags,
         );
 
+        Sentry.addBreadcrumb({
+          category: "enrichment",
+          message: "Data sources processed",
+          data: {
+            poiId,
+            webContentCount: processingResults.jinaEnriched.webContent.length,
+            wikipediaContentCount:
+              processingResults.jinaEnriched.wikipediaContent.length,
+          },
+        });
+
         // 6. Log processing results for monitoring
         enrichmentService.logProcessingResults(poiId, processingResults);
 
@@ -151,6 +175,11 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         };
 
         // 9. Process Gemini LLM enrichment
+        Sentry.addBreadcrumb({
+          category: "enrichment",
+          message: "LLM enrichment started",
+          data: { poiId },
+        });
         let enrichedData: PoiEnriched | null = null;
 
         try {
@@ -167,20 +196,15 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             processingResults.batchId,
           );
         } catch (error) {
-          const errorMessage =
-            error instanceof Error ? error.message : String(error);
-          const errorStack = error instanceof Error ? error.stack : undefined;
-          const errorName = error instanceof Error ? error.name : typeof error;
-
-          request.log.warn(
-            {
-              errorMessage,
-              errorStack,
-              errorName,
-              errorString: String(error),
-              poiId,
-            },
+          captureAndLog(
+            fastify,
+            error,
             "Gemini LLM enrichment failed, falling back to basic extraction",
+            {
+              level: "warning",
+              tags: { operation: "llm-enrichment" },
+              extra: { poiId },
+            },
           );
         }
 
@@ -218,12 +242,20 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         }
 
         // 11. Return enriched data
+        Sentry.addBreadcrumb({
+          category: "enrichment",
+          message: "Enrichment saved",
+          data: { poiId },
+        });
         enrichmentOutcome = { enriched };
         return await reply.status(200).send({
           data: serializePoiEnriched(enriched),
         });
       } catch (error) {
-        request.log.error(error);
+        captureAndLog(fastify, error, "POI enrichment failed", {
+          tags: { operation: "poi-enrichment" },
+          extra: { poiId },
+        });
         const message = error instanceof Error ? error.message : String(error);
         enrichmentOutcome = { httpStatus: 500, message };
         return await reply.status(500).send({

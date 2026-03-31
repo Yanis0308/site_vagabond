@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import type { FastifyInstance } from "fastify";
 import ky, { type HTTPError, type KyInstance } from "ky";
 
@@ -34,6 +35,11 @@ export function createBaseClient(fastify: FastifyInstance): KyInstance {
             },
             "HTTP request failed",
           );
+          Sentry.setContext("http_client_error", {
+            status: response.status,
+            url: response.url,
+            bodyPreview: body.slice(0, 500),
+          });
 
           return error;
         },
