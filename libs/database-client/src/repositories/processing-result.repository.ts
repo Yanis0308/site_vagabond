@@ -72,7 +72,7 @@ export class ProcessingResultRepository {
   ): Promise<Array<typeof processingResults.$inferSelect>> {
     return await this.db.query.processingResults.findMany({
       where: eq(processingResults.targetId, targetId),
-      orderBy: (results, { desc }) => [desc(results.createdAt)],
+      orderBy: (results, { desc }) => [desc(results.updatedAt)],
     });
   }
 

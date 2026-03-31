@@ -144,6 +144,10 @@ export const visitedPois = pgTable(
       table.userId.asc().nullsLast().op("text_ops"),
       table.poiId.asc().nullsLast().op("text_ops"),
     ),
+    index("idx_visited_pois_poi_id").using(
+      "btree",
+      table.poiId.asc().nullsLast().op("text_ops"),
+    ),
     foreignKey({
       columns: [table.userId],
       foreignColumns: [users.userId],
@@ -172,6 +176,10 @@ export const poiData = pgTable(
     categories: jsonb("categories").$type<string[]>(),
   },
   (table) => [
+    index("idx_poi_data_poi_id").using(
+      "btree",
+      table.poiId.asc().nullsLast().op("text_ops"),
+    ),
     index("idx_poi_data_name_normalized").using(
       "btree",
       sql`normalize_search_text((name)::text)`,
@@ -299,6 +307,10 @@ export const poiBoundaries = pgTable(
       table.poiId.asc().nullsLast().op("text_ops"),
       table.boundaryId.asc().nullsLast().op("text_ops"),
     ),
+    index("idx_poi_boundaries_poi_id").using(
+      "btree",
+      table.poiId.asc().nullsLast().op("text_ops"),
+    ),
     // Index sur boundary_id seul : permet les lookups par zone sans scanner les 554K lignes
     // Ex: "combien de POIs dans cette zone ?" (sous-requête 2.1 / totalPoisSubquery dans findUserZoneStats)
     // L'index composite (poi_id, boundary_id) ne couvre pas ce cas car boundary_id n'est pas en tête
@@ -323,23 +335,36 @@ export const poiBoundaries = pgTable(
   ],
 );
 
-export const processingResults = pgTable("processing_results", {
-  id: serial().primaryKey().notNull(),
-  targetId: varchar("target_id", { length: 1000 }).notNull(),
-  status: processingStatusEnum().notNull(),
-  input: jsonb().notNull(),
-  output: jsonb(),
-  createdAt: created_at,
-  updatedAt: updated_at,
-  batchId: varchar("batch_id", { length: 1000 }),
-  type: varchar("type", { length: 100 }).notNull(),
-  version: integer().default(1).notNull(),
-  duration: integer(),
-  distance: integer(),
-  isValid: boolean("is_valid"),
-  cost: integer(),
-  metadata: jsonb("metadata"),
-});
+export const processingResults = pgTable(
+  "processing_results",
+  {
+    id: serial().primaryKey().notNull(),
+    targetId: varchar("target_id", { length: 1000 }).notNull(),
+    status: processingStatusEnum().notNull(),
+    input: jsonb().notNull(),
+    output: jsonb(),
+    createdAt: created_at,
+    updatedAt: updated_at,
+    batchId: varchar("batch_id", { length: 1000 }),
+    type: varchar("type", { length: 100 }).notNull(),
+    version: integer().default(1).notNull(),
+    duration: integer(),
+    distance: integer(),
+    isValid: boolean("is_valid"),
+    cost: integer(),
+    metadata: jsonb("metadata"),
+  },
+  (table) => [
+    index("idx_processing_results_target_id").using(
+      "btree",
+      table.targetId.asc().nullsLast().op("text_ops"),
+    ),
+    index("idx_processing_results_updated_at").using(
+      "btree",
+      table.updatedAt.desc().nullsLast().op("timestamp_ops"),
+    ),
+  ],
+);
 
 export const poiEnriched = pgTable(
   "poi_enriched",
