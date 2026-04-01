@@ -6,12 +6,6 @@ export default [
     rules: {
       "no-restricted-syntax": [
         "error",
-        // Inherited from root config
-        {
-          selector: "TaggedTemplateExpression[typeArguments]",
-          message:
-            "N'utilise pas sql<T>. Utilise .mapWith(Number), .mapWith(String), etc. à la place pour une conversion runtime.",
-        },
         // Prevent direct fastify.log usage — use getLogger(fastify) or request.log instead
         {
           selector:

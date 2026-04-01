@@ -1,10 +1,6 @@
-import {
-  type BriefVisitedPoi,
-  BriefVisitedPoiSchema,
-} from "@vagabond/shared-utils";
-import { and, count, eq, inArray, sql } from "drizzle-orm";
+import { type BriefVisitedPoi } from "@vagabond/shared-utils";
+import { and, count, countDistinct, eq, inArray, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
-import { Type } from "typebox";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import {
@@ -15,7 +11,7 @@ import {
   pois,
   visitedPois,
 } from "../schema.js";
-import { mapWithJsonSchema } from "../sqlMappers.js";
+import { mapWithNullableString } from "../sqlMappers.js";
 
 interface UserZoneStat {
   zone_id: string;
@@ -33,13 +29,13 @@ export class BoundaryRepository {
   constructor(private readonly db: DrizzleClient) {}
 
   /**
-   * Query numbering (see index comments in schema.ts):
-   * - Query 1: recursive CTE `relevant_zones` (zone IDs from visits + parents).
-   * - Query 2: main aggregated stats (`GROUP BY` boundary).
-   *   - Subquery 2.1: `totalPoisSubquery` — COUNT(DISTINCT poi_id) on poi_boundaries by boundary_id (idx_poi_boundaries_boundary_id).
-   *   - Subquery 2.2: `totalSubzonesSubquery` — direct child boundaries count.
-   *   - Subquery 2.3: `completedSubzonesSubquery` — completed subzones in relevantZoneIds.
-   *   - Subquery 2.4: scalar poi_data name — WHERE poi_id = … ORDER BY language DESC, id LIMIT 1 (idx_poi_data_poi_id_lang_id).
+   * Decomposes the query into 4 focused queries + TypeScript assembly:
+   * - Recursive CTE: relevant zone IDs
+   * - Query A: visited POIs with names & coords (raw SQL — PostGIS + scalar subquery)
+   * - Query B: total POIs per zone (Drizzle)
+   * - Query C: subzone counts total + completed (Drizzle + raw SQL for FILTER)
+   * - Query D: boundary info filtered by levels (Drizzle)
+   * Queries A–D run in parallel via Promise.all.
    */
   async findUserZoneStats(
     userId: string,
@@ -52,16 +48,16 @@ export class BoundaryRepository {
       "NEIGHBORHOOD",
     ],
   ): Promise<UserZoneStat[]> {
-    // Query 1: relevant zone IDs (recursive CTE; raw SQL — Drizzle has no native recursive CTE support yet)
-    const relevantZonesResult = await this.db.execute<{ zone_id: string }>(sql`
+    // Recursive CTE: relevant zone IDs (raw SQL — Drizzle has no recursive CTE support)
+    const relevantZonesResult = await this.db.execute(sql`
       WITH RECURSIVE relevant_zones AS (
         SELECT DISTINCT pb.boundary_id as zone_id
         FROM ${visitedPois} vp
         JOIN ${poiBoundaries} pb ON vp.poi_id = pb.poi_id
         WHERE vp.user_id = ${userId}
-        
+
         UNION
-        
+
         SELECT b.parent_id
         FROM relevant_zones rz
         JOIN ${boundaries} b ON rz.zone_id = b.id
@@ -70,122 +66,169 @@ export class BoundaryRepository {
       SELECT zone_id FROM relevant_zones
     `);
 
-    const relevantZoneIds = relevantZonesResult.rows.map((r) => r.zone_id);
+    const relevantZoneIds = (
+      relevantZonesResult.rows as Array<{ zone_id: string }>
+    ).map((r) => r.zone_id);
 
     if (relevantZoneIds.length === 0) {
       return [];
     }
 
-    // Query 2: stats for these zones (Drizzle). Subqueries 2.1–2.3 are correlated; 2.4 is inline in validated_pois.
-    // Subquery 2.1: total POIs per zone (COUNT DISTINCT poi_id WHERE boundary_id = outer boundary)
-    const totalPoisSubquery = this.db
-      .select({
-        count: sql`count(distinct ${poiBoundaries.poiId})`.mapWith(Number),
-      })
-      .from(poiBoundaries)
-      .where(eq(poiBoundaries.boundaryId, boundaries.id));
-
     const b2 = alias(boundaries, "b2");
-    // Subquery 2.2: count direct child boundaries
-    const totalSubzonesSubquery = this.db
-      .select({ count: count() })
-      .from(b2)
-      .where(eq(b2.parentId, boundaries.id));
 
-    const b3 = alias(boundaries, "b3");
-    // Subquery 2.3: child zones that appear in relevantZoneIds ("completed" subzones)
-    const completedSubzonesSubquery = this.db
-      .select({ count: count() })
-      .from(b3)
-      .where(
-        and(eq(b3.parentId, boundaries.id), inArray(b3.id, relevantZoneIds)),
-      );
-
-    // Main SELECT for Query 2 (aggregates + embedded subqueries 2.1–2.4)
-    const stats = await this.db
-      .select({
-        zone_id: boundaries.id,
-        name: sql`COALESCE(${boundaries.name}, 'Unknown')`.mapWith(String),
-        boundary_level: boundaries.boundaryLevel,
-        parent_id: boundaries.parentId,
-        validated_pois_count: sql`count(distinct ${visitedPois.poiId})`.mapWith(
-          Number,
-        ),
-        validated_pois: sql`
-          COALESCE(
-            jsonb_agg(
-              DISTINCT jsonb_strip_nulls(
-                jsonb_build_object(
-                  'id', ${visitedPois.id},
-                  'poiId', ${visitedPois.poiId},
-                  'name', (
-                    -- Subquery 2.4: best display name per POI (idx_poi_data_poi_id_lang_id)
-                    SELECT pd.name FROM ${poiData} pd 
-                    WHERE pd.poi_id = ${visitedPois.poiId} 
-                    ORDER BY pd.language DESC, pd.id LIMIT 1
-                  ),
-                  'coords', jsonb_build_object(
-                    'latitude', ST_Y(${pois.coords}::geometry),
-                    'longitude', ST_X(${pois.coords}::geometry)
-                  ),
-                  'createdAt', ${visitedPois.createdAt},
-                  'comment', ${visitedPois.comment},
-                  'rating', ${visitedPois.rating},
-                  'imageKey', ${visitedPois.imageKey}
-                )
-              )
-            ) FILTER (WHERE ${visitedPois.id} IS NOT NULL),
-            '[]'::jsonb
-          ) 
-        `.mapWith(
-          mapWithJsonSchema(
-            Type.Array(BriefVisitedPoiSchema, {
-              $id: "ValidatedPoisArray",
-            }),
+    // Run queries A, B, C, D in parallel
+    const [visitedPoisRows, boundaryInfoRows, totalPoisRows, subzonesRows] =
+      await Promise.all([
+        // Query A: visited POIs with names, coords, and boundary associations
+        this.db
+          .select({
+            id: visitedPois.id,
+            poiId: visitedPois.poiId,
+            createdAt: visitedPois.createdAt,
+            comment: visitedPois.comment,
+            rating: visitedPois.rating,
+            imageKey: visitedPois.imageKey,
+            latitude: sql`ST_Y(${pois.coords}::geometry)`.mapWith(Number),
+            longitude: sql`ST_X(${pois.coords}::geometry)`.mapWith(Number),
+            boundaryId: poiBoundaries.boundaryId,
+            name: sql`(
+              SELECT pd.name FROM ${poiData} pd
+              WHERE pd.poi_id = ${visitedPois.poiId}
+              ORDER BY pd.language DESC, pd.id LIMIT 1
+            )`.mapWith(mapWithNullableString),
+          })
+          .from(visitedPois)
+          .innerJoin(poiBoundaries, eq(poiBoundaries.poiId, visitedPois.poiId))
+          .innerJoin(pois, eq(pois.id, visitedPois.poiId))
+          .where(
+            and(
+              eq(visitedPois.userId, userId),
+              inArray(poiBoundaries.boundaryId, relevantZoneIds),
+            ),
           ),
-        ),
-        total_pois_count: sql`COALESCE((${totalPoisSubquery}), 0)`.mapWith(
-          Number,
-        ),
-        total_subzones_count:
-          sql`COALESCE((${totalSubzonesSubquery}), 0)`.mapWith(Number),
-        completed_subzones_count:
-          sql`COALESCE((${completedSubzonesSubquery}), 0)`.mapWith(Number),
-      })
-      .from(boundaries)
-      .leftJoin(poiBoundaries, eq(boundaries.id, poiBoundaries.boundaryId))
-      .leftJoin(
-        visitedPois,
-        and(
-          eq(poiBoundaries.poiId, visitedPois.poiId),
-          eq(visitedPois.userId, userId),
-        ),
-      )
-      .leftJoin(pois, eq(visitedPois.poiId, pois.id))
-      .where(
-        and(
-          inArray(boundaries.id, relevantZoneIds),
-          inArray(boundaries.boundaryLevel, boundaryLevels),
-        ),
-      )
-      .groupBy(
-        boundaries.id,
-        boundaries.name,
-        boundaries.boundaryLevel,
-        boundaries.parentId,
-      )
-      .orderBy(
-        sql`
-        CASE ${boundaries.boundaryLevel}
-          WHEN 'COUNTRY' THEN 1
-          WHEN 'REGION' THEN 2  
-          WHEN 'COUNTY' THEN 3
-          WHEN 'CITY' THEN 4
-          WHEN 'DISTRICT' THEN 5
-          WHEN 'NEIGHBORHOOD' THEN 6
-        END`,
-        boundaries.name,
-      );
+
+        // Query D: boundary info filtered by levels (Drizzle)
+        this.db
+          .select({
+            id: boundaries.id,
+            name: sql`COALESCE(${boundaries.name}, 'Unknown')`.mapWith(String),
+            boundary_level: boundaries.boundaryLevel,
+            parent_id: boundaries.parentId,
+          })
+          .from(boundaries)
+          .where(
+            and(
+              inArray(boundaries.id, relevantZoneIds),
+              inArray(boundaries.boundaryLevel, boundaryLevels),
+            ),
+          ),
+
+        // Query B: total POIs count per zone (Drizzle)
+        this.db
+          .select({
+            boundaryId: poiBoundaries.boundaryId,
+            totalPois: countDistinct(poiBoundaries.poiId).mapWith(Number),
+          })
+          .from(poiBoundaries)
+          .where(inArray(poiBoundaries.boundaryId, relevantZoneIds))
+          .groupBy(poiBoundaries.boundaryId),
+
+        // Query C: subzone counts — total + completed (Drizzle + raw SQL for FILTER)
+        this.db
+          .select({
+            parentId: b2.parentId,
+            totalSubzones: count().mapWith(Number),
+            completedSubzones:
+              sql`COUNT(*) FILTER (WHERE ${inArray(b2.id, relevantZoneIds)})`.mapWith(
+                Number,
+              ),
+          })
+          .from(b2)
+          .where(inArray(b2.parentId, relevantZoneIds))
+          .groupBy(b2.parentId),
+      ]);
+
+    // Build lookup maps for O(n) assembly
+    const totalPoisMap = new Map<string, number>();
+    for (const row of totalPoisRows) {
+      totalPoisMap.set(row.boundaryId, row.totalPois);
+    }
+
+    const subzonesMap = new Map<string, { total: number; completed: number }>();
+    for (const row of subzonesRows) {
+      if (row.parentId !== null) {
+        subzonesMap.set(row.parentId, {
+          total: row.totalSubzones,
+          completed: row.completedSubzones,
+        });
+      }
+    }
+
+    // Group visited POIs by boundary, deduplicating by visited_poi id
+    const poisByBoundary = new Map<string, Map<number, BriefVisitedPoi>>();
+    for (const row of visitedPoisRows) {
+      let boundaryPois = poisByBoundary.get(row.boundaryId);
+      if (boundaryPois === undefined) {
+        boundaryPois = new Map<number, BriefVisitedPoi>();
+        poisByBoundary.set(row.boundaryId, boundaryPois);
+      }
+      if (!boundaryPois.has(row.id)) {
+        const poi: BriefVisitedPoi = {
+          id: row.id,
+          poiId: row.poiId,
+          coords: {
+            latitude: row.latitude,
+            longitude: row.longitude,
+          },
+          createdAt: row.createdAt.toISOString(),
+          comment: row.comment,
+          rating: row.rating,
+          imageKey: row.imageKey,
+        };
+        if (row.name !== null) {
+          poi.name = row.name;
+        }
+        boundaryPois.set(row.id, poi);
+      }
+    }
+
+    // Assemble results from boundary info + lookup maps
+    const levelOrder: Record<string, number> = {
+      COUNTRY: 1,
+      REGION: 2,
+      COUNTY: 3,
+      CITY: 4,
+      DISTRICT: 5,
+      NEIGHBORHOOD: 6,
+    };
+
+    const stats: UserZoneStat[] = boundaryInfoRows.map((b) => {
+      const bPois = poisByBoundary.get(b.id);
+      const validatedPois =
+        bPois !== undefined ? Array.from(bPois.values()) : [];
+      const subzones = subzonesMap.get(b.id);
+
+      return {
+        zone_id: b.id,
+        name: b.name,
+        boundary_level: b.boundary_level,
+        parent_id: b.parent_id,
+        validated_pois_count: validatedPois.length,
+        validated_pois: validatedPois,
+        total_pois_count: totalPoisMap.get(b.id) ?? 0,
+        total_subzones_count: subzones?.total ?? 0,
+        completed_subzones_count: subzones?.completed ?? 0,
+      };
+    });
+
+    // Sort by boundary level then name (same order as the original query)
+    stats.sort((a, b) => {
+      const levelDiff =
+        (levelOrder[a.boundary_level] ?? 99) -
+        (levelOrder[b.boundary_level] ?? 99);
+      if (levelDiff !== 0) return levelDiff;
+      return a.name.localeCompare(b.name);
+    });
 
     return stats;
   }

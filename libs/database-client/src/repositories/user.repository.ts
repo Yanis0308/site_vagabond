@@ -1,5 +1,14 @@
 import { getUserDisplayName, logger } from "@vagabond/shared-utils";
-import { and, countDistinct, desc, eq, gte, max } from "drizzle-orm";
+import {
+  and,
+  countDistinct,
+  desc,
+  eq,
+  exists,
+  gte,
+  max,
+  sql,
+} from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import { appReview, poiBoundaries, users, visitedPois } from "../schema.js";
@@ -68,7 +77,14 @@ export class UserRepository {
             : undefined,
         ),
       )
-      .innerJoin(poiBoundaries, eq(visitedPois.poiId, poiBoundaries.poiId))
+      .where(
+        exists(
+          this.db
+            .select({ one: sql`1` })
+            .from(poiBoundaries)
+            .where(eq(poiBoundaries.poiId, visitedPois.poiId)),
+        ),
+      )
       .groupBy(users.userId)
       .orderBy(desc(countDistinct(visitedPois.poiId)));
 

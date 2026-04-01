@@ -91,7 +91,13 @@ export default tseslint.config(
         {
           selector: "TaggedTemplateExpression[typeArguments]",
           message:
-            "N'utilise pas sql<T>. Utilise .mapWith(Number), .mapWith(String), etc. à la place pour une conversion runtime.",
+            "N'utilise pas sql<T>. Utilise .mapWith(Number), .mapWith(String), ou mapWithJsonSchema() à la place pour une conversion runtime.",
+        },
+        {
+          selector:
+            "CallExpression[typeArguments][callee.property.name='execute']",
+          message:
+            "N'utilise pas db.execute<T>(). Utilise db.execute() et type les résultats via une assertion explicite.",
         },
       ],
       "@typescript-eslint/no-deprecated": "warn",

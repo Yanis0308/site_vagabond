@@ -1,0 +1,1 @@
+CREATE INDEX "idx_processing_results_url_lookup" ON "processing_results" USING btree ((input->>'url'),"type","version","status");

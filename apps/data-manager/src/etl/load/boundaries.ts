@@ -73,10 +73,11 @@ export async function loadBoundariesConsolidated(
         typeof item.admin_centre_latitude === "number"
       ) {
         // Utiliser les données de l'admin_centre
-        const pointResult = await db.execute<{ point: string }>(
+        const pointResult = await db.execute(
           sql`SELECT ST_AsGeoJSON(ST_SetSRID(ST_MakePoint(${item.admin_centre_longitude}, ${item.admin_centre_latitude}), 4326)) as point`,
         );
-        displayPoint = pointResult.rows[0]?.point ?? null;
+        displayPoint =
+          (pointResult.rows[0] as { point: string } | undefined)?.point ?? null;
         population = item.admin_centre_population ?? null;
         isCapital = item.admin_centre_is_capital ?? false;
         importanceScore = item.admin_centre_importance_score ?? 0.5;
@@ -86,10 +87,11 @@ export async function loadBoundariesConsolidated(
         );
       } else {
         // Pas d'admin_centre, utiliser le centroïde calculé dans l'étape Transform
-        const pointResult = await db.execute<{ point: string }>(
+        const pointResult = await db.execute(
           sql`SELECT ST_AsGeoJSON(ST_SetSRID(ST_MakePoint(${item.display_point_lon}, ${item.display_point_lat}), 4326)) as point`,
         );
-        displayPoint = pointResult.rows[0]?.point ?? null;
+        displayPoint =
+          (pointResult.rows[0] as { point: string } | undefined)?.point ?? null;
 
         // Importance par défaut basée sur l'admin_level
         importanceScore =
