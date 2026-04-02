@@ -78,7 +78,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     slug: "mobile-app", // For Expo EAS project
     owner: "vagabond-app", // Expo account name
     version: "1.0.0",
-    runtimeVersion: "1.0.0", // For Expo OTA updates
+    runtimeVersion: "1.1.0", // For Expo OTA updates
     updates: {
       fallbackToCacheTimeout: 30000,
       url: parsedConfig.data.eas.updatesUrl,
