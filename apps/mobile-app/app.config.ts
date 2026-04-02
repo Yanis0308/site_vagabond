@@ -187,8 +187,8 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       "./custom.plugin.js",
     ],
     locales: {
-      en: "./assets/locales/en.json",
-      fr: "./assets/locales/fr.json",
+      en: { ios: "./assets/locales/en.json" },
+      fr: { ios: "./assets/locales/fr.json" },
     },
     experiments: {
       typedRoutes: true,
