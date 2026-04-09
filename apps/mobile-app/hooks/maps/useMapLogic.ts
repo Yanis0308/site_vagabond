@@ -1,6 +1,7 @@
 import { type MapState, type MapView } from "@rnmapbox/maps";
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
+import { useThrottler } from "@tanstack/react-pacer";
 import { type PoiFilterLevelEnum } from "@vagabond/shared-utils";
 import { type Feature, type Geometry } from "geojson";
 import { getDistance } from "geolib";
@@ -29,9 +30,15 @@ export interface OnPressEventPoi extends OnPressEvent {
   >;
 }
 
+interface MapCenter {
+  longitude: number;
+  latitude: number;
+}
+
 interface UseMapLogicReturn {
   // Data
   simplifiedLocation: UserLocationReturn["simplifiedLocation"] | null;
+  mapCenter: MapCenter | null;
 
   // Realtime states
   headingRealtime: number;
@@ -63,6 +70,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
   const [headingRealtime, setHeadingRealtime] = useState(0);
   const [zoomRealtime, setZoomRealtime] = useState<number | null>(null);
   const [isCentered, setIsCentered] = useState(true);
+  const [mapCenter, setMapCenter] = useState<MapCenter | null>(null);
 
   const mapRef = useRef<MapView>(null);
   const cameraRef = useRef<CameraRef>(null);
@@ -134,20 +142,36 @@ export const useMapLogic = (): UseMapLogicReturn => {
   }, [simplifiedLocation, moveToUserLocation]);
 
   // Gestion des événements de la carte
+  const cameraChangedDebouncer = useThrottler(
+    (mapState: MapState): void => {
+      const { center, heading } = mapState.properties;
+      setHeadingRealtime(heading);
+      setZoomRealtime(mapState.properties.zoom);
+      setMapCenter({ longitude: center[0] ?? 0, latitude: center[1] ?? 0 });
+      if (simplifiedLocation !== null) {
+        const distance = getDistance(
+          { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
+          {
+            latitude: simplifiedLocation.latitude,
+            longitude: simplifiedLocation.longitude,
+          },
+        );
+        setIsCentered(distance < 20); // 20 meters of tolerance
+      }
+    },
+    { wait: 50 },
+  );
+
+  // Annuler tout callback en attente au démontage pour éviter des setState
+  // sur un composant démonté (memory leak / warnings React)
+  useEffect((): (() => void) => {
+    return () => {
+      cameraChangedDebouncer.cancel();
+    };
+  }, [cameraChangedDebouncer]);
+
   const onCameraChanged = (mapState: MapState): void => {
-    const { center, heading } = mapState.properties;
-    setHeadingRealtime(heading);
-    setZoomRealtime(mapState.properties.zoom);
-    if (simplifiedLocation !== null) {
-      const distance = getDistance(
-        { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
-        {
-          latitude: simplifiedLocation.latitude,
-          longitude: simplifiedLocation.longitude,
-        },
-      );
-      setIsCentered(distance < 20); // 20 meters of tolerance
-    }
+    cameraChangedDebouncer.maybeExecute(mapState);
   };
 
   const onPress = (event: OnPressEventPoi): void => {
@@ -194,6 +218,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
   return {
     // Data
     simplifiedLocation,
+    mapCenter,
 
     // Realtime states
     headingRealtime,

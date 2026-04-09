@@ -11,11 +11,13 @@ import { AppReviewModal } from "@/components/app-review/AppReviewModal";
 import { CustomMapView } from "@/components/custom-ui/CustomMapView";
 import { MapButtons } from "@/components/custom-ui/MapButtons";
 import { MapDebugInfo } from "@/components/custom-ui/MapDebugInfo";
+import { MapLocationInfo } from "@/components/custom-ui/MapLocationInfo";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { PlaceDetailsSheet } from "@/components/place-details/PlaceDetailsSheet";
 import { SearchHeaderButton } from "@/components/SearchHeaderButton";
 import { Box } from "@/components/ui/box";
 import { useMapLogic } from "@/hooks/maps/useMapLogic";
+import { useMapZoneInfo } from "@/hooks/maps/useMapZoneInfo";
 import { useAppReviewModal } from "@/hooks/other/useAppReviewModal";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { mapService } from "@/services/MapService";
@@ -38,7 +40,14 @@ export default function MapsTab(): ReactElement {
     zoomRealtime,
     isCentered,
     moveToPlace,
+    mapCenter,
   } = useMapLogic();
+
+  const zoneName = useMapZoneInfo({
+    mapView: mapRef.current,
+    mapCenter,
+    zoom: zoomRealtime,
+  });
 
   const { selectedPlace, setSelectedPlace } = usePlaceSelection();
   const currentPhoto = useAtomValue(currentPhotoAtom);
@@ -227,6 +236,7 @@ export default function MapsTab(): ReactElement {
         />
 
         <MapDebugInfo zoom={zoomRealtime ?? 0} />
+        <MapLocationInfo zoneName={zoneName} />
 
         <PlaceDetailsSheet
           place={selectedPlace}

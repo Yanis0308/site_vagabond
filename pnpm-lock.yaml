@@ -255,10 +255,10 @@ importers:
         version: 7.14.1
       '@vagabond/api-utils':
         specifier: workspace:*
-        version: link:../../libs/api-utils
+        version: file:libs/api-utils(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(postgres@3.4.8)
       '@vagabond/database-client':
         specifier: workspace:*
-        version: file:libs/database-client(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0)(postgres@3.4.8)
+        version: link:../../libs/database-client
       '@vagabond/shared-utils':
         specifier: workspace:*
         version: link:../../libs/shared-utils
@@ -22260,10 +22260,86 @@ snapshots:
       - sql.js
       - sqlite3
 
+  '@vagabond/api-utils@file:libs/api-utils(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(postgres@3.4.8)':
+    dependencies:
+      '@fastify/compress': 8.3.1
+      '@fastify/sensible': 6.0.4
+      '@vagabond/database-client': file:libs/database-client(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(postgres@3.4.8)
+      '@vagabond/shared-utils': file:libs/shared-utils
+      fastify: 5.7.4(patch_hash=73cf5bf49e4f95e5e0234d8b8ecdf88338d7b9f8bfbfed8e66361be14b19e1ae)
+      fastify-plugin: 5.1.0
+      zod: 3.25.76
+    transitivePeerDependencies:
+      - '@aws-sdk/client-rds-data'
+      - '@cloudflare/workers-types'
+      - '@electric-sql/pglite'
+      - '@libsql/client'
+      - '@libsql/client-wasm'
+      - '@neondatabase/serverless'
+      - '@op-engineering/op-sqlite'
+      - '@opentelemetry/api'
+      - '@planetscale/database'
+      - '@prisma/client'
+      - '@tidbcloud/serverless'
+      - '@types/better-sqlite3'
+      - '@types/pg'
+      - '@types/sql.js'
+      - '@upstash/redis'
+      - '@vercel/postgres'
+      - '@xata.io/client'
+      - better-sqlite3
+      - bun-types
+      - expo-sqlite
+      - gel
+      - knex
+      - kysely
+      - mysql2
+      - pg-native
+      - postgres
+      - prisma
+      - sql.js
+      - sqlite3
+
   '@vagabond/database-client@file:libs/database-client':
     dependencies:
       '@vagabond/shared-utils': file:libs/shared-utils
       drizzle-orm: 0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0)(pg@8.18.0)(postgres@3.4.8)
+      pg: 8.18.0
+    transitivePeerDependencies:
+      - '@aws-sdk/client-rds-data'
+      - '@cloudflare/workers-types'
+      - '@electric-sql/pglite'
+      - '@libsql/client'
+      - '@libsql/client-wasm'
+      - '@neondatabase/serverless'
+      - '@op-engineering/op-sqlite'
+      - '@opentelemetry/api'
+      - '@planetscale/database'
+      - '@prisma/client'
+      - '@tidbcloud/serverless'
+      - '@types/better-sqlite3'
+      - '@types/pg'
+      - '@types/sql.js'
+      - '@upstash/redis'
+      - '@vercel/postgres'
+      - '@xata.io/client'
+      - better-sqlite3
+      - bun-types
+      - expo-sqlite
+      - gel
+      - knex
+      - kysely
+      - mysql2
+      - pg-native
+      - postgres
+      - prisma
+      - sql.js
+      - sqlite3
+
+  '@vagabond/database-client@file:libs/database-client(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(postgres@3.4.8)':
+    dependencies:
+      '@vagabond/shared-utils': file:libs/shared-utils
+      drizzle-orm: 0.45.1(@opentelemetry/api@1.9.0)(@types/pg@8.16.0)(knex@3.1.0(pg@8.18.0))(pg@8.18.0)(postgres@3.4.8)
       pg: 8.18.0
     transitivePeerDependencies:
       - '@aws-sdk/client-rds-data'

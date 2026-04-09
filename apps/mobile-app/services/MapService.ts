@@ -45,7 +45,10 @@ class MapService {
   }
 
   triggerMoveToPlace(): void {
-    if (this.moveToPlace === null || this.pendingMove === null) {
+    if (this.pendingMove === null) {
+      return;
+    }
+    if (this.moveToPlace === null) {
       logger("moveToPlace is not registered");
       return;
     }
