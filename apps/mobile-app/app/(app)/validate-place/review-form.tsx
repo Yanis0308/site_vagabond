@@ -1,14 +1,7 @@
 import { usePreventRemove } from "@react-navigation/native";
-import { useIsMutating, useQueryClient } from "@tanstack/react-query";
-import { useFocusEffect, useNavigation, useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
-import React, {
-  type ReactElement,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { type ReactElement, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -16,11 +9,10 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { ReviewStep } from "@/components/validate-place";
-import {
-  UPLOAD_FILE_MUTATION_KEY,
-  useUploadFileMutation,
-} from "@/hooks/mutations/useUploadFileMutation";
+import { queryClient } from "@/constants/QueryClient";
+import { useBackgroundPhotoUpload } from "@/hooks/mutations/useBackgroundPhotoUpload";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
+import { queuePhotoForUpload } from "@/services/photoStorage";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { shouldShowAppReviewAtom } from "@/stores/shouldShowAppReviewAtom";
@@ -32,18 +24,10 @@ export default function ReviewForm(): ReactElement | null {
   const currentPhoto = useAtomValue(currentPhotoAtom);
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
   const setShouldShowAppReview = useSetAtom(shouldShowAppReviewAtom);
-  const queryClient = useQueryClient();
-  const [fileId, setFileId] = useState<string | null>(null);
   const navigation = useNavigation();
   const router = useRouter();
-  const uploadFileMutation = useUploadFileMutation();
-  const isMutating = useIsMutating({
-    mutationKey: UPLOAD_FILE_MUTATION_KEY,
-  });
-  const isUploading = isMutating > 0;
-  const [uploadError, setUploadError] = useState(false);
+  const { mutate: uploadPhotoInBackground } = useBackgroundPhotoUpload();
   const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
-  const uploadAttemptedRef = useRef(false);
   const dismissTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -55,83 +39,27 @@ export default function ReviewForm(): ReactElement | null {
     };
   }, [setDisplayingLoader]);
 
-  const uploadPhoto = useCallback(async (): Promise<void> => {
-    if (currentPhoto === null || fileId !== null) return;
+  const handleValidated = async (visitedPoiId: number): Promise<void> => {
+    logger(`[ReviewForm] Validated with visitedPoiId: ${visitedPoiId}`);
 
-    try {
-      logger("Starting photo upload...");
-
-      const result = await uploadFileMutation.mutateAsync({
-        uri: currentPhoto.imageUri,
-        fileName: `photo_${Date.now()}.jpg`,
-        mimeType: "image/jpeg",
-      });
-
-      logger("Upload complete, fileId:", result.key);
-      setFileId(result.key);
-      uploadAttemptedRef.current = false;
-    } catch (error) {
-      logger("Error uploading photo:", error);
-      setUploadError(true);
-      uploadAttemptedRef.current = false;
-      Alert.alert(
-        t("review_form.upload_error_title"),
-        t("review_form.upload_error_message"),
-        [
-          {
-            text: t("review_form.upload_error_retake"),
-            style: "cancel",
-            onPress: (): void => {
-              setCurrentPhoto(null);
-              setUploadError(false);
-              navigation.goBack();
-            },
-          },
-          {
-            text: t("review_form.upload_error_retry"),
-            onPress: (): void => {
-              setUploadError(false);
-              void uploadPhoto();
-            },
-          },
-        ],
-      );
-    }
-  }, [
-    currentPhoto,
-    fileId,
-    uploadFileMutation,
-    t,
-    setCurrentPhoto,
-    navigation,
-  ]);
-
-  // Upload photo when screen gains focus with a photo to upload (event: user navigated here)
-  useFocusEffect(
-    useCallback(() => {
-      if (
-        currentPhoto !== null &&
-        fileId === null &&
-        !isUploading &&
-        !uploadError &&
-        !uploadAttemptedRef.current
-      ) {
-        uploadAttemptedRef.current = true;
-        void uploadPhoto();
+    if (currentPhoto?.localPath !== undefined) {
+      try {
+        const queuedUri = queuePhotoForUpload(
+          currentPhoto.localPath,
+          visitedPoiId,
+        );
+        uploadPhotoInBackground({ localUri: queuedUri, visitedPoiId });
+      } catch (error) {
+        logger("[ReviewForm] Failed to rename/start upload:", error);
       }
-    }, [currentPhoto, fileId, isUploading, uploadError, uploadPhoto]),
-  );
+    }
 
-  const handleReviewFormEnd = (): void => {
-    // Explicitly wait for the user-visited-pois refetch to complete before
-    // setting the flag, so useAppReviewModal always evaluates with fresh data.
-    void queryClient
+    await queryClient
       .refetchQueries({ queryKey: ["user-visited-pois"] })
       .then(() => {
         setShouldShowAppReview(true);
       });
     setCurrentPhoto(null);
-    // Small delay to ensure usePreventRemove is properly disabled
     dismissTimeoutRef.current = setTimeout(() => {
       dismissTimeoutRef.current = null;
       router.dismissAll();
@@ -139,7 +67,6 @@ export default function ReviewForm(): ReactElement | null {
   };
 
   usePreventRemove(currentPhoto !== null, ({ data }) => {
-    // Prompt the user before leaving the screen
     Alert.alert(
       t("review_form.prevent_remove_title"),
       t("review_form.prevent_remove_message"),
@@ -184,9 +111,7 @@ export default function ReviewForm(): ReactElement | null {
           place={selectedPlace}
           capturedImage={currentPhoto.imageUri}
           imageSource={currentPhoto.imageSource}
-          imageKey={fileId}
-          isUploading={isUploading}
-          setReviewFormEnded={handleReviewFormEnd}
+          onValidated={(id) => void handleValidated(id)}
         />
       </KeyboardAwareScrollView>
     </CustomScreenContainer>

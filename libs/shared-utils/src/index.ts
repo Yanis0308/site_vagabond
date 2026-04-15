@@ -71,8 +71,10 @@ export {
 export {
   type BriefVisitedPoi,
   BriefVisitedPoiSchema,
+  CheckVisitedPoiImageResponseSchema,
   type CreateVisitedPoiRequest,
   CreateVisitedPoiRequestSchema,
+  CreateVisitedPoiResponseSchema,
   GetVisitedPoisResponseSchema,
   type ImageSource,
   ImageSourceSchema,

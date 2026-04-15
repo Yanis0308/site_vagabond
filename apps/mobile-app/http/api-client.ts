@@ -1,8 +1,8 @@
-import { getAuth, getIdToken } from "@react-native-firebase/auth";
 import { type KyInstance } from "ky";
 
 import { config } from "@/constants/Config";
 
+import { getFirebaseIdToken, hasAuthenticatedUser } from "./firebase-auth";
 import { httpClient } from "./http-client";
 
 // Client HTTP pour notre API avec authentification Firebase
@@ -19,23 +19,20 @@ export const apiClient: KyInstance = httpClient.extend({
         if (retryCount > 0) {
           return;
         }
-        const currentUser = getAuth().currentUser;
-        if (currentUser === null) {
+        if (!hasAuthenticatedUser()) {
           return;
         }
-        // Ajouter le token d'authentification Firebase
-        const idToken = await getIdToken(currentUser);
+        const idToken = await getFirebaseIdToken(false);
         request.headers.set("Authorization", `Bearer ${idToken}`);
       },
     ],
     beforeRetry: [
       async ({ request }): Promise<void> => {
-        const currentUser = getAuth().currentUser;
-        if (currentUser === null) {
+        if (!hasAuthenticatedUser()) {
           return;
         }
         // Forcer le refresh du token Firebase sur 401
-        const freshToken = await getIdToken(currentUser, true);
+        const freshToken = await getFirebaseIdToken(true);
         request.headers.set("Authorization", `Bearer ${freshToken}`);
       },
     ],

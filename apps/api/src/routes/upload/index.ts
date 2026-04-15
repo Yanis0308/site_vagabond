@@ -1,6 +1,12 @@
 import { Upload } from "@aws-sdk/lib-storage";
-import { type FastifyPluginCallbackTypebox } from "@fastify/type-provider-typebox";
-import { UploadFileResponseSchema } from "@vagabond/shared-utils";
+import {
+  type FastifyPluginCallbackTypebox,
+  Type,
+} from "@fastify/type-provider-typebox";
+import {
+  ErrorResponseSchema,
+  UploadFileResponseSchema,
+} from "@vagabond/shared-utils";
 import crypto from "crypto";
 import sharp from "sharp";
 
@@ -15,12 +21,17 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         tags: ["upload"],
         security: [{ bearerAuth: [] }],
         consumes: ["multipart/form-data"],
+        querystring: Type.Object({
+          visitedPoiId: Type.Optional(Type.Number()),
+        }),
         response: {
           200: UploadFileResponseSchema,
+          404: ErrorResponseSchema,
         },
       },
     },
     async function (request, reply) {
+      const { visitedPoiId } = request.query;
       const data = await request.file();
 
       if (data === undefined) {
@@ -37,16 +48,36 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         throw new Error("File too large. Maximum size is 10MB.");
       }
 
-      // Remove all exif metadata but keep image orientation
-      const editedBuffer = await sharp(fileBuffer).autoOrient().toBuffer();
+      // Verify ownership before uploading to avoid orphaned S3 objects
+      if (visitedPoiId !== undefined) {
+        const visitedPoi =
+          await fastify.dbRepositories.visitedPoi.findByIdAndUser(
+            visitedPoiId,
+            request.user.uid,
+          );
 
-      const hash = crypto
-        .createHash("sha256")
-        .update(editedBuffer)
-        .digest("hex");
+        if (visitedPoi === undefined) {
+          return await reply.status(404).send({
+            error: {
+              type: "NOT_FOUND",
+              message:
+                "Visited POI not found or does not belong to current user",
+            },
+          });
+        }
+      }
 
-      const extension = data.filename.split(".").pop();
-      const key = `${request.user.uid}-${hash}.${extension}`;
+      // Remove EXIF metadata, keep orientation, always output JPEG.
+      const editedBuffer = await sharp(fileBuffer)
+        .autoOrient()
+        .jpeg()
+        .toBuffer();
+
+      // visitedPoiId → deterministic key; otherwise SHA-256 of buffer to avoid collisions.
+      const key =
+        visitedPoiId !== undefined
+          ? `${request.user.uid}-${visitedPoiId}.jpg`
+          : `${request.user.uid}-${crypto.createHash("sha256").update(editedBuffer).digest("hex")}.jpg`;
 
       const upload = new Upload({
         client: fastify.s3,
@@ -54,15 +85,27 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           Bucket: fastify.config.s3.bucketName,
           Key: key,
           Body: editedBuffer,
-          ContentType: data.mimetype,
+          ContentType: "image/jpeg",
         },
       });
 
       const uploadResult = await upload.done();
 
+      if (uploadResult.Key === undefined) {
+        throw new Error("Upload failed: missing storage key.");
+      }
+      const finalKey = uploadResult.Key;
+
+      if (visitedPoiId !== undefined) {
+        await fastify.dbRepositories.visitedPoi.updateImageKey(
+          visitedPoiId,
+          finalKey,
+        );
+      }
+
       return await reply.status(200).send({
         data: {
-          key: uploadResult.Key ?? "",
+          key: finalKey,
           url: uploadResult.Location ?? "",
         },
       });

@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import { type ReactElement } from "react";
 
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
+import { useStartupPhotoRecovery } from "@/hooks/other/useStartupPhotoRecovery";
 import { useUserLocationTracking } from "@/hooks/other/useUserLocationTracking";
 import { useUserLocationWatcher } from "@/hooks/other/useUserLocationWatcher";
 
@@ -10,6 +11,8 @@ export default function RootLayout(): ReactElement | null {
   useUserLocationWatcher();
   // Sauvegarder automatiquement la position de l'utilisateur
   useUserLocationTracking();
+  // Re-upload any photos that failed during a previous session
+  useStartupPhotoRecovery();
 
   return (
     <Stack screenOptions={defaultScreenOptions}>

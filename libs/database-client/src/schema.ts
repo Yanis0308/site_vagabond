@@ -134,7 +134,7 @@ export const visitedPois = pgTable(
     poiId: varchar("poi_id", { length: 1000 }).notNull(),
     userId: varchar("user_id", { length: 1000 }).notNull(),
     comment: varchar({ length: 10000 }).notNull(),
-    imageKey: varchar("image_key", { length: 1000 }).notNull(),
+    imageKey: varchar("image_key", { length: 1000 }),
     imageSource: imageSourceEnum("image_source").default("CAMERA").notNull(),
     rating: integer().notNull(),
   },

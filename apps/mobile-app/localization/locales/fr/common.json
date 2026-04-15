@@ -58,6 +58,10 @@
     "error": "Le pseudo doit contenir entre 1 et 50 caractères",
     "format_hint": "Lettres, chiffres, tirets bas, tirets et points uniquement."
   },
+  "upload_progress": {
+    "uploading": "Envoi en cours...",
+    "success": "Photo envoyée !"
+  },
   "app_review": {
     "initial": {
       "title": "Tu aimes l'application ? 🧡",

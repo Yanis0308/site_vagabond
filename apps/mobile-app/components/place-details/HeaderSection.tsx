@@ -4,7 +4,8 @@ import { type ReactElement } from "react";
 import Animated from "react-native-reanimated";
 
 import { Center } from "@/components/ui/center";
-import { config } from "@/constants/Config";
+import { useUsersMe } from "@/hooks/queries/useUsersMe";
+import { resolveVisitedPoiImageUrl } from "@/services/photoStorage";
 import { localImages } from "@/utils/localImages";
 
 import { CustomImage } from "../custom-ui/CustomImage";
@@ -26,6 +27,7 @@ interface HeaderSectionProps {
 const consolidatePhotos = (
   enrichedData: PoiEnrichedData | undefined,
   visitedPois: VisitedPoi[],
+  currentUserId: string | undefined,
 ): PoiEnrichedPhoto[] => {
   const photos: PoiEnrichedPhoto[] = [];
   const hasEnrichedPhotos =
@@ -36,8 +38,15 @@ const consolidatePhotos = (
   }
   if (photos.length === 0 && visitedPois.length > 0) {
     visitedPois.forEach((visitedPoi, index) => {
+      const imageUrl = resolveVisitedPoiImageUrl(
+        visitedPoi,
+        currentUserId === visitedPoi.userId,
+      );
+      if (imageUrl === null) {
+        return;
+      }
       const photo: PoiEnrichedPhoto = {
-        url: `${config.cdnUrl}/${visitedPoi.imageKey}`,
+        url: imageUrl,
         caption: visitedPoi.comment ?? "",
         credit: "",
         isPrimary: index === 0,
@@ -55,7 +64,8 @@ export const HeaderSection = ({
   enrichedData,
   visitedPois,
 }: HeaderSectionProps): ReactElement => {
-  const photos = consolidatePhotos(enrichedData, visitedPois);
+  const { data: currentUser } = useUsersMe();
+  const photos = consolidatePhotos(enrichedData, visitedPois, currentUser?.id);
   const { hasNoVisibleImages } = usePlaceDetailsImages();
 
   const hasEnrichedPhotos =

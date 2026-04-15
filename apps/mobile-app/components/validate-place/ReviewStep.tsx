@@ -31,18 +31,14 @@ interface ReviewStepProps {
   place: PoiType;
   capturedImage: string;
   imageSource: ImageSource;
-  imageKey: string | null;
-  setReviewFormEnded: (value: boolean) => void;
-  isUploading: boolean;
+  onValidated: (visitedPoiId: number) => void;
 }
 
 export const ReviewStep: React.FC<ReviewStepProps> = ({
   place,
   capturedImage,
   imageSource,
-  imageKey,
-  isUploading,
-  setReviewFormEnded,
+  onValidated,
 }) => {
   const { simplifiedLocation } = useUserLocation();
   const validatePlace = useValidatePlaceMutation();
@@ -82,20 +78,17 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
   }, [ratingValue, setFocus]);
 
   const onSubmit = async (data: ReviewFormData): Promise<void> => {
-    if (imageKey === null || imageKey === "") return;
-
     try {
       setDisplayingLoader(true);
-      await validatePlace.mutateAsync({
+      const { id: visitedPoiId } = await validatePlace.mutateAsync({
         placeId: place.id,
-        imageKey,
         imageSource,
         rating: data.rating,
         comment: data.comment,
         coords: simplifiedLocation ?? { latitude: 0, longitude: 0 },
       });
 
-      setReviewFormEnded(true);
+      onValidated(visitedPoiId);
     } catch (error) {
       logger("=== FORM ON SUBMIT ERROR ===", error);
     } finally {
@@ -137,7 +130,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
     );
   };
 
-  const isSubmitDisabled = isSubmitting || imageKey === null;
+  const isSubmitDisabled = isSubmitting;
 
   return (
     <View className="flex flex-1">
@@ -157,13 +150,6 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
           <CustomText className="text-sm text-red-600">
             {"Veuillez entrer un commentaire (facultatif)"}
           </CustomText>
-        )}
-        {isUploading && (
-          <Box className="flex flex-row items-center gap-2 rounded-lg bg-primary-100 px-4 py-3">
-            <CustomText className="text-sm text-primary-600">
-              {"📤 Envoi de la photo en cours..."}
-            </CustomText>
-          </Box>
         )}
         <Button
           onPress={handleSubmit(onSubmit, onError)}

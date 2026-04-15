@@ -12,10 +12,10 @@ export const useValidatePlaceMutation = () => {
       body: CreateVisitedPoiRequest & {
         placeId: string;
       },
-    ) => {
+    ): Promise<{ id: number }> => {
       logger("validate place mutation", body);
       try {
-        await validatePlace(body.placeId, body);
+        return await validatePlace(body.placeId, body);
       } catch (error) {
         logger(
           "=== error in validate place :",

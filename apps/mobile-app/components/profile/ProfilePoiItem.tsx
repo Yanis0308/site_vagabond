@@ -9,10 +9,11 @@ import { CustomText } from "@/components/custom-ui/CustomText";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
-import { config } from "@/constants/Config";
 import { useDeleteVisitedPoiWithConfirm } from "@/hooks/mutations/useDeleteVisitedPoiWithConfirm";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { mapService } from "@/services/MapService";
+import { resolveVisitedPoiImageUrl } from "@/services/photoStorage";
+import { localImages } from "@/utils/localImages";
 import type { PoiType } from "@/utils/types";
 
 interface ProfilePoiItemProps {
@@ -58,7 +59,10 @@ export const ProfilePoiItem = memo(
       <Pressable onPress={handlePress}>
         <HStack className="mx-1 mb-3 gap-0 border-b border-gray-200 bg-white">
           <CustomImage
-            sources={`${config.cdnUrl}/${poi.imageKey}`}
+            sources={
+              resolveVisitedPoiImageUrl(poi, allowProfileEdit) ??
+              localImages.noPhotoPlaceholder
+            }
             height={"full"}
             width={70}
             contentFit="cover"

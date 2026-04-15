@@ -5,8 +5,8 @@ import { memo, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList } from "react-native-gesture-handler";
 
-import { config } from "@/constants/Config";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
+import { resolveVisitedPoiImageUrl } from "@/services/photoStorage";
 import { localImages } from "@/utils/localImages";
 
 import { PolaroidReview } from "../polaroid/PolaroidReview";
@@ -46,7 +46,11 @@ export const ReviewsList = memo(({ visitedPois }: ReviewsListProps) => {
         .map((visitedPoi) => ({
           id: visitedPoi.id,
           poiId: visitedPoi.poiId,
-          imageUrl: `${config.cdnUrl}/${visitedPoi.imageKey}`,
+          imageUrl:
+            resolveVisitedPoiImageUrl(
+              visitedPoi,
+              currentUser?.id === visitedPoi.userId,
+            ) ?? localImages.noPhotoPlaceholder,
           username: visitedPoi.username,
           deletable: currentUser?.id === visitedPoi.userId,
           rating: visitedPoi.rating,

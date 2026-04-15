@@ -3,26 +3,72 @@ import {
   UploadFileResponseSchema,
   validateWithSchema,
 } from "@vagabond/shared-utils";
+import {
+  type FileSystemUploadResult,
+  FileSystemUploadType,
+  uploadAsync,
+} from "expo-file-system/legacy";
 
-import { type UploadFileParams } from "@/hooks/mutations/useUploadFileMutation";
-import { apiClient } from "@/http/api-client";
+import { config } from "@/constants/Config";
 
-export const uploadFile = async (
-  params: UploadFileParams,
-): Promise<FileInfo> => {
-  const formData = new FormData();
-  //@ts-expect-error fix this later
-  formData.append("file", {
-    uri: params.uri,
-    name: params.fileName,
-    type: params.mimeType,
+import { getFirebaseIdToken } from "./firebase-auth";
+
+async function sendUploadRequest(
+  url: string,
+  localUri: string,
+  idToken: string,
+): Promise<FileSystemUploadResult> {
+  return await uploadAsync(url, localUri, {
+    httpMethod: "POST",
+    uploadType: FileSystemUploadType.MULTIPART,
+    fieldName: "file",
+    mimeType: "image/jpeg",
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
   });
-  const rawResult = await apiClient
-    .post("api/upload", { body: formData })
-    .json();
-  if (!validateWithSchema(UploadFileResponseSchema, rawResult)) {
-    throw new Error("Invalid response");
+}
+
+/**
+ * Uploads a visited-POI photo using expo-file-system/legacy `uploadAsync` so
+ * the OS can keep the transfer alive when the app is backgrounded. Used by
+ * the background upload flow and the startup crash-recovery hook.
+ *
+ * Mirrors the 401 retry behaviour of `apiClient`: on 401 we re-read the
+ * current user, force-refresh the Firebase token once, and retry the upload.
+ */
+export const uploadVisitedPoiPhoto = async (
+  localUri: string,
+  visitedPoiId: number,
+): Promise<FileInfo> => {
+  const url = new URL(`${config.apiBaseUrl}/api/upload`);
+  url.searchParams.set("visitedPoiId", String(visitedPoiId));
+  const targetUrl = url.toString();
+
+  let result = await sendUploadRequest(
+    targetUrl,
+    localUri,
+    await getFirebaseIdToken(false),
+  );
+
+  if (result.status === 401) {
+    result = await sendUploadRequest(
+      targetUrl,
+      localUri,
+      await getFirebaseIdToken(true),
+    );
   }
 
-  return rawResult.data;
+  if (result.status < 200 || result.status >= 300) {
+    throw new Error(
+      `Upload failed with status ${result.status}: ${result.body}`,
+    );
+  }
+
+  const parsed: unknown = JSON.parse(result.body);
+  if (!validateWithSchema(UploadFileResponseSchema, parsed)) {
+    throw new Error("Invalid upload response");
+  }
+
+  return parsed.data;
 };

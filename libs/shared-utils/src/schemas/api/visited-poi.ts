@@ -19,7 +19,7 @@ export const VisitedPoiSchema = Type.Object(
     createdAt: Type.String(),
     comment: Nullable(Type.String()),
     rating: Type.Number(),
-    imageKey: Type.String(),
+    imageKey: Nullable(Type.String()),
     imageSource: ImageSourceSchema,
   },
   { $id: "VisitedPoi" },
@@ -34,20 +34,32 @@ export const BriefVisitedPoiSchema = Type.Object(
     createdAt: Type.String(),
     comment: Nullable(Type.String()),
     rating: Type.Number(),
-    imageKey: Type.String(),
+    imageKey: Nullable(Type.String()),
   },
   { $id: "BriefVisitedPoi" },
 );
 
 export const CreateVisitedPoiRequestSchema = Type.Object(
   {
-    imageKey: Type.String({ minLength: 1 }),
     imageSource: ImageSourceSchema,
     rating: Type.Number({ minimum: 1, maximum: 5 }),
     comment: Type.String(),
     coords: CoordsSchema,
   },
   { $id: "CreateVisitedPoiRequest" },
+);
+
+export const CreateVisitedPoiResponseSchema = ApiResponseSchema(
+  Type.Object({ id: Type.Number() }, { $id: "CreateVisitedPoiResponseData" }),
+  "CreateVisitedPoiResponse",
+);
+
+export const CheckVisitedPoiImageResponseSchema = ApiResponseSchema(
+  Type.Object(
+    { hasImage: Type.Boolean() },
+    { $id: "CheckVisitedPoiImageResponseData" },
+  ),
+  "CheckVisitedPoiImageResponse",
 );
 
 export const GetVisitedPoisResponseSchema = ApiResponseSchema(

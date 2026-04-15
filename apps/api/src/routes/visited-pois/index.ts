@@ -3,7 +3,9 @@ import {
   Type,
 } from "@fastify/type-provider-typebox";
 import {
+  CheckVisitedPoiImageResponseSchema,
   CreateVisitedPoiRequestSchema,
+  CreateVisitedPoiResponseSchema,
   EmptyResponseSchema,
   ErrorResponseSchema,
   GetVisitedPoisResponseSchema,
@@ -104,14 +106,14 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         }),
         body: CreateVisitedPoiRequestSchema,
         response: {
-          200: EmptyResponseSchema,
+          200: CreateVisitedPoiResponseSchema,
           409: ErrorResponseSchema,
         },
       },
     },
     async function (request, reply) {
       const { poiId } = request.params;
-      const { imageKey, imageSource, rating, comment, coords } = request.body;
+      const { imageSource, rating, comment, coords } = request.body;
 
       const visitedPoi =
         await fastify.dbRepositories.visitedPoi.findByPoiAndUser(
@@ -128,20 +130,20 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         });
       }
 
-      await fastify.dbRepositories.visitedPoi.createCustom({
-        poiId,
-        imageKey,
-        imageSource,
-        rating,
-        comment,
-        coords,
-        userId: request.user.uid,
-      });
+      const { id: visitedPoiId } =
+        await fastify.dbRepositories.visitedPoi.createCustom({
+          poiId,
+          imageSource,
+          rating,
+          comment,
+          coords,
+          userId: request.user.uid,
+        });
 
-      // Envoyer la réponse HTTP immédiatement
-      const response = reply.status(200).send({ data: {} });
+      // Send HTTP response immediately
+      const response = reply.status(200).send({ data: { id: visitedPoiId } });
 
-      // Envoyer notification Slack en arrière-plan (sans await)
+      // Send Slack notification in background
       void (async (): Promise<void> => {
         try {
           const poiInfo =
@@ -159,8 +161,6 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             const displayLocation =
               locationParts.length > 0 ? locationParts.join(", ") : "—";
 
-            const imageUrl = `${fastify.config.cdnUrl}/${imageKey}`;
-
             await fastify.slack.sendPoiValidationMessage(
               `🏆 *Nouveau lieu validé !*\n` +
                 `👤 *Utilisateur:* ${nicknameDisplay} (${request.user.db.fullName} - ${request.user.email})\n` +
@@ -171,7 +171,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
                   comment.length > 0 ? comment : "Aucun commentaire"
                 }\n` +
                 `📅 *Date:* ${new Date().toLocaleString("fr-FR")}\n` +
-                `🖼️ *Image:* ${imageUrl}`,
+                `🖼️ *Image:* en cours d'upload (#${visitedPoiId})`,
             );
 
             request.log.info(
@@ -192,6 +192,45 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       })();
 
       return await response;
+    },
+  );
+
+  fastify.get(
+    "/:id/status",
+    {
+      schema: {
+        tags: ["visited-pois"],
+        security: [{ bearerAuth: [] }],
+        params: Type.Object({
+          id: Type.Number(),
+        }),
+        response: {
+          200: CheckVisitedPoiImageResponseSchema,
+          404: ErrorResponseSchema,
+        },
+      },
+    },
+    async function (request, reply) {
+      const { id } = request.params;
+
+      const visitedPoi =
+        await fastify.dbRepositories.visitedPoi.findByIdAndUser(
+          id,
+          request.user.uid,
+        );
+
+      if (visitedPoi === undefined) {
+        return await reply.status(404).send({
+          error: {
+            type: "NOT_FOUND",
+            message: "Visited POI not found",
+          },
+        });
+      }
+
+      return await reply.status(200).send({
+        data: { hasImage: visitedPoi.imageKey !== null },
+      });
     },
   );
 };

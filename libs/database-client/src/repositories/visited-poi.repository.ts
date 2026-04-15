@@ -1,7 +1,4 @@
-import {
-  type CreateVisitedPoiRequest,
-  getUserDisplayName,
-} from "@vagabond/shared-utils";
+import { getUserDisplayName, type ImageSource } from "@vagabond/shared-utils";
 import { and, eq, sql } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
@@ -47,20 +44,49 @@ export class VisitedPoiRepository {
     };
   }
 
-  async createCustom(
-    data: CreateVisitedPoiRequest & {
-      userId: string;
-      poiId: string;
-    },
-  ): Promise<unknown> {
-    return await this.db.insert(visitedPois).values({
+  async createCustom(data: {
+    imageSource: ImageSource;
+    rating: number;
+    comment: string;
+    coords: { longitude: number; latitude: number };
+    userId: string;
+    poiId: string;
+  }): Promise<{ id: number }> {
+    const values = {
       poiId: data.poiId,
       userId: data.userId,
-      imageKey: data.imageKey,
       imageSource: data.imageSource,
       rating: data.rating,
       comment: data.comment,
-      coords: [data.coords.longitude, data.coords.latitude],
+      coords: sql`ST_SetSRID(ST_MakePoint(${data.coords.longitude}, ${data.coords.latitude}), 4326)`,
+    };
+    const result = await this.db
+      .insert(visitedPois)
+      .values(values)
+      .returning({ id: visitedPois.id });
+
+    const row = result[0];
+    if (row === undefined) {
+      throw new Error("Failed to create visited POI");
+    }
+
+    return { id: row.id };
+  }
+
+  async updateImageKey(id: number, imageKey: string): Promise<void> {
+    await this.db
+      .update(visitedPois)
+      .set({ imageKey })
+      .where(eq(visitedPois.id, id));
+  }
+
+  async findByIdAndUser(
+    id: number,
+    userId: string,
+  ): Promise<{ id: number; imageKey: string | null } | undefined> {
+    return await this.db.query.visitedPois.findFirst({
+      where: and(eq(visitedPois.id, id), eq(visitedPois.userId, userId)),
+      columns: { id: true, imageKey: true },
     });
   }
 

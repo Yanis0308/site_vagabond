@@ -77,6 +77,10 @@
     "sign_in_with_google": "Sign in with Google",
     "sign_in_to_start": "Your next adventure starts here"
   },
+  "upload_progress": {
+    "uploading": "Uploading photo...",
+    "success": "Photo uploaded!"
+  },
   "edit_nickname": {
     "title": "Nickname",
     "cancel": "Cancel",

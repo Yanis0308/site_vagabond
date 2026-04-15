@@ -20,7 +20,9 @@ import { useMapLogic } from "@/hooks/maps/useMapLogic";
 import { useMapZoneInfo } from "@/hooks/maps/useMapZoneInfo";
 import { useAppReviewModal } from "@/hooks/other/useAppReviewModal";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
+import { useUploadToast } from "@/hooks/other/useUploadToast";
 import { mapService } from "@/services/MapService";
+import { saveDraftPhoto } from "@/services/photoStorage";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
 import { compressImage } from "@/utils/imageCompressor";
@@ -54,6 +56,9 @@ export default function MapsTab(): ReactElement {
   const setCurrentPhoto = useSetAtom(currentPhotoAtom);
   const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
 
+  // Upload progress toast (reacts to uploadingFilesAtom changes)
+  useUploadToast();
+
   // App review modal
   const { isVisible: isAppReviewModalVisible, onClose: onAppReviewClose } =
     useAppReviewModal();
@@ -85,7 +90,8 @@ export default function MapsTab(): ReactElement {
     imageSource: ImageSource,
   ): Promise<void> => {
     const compressedUri = await compressImage(imageUri);
-    setCurrentPhoto({ imageUri: compressedUri, imageSource });
+    const localPath = saveDraftPhoto(compressedUri);
+    setCurrentPhoto({ imageUri: compressedUri, imageSource, localPath });
   };
 
   // Navigate to review form when a photo is selected (decoupled from picker flow)
@@ -121,10 +127,16 @@ export default function MapsTab(): ReactElement {
       try {
         logger("[recoverPendingResult] recovering photo:", asset.uri);
         await waitForFile(asset.uri);
-        setCurrentPhoto({ imageUri: asset.uri, imageSource: "CAMERA" });
+        const compressedUri = await compressImage(asset.uri);
+        const localPath = saveDraftPhoto(compressedUri);
+        setCurrentPhoto({
+          imageUri: compressedUri,
+          imageSource: "CAMERA",
+          localPath,
+        });
         logger("[recoverPendingResult] success");
       } catch (error) {
-        logger("[recoverPendingResult] waitForFile error:", error);
+        logger("[recoverPendingResult] recovery error:", error);
         Alert.alert(
           "Erreur",
           "La photo n'a pas pu être chargée. Veuillez réessayer.",
@@ -165,8 +177,9 @@ export default function MapsTab(): ReactElement {
         setDisplayingLoader(true);
         await waitForFile(asset.uri);
         await handlePhotoSelected(asset.uri, "CAMERA");
-      } catch {
+      } catch (e) {
         setDisplayingLoader(false);
+        logger("[postCamera] error parsing camera", e);
         Alert.alert(
           "Erreur",
           "La photo n'a pas pu être chargée. Veuillez réessayer.",
@@ -197,8 +210,9 @@ export default function MapsTab(): ReactElement {
         setDisplayingLoader(true);
         await waitForFile(asset.uri);
         await handlePhotoSelected(asset.uri, "GALLERY");
-      } catch {
+      } catch (e) {
         setDisplayingLoader(false);
+        logger("[postGallery] error parsing camera", e);
         Alert.alert(
           "Erreur",
           "La photo n'a pas pu être chargée. Veuillez réessayer.",

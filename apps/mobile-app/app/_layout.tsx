@@ -15,6 +15,7 @@ import {
   configureReanimatedLogger,
   ReanimatedLogLevel,
 } from "react-native-reanimated";
+import { Toaster } from "sonner-native";
 
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { FullScreenLoader } from "@/components/validate-place/FullScreenLoader";
@@ -143,6 +144,7 @@ export default function RootLayout(): ReactElement | null {
               </Stack.Protected>
             </Stack>
           </KeyboardProvider>
+          <Toaster position="top-center" />
         </GestureHandlerRootView>
       </PersistQueryClientProvider>
     </GluestackUIProvider>
