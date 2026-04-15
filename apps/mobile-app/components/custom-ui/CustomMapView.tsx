@@ -9,6 +9,7 @@ import {
 import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
 import { type ReactElement, type RefObject } from "react";
+import { Platform } from "react-native";
 
 import { BoundaryFillLayer } from "@/components/custom-ui/BoundaryFillLayer";
 import { BoundaryLineLayer } from "@/components/custom-ui/BoundaryLineLayer";
@@ -72,7 +73,7 @@ export const CustomMapView = function CustomMapView({
       <LocationPuck
         puckBearingEnabled
         puckBearing="heading"
-        topImage="bearingImage"
+        topImage={Platform.OS === "ios" ? undefined : "bearingImage"}
         scale={1.25}
         pulsing={pulsing}
       />
