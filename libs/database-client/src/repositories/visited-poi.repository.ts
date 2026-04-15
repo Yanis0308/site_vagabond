@@ -45,6 +45,7 @@ export class VisitedPoiRepository {
   }
 
   async createCustom(data: {
+    imageKey?: string;
     imageSource: ImageSource;
     rating: number;
     comment: string;
@@ -55,6 +56,7 @@ export class VisitedPoiRepository {
     const values = {
       poiId: data.poiId,
       userId: data.userId,
+      ...(data.imageKey !== undefined && { imageKey: data.imageKey }),
       imageSource: data.imageSource,
       rating: data.rating,
       comment: data.comment,

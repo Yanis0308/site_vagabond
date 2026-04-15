@@ -41,6 +41,7 @@ export const BriefVisitedPoiSchema = Type.Object(
 
 export const CreateVisitedPoiRequestSchema = Type.Object(
   {
+    imageKey: Type.Optional(Type.String({ minLength: 1 })),
     imageSource: ImageSourceSchema,
     rating: Type.Number({ minimum: 1, maximum: 5 }),
     comment: Type.String(),
