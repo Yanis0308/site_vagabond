@@ -47,6 +47,7 @@ export class BoundaryRepository {
       "DISTRICT",
       "NEIGHBORHOOD",
     ],
+    includeValidatedPois = true,
   ): Promise<UserZoneStat[]> {
     // Recursive CTE: relevant zone IDs (raw SQL — Drizzle has no recursive CTE support)
     const relevantZonesResult = await this.db.execute(sql`
@@ -76,11 +77,9 @@ export class BoundaryRepository {
 
     const b2 = alias(boundaries, "b2");
 
-    // Run queries A, B, C, D in parallel
-    const [visitedPoisRows, boundaryInfoRows, totalPoisRows, subzonesRows] =
-      await Promise.all([
-        // Query A: visited POIs with names, coords, and boundary associations
-        this.db
+    // Query A (full): visited POIs with names, coords, and boundary associations
+    const queryAFull = includeValidatedPois
+      ? this.db
           .select({
             id: visitedPois.id,
             poiId: visitedPois.poiId,
@@ -105,48 +104,78 @@ export class BoundaryRepository {
               eq(visitedPois.userId, userId),
               inArray(poiBoundaries.boundaryId, relevantZoneIds),
             ),
-          ),
+          )
+      : null;
 
-        // Query D: boundary info filtered by levels (Drizzle)
-        this.db
-          .select({
-            id: boundaries.id,
-            name: sql`COALESCE(${boundaries.name}, 'Unknown')`.mapWith(String),
-            boundary_level: boundaries.boundaryLevel,
-            parent_id: boundaries.parentId,
-          })
-          .from(boundaries)
-          .where(
-            and(
-              inArray(boundaries.id, relevantZoneIds),
-              inArray(boundaries.boundaryLevel, boundaryLevels),
-            ),
-          ),
-
-        // Query B: total POIs count per zone (Drizzle)
-        this.db
+    // Query A' (count-only): distinct visited POIs count per boundary — no PostGIS, no name subquery
+    const queryACount = !includeValidatedPois
+      ? this.db
           .select({
             boundaryId: poiBoundaries.boundaryId,
-            totalPois: countDistinct(poiBoundaries.poiId).mapWith(Number),
+            count: countDistinct(visitedPois.poiId).mapWith(Number),
           })
-          .from(poiBoundaries)
-          .where(inArray(poiBoundaries.boundaryId, relevantZoneIds))
-          .groupBy(poiBoundaries.boundaryId),
+          .from(visitedPois)
+          .innerJoin(poiBoundaries, eq(poiBoundaries.poiId, visitedPois.poiId))
+          .where(
+            and(
+              eq(visitedPois.userId, userId),
+              inArray(poiBoundaries.boundaryId, relevantZoneIds),
+            ),
+          )
+          .groupBy(poiBoundaries.boundaryId)
+      : null;
 
-        // Query C: subzone counts — total + completed (Drizzle + raw SQL for FILTER)
-        this.db
-          .select({
-            parentId: b2.parentId,
-            totalSubzones: count().mapWith(Number),
-            completedSubzones:
-              sql`COUNT(*) FILTER (WHERE ${inArray(b2.id, relevantZoneIds)})`.mapWith(
-                Number,
-              ),
-          })
-          .from(b2)
-          .where(inArray(b2.parentId, relevantZoneIds))
-          .groupBy(b2.parentId),
-      ]);
+    // Run queries in parallel (Query A xor A' depending on includeValidatedPois)
+    const [
+      visitedPoisRows,
+      visitedCountRows,
+      boundaryInfoRows,
+      totalPoisRows,
+      subzonesRows,
+    ] = await Promise.all([
+      queryAFull ?? Promise.resolve([]),
+      queryACount ?? Promise.resolve([]),
+
+      // Query D: boundary info filtered by levels (Drizzle)
+      this.db
+        .select({
+          id: boundaries.id,
+          name: sql`COALESCE(${boundaries.name}, 'Unknown')`.mapWith(String),
+          boundary_level: boundaries.boundaryLevel,
+          parent_id: boundaries.parentId,
+        })
+        .from(boundaries)
+        .where(
+          and(
+            inArray(boundaries.id, relevantZoneIds),
+            inArray(boundaries.boundaryLevel, boundaryLevels),
+          ),
+        ),
+
+      // Query B: total POIs count per zone (Drizzle)
+      this.db
+        .select({
+          boundaryId: poiBoundaries.boundaryId,
+          totalPois: countDistinct(poiBoundaries.poiId).mapWith(Number),
+        })
+        .from(poiBoundaries)
+        .where(inArray(poiBoundaries.boundaryId, relevantZoneIds))
+        .groupBy(poiBoundaries.boundaryId),
+
+      // Query C: subzone counts — total + completed (Drizzle + raw SQL for FILTER)
+      this.db
+        .select({
+          parentId: b2.parentId,
+          totalSubzones: count().mapWith(Number),
+          completedSubzones:
+            sql`COUNT(*) FILTER (WHERE ${inArray(b2.id, relevantZoneIds)})`.mapWith(
+              Number,
+            ),
+        })
+        .from(b2)
+        .where(inArray(b2.parentId, relevantZoneIds))
+        .groupBy(b2.parentId),
+    ]);
 
     // Build lookup maps for O(n) assembly
     const totalPoisMap = new Map<string, number>();
@@ -162,6 +191,12 @@ export class BoundaryRepository {
           completed: row.completedSubzones,
         });
       }
+    }
+
+    // Count-only map (used when includeValidatedPois = false)
+    const validatedCountMap = new Map<string, number>();
+    for (const row of visitedCountRows) {
+      validatedCountMap.set(row.boundaryId, row.count);
     }
 
     // Group visited POIs by boundary, deduplicating by visited_poi id
@@ -203,10 +238,25 @@ export class BoundaryRepository {
     };
 
     const stats: UserZoneStat[] = boundaryInfoRows.map((b) => {
+      const subzones = subzonesMap.get(b.id);
+
+      if (!includeValidatedPois) {
+        return {
+          zone_id: b.id,
+          name: b.name,
+          boundary_level: b.boundary_level,
+          parent_id: b.parent_id,
+          validated_pois_count: validatedCountMap.get(b.id) ?? 0,
+          validated_pois: [],
+          total_pois_count: totalPoisMap.get(b.id) ?? 0,
+          total_subzones_count: subzones?.total ?? 0,
+          completed_subzones_count: subzones?.completed ?? 0,
+        };
+      }
+
       const bPois = poisByBoundary.get(b.id);
       const validatedPois =
         bPois !== undefined ? Array.from(bPois.values()) : [];
-      const subzones = subzonesMap.get(b.id);
 
       return {
         zone_id: b.id,

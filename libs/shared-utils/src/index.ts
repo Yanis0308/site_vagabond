@@ -57,6 +57,8 @@ export {
   UploadFileResponseSchema,
 } from "./schemas/api/upload.js";
 export {
+  type NicknameUpdate,
+  NicknameUpdateSchema,
   type UpdateUserMeRequest,
   UpdateUserMeRequestSchema,
   type UserAppReviewRequest,

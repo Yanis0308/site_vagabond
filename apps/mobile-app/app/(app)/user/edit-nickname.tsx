@@ -3,9 +3,9 @@ import { useDebouncer } from "@tanstack/react-pacer";
 import {
   allJsonSchemas,
   NICKNAME_MAX_LENGTH,
+  type NicknameUpdate,
+  NicknameUpdateSchema,
   slugifyNickname,
-  type UpdateUserMeRequest,
-  UpdateUserMeRequestSchema,
 } from "@vagabond/shared-utils";
 import { type JSONSchemaType } from "ajv";
 import { router } from "expo-router";
@@ -39,9 +39,9 @@ export default function EditNicknameScreen(): ReactElement {
     setValue,
     formState: { errors, isSubmitting, isValid },
     watch,
-  } = useForm<UpdateUserMeRequest>({
+  } = useForm<NicknameUpdate>({
     resolver: ajvResolver(
-      UpdateUserMeRequestSchema as JSONSchemaType<UpdateUserMeRequest>,
+      NicknameUpdateSchema as JSONSchemaType<NicknameUpdate>,
       {
         addUsedSchema: false,
         schemas: allJsonSchemas,
@@ -60,7 +60,7 @@ export default function EditNicknameScreen(): ReactElement {
     { wait: DEBOUNCE_DELAY },
   );
 
-  const onSubmit = async (values: UpdateUserMeRequest): Promise<void> => {
+  const onSubmit = async (values: NicknameUpdate): Promise<void> => {
     try {
       setDisplayingLoader(true);
       await mutation.mutateAsync(values.nickname);

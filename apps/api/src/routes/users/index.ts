@@ -59,12 +59,15 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     },
     async function (request, reply) {
       const user = request.user.db;
-      const { nickname } = request.body;
+      const { nickname, isPrivate } = request.body;
 
-      await fastify.dbRepositories.user.updateUserNickname(
-        user.userId,
-        nickname,
-      );
+      const updateData: Parameters<
+        (typeof fastify.dbRepositories.user)["updateUser"]
+      >[1] = {};
+      if (nickname !== undefined) updateData.nickname = nickname;
+      if (isPrivate !== undefined) updateData.isPrivate = isPrivate;
+
+      await fastify.dbRepositories.user.updateUser(user.userId, updateData);
 
       return await reply.status(200).send({ data: {} });
     },

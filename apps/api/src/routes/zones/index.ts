@@ -43,6 +43,21 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     },
     async function (request, reply) {
       const { userId } = request.params;
+
+      const targetUser =
+        await fastify.dbRepositories.user.getPublicUserInfo(userId);
+
+      if (targetUser?.isPrivate === true) {
+        const redactedStats =
+          await fastify.dbRepositories.boundary.findUserZoneStats(
+            userId,
+            undefined,
+            false,
+          );
+
+        return await reply.status(200).send({ data: redactedStats });
+      }
+
       const userZoneStats =
         await fastify.dbRepositories.boundary.findUserZoneStats(userId);
 

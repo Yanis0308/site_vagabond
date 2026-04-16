@@ -29,8 +29,11 @@ type ProfileSection =
 
 interface ProfileContentProps {
   userData?: Optional<
-    Pick<UserMe, "id" | "fullName" | "nickname" | "email" | "createdAt">,
-    "email"
+    Pick<
+      UserMe,
+      "id" | "fullName" | "nickname" | "email" | "createdAt" | "isPrivate"
+    >,
+    "email" | "isPrivate"
   > | null;
   zonesStats?: ZoneUserStat[];
   showSignOutButton: boolean;
@@ -49,12 +52,19 @@ export function ProfileContent({
     useProfileComputedData(zonesStats);
 
   const sections = useMemo<ProfileSection[]>(() => {
+    const isOwnProfile = userData?.id === currentUser?.id;
+    const isViewingPrivateProfile =
+      !isOwnProfile && (userData?.isPrivate ?? false);
+
     const baseSections: ProfileSection[] = [
       { type: "header" },
       { type: "progress", data: progress },
       { type: "stats", data: stats },
-      { type: "validatedPlaces", data: sortedHierarchy },
     ];
+
+    if (!isViewingPrivateProfile) {
+      baseSections.push({ type: "validatedPlaces", data: sortedHierarchy });
+    }
 
     if (showSignOutButton) {
       baseSections.push({ type: "signOut" });
@@ -62,7 +72,14 @@ export function ProfileContent({
     }
 
     return baseSections;
-  }, [progress, stats, sortedHierarchy, showSignOutButton]);
+  }, [
+    progress,
+    stats,
+    sortedHierarchy,
+    showSignOutButton,
+    userData,
+    currentUser,
+  ]);
 
   const renderItem = useCallback(
     ({ item }: { item: ProfileSection }) => {

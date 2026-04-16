@@ -218,6 +218,7 @@ export const users = pgTable("users", {
   oauthProviders: varchar("oauth_providers", { length: 1000 }).array(),
   lastLogin: timestamp("last_login", { precision: 3 }).defaultNow().notNull(),
   role: roleEnum().default("USER").notNull(),
+  isPrivate: boolean("is_private").default(false).notNull(),
 });
 
 export const pois = pgTable(

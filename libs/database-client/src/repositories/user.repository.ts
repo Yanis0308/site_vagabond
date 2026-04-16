@@ -20,6 +20,7 @@ export interface UserInfo {
   nickname: string | null;
   oauthProviders: string[];
   lastLogin: Date;
+  isPrivate: boolean;
 }
 
 export interface PublicUserInfo {
@@ -27,6 +28,7 @@ export interface PublicUserInfo {
   fullName: string;
   nickname: string | null;
   createdAt: Date;
+  isPrivate: boolean;
 }
 
 export type DbUser = Omit<typeof users.$inferSelect, "fullName"> & {
@@ -109,7 +111,7 @@ export class UserRepository {
 
   async upsertUser(
     userId: string,
-    userInfo: Omit<UserInfo, "nickname">,
+    userInfo: Omit<UserInfo, "nickname" | "isPrivate">,
   ): Promise<{ user: DbUser; isNew: boolean }> {
     try {
       return await this.db.transaction(
@@ -233,6 +235,7 @@ export class UserRepository {
         nickname: true,
         email: true,
         createdAt: true,
+        isPrivate: true,
       },
     });
 
@@ -245,13 +248,20 @@ export class UserRepository {
       fullName: getUserDisplayName(retrievedUser.fullName, retrievedUser.email),
       nickname: retrievedUser.nickname,
       createdAt: retrievedUser.createdAt,
+      isPrivate: retrievedUser.isPrivate,
     };
   }
 
-  async updateUserNickname(userId: string, nickname: string): Promise<void> {
+  async updateUser(
+    userId: string,
+    userInfo: Partial<Pick<UserInfo, "nickname" | "isPrivate">>,
+  ): Promise<void> {
     await this.db
       .update(users)
-      .set({ nickname })
+      .set({
+        nickname: userInfo.nickname,
+        isPrivate: userInfo.isPrivate,
+      })
       .where(eq(users.userId, userId));
   }
 

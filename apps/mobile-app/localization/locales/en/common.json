@@ -88,5 +88,11 @@
     "placeholder": "Your nickname",
     "error": "Nickname must be between 1 and 50 characters",
     "format_hint": "Letters, digits, underscores, dashes and dots only."
+  },
+  "privacy": {
+    "public_label": "Public profile",
+    "private_label": "Private profile",
+    "public_hint": "Your photos are visible to other users",
+    "private_hint": "Your photos are only visible to you"
   }
 }

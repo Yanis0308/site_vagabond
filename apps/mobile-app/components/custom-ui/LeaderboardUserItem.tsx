@@ -49,7 +49,11 @@ export const LeaderboardUserItem = memo(
     };
 
     const handlePress = (): void => {
-      router.push(`/user/${user.userId}`);
+      if (isCurrentUser) {
+        router.push("/profile");
+      } else {
+        router.push(`/user/${user.userId}`);
+      }
     };
 
     const rankEmoji = getRankEmoji(user.rank);

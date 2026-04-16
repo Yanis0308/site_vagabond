@@ -1,7 +1,7 @@
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 
 import { queryClient } from "@/constants/QueryClient";
-import { updateUserNickname } from "@/http/users";
+import { updateUserMe } from "@/http/users";
 import { logger } from "@/utils/logger";
 
 export const useUpdateNicknameMutation = (): UseMutationResult<
@@ -13,7 +13,7 @@ export const useUpdateNicknameMutation = (): UseMutationResult<
     mutationFn: async (nickname: string): Promise<void> => {
       logger("update nickname mutation", nickname);
       try {
-        await updateUserNickname(nickname);
+        await updateUserMe({ nickname });
       } catch (error) {
         logger("=== error in update nickname mutation", error);
         throw error;

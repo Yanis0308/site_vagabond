@@ -74,5 +74,11 @@
       "submit": "Envoyer mon retour",
       "cancel": "Annuler"
     }
+  },
+  "privacy": {
+    "public_label": "Profil public",
+    "private_label": "Profil privé",
+    "public_hint": "Vos lieux visités sont visibles par les autres utilisateurs",
+    "private_hint": "Vos lieux visités sont uniquement visibles par vous"
   }
 }

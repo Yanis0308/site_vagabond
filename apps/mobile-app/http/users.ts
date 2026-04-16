@@ -18,8 +18,11 @@ export const getMe = async (): Promise<UserMe> => {
   return rawResult.data;
 };
 
-export const updateUserNickname = async (nickname: string): Promise<void> => {
-  await apiClient.patch("api/users/me", { json: { nickname } });
+export const updateUserMe = async (data: {
+  nickname?: string;
+  isPrivate?: boolean;
+}): Promise<void> => {
+  await apiClient.patch("api/users/me", { json: data });
 };
 
 export const getUserPublicInfo = async (

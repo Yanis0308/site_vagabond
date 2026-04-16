@@ -134,6 +134,13 @@
       "when": 1775308297343,
       "tag": "0018_overjoyed_solo",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1775117543567,
+      "tag": "0019_amused_stryfe",
+      "breakpoints": true
     }
   ]
 }

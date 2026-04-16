@@ -160,11 +160,10 @@ export function calculateStats(zoneHierarchy: CountryType[]): Stats {
         departements++;
         for (const city of dept.cities) {
           cities++;
-          const pois = city.pois;
-          visitedPlaces += pois.length;
+          visitedPlaces += city.validatedPoisCount;
 
           // Trouver le POI le plus récent pendant la boucle
-          for (const poi of pois) {
+          for (const poi of city.pois) {
             const poiDate = new Date(poi.createdAt).getTime();
             if (poiDate > latestPoiDate) {
               latestPoiDate = poiDate;
