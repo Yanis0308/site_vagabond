@@ -14,6 +14,7 @@ import { captureAndLog } from "./utils/logger.js";
 // Instantiate Fastify with shared logger config (Fastify 5 does not accept pre-instantiated logger)
 const app = Fastify({
   logger: loggerConfig,
+  pluginTimeout: 120_000,
 });
 
 const CLIENT_DISCONNECT_MESSAGES = ["Premature close", "aborted", "ECONNRESET"];

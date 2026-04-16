@@ -1,28 +1,23 @@
 ALTER TABLE "visited_pois" ADD COLUMN "location_id" integer;
 --> statement-breakpoint
 
--- Data migration — for each visited_poi, create a user_location from coords and link it
-DO $$
-DECLARE
-  vp RECORD;
-  new_location_id INTEGER;
-BEGIN
-  FOR vp IN SELECT id, user_id, coords, created_at, updated_at FROM visited_pois LOOP
-    INSERT INTO user_locations (user_id, coords, "timestamp", created_at, updated_at)
-    VALUES (
-      vp.user_id,
-      -- Fallback to (0, 0) for the rare case where coords was NULL
-      COALESCE(vp.coords, ST_SetSRID(ST_MakePoint(0, 0), 4326)),
-      vp.created_at,
-      vp.created_at,
-      vp.updated_at
-    )
-    RETURNING id INTO new_location_id;
+-- Data migration (set-based): bulk-create user_locations from visited_pois and link them
+-- Step 1: Add a temporary column to track the source visited_poi id
+ALTER TABLE "user_locations" ADD COLUMN "_source_vp_id" integer;
+--> statement-breakpoint
 
-    UPDATE visited_pois SET location_id = new_location_id WHERE id = vp.id;
-  END LOOP;
-END;
-$$;
+-- Step 2: Bulk insert all visited_pois coords into user_locations
+INSERT INTO user_locations (user_id, coords, "timestamp", created_at, updated_at, "_source_vp_id")
+SELECT user_id, COALESCE(coords, ST_SetSRID(ST_MakePoint(0, 0), 4326)), created_at, created_at, updated_at, id
+FROM visited_pois;
+--> statement-breakpoint
+
+-- Step 3: Link visited_pois to their new user_locations via the temp column
+UPDATE visited_pois vp SET location_id = ul.id FROM user_locations ul WHERE ul."_source_vp_id" = vp.id;
+--> statement-breakpoint
+
+-- Step 4: Drop the temporary column
+ALTER TABLE "user_locations" DROP COLUMN "_source_vp_id";
 --> statement-breakpoint
 
 ALTER TABLE "visited_pois" ALTER COLUMN "location_id" SET NOT NULL;
