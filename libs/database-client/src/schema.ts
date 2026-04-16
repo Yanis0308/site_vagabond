@@ -75,6 +75,16 @@ const updated_at = timestamp("updated_at", { precision: 3 })
   .notNull()
   .$onUpdate(() => new Date());
 
+// Mirrors CoordsSchema from shared-utils/geo.ts — all location columns except timestamp
+const coordsColumns = {
+  coords: geometry({ type: "point", srid: 4326 }).notNull(),
+  accuracy: doublePrecision(),
+  altitude: doublePrecision(),
+  altitudeAccuracy: doublePrecision("altitude_accuracy"),
+  heading: doublePrecision(),
+  speed: doublePrecision(),
+};
+
 export const userLocations = pgTable(
   "user_locations",
   {
@@ -82,12 +92,7 @@ export const userLocations = pgTable(
     createdAt: created_at,
     updatedAt: updated_at,
     userId: varchar("user_id", { length: 1000 }).notNull(),
-    coords: geometry({ type: "point", srid: 4326 }).notNull(),
-    accuracy: doublePrecision(),
-    altitude: doublePrecision(),
-    altitudeAccuracy: doublePrecision("altitude_accuracy"),
-    heading: doublePrecision(),
-    speed: doublePrecision(),
+    ...coordsColumns,
     timestamp: timestamp({ precision: 3 }).notNull(),
   },
   (table) => [
@@ -130,7 +135,7 @@ export const visitedPois = pgTable(
     id: serial().primaryKey().notNull(),
     createdAt: created_at,
     updatedAt: updated_at,
-    coords: geometry({ type: "point", srid: 4326 }),
+    locationId: integer("location_id").notNull(),
     poiId: varchar("poi_id", { length: 1000 }).notNull(),
     userId: varchar("user_id", { length: 1000 }).notNull(),
     comment: varchar({ length: 10000 }).notNull(),
@@ -152,6 +157,13 @@ export const visitedPois = pgTable(
       columns: [table.userId],
       foreignColumns: [users.userId],
       name: "visited_pois_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.locationId],
+      foreignColumns: [userLocations.id],
+      name: "visited_pois_location_id_fkey",
     })
       .onUpdate("cascade")
       .onDelete("restrict"),
@@ -427,14 +439,22 @@ export const visitedPoisRelations = relations(visitedPois, ({ one }) => ({
     fields: [visitedPois.userId],
     references: [users.userId],
   }),
-}));
-
-export const userLocationsRelations = relations(userLocations, ({ one }) => ({
-  user: one(users, {
-    fields: [userLocations.userId],
-    references: [users.userId],
+  location: one(userLocations, {
+    fields: [visitedPois.locationId],
+    references: [userLocations.id],
   }),
 }));
+
+export const userLocationsRelations = relations(
+  userLocations,
+  ({ one, many }) => ({
+    user: one(users, {
+      fields: [userLocations.userId],
+      references: [users.userId],
+    }),
+    visitedPois: many(visitedPois),
+  }),
+);
 
 export const usersRelations = relations(users, ({ many, one }) => ({
   visitedPois: many(visitedPois),

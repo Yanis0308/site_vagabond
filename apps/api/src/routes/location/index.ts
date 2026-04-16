@@ -23,12 +23,11 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     },
     async function (request, reply) {
       const user = request.user.db;
-      const { coords, timestamp, ...body } = request.body;
+      const { timestamp, ...coords } = request.body;
 
       try {
         await fastify.dbRepositories.location.insertLocation({
           userId: user.userId,
-          ...body,
           ...coords,
           timestamp: new Date(timestamp),
         });

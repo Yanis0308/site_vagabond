@@ -33,10 +33,8 @@ export const useUserLocationTracking = (): void => {
 
     saveUserLocationMutation(
       {
-        coords: {
-          latitude: userLocation.coords.latitude,
-          longitude: userLocation.coords.longitude,
-        },
+        latitude: userLocation.coords.latitude,
+        longitude: userLocation.coords.longitude,
         accuracy: userLocation.coords.accuracy ?? null,
         altitude: userLocation.coords.altitude ?? null,
         altitudeAccuracy: userLocation.coords.altitudeAccuracy ?? null,

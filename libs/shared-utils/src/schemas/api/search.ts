@@ -1,6 +1,6 @@
 import { type Static, Type } from "typebox";
 
-import { CoordsSchema } from "../geo.js";
+import { SimplifiedCoordsSchema } from "../geo.js";
 import { ApiResponseSchema } from "../utils.js";
 
 export const SearchQuerySchema = Type.Object(
@@ -17,7 +17,7 @@ export const SearchResultSchema = Type.Object(
     }),
     id: Type.String({ examples: ["OSM-N1234567890"] }),
     name: Type.String({ examples: ["Grand Place"] }),
-    coordinates: CoordsSchema,
+    coordinates: SimplifiedCoordsSchema,
     cityName: Type.Optional(Type.String({ examples: ["Lille"] })),
     departmentName: Type.Optional(Type.String({ examples: ["Nord"] })),
   },

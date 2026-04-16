@@ -1,6 +1,6 @@
 import { type Static, Type } from "typebox";
 
-import { CoordsSchema } from "../geo.js";
+import { CoordsSchema, SimplifiedCoordsSchema } from "../geo.js";
 import { ApiResponseSchema, Nullable } from "../utils.js";
 
 export const ImageSourceSchema = Type.Union(
@@ -30,7 +30,7 @@ export const BriefVisitedPoiSchema = Type.Object(
     id: Type.Number(),
     poiId: Type.String(),
     name: Type.Optional(Type.String()),
-    coords: CoordsSchema,
+    coords: SimplifiedCoordsSchema,
     createdAt: Type.String(),
     comment: Nullable(Type.String()),
     rating: Type.Number(),

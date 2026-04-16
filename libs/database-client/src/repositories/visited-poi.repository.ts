@@ -1,8 +1,11 @@
-import { getUserDisplayName, type ImageSource } from "@vagabond/shared-utils";
+import {
+  type CreateVisitedPoiRequest,
+  getUserDisplayName,
+} from "@vagabond/shared-utils";
 import { and, eq, sql } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
-import { users, visitedPois } from "../schema.js";
+import { userLocations, users, visitedPois } from "../schema.js";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- Drizzle query builder return type is too complex to annotate manually
 function buildBaseQuery(db: DrizzleClient) {
@@ -44,35 +47,50 @@ export class VisitedPoiRepository {
     };
   }
 
-  async createCustom(data: {
-    imageKey?: string;
-    imageSource: ImageSource;
-    rating: number;
-    comment: string;
-    coords: { longitude: number; latitude: number };
-    userId: string;
-    poiId: string;
-  }): Promise<{ id: number }> {
-    const values = {
-      poiId: data.poiId,
-      userId: data.userId,
-      ...(data.imageKey !== undefined && { imageKey: data.imageKey }),
-      imageSource: data.imageSource,
-      rating: data.rating,
-      comment: data.comment,
-      coords: sql`ST_SetSRID(ST_MakePoint(${data.coords.longitude}, ${data.coords.latitude}), 4326)`,
-    };
-    const result = await this.db
-      .insert(visitedPois)
-      .values(values)
-      .returning({ id: visitedPois.id });
+  async createCustom(
+    data: CreateVisitedPoiRequest & {
+      userId: string;
+      poiId: string;
+    },
+  ): Promise<{ id: number }> {
+    return await this.db.transaction(async (tx) => {
+      const [location] = await tx
+        .insert(userLocations)
+        .values({
+          userId: data.userId,
+          coords: sql`ST_SetSRID(ST_MakePoint(${data.coords.longitude}, ${data.coords.latitude}), 4326)`,
+          accuracy: data.coords.accuracy,
+          altitude: data.coords.altitude,
+          altitudeAccuracy: data.coords.altitudeAccuracy,
+          heading: data.coords.heading,
+          speed: data.coords.speed,
+          timestamp: new Date(),
+        })
+        .returning({ id: userLocations.id });
 
-    const row = result[0];
-    if (row === undefined) {
-      throw new Error("Failed to create visited POI");
-    }
+      if (location === undefined) {
+        throw new Error("Failed to create user location");
+      }
 
-    return { id: row.id };
+      const [visitedPoi] = await tx
+        .insert(visitedPois)
+        .values({
+          poiId: data.poiId,
+          userId: data.userId,
+          locationId: location.id,
+          ...(data.imageKey !== undefined && { imageKey: data.imageKey }),
+          imageSource: data.imageSource,
+          rating: data.rating,
+          comment: data.comment,
+        })
+        .returning({ id: visitedPois.id });
+
+      if (visitedPoi === undefined) {
+        throw new Error("Failed to create visited POI");
+      }
+
+      return { id: visitedPoi.id };
+    });
   }
 
   async updateImageKey(id: number, imageKey: string): Promise<void> {

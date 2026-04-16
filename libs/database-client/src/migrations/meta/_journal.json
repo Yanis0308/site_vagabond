@@ -141,6 +141,13 @@
       "when": 1775117543567,
       "tag": "0019_amused_stryfe",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1775225130210,
+      "tag": "0020_solid_agent_zero",
+      "breakpoints": true
     }
   ]
 }

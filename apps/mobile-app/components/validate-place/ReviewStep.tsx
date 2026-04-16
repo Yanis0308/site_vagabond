@@ -40,7 +40,7 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
   imageSource,
   onValidated,
 }) => {
-  const { simplifiedLocation } = useUserLocation();
+  const { userLocation } = useUserLocation();
   const validatePlace = useValidatePlaceMutation();
   const setDisplayingLoader = useSetAtom(displayingLoaderAtom);
 
@@ -85,7 +85,15 @@ export const ReviewStep: React.FC<ReviewStepProps> = ({
         imageSource,
         rating: data.rating,
         comment: data.comment,
-        coords: simplifiedLocation ?? { latitude: 0, longitude: 0 },
+        coords: {
+          latitude: userLocation?.coords.latitude ?? 0,
+          longitude: userLocation?.coords.longitude ?? 0,
+          accuracy: userLocation?.coords.accuracy ?? null,
+          altitude: userLocation?.coords.altitude ?? null,
+          altitudeAccuracy: userLocation?.coords.altitudeAccuracy ?? null,
+          heading: userLocation?.coords.heading ?? null,
+          speed: userLocation?.coords.speed ?? null,
+        },
       });
 
       onValidated(visitedPoiId);

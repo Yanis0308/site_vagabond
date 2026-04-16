@@ -3,15 +3,18 @@ import { sql } from "drizzle-orm";
 import { type DrizzleClient } from "../drizzleClient.js";
 import { userLocations } from "../schema.js";
 
-export interface LocationInput {
-  userId: string;
+export interface CoordsInput {
   latitude: number;
   longitude: number;
-  accuracy: number | null;
-  altitude: number | null;
-  altitudeAccuracy: number | null;
-  heading: number | null;
-  speed: number | null;
+  accuracy?: number | null;
+  altitude?: number | null;
+  altitudeAccuracy?: number | null;
+  heading?: number | null;
+  speed?: number | null;
+}
+
+export interface LocationInput extends CoordsInput {
+  userId: string;
   timestamp: Date;
 }
 
