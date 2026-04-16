@@ -48,6 +48,13 @@ export const LeaderboardUserItem = memo(
       return null;
     };
 
+    const getRankTextSize = (rank: number): string => {
+      if (rank < 4) return "text-4xl";
+      if (rank < 10) return "text-xl";
+      if (rank < 100) return "text-lg";
+      return "text-base";
+    };
+
     const handlePress = (): void => {
       if (isCurrentUser) {
         router.push("/profile");
@@ -57,7 +64,6 @@ export const LeaderboardUserItem = memo(
     };
 
     const rankEmoji = getRankEmoji(user.rank);
-    const isWinner = rankEmoji !== null;
 
     return (
       <Pressable onPress={handlePress}>
@@ -71,11 +77,15 @@ export const LeaderboardUserItem = memo(
         >
           <HStack className="items-center gap-2">
             {/* Rank */}
-            <Box className="w-10 items-center">
+            <Box className="w-14 items-center">
               <CustomText
-                className={`font-bold ${getRankColor(user.rank)} ${
-                  isWinner ? "text-4xl" : "text-xl"
-                }`}
+                className={`text-center font-bold ${getRankColor(user.rank)} ${getRankTextSize(
+                  user.rank,
+                )}`}
+                style={{
+                  lineHeight: user.rank < 4 ? 44 : undefined,
+                  textAlignVertical: "center",
+                }}
               >
                 {rankEmoji ?? `#${user.rank}`}
               </CustomText>

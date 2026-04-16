@@ -1,7 +1,6 @@
 import { CrashlyticsService } from "./CrashlyticsService";
 import { FirebaseAnalyticsService } from "./FirebaseAnalyticsService";
 import type { AnalyticsUserContext, IAnalyticsService } from "./types";
-import { VexoService } from "./VexoService";
 
 export class UnifiedAnalyticsService implements IAnalyticsService {
   private static instance: UnifiedAnalyticsService | null = null;
@@ -13,34 +12,24 @@ export class UnifiedAnalyticsService implements IAnalyticsService {
 
   private isInitialized = false;
 
-  // All three analytics services
-  private services: [CrashlyticsService, FirebaseAnalyticsService, VexoService];
+  // All analytics services (Crashlytics + Firebase Analytics)
+  private services: [CrashlyticsService, FirebaseAnalyticsService];
   private crashlyticsService: CrashlyticsService;
   private firebaseAnalyticsService: FirebaseAnalyticsService;
-  private vexoService: VexoService;
 
   constructor() {
     this.crashlyticsService = new CrashlyticsService();
     this.firebaseAnalyticsService = new FirebaseAnalyticsService();
-    this.vexoService = new VexoService();
 
     // Array of all services for easy iteration
-    this.services = [
-      this.crashlyticsService,
-      this.firebaseAnalyticsService,
-      this.vexoService,
-    ];
+    this.services = [this.crashlyticsService, this.firebaseAnalyticsService];
   }
 
   async initialize(): Promise<void> {
     try {
       this.crashlyticsService.initialize();
 
-      // Initialize all services in parallel
-      await Promise.allSettled([
-        this.firebaseAnalyticsService.initialize(),
-        this.vexoService.initialize(),
-      ]);
+      await this.firebaseAnalyticsService.initialize();
 
       this.isInitialized = true;
     } catch (error) {

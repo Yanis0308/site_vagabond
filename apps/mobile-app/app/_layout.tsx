@@ -27,7 +27,7 @@ import { UnifiedAnalyticsService } from "@/lib/analytics/UnifiedAnalyticsService
 import { authenticatedUserAtom } from "@/stores/authenticatedUserAtom";
 import { logger } from "@/utils/logger";
 
-// Initialize unified analytics (includes both Crashlytics and Vexo)
+// Initialize unified analytics
 void UnifiedAnalyticsService.getInstance().initialize();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -81,7 +81,7 @@ export default function RootLayout(): ReactElement | null {
 
         // Prefetch user profile and set analytics context
         ((): void => {
-          // Set unified analytics user context with role (handles both Crashlytics and Vexo)
+          // Set unified analytics user context (Crashlytics + Firebase Analytics)
           void UnifiedAnalyticsService.getInstance().setUserContext({
             email: user.email ?? undefined,
             displayName: user.displayName ?? undefined,
@@ -96,7 +96,7 @@ export default function RootLayout(): ReactElement | null {
         // User is signed out
         setAuthenticatedUser(null);
 
-        // Clear unified analytics user context (handles both Crashlytics and Vexo)
+        // Clear unified analytics user context (Crashlytics + Firebase Analytics)
         void UnifiedAnalyticsService.getInstance().clearUserContext();
       }
 
