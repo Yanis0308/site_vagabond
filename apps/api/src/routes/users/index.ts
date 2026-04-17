@@ -12,6 +12,7 @@ import {
   UsersMeResponseSchema,
 } from "@vagabond/shared-utils";
 import escapeHtml from "escape-html";
+import { getAuth } from "firebase-admin/auth";
 
 import { captureAndLog } from "../../utils/logger.js";
 
@@ -168,6 +169,39 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             );
           }
         })();
+      }
+
+      return await reply.status(200).send({ data: {} });
+    },
+  );
+  fastify.delete(
+    "/me",
+    {
+      schema: {
+        tags: ["users"],
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: EmptyResponseSchema,
+        },
+      },
+    },
+    async function (request, reply) {
+      const { userId } = request.user.db;
+
+      await fastify.dbRepositories.user.deleteUser(userId);
+
+      try {
+        await getAuth(fastify.firebase).deleteUser(userId);
+      } catch (error) {
+        captureAndLog(
+          fastify,
+          error,
+          "Failed to delete Firebase user after DB deletion succeeded",
+          {
+            level: "error",
+            tags: { operation: "firebase-delete-user", userId },
+          },
+        );
       }
 
       return await reply.status(200).send({ data: {} });

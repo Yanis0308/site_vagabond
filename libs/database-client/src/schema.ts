@@ -159,7 +159,7 @@ export const visitedPois = pgTable(
       name: "visited_pois_user_id_fkey",
     })
       .onUpdate("cascade")
-      .onDelete("restrict"),
+      .onDelete("cascade"),
     foreignKey({
       columns: [table.locationId],
       foreignColumns: [userLocations.id],

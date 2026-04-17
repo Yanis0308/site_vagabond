@@ -148,6 +148,13 @@
       "when": 1775308297345,
       "tag": "0020_solid_agent_zero",
       "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1776444368946,
+      "tag": "0021_archive_soft_delete",
+      "breakpoints": true
     }
   ]
 }

@@ -37,6 +37,10 @@ export const getUserPublicInfo = async (
   return rawResult.data;
 };
 
+export const deleteMe = async (): Promise<void> => {
+  await apiClient.delete("api/users/me");
+};
+
 export const submitAppReview = async (
   positive: boolean,
   comment: string | null,

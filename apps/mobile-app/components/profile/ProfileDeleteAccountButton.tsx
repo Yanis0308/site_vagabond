@@ -1,33 +1,27 @@
-import { getAuth } from "@react-native-firebase/auth";
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
-import { memo, type ReactElement, useCallback, useState } from "react";
+import { memo, type ReactElement, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
+import { useDeleteAccountMutation } from "@/hooks/mutations/useDeleteAccountMutation";
 import { logger } from "@/utils/logger";
-
-// TODO: implement real account deletion (API DELETE /me, Firebase delete, S3 cleanup) - required by Apple 5.1.1(v) - for now only signs out
 
 export const ProfileDeleteAccountButton = memo((): ReactElement => {
   const { t } = useTranslation("common");
-  const [isSigningOut, setIsSigningOut] = useState(false);
+  const { mutate: deleteAccount, isPending } = useDeleteAccountMutation();
 
-  const signOut = useCallback(async () => {
-    setIsSigningOut(true);
-    try {
-      try {
-        await GoogleSignin.revokeAccess();
-      } catch (error) {
-        logger("Error GoogleSignin revoking access", error);
-      }
-      await getAuth().signOut();
-    } catch (error) {
-      logger("Error signing out", error);
-      setIsSigningOut(false);
-    }
-  }, []);
+  const handleConfirm = useCallback(() => {
+    deleteAccount(undefined, {
+      onError: (error) => {
+        logger("Error deleting account", error);
+        Alert.alert(
+          t("delete_account_error_title"),
+          t("delete_account_error_message"),
+        );
+      },
+    });
+  }, [deleteAccount, t]);
 
   const handlePress = useCallback(() => {
     Alert.alert(
@@ -38,17 +32,17 @@ export const ProfileDeleteAccountButton = memo((): ReactElement => {
         {
           text: t("delete_account_confirm_yes"),
           style: "destructive",
-          onPress: (): void => void signOut(),
+          onPress: handleConfirm,
         },
       ],
     );
-  }, [t, signOut]);
+  }, [t, handleConfirm]);
 
   return (
     <Box className="items-center justify-center py-2">
       <Button
         onPress={handlePress}
-        isDisabled={isSigningOut}
+        isDisabled={isPending}
         action="text"
         size="none"
       >

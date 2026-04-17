@@ -37,6 +37,8 @@
   "delete_account_confirm_message": "This action is irreversible. All your data will be deleted.",
   "delete_account_confirm_no": "No",
   "delete_account_confirm_yes": "Yes",
+  "delete_account_error_title": "Error",
+  "delete_account_error_message": "An error occurred while deleting your account. Please try again.",
   "delete_review_confirm_title": "Delete this review?",
   "delete_review_confirm_message": "This action is irreversible. Your review will be permanently deleted.",
   "delete_review_confirm_no": "Cancel",

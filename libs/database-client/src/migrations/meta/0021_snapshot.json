@@ -1,6 +1,6 @@
 {
-  "id": "e47f481f-4a7a-42de-9474-6164393026a0",
-  "prevId": "ebc3cb5a-2f55-419c-ba93-5a92de27be8e",
+  "id": "a92e8c41-a344-4276-8a8b-0e6de1dd4712",
+  "prevId": "e47f481f-4a7a-42de-9474-6164393026a0",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -12,7 +12,7 @@
           "name": "id",
           "type": "serial",
           "primaryKey": true,
-          "notNull": false
+          "notNull": true
         },
         "user_id": {
           "name": "user_id",
@@ -1171,6 +1171,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'USER'"
+        },
+        "is_private": {
+          "name": "is_private",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},
@@ -1233,7 +1240,7 @@
           "name": "image_key",
           "type": "varchar(1000)",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "image_source": {
           "name": "image_source",
@@ -1298,7 +1305,7 @@
           "tableTo": "users",
           "columnsFrom": ["user_id"],
           "columnsTo": ["user_id"],
-          "onDelete": "restrict",
+          "onDelete": "cascade",
           "onUpdate": "cascade"
         },
         "visited_pois_location_id_fkey": {

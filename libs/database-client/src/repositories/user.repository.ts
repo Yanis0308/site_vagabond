@@ -252,6 +252,17 @@ export class UserRepository {
     };
   }
 
+  async deleteUser(userId: string): Promise<void> {
+    await this.db.transaction(async (tx) => {
+      // Set cascade context so child triggers attribute the deletion to this user
+      await tx.execute(
+        sql`SELECT set_config('archive.cause_table', 'users', true), set_config('archive.cause_id', ${userId}, true)`,
+      );
+      await tx.delete(visitedPois).where(eq(visitedPois.userId, userId));
+      await tx.delete(users).where(eq(users.userId, userId));
+    });
+  }
+
   async updateUser(
     userId: string,
     userInfo: Partial<Pick<UserInfo, "nickname" | "isPrivate">>,
