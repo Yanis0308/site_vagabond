@@ -12,11 +12,13 @@ import { captureAndLog } from "../utils/logger.js";
 function buildSentryUserFromDecodedToken(
   userId: string,
   decodedToken: auth.DecodedIdToken,
+  clientIpAddress: string,
 ): SentryUser {
   const email = decodedToken.email;
 
   return {
     id: userId,
+    ip_address: clientIpAddress,
     ...(email !== undefined ? { email } : {}),
   };
 }
@@ -27,8 +29,10 @@ function buildSentryUserFromDbAndToken(params: {
   dbEmail: string | null;
   nickname: string | null;
   fullName: string;
+  clientIpAddress: string;
 }): SentryUser {
-  const { userId, tokenEmail, dbEmail, nickname, fullName } = params;
+  const { userId, tokenEmail, dbEmail, nickname, fullName, clientIpAddress } =
+    params;
 
   const email = tokenEmail ?? dbEmail;
 
@@ -36,6 +40,7 @@ function buildSentryUserFromDbAndToken(params: {
 
   return {
     id: userId,
+    ip_address: clientIpAddress,
     ...(email !== null ? { email } : {}),
     username,
   };
@@ -97,7 +102,17 @@ export default fp(
           lastLogin: new Date(),
         };
 
-        Sentry.setUser(buildSentryUserFromDecodedToken(userId, decodedToken));
+        Sentry.setUser(
+          buildSentryUserFromDecodedToken(
+            userId,
+            decodedToken,
+            request.clientIpAddress,
+          ),
+        );
+
+        // Enrich log with user_id early so auth failures after this point carry the id.
+        request.log = request.log.child({ user_id: userId });
+        requestContext.set("log", request.log);
 
         // Ensure user exists and get the fresh DB record
         const { user: dbUser, isNew } =
@@ -113,6 +128,7 @@ export default fp(
             dbEmail: dbUser.email,
             nickname: dbUser.nickname,
             fullName: dbUser.fullName,
+            clientIpAddress: request.clientIpAddress,
           }),
         );
 
@@ -125,8 +141,13 @@ export default fp(
           },
         });
 
-        // Enrich request.log with userId for all subsequent logs in this request
-        request.log = request.log.child({ userId });
+        // Enrich request.log with user info for all subsequent logs in this request
+        request.log = request.log.child({
+          user_id: userId,
+          user_email: decodedToken.email ?? dbUser.email,
+          user_nickname: dbUser.nickname,
+          user_provider: decodedToken.firebase.sign_in_provider,
+        });
         requestContext.set("log", request.log);
 
         // Fire-and-forget Slack notification for new user
@@ -170,6 +191,7 @@ export default fp(
       "fastify-drizzle",
       "slack",
       "request-context",
+      "request-logging",
     ],
   },
 );

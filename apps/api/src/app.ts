@@ -13,6 +13,7 @@ import configPlugin from "./plugins/config.js";
 import firebasePlugin from "./plugins/firebase.js";
 import multipartPlugin from "./plugins/multipart.js";
 import requestContextPlugin from "./plugins/request-context.js";
+import requestLoggingPlugin from "./plugins/request-logging.js";
 import s3Plugin from "./plugins/s3.js";
 import securityPlugin from "./plugins/security.js";
 import slackPlugin from "./plugins/slack.js";
@@ -64,6 +65,9 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
 
   // 8. Request context (AsyncLocalStorage for request-scoped logger)
   await fastify.register(requestContextPlugin, opts);
+
+  // 8b. Request logging (enrich logs + Sentry with IP/userAgent before auth)
+  await fastify.register(requestLoggingPlugin, opts);
 
   // 9. Other plugins
   await fastify.register(multipartPlugin, opts);
