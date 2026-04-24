@@ -1,8 +1,11 @@
 import React, { type ReactElement, useState } from "react";
+import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 import { InitialStep } from "@/components/app-review/InitialStep";
 import { NegativeStep } from "@/components/app-review/NegativeStep";
-import { Modal, ModalBackdrop, ModalContent } from "@/components/ui/modal";
+import { Modal, ModalBackdrop } from "@/components/ui/modal";
 import { useAppReviewMutation } from "@/hooks/mutations/useAppReviewMutation";
 import { logger } from "@/utils/logger";
 
@@ -41,6 +44,12 @@ export const AppReviewModal = ({
   const [step, setStep] = useState<ModalStep>("initial");
   const [comment, setComment] = useState<string>("");
   const mutation = useAppReviewMutation();
+
+  const { height } = useReanimatedKeyboardAnimation();
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: height.value / 2 }],
+  }));
 
   const handleReset = (): void => {
     setStep("initial");
@@ -85,26 +94,31 @@ export const AppReviewModal = ({
 
   return (
     <Modal isOpen={visible} size="full">
-      <ModalBackdrop />
-      <ModalContent className="max-w-[85%] rounded-3xl bg-background-100 px-4 py-6 shadow-lg">
-        {step === "initial" ? (
-          <InitialStep
-            isPending={mutation.isPending}
-            onThumbsUp={handleThumbsUp}
-            onThumbsDown={() => {
-              setStep("negative");
-            }}
-          />
-        ) : (
-          <NegativeStep
-            isPending={mutation.isPending}
-            comment={comment}
-            onCommentChange={setComment}
-            onSubmit={handleThumbsDownSubmit}
-            onBack={handleReset}
-          />
-        )}
-      </ModalContent>
+      <ModalBackdrop onPress={Keyboard.dismiss} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <Animated.View
+          className="w-full max-w-[85%] rounded-3xl bg-background-100 px-4 py-6 shadow-lg"
+          style={animatedStyle}
+        >
+          {step === "initial" ? (
+            <InitialStep
+              isPending={mutation.isPending}
+              onThumbsUp={handleThumbsUp}
+              onThumbsDown={() => {
+                setStep("negative");
+              }}
+            />
+          ) : (
+            <NegativeStep
+              isPending={mutation.isPending}
+              comment={comment}
+              onCommentChange={setComment}
+              onSubmit={handleThumbsDownSubmit}
+              onBack={handleReset}
+            />
+          )}
+        </Animated.View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

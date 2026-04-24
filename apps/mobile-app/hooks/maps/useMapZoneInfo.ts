@@ -7,27 +7,19 @@ import { getZoneFromLocation } from "@/utils/getZoneFromLocation";
 import { logger } from "@/utils/logger";
 
 /**
- * Seuils de zoom → source layer, ordonnés du plus zoomé au plus large.
- * Suit exactement les minZoomLevel des polygon de MapLayersConfig.
+ * Seuils de zoom dédiés à l'affichage du nom de zone dans l'UI.
+ * Indépendants des minZoomLevel de MapLayersConfig (rendu cartographique).
  */
-const ZOOM_TO_SOURCE_LAYER = [
-  {
-    minZoom: layersInfos.CITY.polygon.minZoomLevel,
-    sourceLayerId: layersInfos.CITY.polygon.sourceLayerId,
-  },
-  {
-    minZoom: layersInfos.COUNTY.polygon.minZoomLevel,
-    sourceLayerId: layersInfos.COUNTY.polygon.sourceLayerId,
-  },
-  {
-    minZoom: layersInfos.REGION.polygon.minZoomLevel,
-    sourceLayerId: layersInfos.REGION.polygon.sourceLayerId,
-  },
-  {
-    minZoom: layersInfos.COUNTRY.polygon.minZoomLevel,
-    sourceLayerId: layersInfos.COUNTRY.polygon.sourceLayerId,
-  },
-].sort((a, b) => b.minZoom - a.minZoom);
+const ZONE_NAME_ZOOM_THRESHOLDS = [
+  { minZoom: 12, sourceLayerId: layersInfos.CITY.polygon.sourceLayerId },
+  { minZoom: 8, sourceLayerId: layersInfos.COUNTY.polygon.sourceLayerId },
+  { minZoom: 6, sourceLayerId: layersInfos.REGION.polygon.sourceLayerId },
+  { minZoom: 0, sourceLayerId: layersInfos.COUNTRY.polygon.sourceLayerId },
+] as const;
+
+const ZOOM_TO_SOURCE_LAYER = [...ZONE_NAME_ZOOM_THRESHOLDS].sort(
+  (a, b) => b.minZoom - a.minZoom,
+);
 
 const getSourceLayerForZoom = (zoom: number): string | null => {
   const match = ZOOM_TO_SOURCE_LAYER.find((entry) => zoom >= entry.minZoom);
