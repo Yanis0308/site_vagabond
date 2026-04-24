@@ -77,6 +77,79 @@
       "cancel": "Annuler"
     }
   },
+  "user_feedback": {
+    "place_details": {
+      "cta": "Signaler une erreur",
+      "modal": {
+        "title": "Signaler une erreur",
+        "subtitle": "Ton avis nous aide à améliorer Vagabond 🙌 Ça prend moins de 10 secondes.",
+        "question_reason": "Que veux-tu signaler ?",
+        "question_information": "Sur quelle information exactement ?",
+        "general_information_group": "Informations générales",
+        "next": "Continuer",
+        "back": "Retour",
+        "free_text_label": "Ajoute un commentaire (facultatif)",
+        "free_text_placeholder": "Décris librement le problème constaté.",
+        "review_title": "Vérifie ton signalement avant envoi",
+        "location_required": "La position actuelle est nécessaire pour envoyer ce signalement.",
+        "submit": "Envoyer",
+        "success_title": "Merci ! 🙌",
+        "success_message": "Ton message aide directement à améliorer Vagabond.",
+        "metadata_unknown": "Inconnu",
+        "metadata": {
+          "place": "Lieu",
+          "city": "Ville",
+          "app_version": "Version app",
+          "os": "OS"
+        },
+        "summary": {
+          "report_type": "Signalement",
+          "information_type": "Information concernée",
+          "place": "Lieu",
+          "city": "Ville",
+          "app_version": "Version app",
+          "os": "OS",
+          "screen": "Screen",
+          "comment": "Commentaire",
+          "no_comment": "Aucun commentaire",
+          "not_provided": "Non renseigné"
+        },
+        "report_options": {
+          "incorrect_info": "Infos incorrectes",
+          "closed_or_missing": "Lieu fermé ou inexistant",
+          "irrelevant_place": "Lieu non pertinent",
+          "wrong_category": "Mauvaise catégorie",
+          "accessibility_issue": "Problème d'accessibilité PMR",
+          "wrong_photos": "Photos incorrectes",
+          "missing_information": "Il manque une information",
+          "other_remark": "Autre remarque"
+        },
+        "information_options": {
+          "category": "Catégorie",
+          "photos": "Photos",
+          "fun_facts": "Fun facts",
+          "description": "Description",
+          "address": "Adresse",
+          "phone": "Numéro de téléphone",
+          "website": "Site",
+          "price": "Prix",
+          "opening_hours": "Horaires",
+          "practical_information": "Infos pratiques",
+          "accessibility": "Accessibilité",
+          "transport_access": "Transports et accès"
+        }
+      }
+    },
+    "modal": {
+      "submit": "Envoyer",
+      "retry": "Réessayer",
+      "loading": "Envoi en cours...",
+      "cancel": "Annuler",
+      "close": "Fermer",
+      "success_title": "Merci !",
+      "success_message": "Votre message a bien été envoyé."
+    }
+  },
   "privacy": {
     "public_label": "Profil public",
     "private_label": "Profil privé",

@@ -1,3 +1,7 @@
+import {
+  type UserFeedbackCategory,
+  type UserFeedbackPayload,
+} from "@vagabond/shared-utils";
 import { relations, sql } from "drizzle-orm";
 import {
   boolean,
@@ -412,6 +416,51 @@ export const poiEnriched = pgTable(
   ],
 );
 
+export const userFeedbacks = pgTable(
+  "user_feedbacks",
+  {
+    id: serial().primaryKey().notNull(),
+    userId: varchar("user_id", { length: 1000 }).notNull(),
+    category: varchar({ length: 100 }).$type<UserFeedbackCategory>().notNull(),
+    message: varchar({ length: 10000 }).notNull(),
+    targetPoiId: varchar("target_poi_id", { length: 1000 }),
+    location: geometry({ type: "point", srid: 4326 }),
+    city: varchar({ length: 1000 }),
+    payload: jsonb().$type<UserFeedbackPayload>().notNull(),
+    appVersion: varchar("app_version", { length: 100 }).notNull(),
+    os: varchar({ length: 100 }).notNull(),
+    createdAt: created_at,
+  },
+  (table) => [
+    index("idx_user_feedbacks_user_id").using(
+      "btree",
+      table.userId.asc().nullsLast().op("text_ops"),
+    ),
+    index("idx_user_feedbacks_category").using(
+      "btree",
+      table.category.asc().nullsLast().op("text_ops"),
+    ),
+    index("idx_user_feedbacks_target_poi_id").using(
+      "btree",
+      table.targetPoiId.asc().nullsLast().op("text_ops"),
+    ),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.userId],
+      name: "user_feedbacks_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+    foreignKey({
+      columns: [table.targetPoiId],
+      foreignColumns: [pois.id],
+      name: "user_feedbacks_target_poi_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("set null"),
+  ],
+);
+
 export const appReview = pgTable(
   "app_review",
   {
@@ -459,6 +508,7 @@ export const userLocationsRelations = relations(
 export const usersRelations = relations(users, ({ many, one }) => ({
   visitedPois: many(visitedPois),
   userLocations: many(userLocations),
+  userFeedbacks: many(userFeedbacks),
   appReview: one(appReview, {
     fields: [users.userId],
     references: [appReview.userId],
@@ -478,6 +528,7 @@ export const poiBoundariesRelations = relations(poiBoundaries, ({ one }) => ({
 
 export const poisRelations = relations(pois, ({ many }) => ({
   poiBoundaries: many(poiBoundaries),
+  userFeedbacks: many(userFeedbacks),
 }));
 
 export const boundariesRelations = relations(boundaries, ({ many }) => ({
@@ -487,6 +538,17 @@ export const boundariesRelations = relations(boundaries, ({ many }) => ({
 export const poiEnrichedRelations = relations(poiEnriched, ({ one }) => ({
   poi: one(pois, {
     fields: [poiEnriched.poiId],
+    references: [pois.id],
+  }),
+}));
+
+export const userFeedbacksRelations = relations(userFeedbacks, ({ one }) => ({
+  user: one(users, {
+    fields: [userFeedbacks.userId],
+    references: [users.userId],
+  }),
+  targetPoi: one(pois, {
+    fields: [userFeedbacks.targetPoiId],
     references: [pois.id],
   }),
 }));

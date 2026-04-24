@@ -1,6 +1,7 @@
 import type { PoiEnrichedData, VisitedPoi } from "@vagabond/shared-utils";
 import { type ReactElement } from "react";
 
+import { PlaceDetailsUserFeedback } from "@/components/place-details/PlaceDetailsUserFeedback";
 import { cn } from "@/utils/cn";
 
 import { StarRating } from "../validate-place/StarRating";
@@ -183,6 +184,9 @@ export function RenderListItem({
           className="px-4 pt-3"
         />
       );
+
+    case "userFeedback":
+      return <PlaceDetailsUserFeedback placeId={item.placeId} />;
 
     case "admin":
       return (

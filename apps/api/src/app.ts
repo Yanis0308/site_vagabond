@@ -24,6 +24,7 @@ import locationRoute from "./routes/location/index.js";
 import poisIdRoute from "./routes/pois/[id].js";
 import searchRoute from "./routes/search/index.js";
 import uploadRoute from "./routes/upload/index.js";
+import userFeedbacksRoute from "./routes/user-feedbacks/index.js";
 import usersRoute from "./routes/users/index.js";
 import visitedPoisRoute from "./routes/visited-pois/index.js";
 import zonesRoute from "./routes/zones/index.js";
@@ -83,6 +84,7 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   await fastify.register(poisIdRoute, { prefix: "api/pois" });
   await fastify.register(searchRoute, { prefix: "api/search" });
   await fastify.register(uploadRoute, { prefix: "api/upload" });
+  await fastify.register(userFeedbacksRoute, { prefix: "api/user-feedbacks" });
   await fastify.register(usersRoute, { prefix: "api/users" });
   await fastify.register(visitedPoisRoute, { prefix: "api/visited-pois" });
   await fastify.register(zonesRoute, { prefix: "api/zones" });

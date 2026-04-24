@@ -5,6 +5,7 @@ export * from "./repositories/poi-enriched.repository.js";
 export * from "./repositories/processing-result.repository.js";
 export * from "./repositories/search.repository.js";
 export * from "./repositories/user.repository.js";
+export * from "./repositories/user-feedback.repository.js";
 export * from "./repositories/user-location.repository.js";
 export * from "./repositories/visited-poi.repository.js";
 export * as schema from "./schema.js";

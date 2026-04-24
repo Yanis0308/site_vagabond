@@ -25,6 +25,10 @@ export default fp(
             name: "visited-pois",
             description: "Visited POIs related end-points",
           },
+          {
+            name: "user-feedbacks",
+            description: "User feedback related end-points",
+          },
         ],
         components: {
           securitySchemes: {

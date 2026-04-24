@@ -83,6 +83,79 @@
     "uploading": "Uploading photo...",
     "success": "Photo uploaded!"
   },
+  "user_feedback": {
+    "place_details": {
+      "cta": "Report an error",
+      "modal": {
+        "title": "Report an error",
+        "subtitle": "Your feedback helps improve Vagabond 🙌 It takes less than 10 seconds.",
+        "question_reason": "What would you like to report?",
+        "question_information": "Which information is affected?",
+        "general_information_group": "General information",
+        "next": "Continue",
+        "back": "Back",
+        "free_text_label": "Add a comment (optional)",
+        "free_text_placeholder": "Describe the issue in your own words.",
+        "review_title": "Review your report before sending",
+        "location_required": "Your current location is required to send this report.",
+        "submit": "Send",
+        "success_title": "Thank you! 🙌",
+        "success_message": "Your message directly helps improve Vagabond.",
+        "metadata_unknown": "Unknown",
+        "metadata": {
+          "place": "Place",
+          "city": "City",
+          "app_version": "App version",
+          "os": "OS"
+        },
+        "summary": {
+          "report_type": "Report type",
+          "information_type": "Affected information",
+          "place": "Place",
+          "city": "City",
+          "app_version": "App version",
+          "os": "OS",
+          "screen": "Screenshot",
+          "comment": "Comment",
+          "no_comment": "No comment",
+          "not_provided": "Not provided"
+        },
+        "report_options": {
+          "incorrect_info": "Incorrect information",
+          "closed_or_missing": "Closed or non-existent place",
+          "irrelevant_place": "Irrelevant place",
+          "wrong_category": "Wrong category",
+          "accessibility_issue": "Accessibility issue",
+          "wrong_photos": "Incorrect photos",
+          "missing_information": "Missing information",
+          "other_remark": "Other remark"
+        },
+        "information_options": {
+          "category": "Category",
+          "photos": "Photos",
+          "fun_facts": "Fun facts",
+          "description": "Description",
+          "address": "Address",
+          "phone": "Phone number",
+          "website": "Website",
+          "price": "Price",
+          "opening_hours": "Opening hours",
+          "practical_information": "Practical information",
+          "accessibility": "Accessibility",
+          "transport_access": "Transport and access"
+        }
+      }
+    },
+    "modal": {
+      "submit": "Submit",
+      "retry": "Retry",
+      "loading": "Sending...",
+      "cancel": "Cancel",
+      "close": "Close",
+      "success_title": "Thank you!",
+      "success_message": "Your message has been sent."
+    }
+  },
   "edit_nickname": {
     "title": "Nickname",
     "cancel": "Cancel",

@@ -155,6 +155,13 @@
       "when": 1776444368946,
       "tag": "0021_archive_soft_delete",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1777034655918,
+      "tag": "0022_normal_gamora",
+      "breakpoints": true
     }
   ]
 }

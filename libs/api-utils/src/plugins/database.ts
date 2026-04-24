@@ -5,6 +5,7 @@ import {
   PoiRepository,
   ProcessingResultRepository,
   SearchRepository,
+  UserFeedbackRepository,
   UserLocationRepository,
   UserRepository,
   VisitedPoiRepository,
@@ -18,6 +19,7 @@ export interface DbRepositories {
   boundary: BoundaryRepository;
   search: SearchRepository;
   user: UserRepository;
+  userFeedback: UserFeedbackRepository;
   location: UserLocationRepository;
   visitedPoi: VisitedPoiRepository;
   processingResult: ProcessingResultRepository;
@@ -42,6 +44,7 @@ export default fp(
         boundary: new BoundaryRepository(db),
         search: new SearchRepository(db),
         user: new UserRepository(db),
+        userFeedback: new UserFeedbackRepository(db),
         location: new UserLocationRepository(db),
         visitedPoi: new VisitedPoiRepository(db),
         processingResult: new ProcessingResultRepository(db),

@@ -1,3 +1,4 @@
+import { type UserFeedbackCategory } from "@vagabond/shared-utils";
 import dotenv from "dotenv";
 import fp from "fastify-plugin";
 import fs from "fs";
@@ -24,6 +25,9 @@ const RawConfigSchema = z.object({
   SLACK_CHANNEL_SIGNUPS: z.string(),
   SLACK_CHANNEL_POI_VALIDATIONS: z.string(),
   SLACK_CHANNEL_APP_REVIEWS: z.string(),
+  SLACK_CHANNEL_POI_REPORTS: z.string(),
+  SLACK_CHANNEL_PLACE_SUGGESTIONS: z.string(),
+  SLACK_CHANNEL_USER_FEEDBACK: z.string(),
   DATA_SCRAPER_URL: z.string(),
   DATA_SCRAPER_BASIC_AUTH_USER: z.string(),
   DATA_SCRAPER_BASIC_AUTH_PASSWORD: z.string(),
@@ -47,6 +51,9 @@ export interface Config {
     channelSignups: string;
     channelPoiValidations: string;
     channelAppReviews: string;
+    channelPoiReports: string;
+    channelPlaceSuggestions: string;
+    channelUserFeedbackByCategory: Record<UserFeedbackCategory, string>;
   };
   dataScraper: {
     url: string;
@@ -105,6 +112,16 @@ export default fp(
           channelSignups: rawConfig.SLACK_CHANNEL_SIGNUPS,
           channelPoiValidations: rawConfig.SLACK_CHANNEL_POI_VALIDATIONS,
           channelAppReviews: rawConfig.SLACK_CHANNEL_APP_REVIEWS,
+          channelPoiReports: rawConfig.SLACK_CHANNEL_POI_REPORTS,
+          channelPlaceSuggestions: rawConfig.SLACK_CHANNEL_PLACE_SUGGESTIONS,
+          channelUserFeedbackByCategory: {
+            POI_REPORT: rawConfig.SLACK_CHANNEL_POI_REPORTS,
+            PLACE_SUGGESTION: rawConfig.SLACK_CHANNEL_PLACE_SUGGESTIONS,
+            BUG: rawConfig.SLACK_CHANNEL_USER_FEEDBACK,
+            SUGGESTION: rawConfig.SLACK_CHANNEL_USER_FEEDBACK,
+            INCOMPREHENSION: rawConfig.SLACK_CHANNEL_USER_FEEDBACK,
+            OTHER: rawConfig.SLACK_CHANNEL_USER_FEEDBACK,
+          },
         },
         dataScraper: {
           url: rawConfig.DATA_SCRAPER_URL,

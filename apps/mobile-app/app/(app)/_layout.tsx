@@ -19,6 +19,10 @@ export default function RootLayout(): ReactElement | null {
       <Stack.Screen name="(tabs)" />
       <Stack.Screen name="validate-place/review-form" />
       <Stack.Screen name="search" />
+      <Stack.Screen
+        name="user-feedback/[placeId]"
+        options={{ headerShown: false, presentation: "modal" }}
+      />
       <Stack.Screen name="user/[userId]" />
       <Stack.Screen
         name="user/edit-nickname"

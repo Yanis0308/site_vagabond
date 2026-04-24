@@ -21,6 +21,10 @@ export type ListItemType =
   | { type: "funFacts" }
   | { type: "seasonalClosure" }
   | { type: "socialMedia" }
+  | {
+      type: "userFeedback";
+      placeId: string;
+    }
   | { type: "admin"; placeId: string; placeName: string }
   | { type: "loading" };
 
@@ -149,6 +153,11 @@ export const buildListData = ({
   if (enrichedData?.socialMedia !== undefined) {
     items.push({ type: "socialMedia" });
   }
+
+  items.push({
+    type: "userFeedback",
+    placeId: place.id,
+  });
 
   if (userRole === "ADMIN") {
     items.push({

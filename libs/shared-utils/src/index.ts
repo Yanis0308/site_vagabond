@@ -71,6 +71,22 @@ export {
   UsersMeResponseSchema,
 } from "./schemas/api/user.js";
 export {
+  type BugFeedbackPayload,
+  type CreateUserFeedbackRequest,
+  CreateUserFeedbackRequestSchema,
+  type IncomprehensionFeedbackPayload,
+  type OtherFeedbackPayload,
+  type PlaceSuggestionFeedbackPayload,
+  type PoiReportFeedbackPayload,
+  type SuggestionFeedbackPayload,
+  type UserFeedbackCategory,
+  UserFeedbackCategorySchema,
+  type UserFeedbackPayload,
+  type UserFeedbackPayloadByCategory,
+  type UserFeedbackPoiReportReason,
+  UserFeedbackPoiReportReasonSchema,
+} from "./schemas/api/user-feedback.js";
+export {
   type BriefVisitedPoi,
   BriefVisitedPoiSchema,
   CheckVisitedPoiImageResponseSchema,

@@ -20,6 +20,11 @@ export const queryClient = new QueryClient({
       throwOnError: false,
       onError: (error): void => {
         logger("mutation error", error);
+
+        if (error.name === "UserFeedbackSubmissionError") {
+          return;
+        }
+
         alert(error.message);
       },
     },

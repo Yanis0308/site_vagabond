@@ -8,6 +8,7 @@ import * as scrape from "./api/scrape.js";
 import * as search from "./api/search.js";
 import * as upload from "./api/upload.js";
 import * as user from "./api/user.js";
+import * as userFeedback from "./api/user-feedback.js";
 import * as visitedPoi from "./api/visited-poi.js";
 import * as zones from "./api/zones.js";
 import * as appState from "./app-state.js";
@@ -33,6 +34,7 @@ export const allJsonSchemas = {
   ...poiEnriched,
   ...visitedPoi,
   ...user,
+  ...userFeedback,
   ...zones,
   ...primitive,
   ...response,
