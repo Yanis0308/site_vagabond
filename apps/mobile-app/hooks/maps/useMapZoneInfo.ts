@@ -2,29 +2,9 @@ import { type MapView } from "@rnmapbox/maps";
 import { useAsyncDebouncedCallback } from "@tanstack/react-pacer";
 import { useEffect, useState } from "react";
 
-import { layersInfos } from "@/constants/MapLayersConfig";
 import { getZoneFromLocation } from "@/utils/getZoneFromLocation";
 import { logger } from "@/utils/logger";
-
-/**
- * Seuils de zoom dédiés à l'affichage du nom de zone dans l'UI.
- * Indépendants des minZoomLevel de MapLayersConfig (rendu cartographique).
- */
-const ZONE_NAME_ZOOM_THRESHOLDS = [
-  { minZoom: 12, sourceLayerId: layersInfos.CITY.polygon.sourceLayerId },
-  { minZoom: 8, sourceLayerId: layersInfos.COUNTY.polygon.sourceLayerId },
-  { minZoom: 6, sourceLayerId: layersInfos.REGION.polygon.sourceLayerId },
-  { minZoom: 0, sourceLayerId: layersInfos.COUNTRY.polygon.sourceLayerId },
-] as const;
-
-const ZOOM_TO_SOURCE_LAYER = [...ZONE_NAME_ZOOM_THRESHOLDS].sort(
-  (a, b) => b.minZoom - a.minZoom,
-);
-
-const getSourceLayerForZoom = (zoom: number): string | null => {
-  const match = ZOOM_TO_SOURCE_LAYER.find((entry) => zoom >= entry.minZoom);
-  return match?.sourceLayerId ?? null;
-};
+import { getSourceLayerForZoom } from "@/utils/map-zone";
 
 interface UseMapZoneInfoParams {
   mapView: MapView | null;
@@ -39,10 +19,9 @@ export const useMapZoneInfo = ({
 }: UseMapZoneInfoParams): string | null => {
   const [zoneName, setZoneName] = useState<string | null>(null);
 
-  const sourceLayerId = getSourceLayerForZoom(zoom ?? 0);
-
   const longitude = mapCenter?.longitude ?? null;
   const latitude = mapCenter?.latitude ?? null;
+  const sourceLayerId = getSourceLayerForZoom(zoom ?? 0);
 
   const fetchZoneDebounced = useAsyncDebouncedCallback(
     async (): Promise<void> => {
@@ -52,16 +31,23 @@ export const useMapZoneInfo = ({
         latitude === null ||
         sourceLayerId === null
       ) {
+        setZoneName(null);
         return;
       }
+
       try {
-        const name = await getZoneFromLocation(
+        const nextZoneName = await getZoneFromLocation(
           mapView,
           longitude,
           latitude,
           sourceLayerId,
         );
-        setZoneName(name);
+
+        setZoneName((currentZoneName) => {
+          return currentZoneName === nextZoneName
+            ? currentZoneName
+            : nextZoneName;
+        });
       } catch (error) {
         // querySourceFeatures peut échouer si la carte est démontée ou la
         // tuile non encore chargée — zoneName reste à sa valeur précédente
@@ -73,7 +59,7 @@ export const useMapZoneInfo = ({
 
   useEffect((): void => {
     void fetchZoneDebounced();
-  }, [fetchZoneDebounced, mapView, longitude, latitude, sourceLayerId]);
+  }, [fetchZoneDebounced, latitude, longitude, mapView, sourceLayerId]);
 
   return zoneName;
 };

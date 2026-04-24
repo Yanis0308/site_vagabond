@@ -2,6 +2,7 @@ import {
   LocateFixedIcon,
   LocateIcon,
   SlidersHorizontal,
+  TriangleAlert,
 } from "lucide-react-native";
 import React, { memo, useCallback } from "react";
 
@@ -14,6 +15,7 @@ import { themeColors } from "../ui/gluestack-ui-provider/config";
 export type MapActionType =
   | { type: "locate"; onPress?: () => void; isCentered?: boolean }
   | { type: "compass"; onPress?: () => void; heading: number }
+  | { type: "feedback"; onPress?: () => void }
   | { type: "filter"; onPress?: () => void };
 
 interface MapActionButtonProps {
@@ -52,6 +54,14 @@ export const MapActionButton = memo(function MapActionButton({
       case "filter":
         return (
           <SlidersHorizontal
+            color={themeColors.burntOrange["700"].hex}
+            size={32}
+            strokeWidth={1.5}
+          />
+        );
+      case "feedback":
+        return (
+          <TriangleAlert
             color={themeColors.burntOrange["700"].hex}
             size={32}
             strokeWidth={1.5}

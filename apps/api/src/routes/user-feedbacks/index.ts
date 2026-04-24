@@ -60,19 +60,18 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
               getUserDisplayName(request.user.db.fullName, request.user.email),
             userFullName: request.user.db.fullName,
             userEmail: request.user.email ?? "Email inconnu",
-            targetPoiName: poiInfo?.name ?? "—",
-            targetPoiId: targetPoiId ?? "—",
+            targetPoiName: poiInfo?.name ?? null,
+            targetPoiId: targetPoiId ?? null,
             targetPoiLocation:
               targetPoiLocationParts.length > 0
                 ? targetPoiLocationParts.join(", ")
-                : "—",
+                : null,
             city: body.city ?? "—",
             latitude: body.location?.latitude ?? null,
             longitude: body.location?.longitude ?? null,
             os: body.os,
             appVersion: body.appVersion,
             message: body.message,
-            payload: body.payload as Record<string, unknown>,
             createdAt: new Date(),
           });
         } catch (error) {

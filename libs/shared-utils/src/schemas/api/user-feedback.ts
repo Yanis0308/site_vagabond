@@ -84,7 +84,9 @@ export const CreateUserFeedbackRequestSchema = Type.Union(
       {
         ...userFeedbackBaseProperties,
         category: Type.Literal("POI_REPORT"),
-        targetPoiId: Type.String({ minLength: 1, maxLength: 1000 }),
+        targetPoiId: Type.Optional(
+          Type.String({ minLength: 1, maxLength: 1000 }),
+        ),
         payload: PoiReportFeedbackPayloadSchema,
       },
       { $id: "CreatePoiReportFeedbackRequest" },

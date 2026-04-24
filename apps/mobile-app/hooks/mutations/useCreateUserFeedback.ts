@@ -11,7 +11,7 @@ const USER_FEEDBACK_GENERIC_ERROR_MESSAGE =
   "Impossible d'envoyer pour le moment";
 const UNKNOWN_APP_VERSION = "unknown";
 
-type UserFeedbackMetadataKeys = "location" | "city" | "appVersion" | "os";
+type UserFeedbackMetadataKeys = "location" | "appVersion" | "os";
 
 type DistributiveOmit<T, K extends PropertyKey> = T extends unknown
   ? Omit<T, K>

@@ -16,6 +16,7 @@ import { CustomScreenContainer } from "@/components/navigation/CustomScreenConta
 import { PlaceDetailsSheet } from "@/components/place-details/PlaceDetailsSheet";
 import { SearchHeaderButton } from "@/components/SearchHeaderButton";
 import { Box } from "@/components/ui/box";
+import { useMapCityName } from "@/hooks/maps/useMapCityName";
 import { useMapLogic } from "@/hooks/maps/useMapLogic";
 import { useMapZoneInfo } from "@/hooks/maps/useMapZoneInfo";
 import { useAppReviewModal } from "@/hooks/other/useAppReviewModal";
@@ -49,6 +50,10 @@ export default function MapsTab(): ReactElement {
     mapView: mapRef.current,
     mapCenter,
     zoom: zoomRealtime,
+  });
+  const cityName = useMapCityName({
+    mapView: mapRef.current,
+    mapCenter,
   });
 
   const { selectedPlace, setSelectedPlace } = usePlaceSelection();
@@ -245,6 +250,12 @@ export default function MapsTab(): ReactElement {
         <MapButtons
           onCompassPress={resetMapOrientation}
           onLocatePress={moveToUserLocation}
+          onFeedbackPress={() => {
+            router.push({
+              pathname: "/user-feedback",
+              params: cityName === null ? {} : { city: cityName },
+            });
+          }}
           isCentered={isCentered}
           heading={headingRealtime}
         />

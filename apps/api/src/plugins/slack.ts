@@ -9,16 +9,15 @@ interface UserFeedbackSlackMessageData {
   userDisplayName: string;
   userFullName: string;
   userEmail: string;
-  targetPoiName: string;
-  targetPoiId: string;
-  targetPoiLocation: string;
+  targetPoiName: string | null;
+  targetPoiId: string | null;
+  targetPoiLocation: string | null;
   city: string;
   latitude: number | null;
   longitude: number | null;
   os: string;
   appVersion: string;
   message: string;
-  payload: Record<string, unknown>;
   createdAt: Date;
 }
 
@@ -62,23 +61,6 @@ const formatSlackUser = (
   return `${displayName} (${email})`;
 };
 
-const formatSlackPayload = (payload: Record<string, unknown>): string => {
-  const entries = Object.entries(payload);
-
-  if (entries.length === 0) {
-    return "—";
-  }
-
-  return entries
-    .map(([key, value]) => {
-      const formattedValue =
-        typeof value === "string" ? value : JSON.stringify(value);
-
-      return `• ${escapeSlackText(key)}: ${escapeSlackText(formattedValue)}`;
-    })
-    .join("\n");
-};
-
 const formatSlackCoordinates = (
   latitude: number | null,
   longitude: number | null,
@@ -88,6 +70,10 @@ const formatSlackCoordinates = (
   }
 
   return `${latitude}, ${longitude}`;
+};
+
+const hasSlackValue = (value: string | null): value is string => {
+  return value !== null && value.trim().length > 0;
 };
 
 const buildUserFeedbackSlackMessage = ({
@@ -104,7 +90,6 @@ const buildUserFeedbackSlackMessage = ({
   os,
   appVersion,
   message,
-  payload,
   createdAt,
 }: UserFeedbackSlackMessageData): string => {
   const formattedUser = formatSlackUser(
@@ -112,21 +97,25 @@ const buildUserFeedbackSlackMessage = ({
     escapeSlackText(userFullName),
     escapeSlackText(userEmail),
   );
+  const targetPoiLabel =
+    hasSlackValue(targetPoiName) && hasSlackValue(targetPoiId)
+      ? `${escapeSlackText(targetPoiName)} (${escapeSlackText(targetPoiId)})`
+      : null;
 
   return [
     "📝 *Nouveau feedback utilisateur reçu !*",
     formatSlackEmojiLine("👤", "Utilisateur", formattedUser),
     formatSlackEmojiLine("🏷️", "Catégorie", escapeSlackText(category)),
-    formatSlackEmojiLine(
-      "📍",
-      "POI cible",
-      `${escapeSlackText(targetPoiName)} (${escapeSlackText(targetPoiId)})`,
-    ),
-    formatSlackEmojiLine(
-      "🧭",
-      "Localisation POI",
-      escapeSlackText(targetPoiLocation),
-    ),
+    targetPoiLabel === null
+      ? null
+      : formatSlackEmojiLine("📍", "POI cible", targetPoiLabel),
+    hasSlackValue(targetPoiLocation)
+      ? formatSlackEmojiLine(
+          "🧭",
+          "Localisation POI",
+          escapeSlackText(targetPoiLocation),
+        )
+      : null,
     formatSlackEmojiLine("🏙️", "Ville", escapeSlackText(city)),
     formatSlackEmojiLine(
       "🌍",
@@ -139,13 +128,14 @@ const buildUserFeedbackSlackMessage = ({
       `${escapeSlackText(os)} ${escapeSlackText(appVersion)}`,
     ),
     `💬 *Message:*\n${formatSlackMessageBody(message)}`,
-    `🧩 *Payload:*\n${formatSlackPayload(payload)}`,
     formatSlackEmojiLine(
       "📅",
       "Date",
       escapeSlackText(createdAt.toLocaleString("fr-FR")),
     ),
-  ].join("\n");
+  ]
+    .filter((line): line is string => line !== null)
+    .join("\n");
 };
 
 declare module "fastify" {

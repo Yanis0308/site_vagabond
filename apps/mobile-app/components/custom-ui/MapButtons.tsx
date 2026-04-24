@@ -9,6 +9,7 @@ import { MapActionButton } from "./MapActionButton";
 interface MapButtonsProps {
   onLocatePress?: () => void;
   onCompassPress?: () => void;
+  onFeedbackPress?: () => void;
   onFilterPress?: () => void;
   isCentered?: boolean;
   heading?: number;
@@ -18,6 +19,7 @@ export const MapButtons = memo(
   ({
     onLocatePress,
     onCompassPress,
+    onFeedbackPress,
     onFilterPress,
     isCentered = false,
     heading = 0,
@@ -53,6 +55,14 @@ export const MapButtons = memo(
       [onFilterPress],
     );
 
+    const feedbackAction = useMemo(
+      () => ({
+        type: "feedback" as const,
+        onPress: onFeedbackPress,
+      }),
+      [onFeedbackPress],
+    );
+
     return (
       <View
         className="absolute right-4 flex flex-col items-center justify-between"
@@ -72,6 +82,9 @@ export const MapButtons = memo(
             <MapActionButton action={compassAction} />
           </View>
           <MapActionButton action={locateAction} />
+          {onFeedbackPress !== undefined && (
+            <MapActionButton action={feedbackAction} />
+          )}
         </View>
 
         {/* Filter button at the bottom */}

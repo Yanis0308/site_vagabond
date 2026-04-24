@@ -84,6 +84,34 @@
     "success": "Photo uploaded!"
   },
   "user_feedback": {
+    "map": {
+      "modal": {
+        "title": "Your feedback helps improve Vagabond 🙌",
+        "subtitle": "It takes less than 10 seconds.",
+        "type_label": "Feedback type",
+        "message_label": "Your message",
+        "placeholder_default": "Choose a feedback type to get started.",
+        "message_helper": "Minimum {{min}} characters, maximum {{max}}.",
+        "character_count": "{{count}} / {{max}}",
+        "submit": "Send",
+        "success_title": "Thank you! 🙌",
+        "success_message": "Your message directly helps improve Vagabond.",
+        "type_options": {
+          "bug": "🐞 Bug",
+          "poi_report": "⚠️ Error on a place",
+          "suggestion": "💡 Suggestion",
+          "incomprehension": "🤔 I didn’t understand something",
+          "other": "⭐ Other remark"
+        },
+        "placeholders": {
+          "bug": "What happened?",
+          "poi_report": "Which place is concerned?",
+          "suggestion": "What could we improve?",
+          "incomprehension": "What caused the problem for you?",
+          "other": "Tell us everything!"
+        }
+      }
+    },
     "place_details": {
       "cta": "Report an error",
       "modal": {
