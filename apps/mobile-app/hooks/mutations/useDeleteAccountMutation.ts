@@ -3,6 +3,7 @@ import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 
 import { deleteMe } from "@/http/users";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { logger } from "@/utils/logger";
 
 export const useDeleteAccountMutation = (): UseMutationResult<
@@ -21,6 +22,9 @@ export const useDeleteAccountMutation = (): UseMutationResult<
       }
 
       await getAuth().signOut();
+    },
+    onSuccess: (): void => {
+      void trackEvent("account_deleted");
     },
   });
 };

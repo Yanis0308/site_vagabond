@@ -17,6 +17,7 @@ import {
 } from "@/components/place-details/user-feedback-modal/utils";
 import { UserFeedbackPage } from "@/components/user-feedback/UserFeedbackPage";
 import { useCreateUserFeedback } from "@/hooks/mutations/useCreateUserFeedback";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 const getPlaceIdParam = (
   placeId: string | string[] | undefined,
@@ -47,7 +48,9 @@ export default function UserFeedbackRoute(): ReactElement | null {
   useEffect(() => {
     if (normalizedPlaceId === null) {
       router.dismiss();
+      return;
     }
+    void trackEvent("poi_report_started", { poi_id: normalizedPlaceId });
   }, [normalizedPlaceId]);
 
   const { isError: mutationHasError, reset: resetMutation } = mutation;
@@ -98,6 +101,10 @@ export default function UserFeedbackRoute(): ReactElement | null {
     ) {
       return;
     }
+
+    void trackEvent("poi_report_submitted", {
+      poi_id: normalizedPlaceId,
+    });
 
     mutation.mutate({
       category: "POI_REPORT",

@@ -6,15 +6,18 @@ import { Linking, Pressable } from "react-native";
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { Box } from "@/components/ui/box";
 import { Divider } from "@/components/ui/divider";
+import { trackEvent } from "@/lib/analytics/analytics";
+import { type SocialPlatform } from "@/lib/analytics/events";
 import { cn } from "@/utils/cn";
 
 interface SocialMediaSectionProps {
+  poiId: string;
   socialMedia?: PoiEnrichedData["socialMedia"];
   className?: string;
 }
 
 export const SocialMediaSection = memo(
-  ({ socialMedia, className }: SocialMediaSectionProps): ReactNode => {
+  ({ poiId, socialMedia, className }: SocialMediaSectionProps): ReactNode => {
     if (socialMedia === undefined) {
       return null;
     }
@@ -28,7 +31,8 @@ export const SocialMediaSection = memo(
       return null;
     }
 
-    const handlePress = (url: string): void => {
+    const handlePress = (url: string, platform: SocialPlatform): void => {
+      void trackEvent("poi_social_link_opened", { poi_id: poiId, platform });
       Linking.canOpenURL(url)
         .then((supported) => {
           if (supported) {
@@ -45,6 +49,7 @@ export const SocialMediaSection = memo(
       IconComponent: typeof Instagram;
       label: string;
       url: string;
+      platform: SocialPlatform;
     }> = [];
 
     if (socialMedia.instagramHandle !== undefined) {
@@ -52,6 +57,7 @@ export const SocialMediaSection = memo(
         IconComponent: Instagram,
         label: `Instagram ${socialMedia.instagramHandle}`,
         url: `https://www.instagram.com/${socialMedia.instagramHandle.replace("@", "")}`,
+        platform: "instagram",
       });
     }
     if (socialMedia.facebookUrl !== undefined) {
@@ -59,6 +65,7 @@ export const SocialMediaSection = memo(
         IconComponent: Facebook,
         label: "Facebook",
         url: socialMedia.facebookUrl,
+        platform: "facebook",
       });
     }
     if (socialMedia.twitterHandle !== undefined) {
@@ -66,6 +73,7 @@ export const SocialMediaSection = memo(
         IconComponent: Twitter,
         label: `Twitter ${socialMedia.twitterHandle}`,
         url: `https://twitter.com/${socialMedia.twitterHandle.replace("@", "")}`,
+        platform: "twitter",
       });
     }
 
@@ -80,7 +88,7 @@ export const SocialMediaSection = memo(
             <Box key={index}>
               <Pressable
                 onPress={() => {
-                  handlePress(item.url);
+                  handlePress(item.url, item.platform);
                 }}
                 className="px-6 active:opacity-70"
               >

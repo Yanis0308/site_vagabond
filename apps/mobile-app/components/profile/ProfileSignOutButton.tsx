@@ -6,6 +6,7 @@ import { Alert } from "react-native";
 
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { logger } from "@/utils/logger";
 
 export const ProfileSignOutButton = memo((): ReactElement => {
@@ -14,6 +15,7 @@ export const ProfileSignOutButton = memo((): ReactElement => {
 
   const signOut = useCallback(async () => {
     setIsSigningOut(true);
+    void trackEvent("sign_out");
     try {
       try {
         await GoogleSignin.revokeAccess();

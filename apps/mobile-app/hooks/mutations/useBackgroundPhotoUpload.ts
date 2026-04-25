@@ -3,6 +3,7 @@ import { useSetAtom } from "jotai";
 
 import { queryClient } from "@/constants/QueryClient";
 import { uploadVisitedPoiPhoto } from "@/http/upload-file";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { deletePhoto } from "@/services/photoStorage";
 import { uploadingFilesAtom } from "@/stores/uploadStateAtom";
 import { logger } from "@/utils/logger";
@@ -50,6 +51,9 @@ export const useBackgroundPhotoUpload = (): UseMutationResult<
       setUploadingFiles((prev: Set<number>) => new Set(prev).add(visitedPoiId));
     },
     onSuccess: async (_data, { localUri, visitedPoiId }) => {
+      void trackEvent("photo_upload_succeeded", {
+        visited_poi_id: visitedPoiId,
+      });
       setUploadingFiles((prev: Set<number>) => {
         const next = new Set(prev);
         next.delete(visitedPoiId);
@@ -63,7 +67,11 @@ export const useBackgroundPhotoUpload = (): UseMutationResult<
       ]);
       deletePhoto(localUri);
     },
-    onError: (_error, { visitedPoiId }) => {
+    onError: (error: Error, { visitedPoiId }) => {
+      void trackEvent("photo_upload_failed", {
+        reason: error.message,
+        visited_poi_id: visitedPoiId,
+      });
       setUploadingFiles((prev: Set<number>) => {
         const next = new Set(prev);
         next.delete(visitedPoiId);

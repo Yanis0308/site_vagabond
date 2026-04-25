@@ -1,6 +1,6 @@
 import ky, { type HTTPError, type KyInstance } from "ky";
 
-import { UnifiedAnalyticsService } from "@/lib/analytics/UnifiedAnalyticsService";
+import { recordError, trackEvent } from "@/lib/analytics/analytics";
 import { logger } from "@/utils/logger";
 
 /**
@@ -36,21 +36,22 @@ export const httpClient: KyInstance = ky.create({
     ],
     beforeError: [
       (error): HTTPError => {
-        // Log des erreurs API
         logger("API Error", error);
 
-        // Log des erreurs API aux analytics
         const url = new URL(error.request.url);
-        void UnifiedAnalyticsService.getInstance().recordError(
-          new Error(
-            `API Error: ${error.response.status} ${error.response.statusText}`,
-          ),
-          "API Request Failed",
+        const endpoint = url.pathname + url.search;
+        const method = error.request.method;
+        const status = error.response.status;
+
+        void trackEvent("api_error", { endpoint, status, method });
+        void recordError(
+          new Error(`API Error: ${status} ${error.response.statusText}`),
           {
-            endpoint: url.pathname + url.search,
-            method: error.request.method,
-            statusCode: error.response.status,
-            statusText: error.response.statusText,
+            type: "api_error",
+            endpoint,
+            method,
+            status_code: String(status),
+            status_text: error.response.statusText,
           },
         );
 

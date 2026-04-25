@@ -1,6 +1,6 @@
 import { File } from "expo-file-system";
 
-import { UnifiedAnalyticsService } from "@/lib/analytics/UnifiedAnalyticsService";
+import { breadcrumb } from "@/lib/analytics/analytics";
 
 import { logger } from "./logger";
 
@@ -12,14 +12,7 @@ export const waitForFile = async (
   const initialFile = new File(uri);
   if (initialFile.exists && initialFile.size > 0) return;
 
-  const analytics = UnifiedAnalyticsService.getInstance();
-  if (analytics.getIsInitialized()) {
-    await analytics.logCustomEvent("wait_for_file_missing_on_start", {
-      uri,
-      maxRetries,
-      delayMs,
-    });
-  }
+  breadcrumb(`waitForFile: file missing, retry loop starting (uri=${uri})`);
 
   for (let i = 0; i < maxRetries; i++) {
     const file = new File(uri);

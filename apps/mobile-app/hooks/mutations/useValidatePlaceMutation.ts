@@ -3,6 +3,7 @@ import { type CreateVisitedPoiRequest } from "@vagabond/shared-utils";
 
 import { queryClient } from "@/constants/QueryClient";
 import { validatePlace } from "@/http/validate-place";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { logger } from "@/utils/logger";
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type -- not important
@@ -28,6 +29,7 @@ export const useValidatePlaceMutation = () => {
       }
     },
     onSuccess: (_, variables) => {
+      void trackEvent("poi_validated", { poi_id: variables.placeId });
       return void Promise.all([
         queryClient.invalidateQueries({
           queryKey: ["user-zone-stats"],

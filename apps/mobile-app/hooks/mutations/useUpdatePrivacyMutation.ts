@@ -3,6 +3,7 @@ import type { UserMe } from "@vagabond/shared-utils";
 
 import { queryClient } from "@/constants/QueryClient";
 import { updateUserMe } from "@/http/users";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { logger } from "@/utils/logger";
 
 const ME_QUERY_KEY = ["users", "me"] as const;
@@ -44,6 +45,9 @@ export const useUpdatePrivacyMutation = (): UseMutationResult<
       if (context?.previousUser !== undefined) {
         queryClient.setQueryData<UserMe>(ME_QUERY_KEY, context.previousUser);
       }
+    },
+    onSuccess: (_data, isPrivate): void => {
+      void trackEvent("privacy_settings_changed", { is_private: isPrivate });
     },
     onSettled: (): Promise<void> => {
       return queryClient.invalidateQueries({ queryKey: ME_QUERY_KEY });

@@ -27,6 +27,7 @@ import { TransportAccessSection } from "./TransportAccessSection";
 interface RenderListItemProps {
   item: ListItemType;
   enrichedData: PoiEnrichedData | undefined;
+  placeId: string;
   onPressCamera: () => Promise<void>;
   onPressGallery: () => Promise<void>;
   imageBoxAnimatedStyle: {
@@ -44,6 +45,7 @@ interface RenderListItemProps {
 export function RenderListItem({
   item,
   enrichedData,
+  placeId,
   onPressCamera,
   onPressGallery,
   imageBoxAnimatedStyle,
@@ -100,6 +102,7 @@ export function RenderListItem({
     case "contactInfo":
       return (
         <ContactInfoSection
+          poiId={placeId}
           address={enrichedData?.address}
           phone={enrichedData?.phone}
           website={enrichedData?.website}
@@ -180,6 +183,7 @@ export function RenderListItem({
     case "socialMedia":
       return (
         <SocialMediaSection
+          poiId={placeId}
           socialMedia={enrichedData?.socialMedia}
           className="px-4 pt-3"
         />

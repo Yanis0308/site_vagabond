@@ -12,6 +12,10 @@ import React, {
   useRef,
   useState,
 } from "react";
+import {
+  type NativeScrollEvent,
+  type NativeSyntheticEvent,
+} from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -26,6 +30,7 @@ import { usePoiEnriched } from "@/hooks/queries/usePoiEnriched";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { useUserVisitedPois } from "@/hooks/queries/useUserVisitedPois";
 import { useVisitedPois } from "@/hooks/queries/useVisitedPois";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { type PoiType } from "@/utils/types";
 
 import { themeColors } from "../ui/gluestack-ui-provider/config";
@@ -87,6 +92,7 @@ export const PlaceDetailsSheet = ({
 }: PlaceDetailsSheetV2Props): ReactElement => {
   const DEFAULT_SNAP_POINT = 1;
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const scrollFiredRef = useRef(false);
   const [flashListKey, setFlashListKey] = useState(0);
 
   const BottomSheetScrollable = useBottomSheetScrollableCreator({
@@ -111,12 +117,25 @@ export const PlaceDetailsSheet = ({
   const isVisited = place !== null ? visitedPoiIds.includes(place.id) : false;
 
   useEffect(() => {
+    scrollFiredRef.current = false;
     if (place?.id !== undefined) {
       bottomSheetRef.current?.snapToIndex(DEFAULT_SNAP_POINT);
+      void trackEvent("poi_details_viewed", { poi_id: place.id });
     } else {
       bottomSheetRef.current?.close();
     }
   }, [place?.id]);
+
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>): void => {
+    if (scrollFiredRef.current || place === null) return;
+    const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
+    const scrollable = contentSize.height - layoutMeasurement.height;
+    if (scrollable <= 0) return;
+    if (contentOffset.y / scrollable >= 0.5) {
+      scrollFiredRef.current = true;
+      void trackEvent("poi_details_scrolled", { poi_id: place.id });
+    }
+  };
 
   // Force FlashList remount when returning from validation to fix iOS scroll corruption
   useFocusEffect(
@@ -262,6 +281,7 @@ export const PlaceDetailsSheet = ({
             <RenderListItem
               item={item}
               enrichedData={enrichedData ?? undefined}
+              placeId={place?.id ?? ""}
               onPressCamera={onPressCamera}
               onPressGallery={onPressGallery}
               imageBoxAnimatedStyle={imageBoxAnimatedStyle}
@@ -273,6 +293,8 @@ export const PlaceDetailsSheet = ({
           keyExtractor={keyExtractor}
           stickyHeaderIndices={stickyHeaderIndices}
           renderScrollComponent={BottomSheetScrollable}
+          onScroll={onScroll}
+          scrollEventThrottle={100}
         />
       </BottomSheet>
     </PlaceDetailsImagesProvider>

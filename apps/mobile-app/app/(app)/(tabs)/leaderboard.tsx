@@ -1,6 +1,7 @@
 import React, {
   type ReactElement,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -18,6 +19,7 @@ import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { VStack } from "@/components/ui/vstack";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 interface Route {
   key: string;
@@ -64,6 +66,12 @@ export default function Leaderboard(): ReactElement {
     () => (index === 0 ? "all-time" : "monthly"),
     [index],
   );
+
+  useEffect(() => {
+    void trackEvent("leaderboard_viewed", {
+      period: index === 0 ? "all_time" : "monthly",
+    });
+  }, [index]);
 
   const options = useMemo(
     () => ({

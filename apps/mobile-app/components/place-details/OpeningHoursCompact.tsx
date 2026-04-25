@@ -4,9 +4,11 @@ import { Pressable } from "react-native";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { Box } from "@/components/ui/box";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { cn } from "@/utils/cn";
 
 interface OpeningHoursCompactProps {
+  poiId: string;
   openingHours?: PoiEnrichedData["openingHours"];
   className?: string;
 }
@@ -46,7 +48,7 @@ const formatTime = (time: string): string => {
 };
 
 export const OpeningHoursCompact = memo(
-  ({ openingHours, className }: OpeningHoursCompactProps): ReactNode => {
+  ({ poiId, openingHours, className }: OpeningHoursCompactProps): ReactNode => {
     const [isExpanded, setIsExpanded] = useState(false);
 
     if (openingHours === undefined || openingHours.length === 0) {
@@ -95,6 +97,9 @@ export const OpeningHoursCompact = memo(
       <Box className={cn("gap-2", className)}>
         <Pressable
           onPress={() => {
+            if (!isExpanded) {
+              void trackEvent("poi_opening_hours_expanded", { poi_id: poiId });
+            }
             setIsExpanded(!isExpanded);
           }}
           className="flex-row items-center justify-between py-1"

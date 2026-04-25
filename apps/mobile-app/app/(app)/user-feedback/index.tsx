@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { type ReactElement, useMemo, useState } from "react";
+import { type ReactElement, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
@@ -15,6 +15,7 @@ import {
 } from "@/components/user-feedback/map-feedback";
 import { UserFeedbackPage } from "@/components/user-feedback/UserFeedbackPage";
 import { useCreateUserFeedback } from "@/hooks/mutations/useCreateUserFeedback";
+import { trackEvent } from "@/lib/analytics/analytics";
 
 const getCityParam = (city: string | string[] | undefined): string | null => {
   const normalizedCity = Array.isArray(city) ? city[0] : city;
@@ -37,6 +38,10 @@ export default function UserFeedbackMapRoute(): ReactElement {
     null,
   );
   const [message, setMessage] = useState<string>("");
+
+  useEffect(() => {
+    void trackEvent("map_feedback_started");
+  }, []);
 
   const trimmedMessage = message.trim();
   const messageLength = trimmedMessage.length;
@@ -70,6 +75,8 @@ export default function UserFeedbackMapRoute(): ReactElement {
     ) {
       return;
     }
+
+    void trackEvent("map_feedback_submitted");
 
     mutation.mutate(
       buildMapFeedbackInput(selectedType, trimmedMessage, normalizedCity),

@@ -5,11 +5,13 @@ import { Linking, Pressable } from "react-native";
 import { CustomText } from "@/components/custom-ui/CustomText";
 import { Box } from "@/components/ui/box";
 import { Divider } from "@/components/ui/divider";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { cn } from "@/utils/cn";
 
 import { OpeningHoursCompact } from "./OpeningHoursCompact";
 
 interface ContactInfoSectionProps {
+  poiId: string;
   address?: PoiEnrichedData["address"];
   phone?: PoiEnrichedData["phone"];
   website?: PoiEnrichedData["website"];
@@ -59,6 +61,7 @@ ContactInfoRow.displayName = "ContactInfoRow";
 
 export const ContactInfoSection = memo(
   ({
+    poiId,
     address,
     phone,
     website,
@@ -88,6 +91,7 @@ export const ContactInfoSection = memo(
 
     const handleAddressPress = (): void => {
       if (fullAddress !== "") {
+        void trackEvent("poi_directions_requested", { poi_id: poiId });
         // Try to open native GPS apps first (geo: scheme)
         // Fallback to Google Maps if geo: is not supported
         const geoUrl = `geo:0,0?q=${encodeURIComponent(fullAddress)}`;
@@ -124,6 +128,7 @@ export const ContactInfoSection = memo(
 
     const handlePhonePress = (): void => {
       if (phone !== undefined && phone !== "") {
+        void trackEvent("poi_phone_called", { poi_id: poiId });
         const telUrl = `tel:${phone}`;
         Linking.canOpenURL(telUrl)
           .then((supported) => {
@@ -140,6 +145,7 @@ export const ContactInfoSection = memo(
 
     const handleWebsitePress = (): void => {
       if (website !== undefined && website !== "") {
+        void trackEvent("poi_website_opened", { poi_id: poiId });
         Linking.canOpenURL(website)
           .then((supported) => {
             if (supported) {
@@ -217,7 +223,11 @@ export const ContactInfoSection = memo(
     // Opening hours
     if (openingHours !== undefined && openingHours.length > 0) {
       infoItems.push(
-        <OpeningHoursCompact key="openingHours" openingHours={openingHours} />,
+        <OpeningHoursCompact
+          key="openingHours"
+          poiId={poiId}
+          openingHours={openingHours}
+        />,
       );
     }
 

@@ -9,6 +9,7 @@ import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 import { Platform } from "react-native";
 
 import { config } from "@/constants/Config";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { logger } from "@/utils/logger";
 
 const iosFunction = async (nonce: string): Promise<AppleRequestResponse> => {
@@ -95,6 +96,13 @@ export const useAppleLoginMutation = (): UseMutationResult<
     },
     onSuccess: () => {
       logger("success apple login");
+      void trackEvent("sign_in_succeeded", { method: "apple" });
+    },
+    onError: (error: Error) => {
+      void trackEvent("sign_in_failed", {
+        method: "apple",
+        reason: error.message,
+      });
     },
   });
 };

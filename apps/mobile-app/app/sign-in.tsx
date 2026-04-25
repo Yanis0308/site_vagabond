@@ -12,6 +12,7 @@ import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { VStack } from "@/components/ui/vstack";
 import { useAppleLoginMutation } from "@/hooks/mutations/useAppleLoginMutation";
 import { useGoogleLoginMutation } from "@/hooks/mutations/useGoogleLoginMutation";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { localImages } from "@/utils/localImages";
 
 export default function SignInScreen(): ReactElement {
@@ -27,12 +28,14 @@ export default function SignInScreen(): ReactElement {
 
   const appleLogin = useCallback(() => {
     if (!loginPending) {
+      void trackEvent("sign_in_started", { method: "apple" });
       appleLoginMutate();
     }
   }, [appleLoginMutate, loginPending]);
 
   const googleLogin = useCallback(() => {
     if (!loginPending) {
+      void trackEvent("sign_in_started", { method: "google" });
       googleLoginMutate();
     }
   }, [googleLoginMutate, loginPending]);

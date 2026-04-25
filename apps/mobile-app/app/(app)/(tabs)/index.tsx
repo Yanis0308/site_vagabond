@@ -22,6 +22,7 @@ import { useMapZoneInfo } from "@/hooks/maps/useMapZoneInfo";
 import { useAppReviewModal } from "@/hooks/other/useAppReviewModal";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { useUploadToast } from "@/hooks/other/useUploadToast";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { mapService } from "@/services/MapService";
 import { saveDraftPhoto } from "@/services/photoStorage";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
@@ -67,6 +68,11 @@ export default function MapsTab(): ReactElement {
   // App review modal
   const { isVisible: isAppReviewModalVisible, onClose: onAppReviewClose } =
     useAppReviewModal();
+
+  // Track map screen load once per mount
+  useEffect(() => {
+    void trackEvent("map_viewed");
+  }, []);
 
   // Register moveToPlace function in MapService so it's available to the search screen
   useEffect(() => {
@@ -152,6 +158,12 @@ export default function MapsTab(): ReactElement {
   }, [setCurrentPhoto]);
 
   const openCamera = async (): Promise<void> => {
+    if (selectedPlace !== null) {
+      void trackEvent("poi_validation_started", {
+        poi_id: selectedPlace.id,
+        source: "camera",
+      });
+    }
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== ImagePicker.PermissionStatus.GRANTED) {
       Alert.alert(
@@ -194,6 +206,12 @@ export default function MapsTab(): ReactElement {
   };
 
   const openGallery = async (): Promise<void> => {
+    if (selectedPlace !== null) {
+      void trackEvent("poi_validation_started", {
+        poi_id: selectedPlace.id,
+        source: "gallery",
+      });
+    }
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== ImagePicker.PermissionStatus.GRANTED) {
       Alert.alert(
@@ -249,7 +267,10 @@ export default function MapsTab(): ReactElement {
 
         <MapButtons
           onCompassPress={resetMapOrientation}
-          onLocatePress={moveToUserLocation}
+          onLocatePress={() => {
+            void trackEvent("map_recenter_pressed");
+            moveToUserLocation();
+          }}
           onFeedbackPress={() => {
             router.push({
               pathname: "/user-feedback",

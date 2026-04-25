@@ -8,6 +8,7 @@ import {
 import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 
 import { config } from "@/constants/Config";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { logger } from "@/utils/logger";
 
 GoogleSignin.configure({
@@ -78,6 +79,13 @@ export const useGoogleLoginMutation = (): UseMutationResult<
     },
     onSuccess: () => {
       logger("success google login");
+      void trackEvent("sign_in_succeeded", { method: "google" });
+    },
+    onError: (error: Error) => {
+      void trackEvent("sign_in_failed", {
+        method: "google",
+        reason: error.message,
+      });
     },
   });
 };

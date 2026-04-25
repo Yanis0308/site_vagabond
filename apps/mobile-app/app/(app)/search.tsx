@@ -1,7 +1,7 @@
 import type { SearchResult } from "@vagabond/shared-utils";
 import { router } from "expo-router";
 import { Trash2 } from "lucide-react-native";
-import { type ReactElement, useRef } from "react";
+import { type ReactElement, useEffect, useRef } from "react";
 import { Keyboard, TouchableOpacity } from "react-native";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
@@ -19,6 +19,7 @@ import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
 import { useSearch } from "@/hooks/queries/useSearch";
 import { searchPlaces } from "@/http/search";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { mapService } from "@/services/MapService";
 import {
   type RecentSearch,
@@ -39,12 +40,26 @@ export default function SearchScreen(): ReactElement {
 
   const { data: searchResults, isLoading: searchIsLoading } = useSearch();
 
+  useEffect(() => {
+    if (searchIsLoading) return;
+    if (searchTerm.length < 2) return;
+    void trackEvent("poi_search_performed", {
+      query_length: searchTerm.length,
+      results_count: searchResults?.length ?? 0,
+    });
+  }, [searchIsLoading, searchResults, searchTerm]);
+
   const dismissKeyboardAndBlur = (): void => {
     Keyboard.dismiss();
     searchHeaderRef.current?.blur();
   };
 
   const handleSelectResult = (result: SearchResult): void => {
+    void trackEvent("poi_search_result_selected", {
+      result_type: result.type,
+      result_id: result.id,
+    });
+
     // Add to recent searches
     void addRecentSearch(result);
 

@@ -12,6 +12,7 @@ import { ReviewStep } from "@/components/validate-place";
 import { queryClient } from "@/constants/QueryClient";
 import { useBackgroundPhotoUpload } from "@/hooks/mutations/useBackgroundPhotoUpload";
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { queuePhotoForUpload } from "@/services/photoStorage";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
@@ -48,6 +49,13 @@ export default function ReviewForm(): ReactElement | null {
           currentPhoto.localPath,
           visitedPoiId,
         );
+        if (selectedPlace !== null) {
+          void trackEvent("photo_upload_started", {
+            poi_id: selectedPlace.id,
+            source:
+              currentPhoto.imageSource === "CAMERA" ? "camera" : "gallery",
+          });
+        }
         uploadPhotoInBackground({ localUri: queuedUri, visitedPoiId });
       } catch (error) {
         logger("[ReviewForm] Failed to rename/start upload:", error);
@@ -82,6 +90,11 @@ export default function ReviewForm(): ReactElement | null {
           text: t("review_form.prevent_remove_confirm"),
           style: "destructive",
           onPress: (): void => {
+            if (selectedPlace !== null) {
+              void trackEvent("poi_validation_cancelled", {
+                poi_id: selectedPlace.id,
+              });
+            }
             setCurrentPhoto(null);
             navigation.dispatch(data.action);
           },

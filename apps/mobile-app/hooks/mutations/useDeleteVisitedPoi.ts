@@ -3,6 +3,7 @@ import { type ZoneUserStat } from "@vagabond/shared-utils";
 
 import { queryClient } from "@/constants/QueryClient";
 import { deleteVisitedPoi } from "@/http/visited-pois";
+import { trackEvent } from "@/lib/analytics/analytics";
 import { logger } from "@/utils/logger";
 
 export const useDeleteVisitedPoi = (
@@ -19,6 +20,9 @@ export const useDeleteVisitedPoi = (
       }
     },
     onSuccess: (_, visitedPoiId) => {
+      void trackEvent("poi_validation_deleted", {
+        visited_poi_id: visitedPoiId,
+      });
       queryClient.setQueriesData<ZoneUserStat[]>(
         { queryKey: ["user-zone-stats", "me"] },
         (old) =>
