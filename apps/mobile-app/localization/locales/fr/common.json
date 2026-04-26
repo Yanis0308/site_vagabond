@@ -3,6 +3,7 @@
     "map": "Carte"
   },
   "place_details_sheet": {
+    "title": "{{name}}",
     "loading_enriched_data": "Chargement des informations supplémentaires..."
   },
   "sign_out": "Se déconnecter",

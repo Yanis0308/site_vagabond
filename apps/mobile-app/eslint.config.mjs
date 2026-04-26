@@ -84,6 +84,7 @@ export default [
       "components/ui/",
       "**/*.js",
       "**/*.mjs",
+      "scripts/",
       "expo-env.d.ts",
       "dist/*",
     ],

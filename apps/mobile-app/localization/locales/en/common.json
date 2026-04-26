@@ -1,32 +1,11 @@
 {
   "tabs": {
-    "map": "Map",
-    "settings": "Settings"
+    "map": "Map"
   },
-  "camera_permission_required": "We need your permission to use the camera",
   "place_details_sheet": {
     "title": "{{name}}",
-    "visit_place": "Visit place",
-    "your_photo": "Your photo",
-    "search_on_google": "Search on Google",
-    "search_on_wikipedia": "Search on Wikipedia",
-    "search_on_wikidata": "Search on Wikidata",
-    "navigate_to_place": "Navigate to place",
     "loading_enriched_data": "Loading additional information..."
   },
-  "picture_input": {
-    "add_your_photo": "Add your photo",
-    "remove_photo": "Remove photo",
-    "open_camera": "Open camera",
-    "open_gallery": "Open gallery"
-  },
-  "app_name": "Vagabond",
-  "welcome_to_the_neo-tourism": "Welcome to the neo-tourism !",
-  "your_current_location_is": "Your current location is {{position}}",
-  "your_position_is_needed": "Your position is needed",
-  "your_photo_is_needed": "Your photo is needed",
-  "submit": "Submit",
-  "green_text": "Green text",
   "sign_out": "Sign out",
   "sign_out_confirm_title": "Sign out?",
   "sign_out_confirm_message": "Are you sure you want to sign out?",
@@ -59,11 +38,6 @@
   "last_place_visited_on_no_name": "Last place visited on {{date}}",
   "cities": "cities",
   "departements": "departments",
-  "zoom": "Zoom: {{zoom}}",
-  "pois": "POIs: {{pois}}",
-  "img_queue": "Img queue: {{queueLength}}",
-  "img_loading": "Img loading: {{pendingRequests}}",
-  "clustering": "Clustering: {{enabled}}",
   "review_form": {
     "upload_error_title": "Error",
     "upload_error_message": "Failed to upload the photo. Would you like to try again?",
@@ -79,9 +53,30 @@
     "sign_in_with_google": "Sign in with Google",
     "sign_in_to_start": "Your next adventure starts here"
   },
+  "edit_nickname": {
+    "title": "Nickname",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "placeholder": "Your nickname",
+    "error": "Nickname must be between 1 and 50 characters",
+    "format_hint": "Letters, digits, underscores, dashes and dots only."
+  },
   "upload_progress": {
     "uploading": "Uploading photo...",
     "success": "Photo uploaded!"
+  },
+  "app_review": {
+    "initial": {
+      "title": "Do you like the app? 🧡",
+      "subtitle": "Your feedback helps us improve!"
+    },
+    "negative": {
+      "title": "Tell us what's wrong 🙏",
+      "subtitle": "Your feedback really helps us improve.",
+      "placeholder": "What could we improve?",
+      "submit": "Send my feedback",
+      "cancel": "Cancel"
+    }
   },
   "user_feedback": {
     "map": {
@@ -183,14 +178,6 @@
       "success_title": "Thank you!",
       "success_message": "Your message has been sent."
     }
-  },
-  "edit_nickname": {
-    "title": "Nickname",
-    "cancel": "Cancel",
-    "confirm": "Confirm",
-    "placeholder": "Your nickname",
-    "error": "Nickname must be between 1 and 50 characters",
-    "format_hint": "Letters, digits, underscores, dashes and dots only."
   },
   "privacy": {
     "public_label": "Public profile",

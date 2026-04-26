@@ -9,8 +9,8 @@
     "prepare": "husky",
     "prettier-write": "prettier . --write",
     "build": "turbo run build",
-    "check-all": "turbo run typescript-check lint-check prettier-check",
-    "check-affected": "turbo run typescript-check lint-check prettier-check --filter=[HEAD]",
+    "check-all": "turbo run typescript-check lint-check prettier-check i18n-check",
+    "check-affected": "turbo run typescript-check lint-check prettier-check i18n-check --filter=[HEAD]",
     "fix-all": "turbo run lint-fix prettier-fix",
     "clean-all": "turbo run clean && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' \\; -print"
   },

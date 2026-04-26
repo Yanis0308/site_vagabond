@@ -9,6 +9,9 @@
       "dependsOn": ["^build"],
       "outputs": []
     },
+    "i18n-check": {
+      "outputs": []
+    },
     "lint-check": {
       "dependsOn": ["^build"],
       "outputs": []
