@@ -25,7 +25,7 @@ export type ListItemType =
       type: "userFeedback";
       placeId: string;
     }
-  | { type: "admin"; placeId: string; placeName: string }
+  | { type: "staff"; placeId: string; placeName: string }
   | { type: "loading" };
 
 interface BuildListDataParams {
@@ -161,7 +161,7 @@ export const buildListData = ({
 
   if (userRole === "ADMIN") {
     items.push({
-      type: "admin",
+      type: "staff",
       placeId: place.id,
       placeName: place.name,
     });

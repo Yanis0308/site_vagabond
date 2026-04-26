@@ -2,11 +2,11 @@ import { requestContext } from "@fastify/request-context";
 import * as Sentry from "@sentry/node";
 import { type User as SentryUser } from "@sentry/node";
 import { type DbUser } from "@vagabond/database-client";
-import { type FastifyRequest } from "fastify";
 import fp from "fastify-plugin";
 import { type auth } from "firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 
+import { STAFF_TOOLS_API_PREFIX } from "../routes/staff-tools/path.js";
 import { captureAndLog } from "../utils/logger.js";
 
 function buildSentryUserFromDecodedToken(
@@ -65,7 +65,7 @@ const PUBLIC_PATHS: Array<string | RegExp> = [
 
 export default fp(
   (fastify) => {
-    fastify.addHook("onRequest", async (request: FastifyRequest) => {
+    fastify.addHook("onRequest", async (request, reply) => {
       const isPublicPath = PUBLIC_PATHS.some((path) => {
         if (path instanceof RegExp) {
           return path.test(request.url);
@@ -120,6 +120,20 @@ export default fp(
 
         // Attach DB user to request.user
         request.user = Object.assign(decodedToken, { db: dbUser });
+
+        // Staff-tools routes : accessibles uniquement aux ADMIN sur le serveur dev
+        if (request.url.startsWith(`${STAFF_TOOLS_API_PREFIX}/`)) {
+          if (!fastify.config.isDevServer || dbUser.role !== "ADMIN") {
+            await reply.status(403).send({
+              error: {
+                type: "FORBIDDEN",
+                message:
+                  "Staff tools are only accessible to staff users on the dev server",
+              },
+            });
+            return;
+          }
+        }
 
         Sentry.setUser(
           buildSentryUserFromDbAndToken({

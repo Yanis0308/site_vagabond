@@ -28,6 +28,25 @@ interface UserZoneStat {
 export class BoundaryRepository {
   constructor(private readonly db: DrizzleClient) {}
 
+  async findIdForPoiAtLevel(
+    poiId: string,
+    level: BoundaryLevelEnum,
+  ): Promise<string | undefined> {
+    const result = await this.db
+      .select({ boundaryId: boundaries.id })
+      .from(poiBoundaries)
+      .innerJoin(boundaries, eq(poiBoundaries.boundaryId, boundaries.id))
+      .where(
+        and(
+          eq(poiBoundaries.poiId, poiId),
+          eq(boundaries.boundaryLevel, level),
+        ),
+      )
+      .limit(1);
+
+    return result[0]?.boundaryId;
+  }
+
   /**
    * Decomposes the query into 4 focused queries + TypeScript assembly:
    * - Recursive CTE: relevant zone IDs

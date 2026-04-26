@@ -28,6 +28,7 @@ export const ErrorEnumSchema = Type.Union(
     Type.Literal("RESOURCE_ALREADY_EXISTS"),
     Type.Literal("NOT_FOUND"),
     Type.Literal("INTERNAL_SERVER_ERROR"),
+    Type.Literal("FORBIDDEN"),
   ],
   { $id: "ErrorEnum" },
 );

@@ -6,7 +6,6 @@ import { cn } from "@/utils/cn";
 
 import { StarRating } from "../validate-place/StarRating";
 import { AccessibilitySection } from "./AccessibilitySection";
-import { AdminInfoSection } from "./AdminInfoSection";
 import { AmenitiesSection } from "./AmenitiesSection";
 import { AverageVisitDurationSection } from "./AverageVisitDurationSection";
 import { BadgesSection } from "./BadgesSection";
@@ -21,6 +20,7 @@ import { PracticalTipsSection } from "./PracticalTipsSection";
 import { ReviewsList } from "./ReviewsList";
 import { SeasonalClosureSection } from "./SeasonalClosureSection";
 import { SocialMediaSection } from "./SocialMediaSection";
+import { StaffInfoSection } from "./StaffInfoSection";
 import { TitleAndButtonSection } from "./TitleAndButtonSection";
 import { TransportAccessSection } from "./TransportAccessSection";
 
@@ -192,9 +192,9 @@ export function RenderListItem({
     case "userFeedback":
       return <PlaceDetailsUserFeedback placeId={item.placeId} />;
 
-    case "admin":
+    case "staff":
       return (
-        <AdminInfoSection placeId={item.placeId} placeName={item.placeName} />
+        <StaffInfoSection placeId={item.placeId} placeName={item.placeName} />
       );
 
     case "loading":

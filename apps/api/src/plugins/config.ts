@@ -36,11 +36,13 @@ const RawConfigSchema = z.object({
   GROQ_API_KEY: z.string(),
   SENTRY_DSN: z.string(),
   SENTRY_ENVIRONMENT: z.string(),
+  APP_ENV: z.enum(["development", "production"]).optional(),
 });
 
 // Type d'inférence pour TypeScript
 export interface Config {
   isDev: boolean;
+  isDevServer: boolean;
   firebaseAdminServiceAccountFilePath: string;
   cdnUrl: string;
   s3: {
@@ -102,6 +104,7 @@ export default fp(
 
       const config: Config = {
         isDev,
+        isDevServer: rawConfig.APP_ENV === "development",
         firebaseAdminServiceAccountFilePath,
         cdnUrl: rawConfig.CDN_URL,
         s3: {

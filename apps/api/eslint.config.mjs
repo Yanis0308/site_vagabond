@@ -19,6 +19,12 @@ export default [
           message:
             "Utilise getLogger(this.fastify) depuis utils/logger.ts à la place de this.fastify.log pour inclure le reqId et userId dans les logs.",
         },
+        // Prevent usage of the staff-tools repository outside of the staff-tools routes/services.
+        {
+          selector: "MemberExpression[property.name='staffTools']",
+          message:
+            "Le repository staffTools est réservé aux routes/services staff-tools (dev-only).",
+        },
       ],
     },
   },

@@ -5,6 +5,7 @@ import {
   PoiRepository,
   ProcessingResultRepository,
   SearchRepository,
+  StaffToolsRepository,
   UserFeedbackRepository,
   UserLocationRepository,
   UserRepository,
@@ -23,6 +24,7 @@ export interface DbRepositories {
   location: UserLocationRepository;
   visitedPoi: VisitedPoiRepository;
   processingResult: ProcessingResultRepository;
+  staffTools: StaffToolsRepository;
 }
 
 declare module "fastify" {
@@ -48,6 +50,7 @@ export default fp(
         location: new UserLocationRepository(db),
         visitedPoi: new VisitedPoiRepository(db),
         processingResult: new ProcessingResultRepository(db),
+        staffTools: new StaffToolsRepository(db),
       };
 
       fastify.decorate(decoratorName, repositories);

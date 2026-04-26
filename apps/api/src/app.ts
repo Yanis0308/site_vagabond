@@ -23,6 +23,8 @@ import leaderboardRoute from "./routes/leaderboard/index.js";
 import locationRoute from "./routes/location/index.js";
 import poisIdRoute from "./routes/pois/[id].js";
 import searchRoute from "./routes/search/index.js";
+import staffToolsRoute from "./routes/staff-tools/index.js";
+import { STAFF_TOOLS_API_PREFIX } from "./routes/staff-tools/path.js";
 import uploadRoute from "./routes/upload/index.js";
 import userFeedbacksRoute from "./routes/user-feedbacks/index.js";
 import usersRoute from "./routes/users/index.js";
@@ -88,6 +90,7 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   await fastify.register(usersRoute, { prefix: "api/users" });
   await fastify.register(visitedPoisRoute, { prefix: "api/visited-pois" });
   await fastify.register(zonesRoute, { prefix: "api/zones" });
+  await fastify.register(staffToolsRoute, { prefix: STAFF_TOOLS_API_PREFIX });
 };
 
 export default app;

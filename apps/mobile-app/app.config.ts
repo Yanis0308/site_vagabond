@@ -2,7 +2,7 @@ import { type ConfigContext, type ExpoConfig } from "expo/config";
 import { type DeepPartial } from "utility-types";
 import { z } from "zod";
 
-export const RuntimeConfigSchema = z.object({
+const RuntimeConfigSchema = z.object({
   apiBaseUrl: z.string().url(),
   cdnUrl: z.string().url(),
   appleSignInServiceId: z.string(),
@@ -12,6 +12,7 @@ export const RuntimeConfigSchema = z.object({
   mapboxStyleUrl: z.string(),
   mapboxBoundariesTilesetUrl: z.string(),
   mapboxPoisTilesetUrl: z.string(),
+  isDevEnv: z.boolean(),
 });
 
 const appConfigSchema = z.object({
@@ -60,6 +61,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       mapboxBoundariesTilesetUrl:
         process.env.EXPO_PUBLIC_BOUNDARIES_MAPBOX_TILESET_URL,
       mapboxPoisTilesetUrl: process.env.EXPO_PUBLIC_POIS_MAPBOX_TILESET_URL,
+      isDevEnv: process.env.EXPO_PUBLIC_APP_ENV === "development",
     },
   };
 

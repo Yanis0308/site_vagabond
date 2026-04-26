@@ -12,6 +12,7 @@ export const RuntimeConfigSchema = z.object({
   mapboxStyleUrl: z.string(),
   mapboxBoundariesTilesetUrl: z.string(),
   mapboxPoisTilesetUrl: z.string(),
+  isDevEnv: z.boolean(),
 });
 
 // Expo will replace explicitly "process.env.my_key" by the corresponding env var, so we need to use it in plain text

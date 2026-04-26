@@ -6,6 +6,7 @@ import * as poiEnriched from "./api/poi-enriched.js";
 import * as response from "./api/response.js";
 import * as scrape from "./api/scrape.js";
 import * as search from "./api/search.js";
+import * as staffTools from "./api/staff-tools.js";
 import * as upload from "./api/upload.js";
 import * as user from "./api/user.js";
 import * as userFeedback from "./api/user-feedback.js";
@@ -23,6 +24,7 @@ import * as primitive from "./primitive.js";
 import * as llmProcessors from "./processors/llm.js";
 
 export const allJsonSchemas = {
+  ...staffTools,
   ...enums,
   ...error,
   ...etl,

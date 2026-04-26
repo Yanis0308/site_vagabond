@@ -4,6 +4,7 @@ export * from "./repositories/poi.repository.js";
 export * from "./repositories/poi-enriched.repository.js";
 export * from "./repositories/processing-result.repository.js";
 export * from "./repositories/search.repository.js";
+export * from "./repositories/staff-tools.repository.js";
 export * from "./repositories/user.repository.js";
 export * from "./repositories/user-feedback.repository.js";
 export * from "./repositories/user-location.repository.js";

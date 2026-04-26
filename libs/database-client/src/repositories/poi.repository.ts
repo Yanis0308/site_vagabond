@@ -109,6 +109,21 @@ export class PoiRepository {
     };
   }
 
+  async findCoordsById(
+    poiId: string,
+  ): Promise<{ latitude: number; longitude: number } | undefined> {
+    const result = await this.db
+      .select({
+        latitude: sql`ST_Y(${pois.coords}::geometry)`.mapWith(Number),
+        longitude: sql`ST_X(${pois.coords}::geometry)`.mapWith(Number),
+      })
+      .from(pois)
+      .where(eq(pois.id, poiId))
+      .limit(1);
+
+    return result[0];
+  }
+
   async findOsmTagsByPoiId(
     poiId: string,
   ): Promise<Record<string, unknown> | null> {

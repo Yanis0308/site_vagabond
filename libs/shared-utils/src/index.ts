@@ -52,6 +52,14 @@ export {
   SearchResultSchema,
 } from "./schemas/api/search.js";
 export {
+  type StaffToolsBoundaryLevel,
+  StaffToolsBoundaryLevelSchema,
+  type StaffToolsCompleteZoneRequest,
+  StaffToolsCompleteZoneRequestSchema,
+  StaffToolsCompleteZoneResponseSchema,
+  StaffToolsValidatePlaceResponseSchema,
+} from "./schemas/api/staff-tools.js";
+export {
   type FileInfo,
   FileInfoSchema,
   UploadFileResponseSchema,
