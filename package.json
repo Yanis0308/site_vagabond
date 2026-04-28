@@ -57,7 +57,8 @@
     },
     "patchedDependencies": {
       "ajv@8.17.1": "patches/ajv@8.17.1.patch",
-      "fastify": "patches/fastify.patch"
+      "fastify": "patches/fastify.patch",
+      "@nandorojo/galeria@3.0.0": "patches/@nandorojo__galeria@3.0.0.patch"
     }
   }
 }

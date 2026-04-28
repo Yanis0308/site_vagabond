@@ -31,6 +31,7 @@ import { useUsersMe } from "@/hooks/queries/useUsersMe";
 import { useUserVisitedPois } from "@/hooks/queries/useUserVisitedPois";
 import { useVisitedPois } from "@/hooks/queries/useVisitedPois";
 import { trackEvent } from "@/lib/analytics/analytics";
+import { resolveVisitedPoiImageUrl } from "@/services/photoStorage";
 import { type PoiType } from "@/utils/types";
 
 import { themeColors } from "../ui/gluestack-ui-provider/config";
@@ -163,7 +164,11 @@ export const PlaceDetailsSheet = ({
   const imageCount =
     enrichedData?.photos !== undefined
       ? enrichedData.photos.length
-      : visitedPois.length;
+      : visitedPois.filter(
+          (poi) =>
+            resolveVisitedPoiImageUrl(poi, user.data?.id === poi.userId) !==
+            null,
+        ).length;
 
   const placeDetailsImagesContext = usePlaceDetailsImagesContext(
     place?.id ?? "",

@@ -2,10 +2,11 @@ import type { BriefVisitedPoi } from "@vagabond/shared-utils";
 import { router } from "expo-router";
 import { Trash2 } from "lucide-react-native";
 import { memo, type ReactElement } from "react";
-import { Pressable } from "react-native";
+import { Pressable, type ViewStyle } from "react-native";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
 import { CustomText } from "@/components/custom-ui/CustomText";
+import { SingleImageGallery } from "@/components/custom-ui/SingleImageGallery";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { HStack } from "@/components/ui/hstack";
 import { VStack } from "@/components/ui/vstack";
@@ -21,6 +22,11 @@ interface ProfilePoiItemProps {
   allowNavigation: boolean;
   allowProfileEdit: boolean;
 }
+
+const galleryImageStyle: ViewStyle = {
+  width: 70,
+  height: "100%",
+};
 
 export const ProfilePoiItem = memo(
   ({
@@ -55,20 +61,30 @@ export const ProfilePoiItem = memo(
       });
     };
 
+    const resolvedUrl = resolveVisitedPoiImageUrl(poi, allowProfileEdit);
+    const imageSources = resolvedUrl ?? localImages.noPhotoPlaceholder;
+
+    const imageElement: ReactElement = (
+      <CustomImage
+        sources={imageSources}
+        height={"full"}
+        width={70}
+        contentFit="cover"
+        showLoader={true}
+      />
+    );
+
     return (
-      <Pressable onPress={handlePress}>
-        <HStack className="mx-1 mb-3 gap-0 border-b border-gray-200 bg-white">
-          <CustomImage
-            sources={
-              resolveVisitedPoiImageUrl(poi, allowProfileEdit) ??
-              localImages.noPhotoPlaceholder
-            }
-            height={"full"}
-            width={70}
-            contentFit="cover"
-            showLoader={true}
-          />
-          <HStack className="flex-1 items-center justify-between p-2">
+      <HStack className="mx-1 mb-3 gap-0 border-b border-gray-200 bg-white">
+        {typeof imageSources === "string" ? (
+          <SingleImageGallery source={imageSources} style={galleryImageStyle}>
+            {imageElement}
+          </SingleImageGallery>
+        ) : (
+          <Pressable onPress={handlePress}>{imageElement}</Pressable>
+        )}
+        <Pressable onPress={handlePress} className="flex-1">
+          <HStack className="items-center justify-between p-2">
             <VStack className="shrink gap-1">
               {poi.name !== undefined && (
                 <CustomText className="font-semibold text-gray-900">
@@ -91,8 +107,8 @@ export const ProfilePoiItem = memo(
               </Pressable>
             )}
           </HStack>
-        </HStack>
-      </Pressable>
+        </Pressable>
+      </HStack>
     );
   },
 );

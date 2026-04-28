@@ -1,7 +1,9 @@
+import { Galeria } from "@nandorojo/galeria";
 import { type PoiEnrichedPhoto } from "@vagabond/shared-utils/dist/schemas/processors/llm";
 import { type ReactElement, type ReactNode } from "react";
 import { FlatList } from "react-native-gesture-handler";
 
+import { usePlaceDetailsImages } from "./PlaceDetailsImagesContext";
 import { PlaceImage } from "./PlaceImage";
 
 interface PhotosSectionProps {
@@ -19,32 +21,39 @@ const photosSorter = (a: PoiEnrichedPhoto, b: PoiEnrichedPhoto): number => {
 };
 
 export const PhotosSection = ({ photos }: PhotosSectionProps): ReactNode => {
-  const sortedPhotos = [...photos].sort(photosSorter);
-  const isSinglePhoto = photos.length === 1;
+  const { failedUrls } = usePlaceDetailsImages();
+  const visiblePhotos = [...photos]
+    .sort(photosSorter)
+    .filter((photo) => !failedUrls.has(photo.url));
+  const isSinglePhoto = visiblePhotos.length === 1;
+  const galleryUrls = visiblePhotos.map((photo) => photo.url);
 
   const keyExtractor = (item: PoiEnrichedPhoto): string => item.url;
   const renderItem = ({
     item,
+    index,
   }: {
     item: PoiEnrichedPhoto;
-  }): ReactElement | null => (
+    index: number;
+  }): ReactElement => (
     <PlaceImage
+      index={index}
       url={item.url}
       caption={item.caption}
       isSinglePhoto={isSinglePhoto}
     />
   );
 
-  // We use FlatList from react-native-gesture-handler because we are inside a BottomSheet
-  // and nested FlashList is not working properly in this case
   return (
-    <FlatList
-      data={sortedPhotos}
-      keyExtractor={keyExtractor}
-      renderItem={renderItem}
-      horizontal
-      contentContainerClassName="py-1 gap-2"
-      showsHorizontalScrollIndicator={false}
-    />
+    <Galeria urls={galleryUrls} theme="dark">
+      <FlatList
+        data={visiblePhotos}
+        keyExtractor={keyExtractor}
+        renderItem={renderItem}
+        horizontal
+        contentContainerClassName="py-1 gap-2"
+        showsHorizontalScrollIndicator={false}
+      />
+    </Galeria>
   );
 };

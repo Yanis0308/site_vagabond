@@ -153,7 +153,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         {
           // https://github.com/invertase/react-native-firebase/issues/8657#issuecomment-3365508371
           ios: {
-            deploymentTarget: "15.1",
+            deploymentTarget: "16.0",
             useFrameworks: "static",
             forceStaticLinking: ["RNFBApp"],
           },

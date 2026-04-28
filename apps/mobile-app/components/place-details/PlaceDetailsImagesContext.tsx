@@ -1,14 +1,9 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useRef,
-  useState,
-} from "react";
+import { createContext, useContext, useState } from "react";
 
 interface PlaceDetailsImagesContextValue {
   hasNoVisibleImages: boolean;
-  reportImageLoadFailed: () => void;
+  failedUrls: ReadonlySet<string>;
+  reportImageLoadFailed: (url: string) => void;
 }
 
 const PlaceDetailsImagesContext =
@@ -28,28 +23,32 @@ export const usePlaceDetailsImagesContext = (
   placeId: string,
   imageCount: number,
 ): PlaceDetailsImagesContextValue => {
-  const [allImagesFailed, setAllImagesFailed] = useState(false);
-  const failedCountRef = useRef(0);
-  const prevPlaceIdRef = useRef(placeId);
+  const [currentPlaceId, setCurrentPlaceId] = useState(placeId);
+  const [failedUrls, setFailedUrls] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
 
-  // Reset state when the place changes
-  if (prevPlaceIdRef.current !== placeId) {
-    prevPlaceIdRef.current = placeId;
-    failedCountRef.current = 0;
-    setAllImagesFailed(false);
+  if (currentPlaceId !== placeId) {
+    setCurrentPlaceId(placeId);
+    setFailedUrls(new Set());
   }
 
-  const hasNoVisibleImages = imageCount === 0 || allImagesFailed;
+  const hasNoVisibleImages = imageCount === 0 || failedUrls.size >= imageCount;
 
-  const reportImageLoadFailed = useCallback((): void => {
-    failedCountRef.current += 1;
-    if (imageCount > 0 && failedCountRef.current >= imageCount) {
-      setAllImagesFailed(true);
-    }
-  }, [imageCount]);
+  const reportImageLoadFailed = (url: string): void => {
+    setFailedUrls((prev) => {
+      if (prev.has(url)) {
+        return prev;
+      }
+      const next = new Set(prev);
+      next.add(url);
+      return next;
+    });
+  };
 
   return {
     hasNoVisibleImages,
+    failedUrls,
     reportImageLoadFailed,
   };
 };

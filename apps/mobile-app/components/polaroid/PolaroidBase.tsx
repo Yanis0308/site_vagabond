@@ -1,10 +1,12 @@
 import { memo, type ReactNode, useEffect, useState } from "react";
+import { type ViewStyle } from "react-native";
 
 import { type ImageLoadAsyncSource } from "@/hooks/queries/useImageFromMultipleSources";
 import { shadowStyles } from "@/styles/shadows";
 import { cn } from "@/utils/cn";
 
 import { CustomImage } from "../custom-ui/CustomImage";
+import { SingleImageGallery } from "../custom-ui/SingleImageGallery";
 import { Box } from "../ui/box";
 
 interface PolaroidBaseProps {
@@ -16,6 +18,11 @@ interface PolaroidBaseProps {
   className?: string;
   topRightAction?: ReactNode;
 }
+
+const galleryImageStyle: ViewStyle = {
+  width: "100%",
+  height: "100%",
+};
 
 export const PolaroidBase = memo(
   ({
@@ -52,18 +59,20 @@ export const PolaroidBase = memo(
             imageWithBorder && "border border-gray-100",
           )}
         >
-          <CustomImage
-            sources={imageUrl}
-            height="full"
-            width="full"
-            className={cn(
-              "transition-opacity delay-150 duration-1000 ease-in-out",
-              isLoaded ? "opacity-100" : "opacity-0",
-              isSmall && "rounded-lg",
-            )}
-            contentFit={isSmall ? "cover" : "contain"}
-            showLoader={true}
-          />
+          <SingleImageGallery source={imageUrl} style={galleryImageStyle}>
+            <CustomImage
+              sources={imageUrl}
+              height="full"
+              width="full"
+              className={cn(
+                "transition-opacity delay-150 duration-1000 ease-in-out",
+                isLoaded ? "opacity-100" : "opacity-0",
+                isSmall && "rounded-lg",
+              )}
+              contentFit={isSmall ? "cover" : "contain"}
+              showLoader={true}
+            />
+          </SingleImageGallery>
         </Box>
         {children}
       </Box>

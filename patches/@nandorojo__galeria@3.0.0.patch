@@ -1,0 +1,31 @@
+diff --git a/ios/GaleriaView.swift b/ios/GaleriaView.swift
+index f6d63462571413da4ad9ff112c35d90e4d0341e3..e0399cd27ae29975fb89d9e58a3cfdac8b1ce9fe 100644
+--- a/ios/GaleriaView.swift
++++ b/ios/GaleriaView.swift
+@@ -33,15 +33,19 @@ class GaleriaView: ExpoView {
+   }
+ 
+   func getChildImageView() -> UIImageView? {
+-    for reactSubview in self.subviews {
+-      for subview in reactSubview.subviews {
+-        if let imageView = subview as? UIImageView {
+-          childImageView = imageView
+-          return imageView
+-        }
++    return findFirstImageView(in: self)
++  }
++
++  private func findFirstImageView(in view: UIView) -> UIImageView? {
++    for subview in view.subviews {
++      if let imageView = subview as? UIImageView {
++        childImageView = imageView
++        return imageView
++      }
++      if let found = findFirstImageView(in: subview) {
++        return found
+       }
+     }
+-
+     return nil
+   }
+ 
