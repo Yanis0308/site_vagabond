@@ -18,7 +18,10 @@ import { MapPOILayers } from "@/components/custom-ui/MapPOILayers";
 import { MapVoronoiLayers } from "@/components/custom-ui/MapVoronoiLayers";
 import { config } from "@/constants/Config";
 import { useMapImages } from "@/hooks/maps/useMapImages";
-import { type OnPressEventPoi } from "@/hooks/maps/useMapLogic";
+import {
+  getSavedCameraState,
+  type OnPressEventPoi,
+} from "@/hooks/maps/useMapLogic";
 import { useUserVisitedPois } from "@/hooks/queries/useUserVisitedPois";
 import { type PoiType } from "@/utils/types";
 
@@ -42,6 +45,7 @@ export const CustomMapView = function CustomMapView({
   const {
     data: { visitedPoiIds },
   } = useUserVisitedPois();
+  const savedCamera = getSavedCameraState();
 
   const pulsing = { isEnabled: false };
 
@@ -69,7 +73,20 @@ export const CustomMapView = function CustomMapView({
       scaleBarEnabled={false}
       pitchEnabled={false}
     >
-      <Camera pitch={0} heading={0} ref={cameraRef} maxBounds={maxBounds} />
+      <Camera
+        pitch={0}
+        heading={0}
+        ref={cameraRef}
+        maxBounds={maxBounds}
+        defaultSettings={
+          savedCamera.center !== null && savedCamera.zoom !== null
+            ? {
+                centerCoordinate: savedCamera.center,
+                zoomLevel: savedCamera.zoom,
+              }
+            : undefined
+        }
+      />
       <LocationPuck
         puckBearingEnabled
         puckBearing="heading"

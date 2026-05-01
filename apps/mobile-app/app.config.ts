@@ -61,7 +61,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       mapboxBoundariesTilesetUrl:
         process.env.EXPO_PUBLIC_BOUNDARIES_MAPBOX_TILESET_URL,
       mapboxPoisTilesetUrl: process.env.EXPO_PUBLIC_POIS_MAPBOX_TILESET_URL,
-      isDevEnv: process.env.EXPO_PUBLIC_APP_ENV === "development",
+      isDevEnv: process.env.BUILD_PROFILE !== "production",
     },
   };
 
@@ -78,9 +78,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     slug: "mobile-app", // For Expo EAS project
     owner: "vagabond-app", // Expo account name
     version: "1.1.0",
-    runtimeVersion: {
-      policy: "fingerprint",
-    }, // For Expo OTA updates
+    // OTA runtime policy is always 1.0.0 for development / preview
+    // and fingerprint for production (hashes of native code + app.config.ts + package.json + pnpm-lock.yaml)
+    runtimeVersion: parsedConfig.data.runtimeConfig.isDevEnv
+      ? "1.0.0"
+      : { policy: "fingerprint" },
     updates: {
       fallbackToCacheTimeout: 30000,
       url: parsedConfig.data.eas.updatesUrl,

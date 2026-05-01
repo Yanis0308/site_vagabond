@@ -21,6 +21,29 @@ import {
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
 
+// Module-level state survives component remounts
+const persistentMapState = {
+  firstCenteringDone: false,
+  cameraCenter: null as [number, number] | null,
+  cameraZoom: null as number | null,
+};
+
+interface SavedCameraState {
+  center: [number, number] | null;
+  zoom: number | null;
+}
+
+export const getSavedCameraState = (): SavedCameraState => ({
+  center: persistentMapState.cameraCenter,
+  zoom: persistentMapState.cameraZoom,
+});
+
+export const resetPersistentMapState = (): void => {
+  persistentMapState.firstCenteringDone = false;
+  persistentMapState.cameraCenter = null;
+  persistentMapState.cameraZoom = null;
+};
+
 export interface OnPressEventPoi extends OnPressEvent {
   features: Array<
     Feature<
@@ -64,7 +87,6 @@ interface UseMapLogicReturn {
 
 export const useMapLogic = (): UseMapLogicReturn => {
   const { simplifiedLocation } = useUserLocation();
-  const firstCenteringDone = useRef(false);
 
   // États pour le zoom et heading (uniquement pour affichage en temps réel)
   const [headingRealtime, setHeadingRealtime] = useState(0);
@@ -133,21 +155,38 @@ export const useMapLogic = (): UseMapLogicReturn => {
     }, 100);
   };
 
-  // Centrer la caméra sur la position de l'utilisateur
+  // Centrer la caméra sur la position de l'utilisateur (une seule fois au lancement)
   useEffect(() => {
-    if (simplifiedLocation !== null && !firstCenteringDone.current) {
+    if (simplifiedLocation !== null && !persistentMapState.firstCenteringDone) {
       moveToUserLocation();
-      firstCenteringDone.current = true;
+      persistentMapState.firstCenteringDone = true;
     }
   }, [simplifiedLocation, moveToUserLocation]);
 
   // Gestion des événements de la carte
   const cameraChangedDebouncer = useThrottler(
     (mapState: MapState): void => {
-      const { center, heading } = mapState.properties;
+      const { center, heading, zoom } = mapState.properties;
+      const lng = center[0];
+      const lat = center[1];
       setHeadingRealtime(heading);
-      setZoomRealtime(mapState.properties.zoom);
-      setMapCenter({ longitude: center[0] ?? 0, latitude: center[1] ?? 0 });
+      setZoomRealtime(zoom);
+      setMapCenter({ longitude: lng ?? 0, latitude: lat ?? 0 });
+
+      // Persist camera state across component remounts (tab switches).
+      // Skip writes when Mapbox emits a partially-undefined center to avoid
+      // restoring the camera to [0, 0] on next mount.
+      if (
+        typeof lng === "number" &&
+        typeof lat === "number" &&
+        Number.isFinite(lng) &&
+        Number.isFinite(lat) &&
+        Number.isFinite(zoom)
+      ) {
+        persistentMapState.cameraCenter = [lng, lat];
+        persistentMapState.cameraZoom = zoom;
+      }
+
       if (simplifiedLocation !== null) {
         const distance = getDistance(
           { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
