@@ -56,7 +56,7 @@ export const ProfilePoiItem = memo(
       setSelectedPlace(poiData);
       mapService.setPendingMove(poiData.coords, true);
 
-      router.push({
+      router.navigate({
         pathname: "/",
       });
     };

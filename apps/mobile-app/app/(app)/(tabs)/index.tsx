@@ -109,7 +109,7 @@ export default function MapsTab(): ReactElement {
   useEffect(() => {
     if (currentPhoto !== null && currentPhoto.imageUri !== "") {
       scrollRepairNeededRef.current = true;
-      router.push("/validate-place/review-form");
+      router.navigate("/validate-place/review-form");
     }
   }, [currentPhoto]);
 
@@ -272,7 +272,7 @@ export default function MapsTab(): ReactElement {
             moveToUserLocation();
           }}
           onFeedbackPress={() => {
-            router.push({
+            router.navigate({
               pathname: "/user-feedback",
               params: cityName === null ? {} : { city: cityName },
             });

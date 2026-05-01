@@ -41,7 +41,7 @@ export const ProfileHeader = memo(
         : undefined;
 
     const handleEditNickname = (): void => {
-      router.push({
+      router.navigate({
         pathname: "/user/edit-nickname",
       });
     };

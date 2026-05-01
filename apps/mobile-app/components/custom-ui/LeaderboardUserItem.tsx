@@ -57,9 +57,9 @@ export const LeaderboardUserItem = memo(
 
     const handlePress = (): void => {
       if (isCurrentUser) {
-        router.push("/profile");
+        router.navigate("/profile");
       } else {
-        router.push(`/user/${user.userId}`);
+        router.navigate(`/user/${user.userId}`);
       }
     };
 

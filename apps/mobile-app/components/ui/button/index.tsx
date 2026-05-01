@@ -337,7 +337,7 @@ const useNavigationHandler = (href?: string): (() => void) => {
 
   return useCallback(() => {
     if (href !== null && href !== undefined) {
-      router.push(href as Href);
+      router.navigate(href as Href);
     }
   }, [href, router]);
 };

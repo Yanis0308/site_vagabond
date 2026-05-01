@@ -55,7 +55,7 @@ export const SearchHeaderButton = ({
   const handlePress = (): void => {
     // Navigate to search screen when the search bar is pressed
     // Since the input is not editable, we handle press instead of focus
-    router.push({
+    router.navigate({
       pathname: "/search",
     });
   };
