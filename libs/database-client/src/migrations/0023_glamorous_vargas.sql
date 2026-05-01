@@ -1,0 +1,1 @@
+CREATE INDEX "idx_visited_pois_location_id" ON "visited_pois" USING btree ("location_id" int4_ops);

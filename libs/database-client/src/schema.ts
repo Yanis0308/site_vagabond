@@ -157,6 +157,10 @@ export const visitedPois = pgTable(
       "btree",
       table.poiId.asc().nullsLast().op("text_ops"),
     ),
+    index("idx_visited_pois_location_id").using(
+      "btree",
+      table.locationId.asc().nullsLast().op("int4_ops"),
+    ),
     foreignKey({
       columns: [table.userId],
       foreignColumns: [users.userId],

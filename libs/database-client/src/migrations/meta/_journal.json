@@ -162,6 +162,13 @@
       "when": 1777034655918,
       "tag": "0022_normal_gamora",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1777472977464,
+      "tag": "0023_glamorous_vargas",
+      "breakpoints": true
     }
   ]
 }
