@@ -11,7 +11,7 @@ import {
   GetVisitedPoisResponseSchema,
 } from "@vagabond/shared-utils";
 
-import { captureAndLog } from "../../utils/logger.js";
+import { notifyPoiValidatedOnSlack } from "../../services/poi-validation-slack.service.js";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
@@ -144,53 +144,23 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       // Send HTTP response immediately
       const response = reply.status(200).send({ data: { id: visitedPoiId } });
 
-      // Send Slack notification in background
-      void (async (): Promise<void> => {
-        try {
-          const poiInfo =
-            await fastify.dbRepositories.poi.findByIdWithNameAndCoords(poiId);
-
-          if (poiInfo !== null) {
-            const displayName =
-              poiInfo.name.length > 0 ? poiInfo.name : "Lieu inconnu";
-            const nicknameDisplay = request.user.db.nickname;
-            const locationParts = [
-              poiInfo.cityName,
-              poiInfo.countyName,
-              poiInfo.regionName,
-            ].filter((x): x is string => x !== null && x.length > 0);
-            const displayLocation =
-              locationParts.length > 0 ? locationParts.join(", ") : "—";
-
-            await fastify.slack.sendPoiValidationMessage(
-              `🏆 *Nouveau lieu validé !*\n` +
-                `👤 *Utilisateur:* ${nicknameDisplay} (${request.user.db.fullName} - ${request.user.email})\n` +
-                `📍 *Lieu:* ${displayName}\n` +
-                `🏙️ *Localisation:* ${displayLocation}\n` +
-                `⭐ *Note:* ${rating}/5\n` +
-                `💬 *Commentaire:* ${
-                  comment.length > 0 ? comment : "Aucun commentaire"
-                }\n` +
-                `📅 *Date:* ${new Date().toLocaleString("fr-FR")}\n` +
-                `🖼️ *Image:* en cours d'upload (#${visitedPoiId})`,
-            );
-
-            request.log.info(
-              `Place validated: ${displayName} by ${request.user.db.fullName} (${request.user.uid})`,
-            );
-          }
-        } catch (error) {
-          captureAndLog(
-            fastify,
-            error,
-            "Failed to send Slack notification for place validation",
-            {
-              level: "warning",
-              tags: { operation: "slack-poi-validation" },
-            },
-          );
-        }
-      })();
+      // Legacy path: client provided imageKey at validation time, so the photo is
+      // already uploaded. Notify Slack here. In the post-VG-310 flow imageKey is
+      // undefined and the upload endpoint sends the notification once the photo lands.
+      if (imageKey !== undefined) {
+        void notifyPoiValidatedOnSlack(fastify, {
+          visitedPoiId,
+          poiId,
+          photoUrl: `${fastify.config.cdnUrl}/${imageKey}`,
+          userDisplayName: request.user.db.nickname ?? request.user.db.fullName,
+          userFullName: request.user.db.fullName,
+          userEmail: request.user.email ?? "—",
+          userId: request.user.uid,
+          rating,
+          comment,
+          createdAt: new Date(),
+        });
+      }
 
       return await response;
     },

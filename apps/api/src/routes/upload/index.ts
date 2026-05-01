@@ -3,12 +3,15 @@ import {
   type FastifyPluginCallbackTypebox,
   Type,
 } from "@fastify/type-provider-typebox";
+import { type VisitedPoiContext } from "@vagabond/database-client";
 import {
   ErrorResponseSchema,
   UploadFileResponseSchema,
 } from "@vagabond/shared-utils";
 import crypto from "crypto";
 import sharp from "sharp";
+
+import { notifyPoiValidatedOnSlack } from "../../services/poi-validation-slack.service.js";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png"];
@@ -48,15 +51,19 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         throw new Error("File too large. Maximum size is 10MB.");
       }
 
-      // Verify ownership before uploading to avoid orphaned S3 objects
+      // Verify ownership before uploading to avoid orphaned S3 objects.
+      // Context (poiId, rating, comment, createdAt, imageKey) is reused for the Slack
+      // notification below; imageKey gates against duplicate alerts on retried uploads.
+      let visitedPoiContext: VisitedPoiContext | undefined;
+
       if (visitedPoiId !== undefined) {
-        const visitedPoi =
-          await fastify.dbRepositories.visitedPoi.findByIdAndUser(
+        visitedPoiContext =
+          await fastify.dbRepositories.visitedPoi.findContextByIdAndUser(
             visitedPoiId,
             request.user.uid,
           );
 
-        if (visitedPoi === undefined) {
+        if (visitedPoiContext === undefined) {
           return await reply.status(404).send({
             error: {
               type: "NOT_FOUND",
@@ -96,11 +103,32 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       }
       const finalKey = uploadResult.Key;
 
-      if (visitedPoiId !== undefined) {
+      if (visitedPoiId !== undefined && visitedPoiContext !== undefined) {
+        const isFirstPhoto = visitedPoiContext.imageKey === null;
+
         await fastify.dbRepositories.visitedPoi.updateImageKey(
           visitedPoiId,
           finalKey,
         );
+
+        // Only notify Slack on the first successful photo upload to avoid
+        // duplicate alerts when the mobile background uploader retries.
+        if (isFirstPhoto) {
+          const contextForSlack = visitedPoiContext;
+          void notifyPoiValidatedOnSlack(fastify, {
+            visitedPoiId,
+            poiId: contextForSlack.poiId,
+            photoUrl: `${fastify.config.cdnUrl}/${finalKey}`,
+            userDisplayName:
+              request.user.db.nickname ?? request.user.db.fullName,
+            userFullName: request.user.db.fullName,
+            userEmail: request.user.email ?? "—",
+            userId: request.user.uid,
+            rating: contextForSlack.rating,
+            comment: contextForSlack.comment,
+            createdAt: contextForSlack.createdAt,
+          });
+        }
       }
 
       return await reply.status(200).send({

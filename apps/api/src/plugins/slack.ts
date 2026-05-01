@@ -21,6 +21,19 @@ interface UserFeedbackSlackMessageData {
   createdAt: Date;
 }
 
+interface PoiValidationSlackMessageData {
+  visitedPoiId: number;
+  poiName: string;
+  location: string;
+  userDisplayName: string;
+  userFullName: string;
+  userEmail: string;
+  rating: number;
+  comment: string;
+  photoUrl: string;
+  createdAt: Date;
+}
+
 const escapeSlackText = (value: string): string => {
   return value
     .replaceAll("&", "&amp;")
@@ -138,11 +151,52 @@ const buildUserFeedbackSlackMessage = ({
     .join("\n");
 };
 
+const buildPoiValidationSlackMessage = ({
+  visitedPoiId,
+  poiName,
+  location,
+  userDisplayName,
+  userFullName,
+  userEmail,
+  rating,
+  comment,
+  photoUrl,
+  createdAt,
+}: PoiValidationSlackMessageData): string => {
+  const formattedUser = formatSlackUser(
+    escapeSlackText(userDisplayName),
+    escapeSlackText(userFullName),
+    escapeSlackText(userEmail),
+  );
+  const trimmedComment = comment.trim();
+  const commentValue =
+    trimmedComment.length > 0
+      ? escapeSlackText(trimmedComment)
+      : "Aucun commentaire";
+
+  return [
+    `🏆 *Nouveau lieu validé !* (#${visitedPoiId})`,
+    formatSlackEmojiLine("👤", "Utilisateur", formattedUser),
+    formatSlackEmojiLine("📍", "Lieu", escapeSlackText(poiName)),
+    formatSlackEmojiLine("🏙️", "Localisation", escapeSlackText(location)),
+    formatSlackEmojiLine("⭐", "Note", `${rating}/5`),
+    formatSlackEmojiLine("💬", "Commentaire", commentValue),
+    formatSlackEmojiLine(
+      "📅",
+      "Date",
+      escapeSlackText(createdAt.toLocaleString("fr-FR")),
+    ),
+    photoUrl,
+  ].join("\n");
+};
+
 declare module "fastify" {
   interface FastifyInstance {
     slack: {
       sendSignupMessage: (message: string) => Promise<void>;
-      sendPoiValidationMessage: (message: string) => Promise<void>;
+      sendPoiValidationMessage: (
+        data: PoiValidationSlackMessageData,
+      ) => Promise<void>;
       sendAppReviewMessage: (message: string) => Promise<void>;
       sendUserFeedbackMessage: (
         data: UserFeedbackSlackMessageData,
@@ -181,7 +235,9 @@ export default fp(
 
     const slackService: {
       sendSignupMessage: (message: string) => Promise<void>;
-      sendPoiValidationMessage: (message: string) => Promise<void>;
+      sendPoiValidationMessage: (
+        data: PoiValidationSlackMessageData,
+      ) => Promise<void>;
       sendAppReviewMessage: (message: string) => Promise<void>;
       sendUserFeedbackMessage: (
         data: UserFeedbackSlackMessageData,
@@ -189,8 +245,11 @@ export default fp(
     } = {
       sendSignupMessage: (message: string) =>
         sendMessage(message, channelSignups),
-      sendPoiValidationMessage: (message: string) =>
-        sendMessage(message, channelPoiValidations),
+      sendPoiValidationMessage: (data: PoiValidationSlackMessageData) =>
+        sendMessage(
+          buildPoiValidationSlackMessage(data),
+          channelPoiValidations,
+        ),
       sendAppReviewMessage: (message: string) =>
         sendMessage(message, channelAppReviews),
       sendUserFeedbackMessage: (data: UserFeedbackSlackMessageData) =>

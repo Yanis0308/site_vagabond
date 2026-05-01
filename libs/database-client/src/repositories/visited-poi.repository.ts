@@ -36,6 +36,15 @@ export type VisitedPoiRow = Omit<BaseRow, "fullName" | "nickname" | "email"> & {
   username: string;
 };
 
+export interface VisitedPoiContext {
+  id: number;
+  poiId: string;
+  imageKey: string | null;
+  rating: number;
+  comment: string;
+  createdAt: Date;
+}
+
 export class VisitedPoiRepository {
   constructor(private readonly db: DrizzleClient) {}
 
@@ -107,6 +116,23 @@ export class VisitedPoiRepository {
     return await this.db.query.visitedPois.findFirst({
       where: and(eq(visitedPois.id, id), eq(visitedPois.userId, userId)),
       columns: { id: true, imageKey: true },
+    });
+  }
+
+  async findContextByIdAndUser(
+    id: number,
+    userId: string,
+  ): Promise<VisitedPoiContext | undefined> {
+    return await this.db.query.visitedPois.findFirst({
+      where: and(eq(visitedPois.id, id), eq(visitedPois.userId, userId)),
+      columns: {
+        id: true,
+        poiId: true,
+        imageKey: true,
+        rating: true,
+        comment: true,
+        createdAt: true,
+      },
     });
   }
 
