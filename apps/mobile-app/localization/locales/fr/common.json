@@ -66,6 +66,7 @@
     "success": "Photo envoyée !"
   },
   "app_review": {
+    "close": "Fermer",
     "initial": {
       "title": "Tu aimes l'application ? 🧡",
       "subtitle": "Ton avis nous aide à nous améliorer !"

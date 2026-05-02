@@ -42,6 +42,7 @@ export interface EventSchemas {
   privacy_settings_changed: { is_private: boolean };
   leaderboard_viewed: { period: LeaderboardPeriod };
   app_review_submitted: { positive: boolean; has_comment: boolean };
+  app_review_dismissed: { visited_poi_count: number; is_re_prompt: boolean };
 
   api_error: { endpoint: string; status: number; method: string };
 }

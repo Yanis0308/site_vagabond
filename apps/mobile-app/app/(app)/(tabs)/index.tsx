@@ -66,8 +66,11 @@ export default function MapsTab(): ReactElement {
   useUploadToast();
 
   // App review modal
-  const { isVisible: isAppReviewModalVisible, onClose: onAppReviewClose } =
-    useAppReviewModal();
+  const {
+    isVisible: isAppReviewModalVisible,
+    onClose: onAppReviewClose,
+    onDismiss: onAppReviewDismiss,
+  } = useAppReviewModal();
 
   // Track map screen load once per mount
   useEffect(() => {
@@ -296,6 +299,7 @@ export default function MapsTab(): ReactElement {
         <AppReviewModal
           visible={isAppReviewModalVisible}
           onClose={onAppReviewClose}
+          onDismiss={onAppReviewDismiss}
         />
       </Box>
     </CustomScreenContainer>

@@ -1,10 +1,13 @@
+import { X } from "lucide-react-native";
 import React, { type ReactElement, useState } from "react";
-import { Keyboard, TouchableWithoutFeedback } from "react-native";
+import { useTranslation } from "react-i18next";
+import { Keyboard, Pressable, TouchableWithoutFeedback } from "react-native";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 import { InitialStep } from "@/components/app-review/InitialStep";
 import { NegativeStep } from "@/components/app-review/NegativeStep";
+import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { Modal, ModalBackdrop } from "@/components/ui/modal";
 import { useAppReviewMutation } from "@/hooks/mutations/useAppReviewMutation";
 import { logger } from "@/utils/logger";
@@ -12,6 +15,7 @@ import { logger } from "@/utils/logger";
 interface AppReviewModalProps {
   visible: boolean;
   onClose: () => void;
+  onDismiss: () => void;
 }
 
 type ModalStep = "initial" | "negative";
@@ -40,7 +44,9 @@ async function tryRequestStoreReview(): Promise<void> {
 export const AppReviewModal = ({
   visible,
   onClose,
+  onDismiss,
 }: AppReviewModalProps): ReactElement => {
+  const { t } = useTranslation("common");
   const [step, setStep] = useState<ModalStep>("initial");
   const [comment, setComment] = useState<string>("");
   const mutation = useAppReviewMutation();
@@ -59,6 +65,11 @@ export const AppReviewModal = ({
   const handleClose = (): void => {
     handleReset();
     onClose();
+  };
+
+  const handleDismiss = (): void => {
+    handleReset();
+    onDismiss();
   };
 
   const handleThumbsUp = (): void => {
@@ -97,9 +108,23 @@ export const AppReviewModal = ({
       <ModalBackdrop onPress={Keyboard.dismiss} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <Animated.View
-          className="w-full max-w-[85%] rounded-3xl bg-background-100 px-4 py-6 shadow-lg"
+          className="w-full max-w-[85%] rounded-3xl bg-background-100 px-4 pb-6 pt-12 shadow-lg"
           style={animatedStyle}
         >
+          <Pressable
+            onPress={handleDismiss}
+            disabled={mutation.isPending}
+            accessibilityRole="button"
+            accessibilityLabel={t("app_review.close")}
+            hitSlop={8}
+            className="absolute right-3 top-3 z-10 size-7 items-center justify-center rounded-full bg-background-200 active:opacity-70"
+          >
+            <X
+              size={16}
+              color={themeColors.typography["500"].hex}
+              strokeWidth={2}
+            />
+          </Pressable>
           {step === "initial" ? (
             <InitialStep
               isPending={mutation.isPending}
