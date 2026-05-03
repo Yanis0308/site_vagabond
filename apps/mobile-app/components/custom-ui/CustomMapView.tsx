@@ -4,9 +4,13 @@ import {
   LocationPuck,
   type MapState,
   MapView,
+  UserTrackingMode,
   VectorSource,
 } from "@rnmapbox/maps";
-import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
+import {
+  type CameraRef,
+  type UserTrackingModeChangeCallback,
+} from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
 import { type ReactElement, type RefObject } from "react";
 import { Platform } from "react-native";
@@ -18,10 +22,7 @@ import { MapPOILayers } from "@/components/custom-ui/MapPOILayers";
 import { MapVoronoiLayers } from "@/components/custom-ui/MapVoronoiLayers";
 import { config } from "@/constants/Config";
 import { useMapImages } from "@/hooks/maps/useMapImages";
-import {
-  getSavedCameraState,
-  type OnPressEventPoi,
-} from "@/hooks/maps/useMapLogic";
+import { type OnPressEventPoi } from "@/hooks/maps/useMapLogic";
 import { useUserVisitedPois } from "@/hooks/queries/useUserVisitedPois";
 import { type PoiType } from "@/utils/types";
 
@@ -30,7 +31,9 @@ interface CustomMapViewProps {
   mapRef: RefObject<MapView | null>;
   cameraRef: RefObject<CameraRef | null>;
   selectedPlace: PoiType | null;
+  isFollowingUser: boolean;
   onCameraChanged: (mapState: MapState) => void;
+  onUserTrackingModeChange: UserTrackingModeChangeCallback;
   onPress: (event: OnPressEventPoi) => void;
 }
 
@@ -38,14 +41,15 @@ export const CustomMapView = function CustomMapView({
   mapRef,
   cameraRef,
   selectedPlace,
+  isFollowingUser,
   onCameraChanged,
+  onUserTrackingModeChange,
   onPress,
 }: CustomMapViewProps): ReactElement {
   const images = useMapImages();
   const {
     data: { visitedPoiIds },
   } = useUserVisitedPois();
-  const savedCamera = getSavedCameraState();
 
   const pulsing = { isEnabled: false };
 
@@ -78,14 +82,10 @@ export const CustomMapView = function CustomMapView({
         heading={0}
         ref={cameraRef}
         maxBounds={maxBounds}
-        defaultSettings={
-          savedCamera.center !== null && savedCamera.zoom !== null
-            ? {
-                centerCoordinate: savedCamera.center,
-                zoomLevel: savedCamera.zoom,
-              }
-            : undefined
-        }
+        followUserLocation={isFollowingUser}
+        followUserMode={UserTrackingMode.Follow}
+        followZoomLevel={14}
+        onUserTrackingModeChange={onUserTrackingModeChange}
       />
       <LocationPuck
         puckBearingEnabled
@@ -96,7 +96,7 @@ export const CustomMapView = function CustomMapView({
       />
       <Images images={images} />
 
-      {/* 
+      {/*
           Z-INDEX STRATEGY:
           We use separate VectorSource blocks to control layer Z-index.
           The order below determines the visual layering (last source renders on top).

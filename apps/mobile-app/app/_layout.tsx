@@ -22,7 +22,6 @@ import { FullScreenLoader } from "@/components/validate-place/FullScreenLoader";
 import { config } from "@/constants/Config";
 import { PERSIST_OPTIONS, queryClient } from "@/constants/QueryClient";
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
-import { resetPersistentMapState } from "@/hooks/maps/useMapLogic";
 import { useReactQueryFocusManager } from "@/hooks/other/useReactQueryFocusManager";
 import { clearUser, identifyUser } from "@/lib/analytics/analytics";
 import { AppErrorBoundary } from "@/lib/analytics/error-boundary";
@@ -78,7 +77,6 @@ export default function RootLayout(): ReactElement {
         });
       } else {
         setAuthenticatedUser(null);
-        resetPersistentMapState();
         void clearUser();
       }
       setAuthReady(true);

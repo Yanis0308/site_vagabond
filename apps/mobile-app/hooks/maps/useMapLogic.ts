@@ -1,17 +1,13 @@
 import { type MapState, type MapView } from "@rnmapbox/maps";
-import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
+import {
+  type CameraRef,
+  type UserTrackingModeChangeCallback,
+} from "@rnmapbox/maps/lib/typescript/src/components/Camera";
 import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
 import { useThrottler } from "@tanstack/react-pacer";
 import { type PoiFilterLevelEnum } from "@vagabond/shared-utils";
 import { type Feature, type Geometry } from "geojson";
-import { getDistance } from "geolib";
-import {
-  type RefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { type RefObject, useEffect, useRef, useState } from "react";
 
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import {
@@ -20,29 +16,6 @@ import {
 } from "@/hooks/queries/useUserLocation";
 import { logger } from "@/utils/logger";
 import { type PoiType } from "@/utils/types";
-
-// Module-level state survives component remounts
-const persistentMapState = {
-  firstCenteringDone: false,
-  cameraCenter: null as [number, number] | null,
-  cameraZoom: null as number | null,
-};
-
-interface SavedCameraState {
-  center: [number, number] | null;
-  zoom: number | null;
-}
-
-export const getSavedCameraState = (): SavedCameraState => ({
-  center: persistentMapState.cameraCenter,
-  zoom: persistentMapState.cameraZoom,
-});
-
-export const resetPersistentMapState = (): void => {
-  persistentMapState.firstCenteringDone = false;
-  persistentMapState.cameraCenter = null;
-  persistentMapState.cameraZoom = null;
-};
 
 export interface OnPressEventPoi extends OnPressEvent {
   features: Array<
@@ -66,7 +39,7 @@ interface UseMapLogicReturn {
   // Realtime states
   headingRealtime: number;
   zoomRealtime: number | null;
-  isCentered: boolean;
+  isFollowingUser: boolean;
 
   // Refs
   mapRef: RefObject<MapView | null>;
@@ -74,6 +47,7 @@ interface UseMapLogicReturn {
 
   // Event handlers
   onCameraChanged: (mapState: MapState) => void;
+  onUserTrackingModeChange: UserTrackingModeChangeCallback;
   onPress: (event: OnPressEventPoi) => void;
 
   // Actions
@@ -91,7 +65,9 @@ export const useMapLogic = (): UseMapLogicReturn => {
   // États pour le zoom et heading (uniquement pour affichage en temps réel)
   const [headingRealtime, setHeadingRealtime] = useState(0);
   const [zoomRealtime, setZoomRealtime] = useState<number | null>(null);
-  const [isCentered, setIsCentered] = useState(true);
+  // Follow on by default — Mapbox waits for the first GPS fix and then
+  // centers on the puck, replacing the previous "first-centering" effect.
+  const [isFollowingUser, setIsFollowingUser] = useState(true);
   const [mapCenter, setMapCenter] = useState<MapCenter | null>(null);
 
   const mapRef = useRef<MapView>(null);
@@ -100,20 +76,9 @@ export const useMapLogic = (): UseMapLogicReturn => {
   // Hook unifié pour gérer la sélection de lieu
   const { setSelectedPlace } = usePlaceSelection();
 
-  const moveToUserLocation = useCallback(() => {
-    if (simplifiedLocation !== null && cameraRef.current !== null) {
-      cameraRef.current.setCamera({
-        centerCoordinate: [
-          simplifiedLocation.longitude,
-          simplifiedLocation.latitude,
-        ],
-        zoomLevel: 14,
-        heading: 0, // reset orientation
-        animationMode: "flyTo",
-        animationDuration: 1000,
-      });
-    }
-  }, [simplifiedLocation]);
+  const moveToUserLocation = (): void => {
+    setIsFollowingUser(true);
+  };
 
   const resetMapOrientation = (): void => {
     if (cameraRef.current !== null) {
@@ -133,6 +98,8 @@ export const useMapLogic = (): UseMapLogicReturn => {
       logger("cameraRef.current is null, cannot move to place");
       return;
     }
+
+    setIsFollowingUser(false);
 
     // Apply north offset for POI to keep it visible above the bottom sheet
     // The bottom sheet occupies 60% of the screen height, so we shift the camera
@@ -155,48 +122,13 @@ export const useMapLogic = (): UseMapLogicReturn => {
     }, 100);
   };
 
-  // Centrer la caméra sur la position de l'utilisateur (une seule fois au lancement)
-  useEffect(() => {
-    if (simplifiedLocation !== null && !persistentMapState.firstCenteringDone) {
-      moveToUserLocation();
-      persistentMapState.firstCenteringDone = true;
-    }
-  }, [simplifiedLocation, moveToUserLocation]);
-
   // Gestion des événements de la carte
   const cameraChangedDebouncer = useThrottler(
     (mapState: MapState): void => {
-      const { center, heading, zoom } = mapState.properties;
-      const lng = center[0];
-      const lat = center[1];
+      const { center, heading } = mapState.properties;
       setHeadingRealtime(heading);
-      setZoomRealtime(zoom);
-      setMapCenter({ longitude: lng ?? 0, latitude: lat ?? 0 });
-
-      // Persist camera state across component remounts (tab switches).
-      // Skip writes when Mapbox emits a partially-undefined center to avoid
-      // restoring the camera to [0, 0] on next mount.
-      if (
-        typeof lng === "number" &&
-        typeof lat === "number" &&
-        Number.isFinite(lng) &&
-        Number.isFinite(lat) &&
-        Number.isFinite(zoom)
-      ) {
-        persistentMapState.cameraCenter = [lng, lat];
-        persistentMapState.cameraZoom = zoom;
-      }
-
-      if (simplifiedLocation !== null) {
-        const distance = getDistance(
-          { latitude: center[1] ?? 0, longitude: center[0] ?? 0 },
-          {
-            latitude: simplifiedLocation.latitude,
-            longitude: simplifiedLocation.longitude,
-          },
-        );
-        setIsCentered(distance < 20); // 20 meters of tolerance
-      }
+      setZoomRealtime(mapState.properties.zoom);
+      setMapCenter({ longitude: center[0] ?? 0, latitude: center[1] ?? 0 });
     },
     { wait: 50 },
   );
@@ -211,6 +143,10 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
   const onCameraChanged = (mapState: MapState): void => {
     cameraChangedDebouncer.maybeExecute(mapState);
+  };
+
+  const onUserTrackingModeChange: UserTrackingModeChangeCallback = (event) => {
+    setIsFollowingUser(event.nativeEvent.payload.followUserLocation);
   };
 
   const onPress = (event: OnPressEventPoi): void => {
@@ -262,7 +198,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
     // Realtime states
     headingRealtime,
     zoomRealtime,
-    isCentered,
+    isFollowingUser,
 
     // Refs
     mapRef,
@@ -270,6 +206,7 @@ export const useMapLogic = (): UseMapLogicReturn => {
 
     // Event handlers
     onCameraChanged,
+    onUserTrackingModeChange,
     onPress,
 
     // Actions

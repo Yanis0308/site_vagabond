@@ -37,12 +37,13 @@ export default function MapsTab(): ReactElement {
     mapRef,
     cameraRef,
     onCameraChanged,
+    onUserTrackingModeChange,
     onPress,
     moveToUserLocation,
     resetMapOrientation,
     headingRealtime,
     zoomRealtime,
-    isCentered,
+    isFollowingUser,
     moveToPlace,
     mapCenter,
   } = useMapLogic();
@@ -264,7 +265,9 @@ export default function MapsTab(): ReactElement {
           mapRef={mapRef}
           cameraRef={cameraRef}
           selectedPlace={selectedPlace}
+          isFollowingUser={isFollowingUser}
           onCameraChanged={onCameraChanged}
+          onUserTrackingModeChange={onUserTrackingModeChange}
           onPress={onPress}
         />
 
@@ -280,7 +283,7 @@ export default function MapsTab(): ReactElement {
               params: cityName === null ? {} : { city: cityName },
             });
           }}
-          isCentered={isCentered}
+          isCentered={isFollowingUser}
           heading={headingRealtime}
         />
 
