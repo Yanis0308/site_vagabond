@@ -27,6 +27,10 @@ export default function RootLayout(): ReactElement | null {
         name="user-feedback/[placeId]"
         options={{ headerShown: false, presentation: "modal" }}
       />
+      <Stack.Screen
+        name="user-feedback/place-suggestion"
+        options={{ headerShown: false, presentation: "modal" }}
+      />
       <Stack.Screen name="user/[userId]" />
       <Stack.Screen
         name="user/edit-nickname"

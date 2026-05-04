@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from "react";
+import React, { memo } from "react";
 import { useWindowDimensions, View } from "react-native";
 
 import { useSafeAreaCustom } from "@/hooks/other/useSafeAreaCustom";
@@ -10,6 +10,7 @@ interface MapButtonsProps {
   onLocatePress?: () => void;
   onCompassPress?: () => void;
   onFeedbackPress?: () => void;
+  onSuggestPlacePress?: () => void;
   onFilterPress?: () => void;
   isCentered?: boolean;
   heading?: number;
@@ -20,6 +21,7 @@ export const MapButtons = memo(
     onLocatePress,
     onCompassPress,
     onFeedbackPress,
+    onSuggestPlacePress,
     onFilterPress,
     isCentered = false,
     heading = 0,
@@ -29,39 +31,32 @@ export const MapButtons = memo(
     const bottomMargin =
       Math.ceil(displayHeight / 4) + safeAreaInsets.tabBarTotalHeight;
 
-    const compassAction = useMemo(
-      () => ({
-        type: "compass" as const,
-        onPress: onCompassPress,
-        heading: heading,
-      }),
-      [onCompassPress, heading],
-    );
+    const compassAction = {
+      type: "compass" as const,
+      onPress: onCompassPress,
+      heading: heading,
+    };
 
-    const locateAction = useMemo(
-      () => ({
-        type: "locate" as const,
-        onPress: onLocatePress,
-        isCentered: isCentered,
-      }),
-      [isCentered, onLocatePress],
-    );
+    const locateAction = {
+      type: "locate" as const,
+      onPress: onLocatePress,
+      isCentered: isCentered,
+    };
 
-    const filterAction = useMemo(
-      () => ({
-        type: "filter" as const,
-        onPress: onFilterPress,
-      }),
-      [onFilterPress],
-    );
+    const filterAction = {
+      type: "filter" as const,
+      onPress: onFilterPress,
+    };
 
-    const feedbackAction = useMemo(
-      () => ({
-        type: "feedback" as const,
-        onPress: onFeedbackPress,
-      }),
-      [onFeedbackPress],
-    );
+    const feedbackAction = {
+      type: "feedback" as const,
+      onPress: onFeedbackPress,
+    };
+
+    const suggestPlaceAction = {
+      type: "place-suggestion" as const,
+      onPress: onSuggestPlacePress,
+    };
 
     return (
       <View
@@ -84,6 +79,9 @@ export const MapButtons = memo(
           <MapActionButton action={locateAction} />
           {onFeedbackPress !== undefined && (
             <MapActionButton action={feedbackAction} />
+          )}
+          {onSuggestPlacePress !== undefined && (
+            <MapActionButton action={suggestPlaceAction} />
           )}
         </View>
 

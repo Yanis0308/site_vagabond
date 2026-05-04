@@ -73,6 +73,15 @@ export default [
           ],
         },
       ],
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector:
+            "CallExpression[callee.object.name='router'][callee.property.name='push']",
+          message:
+            "Use router.navigate() instead of router.push(); use router.dismiss() to close a modal.",
+        },
+      ],
     },
   },
 

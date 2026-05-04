@@ -1,10 +1,12 @@
 import {
   LocateFixedIcon,
   LocateIcon,
+  PlusIcon,
   SlidersHorizontal,
   TriangleAlert,
 } from "lucide-react-native";
 import React, { memo, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { cn } from "@/utils/cn";
 
@@ -16,7 +18,8 @@ export type MapActionType =
   | { type: "locate"; onPress?: () => void; isCentered?: boolean }
   | { type: "compass"; onPress?: () => void; heading: number }
   | { type: "feedback"; onPress?: () => void }
-  | { type: "filter"; onPress?: () => void };
+  | { type: "filter"; onPress?: () => void }
+  | { type: "place-suggestion"; onPress?: () => void };
 
 interface MapActionButtonProps {
   action: MapActionType;
@@ -27,6 +30,12 @@ export const MapActionButton = memo(function MapActionButton({
   action,
   className,
 }: MapActionButtonProps): React.JSX.Element {
+  const { t } = useTranslation("common");
+  const accessibilityLabel =
+    action.type === "place-suggestion"
+      ? t("user_feedback.place_suggestion.button_a11y_label")
+      : undefined;
+
   const icon = useCallback(() => {
     switch (action.type) {
       case "locate":
@@ -67,6 +76,14 @@ export const MapActionButton = memo(function MapActionButton({
             strokeWidth={1.5}
           />
         );
+      case "place-suggestion":
+        return (
+          <PlusIcon
+            color={themeColors.burntOrange["700"].hex}
+            size={32}
+            strokeWidth={1.5}
+          />
+        );
       default:
         return null;
     }
@@ -78,6 +95,7 @@ export const MapActionButton = memo(function MapActionButton({
       action="mapAction"
       size="none"
       className={cn("border border-burntOrange-700", className)}
+      accessibilityLabel={accessibilityLabel}
     >
       <ButtonIcon as={icon} />
     </Button>

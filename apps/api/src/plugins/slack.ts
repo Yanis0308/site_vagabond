@@ -1,11 +1,23 @@
 import { WebClient } from "@slack/web-api";
-import { type UserFeedbackCategory } from "@vagabond/shared-utils";
+import {
+  type CreateUserFeedbackRequest,
+  type PlaceSuggestionFeedbackPayload,
+} from "@vagabond/shared-utils";
 import fp from "fastify-plugin";
 
 import { captureAndLog, getLogger } from "../utils/logger.js";
 
+type DistributedPick<T, K extends keyof T> = T extends unknown
+  ? Pick<T, K>
+  : never;
+
+type FeedbackContent = DistributedPick<
+  CreateUserFeedbackRequest,
+  "category" | "payload"
+>;
+
 interface UserFeedbackSlackMessageData {
-  category: UserFeedbackCategory;
+  feedback: FeedbackContent;
   userDisplayName: string;
   userFullName: string;
   userEmail: string;
@@ -89,11 +101,45 @@ const hasSlackValue = (value: string | null): value is string => {
   return value !== null && value.trim().length > 0;
 };
 
+const formatPlaceSuggestionPayload = (
+  payload: PlaceSuggestionFeedbackPayload,
+): string[] => {
+  const lines = [
+    formatSlackEmojiLine(
+      "🏷️",
+      "Nom du lieu",
+      escapeSlackText(payload.placeName),
+    ),
+    formatSlackEmojiLine("📍", "Adresse", escapeSlackText(payload.address)),
+  ];
+
+  if (
+    payload.description !== undefined &&
+    payload.description.trim().length > 0
+  ) {
+    lines.push(
+      `📝 *${escapeSlackText("Description")}:*\n${formatSlackMessageBody(
+        payload.description,
+      )}`,
+    );
+  }
+
+  return lines;
+};
+
+const formatFeedbackPayloadLines = (feedback: FeedbackContent): string[] => {
+  if (feedback.category === "PLACE_SUGGESTION") {
+    return formatPlaceSuggestionPayload(feedback.payload);
+  }
+
+  return [];
+};
+
 const buildUserFeedbackSlackMessage = ({
   userDisplayName,
   userFullName,
   userEmail,
-  category,
+  feedback,
   targetPoiName,
   targetPoiId,
   targetPoiLocation,
@@ -118,7 +164,7 @@ const buildUserFeedbackSlackMessage = ({
   return [
     "📝 *Nouveau feedback utilisateur reçu !*",
     formatSlackEmojiLine("👤", "Utilisateur", formattedUser),
-    formatSlackEmojiLine("🏷️", "Catégorie", escapeSlackText(category)),
+    formatSlackEmojiLine("🏷️", "Catégorie", escapeSlackText(feedback.category)),
     targetPoiLabel === null
       ? null
       : formatSlackEmojiLine("📍", "POI cible", targetPoiLabel),
@@ -140,7 +186,10 @@ const buildUserFeedbackSlackMessage = ({
       "App",
       `${escapeSlackText(os)} ${escapeSlackText(appVersion)}`,
     ),
-    `💬 *Message:*\n${formatSlackMessageBody(message)}`,
+    ...formatFeedbackPayloadLines(feedback),
+    message.trim().length > 0
+      ? `💬 *Message:*\n${formatSlackMessageBody(message)}`
+      : null,
     formatSlackEmojiLine(
       "📅",
       "Date",
@@ -255,7 +304,7 @@ export default fp(
       sendUserFeedbackMessage: (data: UserFeedbackSlackMessageData) =>
         sendMessage(
           buildUserFeedbackSlackMessage(data),
-          slackConfig.channelUserFeedbackByCategory[data.category],
+          slackConfig.channelUserFeedbackByCategory[data.feedback.category],
         ),
     };
 

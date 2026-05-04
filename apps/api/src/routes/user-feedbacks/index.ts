@@ -54,7 +54,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
                 );
 
           await fastify.slack.sendUserFeedbackMessage({
-            category: body.category,
+            feedback: request.body,
             userDisplayName:
               request.user.db.nickname ??
               getUserDisplayName(request.user.db.fullName, request.user.email),

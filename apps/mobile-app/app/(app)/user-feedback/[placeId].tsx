@@ -18,24 +18,11 @@ import {
 import { UserFeedbackPage } from "@/components/user-feedback/UserFeedbackPage";
 import { useCreateUserFeedback } from "@/hooks/mutations/useCreateUserFeedback";
 import { trackEvent } from "@/lib/analytics/analytics";
-
-const getPlaceIdParam = (
-  placeId: string | string[] | undefined,
-): string | null => {
-  const normalizedPlaceId = Array.isArray(placeId) ? placeId[0] : placeId;
-
-  if (normalizedPlaceId === undefined) {
-    return null;
-  }
-
-  const trimmedPlaceId = normalizedPlaceId.trim();
-
-  return trimmedPlaceId === "" ? null : trimmedPlaceId;
-};
+import { normalizeStringSearchParam } from "@/utils/searchParams";
 
 export default function UserFeedbackRoute(): ReactElement | null {
   const { placeId } = useLocalSearchParams<{ placeId?: string | string[] }>();
-  const normalizedPlaceId = getPlaceIdParam(placeId);
+  const normalizedPlaceId = normalizeStringSearchParam(placeId);
   const { t } = useTranslation("common");
   const mutation = useCreateUserFeedback();
   const [message, setMessage] = useState<string>("");
@@ -91,7 +78,7 @@ export default function UserFeedbackRoute(): ReactElement | null {
     (requiresInformationStep && selectedInformationType === null);
 
   const handleClose = (): void => {
-    router.back();
+    router.dismiss();
   };
 
   const handleSubmit = (): void => {

@@ -26,6 +26,8 @@ export interface EventSchemas {
   };
   map_feedback_started: Record<string, never>;
   map_feedback_submitted: Record<string, never>;
+  place_suggestion_started: Record<string, never>;
+  place_suggestion_submitted: Record<string, never>;
   poi_search_performed: { query_length: number; results_count: number };
   poi_search_result_selected: { result_type: string; result_id: string };
   poi_phone_called: { poi_id: string };

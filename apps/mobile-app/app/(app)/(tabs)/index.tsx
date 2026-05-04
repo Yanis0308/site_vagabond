@@ -283,6 +283,12 @@ export default function MapsTab(): ReactElement {
               params: cityName === null ? {} : { city: cityName },
             });
           }}
+          onSuggestPlacePress={() => {
+            router.navigate({
+              pathname: "/user-feedback/place-suggestion",
+              params: cityName === null ? {} : { city: cityName },
+            });
+          }}
           isCentered={isFollowingUser}
           heading={headingRealtime}
         />

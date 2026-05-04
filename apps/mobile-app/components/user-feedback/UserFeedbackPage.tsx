@@ -147,14 +147,6 @@ export const UserFeedbackPage = ({
           {showFooter ? (
             <View className="gap-3 border-t border-background-200 px-6 py-4">
               <Button
-                action="secondary"
-                isDisabled={isPending}
-                onPress={onClose}
-              >
-                <ButtonText>{t("user_feedback.modal.cancel")}</ButtonText>
-              </Button>
-
-              <Button
                 action="submit"
                 isDisabled={isPending || isSubmitDisabled}
                 onPress={primaryAction}

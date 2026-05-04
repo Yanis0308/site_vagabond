@@ -16,23 +16,12 @@ import {
 import { UserFeedbackPage } from "@/components/user-feedback/UserFeedbackPage";
 import { useCreateUserFeedback } from "@/hooks/mutations/useCreateUserFeedback";
 import { trackEvent } from "@/lib/analytics/analytics";
-
-const getCityParam = (city: string | string[] | undefined): string | null => {
-  const normalizedCity = Array.isArray(city) ? city[0] : city;
-
-  if (normalizedCity === undefined) {
-    return null;
-  }
-
-  const trimmedCity = normalizedCity.trim();
-
-  return trimmedCity === "" ? null : trimmedCity;
-};
+import { normalizeStringSearchParam } from "@/utils/searchParams";
 
 export default function UserFeedbackMapRoute(): ReactElement {
   const { city } = useLocalSearchParams<{ city?: string | string[] }>();
   const { t } = useTranslation("common");
-  const normalizedCity = getCityParam(city);
+  const normalizedCity = normalizeStringSearchParam(city);
   const mutation = useCreateUserFeedback();
   const [selectedType, setSelectedType] = useState<MapFeedbackType | null>(
     null,
@@ -65,7 +54,7 @@ export default function UserFeedbackMapRoute(): ReactElement {
   }, [selectedOption, t]);
 
   const handleClose = (): void => {
-    router.back();
+    router.dismiss();
   };
 
   const handleSubmit = (): void => {

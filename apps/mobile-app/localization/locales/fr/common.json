@@ -174,10 +174,25 @@
       "submit": "Envoyer",
       "retry": "Réessayer",
       "loading": "Envoi en cours...",
-      "cancel": "Annuler",
       "close": "Fermer",
       "success_title": "Merci !",
       "success_message": "Votre message a bien été envoyé."
+    },
+    "place_suggestion": {
+      "button_a11y_label": "Suggérer un lieu manquant",
+      "modal": {
+        "title": "Un lieu à recommander aux autres Vagabonds ? 🙌",
+        "subtitle": "C'est très important pour la communauté !",
+        "place_name_label": "Nom du lieu (obligatoire)",
+        "place_name_placeholder": "Nom du lieu",
+        "address_label": "Localisation (obligatoire)",
+        "address_placeholder": "Une adresse, un lieu-dit, une place...",
+        "description_label": "Description (optionnel)",
+        "description_placeholder": "Pourquoi ce lieu vaut le détour ?",
+        "submit": "Envoyer",
+        "success_title": "Merci pour ta suggestion ! 🙌",
+        "success_message": "Ta suggestion va être étudiée et pourrait bientôt apparaître sur la carte !"
+      }
     }
   },
   "privacy": {

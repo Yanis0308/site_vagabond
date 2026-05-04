@@ -43,8 +43,9 @@ export const PoiReportFeedbackPayloadSchema = Type.Object(
 
 export const PlaceSuggestionFeedbackPayloadSchema = Type.Object(
   {
-    name: Type.String({ minLength: 1, maxLength: 1000 }),
-    placeType: Type.Optional(Type.String({ minLength: 1, maxLength: 100 })),
+    placeName: Type.String({ minLength: 1, maxLength: 1000 }),
+    address: Type.String({ minLength: 1, maxLength: 1000 }),
+    description: Type.Optional(Type.String({ minLength: 1, maxLength: 10000 })),
   },
   { $id: "PlaceSuggestionFeedbackPayload" },
 );
@@ -94,6 +95,7 @@ export const CreateUserFeedbackRequestSchema = Type.Union(
     Type.Object(
       {
         ...userFeedbackBaseProperties,
+        message: Type.String({ minLength: 0, maxLength: 10000 }),
         category: Type.Literal("PLACE_SUGGESTION"),
         targetPoiId: Type.Optional(
           Type.String({ minLength: 1, maxLength: 1000 }),
