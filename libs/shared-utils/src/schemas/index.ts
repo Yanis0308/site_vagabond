@@ -1,4 +1,5 @@
 import * as googleMapsPlace from "./api/google-maps-place.js";
+import * as health from "./api/health.js";
 import * as leaderboard from "./api/leaderboard.js";
 import * as location from "./api/location.js";
 import { PoiCategoryTypesSchema } from "./api/poi-categories.js";
@@ -30,6 +31,7 @@ export const allJsonSchemas = {
   ...etl,
   ...geo,
   ...googleMapsPlace,
+  ...health,
   ...jinaReader,
   ...jinaSearch,
   PoiCategoryTypesSchema,

@@ -56,8 +56,9 @@ declare module "fastify" {
 
 // Liste des chemins publics
 const PUBLIC_PATHS: Array<string | RegExp> = [
+  "/api/live",
+  "/api/ready",
   // String or RegExp
-  //   "/api/health",
   //   /^\/api\/public\/.*/, // All paths starting with /api/public/
   // /^\/documentation.*/, // Documentation if needed
   ///.*/, All for testing

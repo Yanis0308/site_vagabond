@@ -26,6 +26,27 @@ export default [
             "Le repository staffTools est réservé aux routes/services staff-tools (dev-only).",
         },
       ],
+      // Force toute lecture d'env var à passer par fastify.config (plugins/config.ts).
+      // Cela évite la dispersion des process.env.* dans le code et garantit une
+      // validation centralisée par Zod.
+      "no-restricted-properties": [
+        "error",
+        {
+          object: "process",
+          property: "env",
+          message:
+            "N'utilise pas process.env directement. Ajoute la variable au RawConfigSchema dans src/plugins/config.ts puis lis-la via fastify.config.",
+        },
+      ],
+    },
+  },
+  {
+    // Exceptions : config.ts est le SEUL endroit où on lit process.env (validation Zod) ;
+    // logger.ts est évalué au niveau module avant que Fastify ne soit construit, donc
+    // ne peut pas accéder à fastify.config.
+    files: ["src/plugins/config.ts", "src/lib/logger.ts"],
+    rules: {
+      "no-restricted-properties": "off",
     },
   },
 ];

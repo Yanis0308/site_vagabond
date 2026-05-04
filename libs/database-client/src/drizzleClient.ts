@@ -8,6 +8,8 @@ import { fileURLToPath } from "url";
 import * as schema from "./schema.js";
 import { SUPABASE_SSL_CERT } from "./supabase-cert.js";
 
+const PING_TIMEOUT_MS = 500;
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -18,6 +20,7 @@ export const getDrizzleClient = async (): Promise<
     $client: Pool;
   } & {
     close: () => Promise<void>;
+    ping: () => Promise<void>;
   }
 > => {
   const databaseUrl = process.env.API_DATABASE_URL;
@@ -53,6 +56,21 @@ export const getDrizzleClient = async (): Promise<
   return Object.assign(db, {
     close: async () => {
       await pool.end();
+    },
+    ping: async () => {
+      let timeoutId: NodeJS.Timeout | undefined;
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        timeoutId = setTimeout(() => {
+          reject(new Error("DB ping timeout"));
+        }, PING_TIMEOUT_MS);
+      });
+      try {
+        await Promise.race([pool.query("SELECT 1"), timeoutPromise]);
+      } finally {
+        if (timeoutId !== undefined) {
+          clearTimeout(timeoutId);
+        }
+      }
     },
   });
 };

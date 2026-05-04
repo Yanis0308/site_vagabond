@@ -18,7 +18,9 @@ import s3Plugin from "./plugins/s3.js";
 import securityPlugin from "./plugins/security.js";
 import slackPlugin from "./plugins/slack.js";
 import swaggerPlugin from "./plugins/swagger.js";
+import underPressurePlugin from "./plugins/under-pressure.js";
 // Routes
+import healthRoute from "./routes/health/index.js";
 import leaderboardRoute from "./routes/leaderboard/index.js";
 import locationRoute from "./routes/location/index.js";
 import poisIdRoute from "./routes/pois/[id].js";
@@ -62,6 +64,9 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   // 6. Database (repositories)
   await fastify.register(databasePlugin, opts);
 
+  // 6b. Under-pressure (load shedding + cached health check, depends on database)
+  await fastify.register(underPressurePlugin, opts);
+
   // 7. Utility plugins
   await fastify.register(compressPlugin, opts);
   await fastify.register(sensiblePlugin, opts);
@@ -81,6 +86,7 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   await fastify.register(authPlugin, opts);
 
   // 11. Routes
+  await fastify.register(healthRoute, { prefix: "api" });
   await fastify.register(leaderboardRoute, { prefix: "api/leaderboard" });
   await fastify.register(locationRoute, { prefix: "api/location" });
   await fastify.register(poisIdRoute, { prefix: "api/pois" });

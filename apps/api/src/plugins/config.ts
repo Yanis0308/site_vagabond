@@ -37,12 +37,16 @@ const RawConfigSchema = z.object({
   SENTRY_DSN: z.string(),
   SENTRY_ENVIRONMENT: z.string(),
   APP_ENV: z.enum(["development", "production"]).optional(),
+  FLY_APP_NAME: z.string().optional(),
+  FLY_VM_MEMORY_MB: z.coerce.number().int().positive().default(1024),
 });
 
 // Type d'inférence pour TypeScript
 export interface Config {
   isDev: boolean;
   isDevServer: boolean;
+  appServerName: string | undefined;
+  serverMemoryMb: number;
   firebaseAdminServiceAccountFilePath: string;
   cdnUrl: string;
   s3: {
@@ -105,6 +109,8 @@ export default fp(
       const config: Config = {
         isDev,
         isDevServer: rawConfig.APP_ENV === "development",
+        appServerName: rawConfig.FLY_APP_NAME,
+        serverMemoryMb: rawConfig.FLY_VM_MEMORY_MB,
         firebaseAdminServiceAccountFilePath,
         cdnUrl: rawConfig.CDN_URL,
         s3: {

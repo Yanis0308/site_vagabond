@@ -30,6 +30,7 @@ export interface DbRepositories {
 declare module "fastify" {
   interface FastifyInstance {
     dbRepositories: DbRepositories;
+    dbPing: () => Promise<void>;
   }
 }
 
@@ -54,6 +55,7 @@ export default fp(
       };
 
       fastify.decorate(decoratorName, repositories);
+      fastify.decorate("dbPing", () => db.ping());
 
       fastify.addHook("onClose", async () => {
         await db.close();
