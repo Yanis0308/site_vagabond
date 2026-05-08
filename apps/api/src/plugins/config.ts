@@ -39,6 +39,18 @@ const RawConfigSchema = z.object({
   APP_ENV: z.enum(["development", "production"]).optional(),
   FLY_APP_NAME: z.string().optional(),
   FLY_VM_MEMORY_MB: z.coerce.number().int().positive().default(1024),
+  PGBOSS_SCHEMA: z.string().default("pgboss"),
+  // Nombre max de jobs enrich-poi traités en parallèle **par instance API**.
+  PGBOSS_ENRICHMENT_CONCURRENCY: z
+    .string()
+    .transform(Number)
+    .pipe(z.number().int().positive()),
+  // Rétention des jobs terminés avant suppression (nettoyage automatique).
+  PGBOSS_ARCHIVE_DAYS: z
+    .string()
+    .default("7")
+    .transform(Number)
+    .pipe(z.number().int().positive()),
 });
 
 // Type d'inférence pour TypeScript
@@ -47,6 +59,7 @@ export interface Config {
   isDevServer: boolean;
   appServerName: string | undefined;
   serverMemoryMb: number;
+  databaseUrl: string;
   firebaseAdminServiceAccountFilePath: string;
   cdnUrl: string;
   s3: {
@@ -74,6 +87,11 @@ export interface Config {
   };
   groq: {
     apiKey: string;
+  };
+  pgboss: {
+    schema: string;
+    enrichmentConcurrency: number;
+    archiveDays: number;
   };
 }
 
@@ -111,6 +129,7 @@ export default fp(
         isDevServer: rawConfig.APP_ENV === "development",
         appServerName: rawConfig.FLY_APP_NAME,
         serverMemoryMb: rawConfig.FLY_VM_MEMORY_MB,
+        databaseUrl: rawConfig.API_DATABASE_URL,
         firebaseAdminServiceAccountFilePath,
         cdnUrl: rawConfig.CDN_URL,
         s3: {
@@ -145,6 +164,11 @@ export default fp(
         },
         groq: {
           apiKey: rawConfig.GROQ_API_KEY,
+        },
+        pgboss: {
+          schema: rawConfig.PGBOSS_SCHEMA,
+          enrichmentConcurrency: rawConfig.PGBOSS_ENRICHMENT_CONCURRENCY,
+          archiveDays: rawConfig.PGBOSS_ARCHIVE_DAYS,
         },
       };
 

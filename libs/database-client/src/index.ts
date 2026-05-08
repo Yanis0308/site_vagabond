@@ -1,4 +1,5 @@
 export { getDrizzleClient } from "./drizzleClient.js";
+export { getPgSslOptions, type PgSslOptions } from "./pg-ssl.js";
 export * from "./repositories/boundary.repository.js";
 export * from "./repositories/poi.repository.js";
 export * from "./repositories/poi-enriched.repository.js";

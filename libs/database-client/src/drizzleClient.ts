@@ -5,8 +5,8 @@ import { dirname, join } from "path";
 import pg, { type Pool } from "pg";
 import { fileURLToPath } from "url";
 
+import { getPgSslOptions } from "./pg-ssl.js";
 import * as schema from "./schema.js";
-import { SUPABASE_SSL_CERT } from "./supabase-cert.js";
 
 const PING_TIMEOUT_MS = 500;
 
@@ -30,12 +30,7 @@ export const getDrizzleClient = async (): Promise<
 
   const pool = new pg.Pool({
     connectionString: databaseUrl,
-    ssl: isDev
-      ? false
-      : {
-          rejectUnauthorized: true,
-          ca: SUPABASE_SSL_CERT,
-        },
+    ssl: getPgSslOptions(isDev),
     max: 20,
     connectionTimeoutMillis: 20000,
     idleTimeoutMillis: 30000,

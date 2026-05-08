@@ -12,6 +12,7 @@ import bodyDecodePlugin from "./plugins/body-decode.js";
 import configPlugin from "./plugins/config.js";
 import firebasePlugin from "./plugins/firebase.js";
 import multipartPlugin from "./plugins/multipart.js";
+import pgBossPlugin from "./plugins/pg-boss.js";
 import requestContextPlugin from "./plugins/request-context.js";
 import requestLoggingPlugin from "./plugins/request-logging.js";
 import s3Plugin from "./plugins/s3.js";
@@ -66,6 +67,9 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
 
   // 6b. Under-pressure (load shedding + cached health check, depends on database)
   await fastify.register(underPressurePlugin, opts);
+
+  // 6c. pg-boss (job queue — dépend de config)
+  await fastify.register(pgBossPlugin, opts);
 
   // 7. Utility plugins
   await fastify.register(compressPlugin, opts);
