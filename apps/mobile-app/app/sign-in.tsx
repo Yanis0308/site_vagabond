@@ -82,10 +82,10 @@ export default function SignInScreen(): ReactElement {
         action="login"
         onPress={appleLogin}
         isDisabled={loginPending}
-        className="w-full"
+        className="h-auto min-h-16 w-full px-4 py-3"
       >
         {appleIcon}
-        <ButtonText adjustsFontSizeToFit numberOfLines={1}>
+        <ButtonText className="text-lg" maxFontSizeMultiplier={1.5}>
           {t("auth.sign_in_with_apple")}
         </ButtonText>
       </Button>
@@ -99,10 +99,10 @@ export default function SignInScreen(): ReactElement {
         action="login"
         onPress={googleLogin}
         isDisabled={loginPending}
-        className="w-full"
+        className="h-auto min-h-16 w-full px-4 py-3"
       >
         {googleIcon}
-        <ButtonText adjustsFontSizeToFit numberOfLines={1}>
+        <ButtonText className="text-lg" maxFontSizeMultiplier={1.5}>
           {t("auth.sign_in_with_google")}
         </ButtonText>
       </Button>
@@ -118,7 +118,7 @@ export default function SignInScreen(): ReactElement {
       isTabScreen={false}
     >
       <Box className={"flex flex-1 items-center justify-center gap-4"}>
-        <VStack className={"items-center gap-4"}>
+        <VStack className={"items-center gap-4 px-8"}>
           <CustomImage
             sources={localImages.fullIconWithText}
             alt={"Vagabond App Logo"}
@@ -127,7 +127,9 @@ export default function SignInScreen(): ReactElement {
             contentFit="contain"
             showLoader={false}
           />
-          <CustomText size={"xl"}>{t("auth.sign_in_to_start")}</CustomText>
+          <CustomText size={"xl"} className={"text-center"}>
+            {t("auth.sign_in_to_start")}
+          </CustomText>
           <Box
             className={"flex animate-bounce items-center justify-center pt-2"}
           >
