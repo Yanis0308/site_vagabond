@@ -10,10 +10,7 @@ import { Type } from "typebox";
 
 import { logger } from "@/utils/logger";
 
-const AppReviewVisitedPoiCountAtDismissalSchema = Type.Union([
-  Type.Number(),
-  Type.Undefined(),
-]);
+const AppReviewVisitedPoiCountAtDismissalSchema = Type.Number();
 
 type AppReviewVisitedPoiCountAtDismissal = number | undefined;
 

@@ -78,11 +78,11 @@ export const UserAppReviewRequestSchema = Type.Union(
   [
     Type.Object({
       positive: Type.Literal(true),
-      comment: Type.Optional(Nullable(Type.String())),
+      comment: Type.Null(),
     }),
     Type.Object({
       positive: Type.Literal(false),
-      comment: Type.String({ minLength: 10 }),
+      comment: Type.String(),
     }),
   ],
   { $id: "UserAppReviewRequest" },

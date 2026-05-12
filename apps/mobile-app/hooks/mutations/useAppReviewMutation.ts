@@ -13,8 +13,7 @@ export const useAppReviewMutation = () => {
     onSuccess: (_data, { positive, comment }) => {
       void trackEvent("app_review_submitted", {
         positive,
-        has_comment:
-          comment !== undefined && comment !== null && comment !== "",
+        has_comment: comment !== null && comment !== "",
       });
       void queryClient.invalidateQueries({ queryKey: ["users", "me"] });
     },
