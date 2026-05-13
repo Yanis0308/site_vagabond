@@ -1,5 +1,6 @@
 import { type FastifyPluginCallbackTypebox } from "@fastify/type-provider-typebox";
 import {
+  ErrorResponseSchema,
   HealthResponseSchema,
   ReadyResponseSchema,
 } from "@vagabond/shared-utils";
@@ -29,14 +30,16 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         tags: ["health"],
         response: {
           200: ReadyResponseSchema,
-          503: ReadyResponseSchema,
+          503: ErrorResponseSchema,
         },
       },
     },
     async function (request, reply) {
       if (shutdownState.isShuttingDown) {
         return await reply.status(503).send({
-          data: { status: "shutting_down", checks: { database: "down" } },
+          statusCode: 503,
+          error: "Service Unavailable",
+          message: "Shutting down",
         });
       }
 
@@ -48,7 +51,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       } catch (error) {
         request.log.warn({ err: error }, "Readiness check failed: database");
         return await reply.status(503).send({
-          data: { status: "not_ready", checks: { database: "down" } },
+          statusCode: 503,
+          error: "Service Unavailable",
+          message: "Database is down",
         });
       }
     },

@@ -40,10 +40,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         });
 
         return await reply.status(500).send({
-          error: {
-            type: "INTERNAL_SERVER_ERROR",
-            message: "Failed to save user location",
-          },
+          statusCode: 500,
+          error: "Internal Server Error",
+          message: "Failed to save user location",
         });
       }
     },

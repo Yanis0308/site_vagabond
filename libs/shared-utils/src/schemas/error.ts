@@ -1,20 +1,16 @@
 import { Type } from "typebox";
 
-import { ErrorEnumSchema } from "./enums.js";
-import { MetadataSchema } from "./metadata.js";
-
-export const ErrorSchema = Type.Object(
-  {
-    type: ErrorEnumSchema,
-    message: Type.String(),
-  },
-  { $id: "Error" },
-);
-
+// Mirrors the default Fastify error reply body produced by
+// fastify/lib/error-serializer.js: { statusCode, code?, error, message }.
+// Aligning on this shape lets native plugin errors (e.g. @fastify/under-pressure
+// 503, @fastify/rate-limit 429) flow through declared response schemas without
+// triggering FST_ERR_FAILED_ERROR_SERIALIZATION.
 export const ErrorResponseSchema = Type.Object(
   {
-    error: ErrorSchema,
-    metadata: Type.Optional(MetadataSchema),
+    statusCode: Type.Number(),
+    error: Type.String(),
+    message: Type.String(),
+    code: Type.Optional(Type.String()),
   },
   { $id: "ErrorResponse" },
 );

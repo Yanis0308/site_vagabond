@@ -94,10 +94,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
       if (user === null) {
         return await reply.status(404).send({
-          error: {
-            type: "NOT_FOUND",
-            message: "User not found",
-          },
+          statusCode: 404,
+          error: "Not Found",
+          message: "User not found",
         });
       }
 
@@ -135,10 +134,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       } catch (error) {
         if (error instanceof AppReviewAlreadyExistsError) {
           return await reply.status(409).send({
-            error: {
-              type: "RESOURCE_ALREADY_EXISTS",
-              message: "A review already exists",
-            },
+            statusCode: 409,
+            error: "Conflict",
+            message: "A review already exists",
           });
         }
         throw error;

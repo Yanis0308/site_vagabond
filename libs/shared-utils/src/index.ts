@@ -128,8 +128,6 @@ export {
 export {
   type BoundaryLevelEnum,
   BoundaryLevelEnumSchema,
-  type ErrorEnum,
-  ErrorEnumSchema,
   type LanguageEnum,
   LanguageEnumSchema,
   type PoiDataSourceEnum,

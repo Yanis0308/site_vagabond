@@ -65,11 +65,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
         if (visitedPoiContext === undefined) {
           return await reply.status(404).send({
-            error: {
-              type: "NOT_FOUND",
-              message:
-                "Visited POI not found or does not belong to current user",
-            },
+            statusCode: 404,
+            error: "Not Found",
+            message: "Visited POI not found or does not belong to current user",
           });
         }
       }

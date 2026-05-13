@@ -27,3 +27,32 @@ functionality into the `plugins` folder, and share it via
 
 If you're a bit confused about using `async/await` to write routes, you would
 better take a look at [Promise resolution](https://fastify.dev/docs/latest/Reference/Routes/#promise-resolution) for more details.
+
+## Error responses
+
+`ErrorResponseSchema` (`libs/shared-utils/src/schemas/error.ts`) mirrors
+Fastify's default error reply body: `{ statusCode, error, message, code? }`.
+Use it for any error status (4xx/5xx) declared in a route `response` schema.
+
+Two reasons to keep this shape aligned with Fastify's default:
+
+1. Native plugin errors flow through unchanged. When `@fastify/under-pressure`
+   throws 503, `@fastify/rate-limit` throws 429, or AJV throws 400, Fastify
+   serializes them with its default serializer producing this exact shape —
+   no `setErrorHandler` reshaping needed, no `FST_ERR_FAILED_ERROR_SERIALIZATION`.
+2. Handlers that explicitly send an error use the same body shape, so the
+   client sees one consistent format whatever the error source.
+
+Example:
+
+```ts
+return await reply.status(404).send({
+  statusCode: 404,
+  error: "Not Found",
+  message: "POI not found",
+});
+```
+
+Background: VG-317 originally declared `503: ReadyResponseSchema` on `/ready`,
+causing serialization failures whenever `under-pressure` intercepted the
+request. The fix realigned `ErrorResponseSchema` on Fastify's native shape on VG-424.

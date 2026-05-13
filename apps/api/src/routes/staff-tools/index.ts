@@ -41,17 +41,18 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       );
       if (existing !== undefined) {
         return await reply.status(409).send({
-          error: {
-            type: "RESOURCE_ALREADY_EXISTS",
-            message: "Place already validated by this user",
-          },
+          statusCode: 409,
+          error: "Conflict",
+          message: "Place already validated by this user",
         });
       }
 
       const coords = await fastify.dbRepositories.poi.findCoordsById(poiId);
       if (coords === undefined) {
         return await reply.status(404).send({
-          error: { type: "NOT_FOUND", message: "POI not found" },
+          statusCode: 404,
+          error: "Not Found",
+          message: "POI not found",
         });
       }
 
@@ -102,10 +103,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           error.message.startsWith("No boundary found")
         ) {
           return await reply.status(404).send({
-            error: {
-              type: "NOT_FOUND",
-              message: error.message,
-            },
+            statusCode: 404,
+            error: "Not Found",
+            message: error.message,
           });
         }
 

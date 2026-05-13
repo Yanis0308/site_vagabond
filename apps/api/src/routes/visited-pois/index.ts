@@ -84,10 +84,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
       if (deletedVisitedPois.length === 0) {
         return await reply.status(404).send({
-          error: {
-            type: "NOT_FOUND",
-            message: "Visited POI not found",
-          },
+          statusCode: 404,
+          error: "Not Found",
+          message: "Visited POI not found",
         });
       }
 
@@ -123,10 +122,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
       if (visitedPoi !== undefined) {
         return await reply.status(409).send({
-          error: {
-            type: "RESOURCE_ALREADY_EXISTS",
-            message: "Visited POI already exists for this user",
-          },
+          statusCode: 409,
+          error: "Conflict",
+          message: "Visited POI already exists for this user",
         });
       }
 
@@ -192,10 +190,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
 
       if (visitedPoi === undefined) {
         return await reply.status(404).send({
-          error: {
-            type: "NOT_FOUND",
-            message: "Visited POI not found",
-          },
+          statusCode: 404,
+          error: "Not Found",
+          message: "Visited POI not found",
         });
       }
 

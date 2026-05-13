@@ -23,17 +23,6 @@ export const VisitedPoiStatusEnumSchema = Type.Union(
 );
 export type VisitedPoiStatusEnum = Static<typeof VisitedPoiStatusEnumSchema>;
 
-export const ErrorEnumSchema = Type.Union(
-  [
-    Type.Literal("RESOURCE_ALREADY_EXISTS"),
-    Type.Literal("NOT_FOUND"),
-    Type.Literal("INTERNAL_SERVER_ERROR"),
-    Type.Literal("FORBIDDEN"),
-  ],
-  { $id: "ErrorEnum" },
-);
-export type ErrorEnum = Static<typeof ErrorEnumSchema>;
-
 export const RoleEnumSchema = Type.Union(
   [Type.Literal("ADMIN"), Type.Literal("USER")],
   { $id: "RoleEnum" },

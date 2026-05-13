@@ -77,13 +77,12 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             });
           }
           return await reply.status(outcome.httpStatus).send({
-            error: {
-              type:
-                outcome.httpStatus === 404
-                  ? "NOT_FOUND"
-                  : "INTERNAL_SERVER_ERROR",
-              message: outcome.message,
-            },
+            statusCode: outcome.httpStatus,
+            error:
+              outcome.httpStatus === 404
+                ? "Not Found"
+                : "Internal Server Error",
+            message: outcome.message,
           });
         }
 
@@ -102,10 +101,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         if (poi === null) {
           enrichmentOutcome = { httpStatus: 404, message: "POI not found" };
           return await reply.status(404).send({
-            error: {
-              type: "NOT_FOUND",
-              message: "POI not found",
-            },
+            statusCode: 404,
+            error: "Not Found",
+            message: "POI not found",
           });
         }
 
@@ -215,10 +213,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             message: "Failed to create enriched POI data",
           };
           return await reply.status(500).send({
-            error: {
-              type: "INTERNAL_SERVER_ERROR",
-              message: "Failed to create enriched POI data",
-            },
+            statusCode: 500,
+            error: "Internal Server Error",
+            message: "Failed to create enriched POI data",
           });
         }
 
@@ -234,10 +231,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             message: "Failed to create enriched POI data",
           };
           return await reply.status(500).send({
-            error: {
-              type: "INTERNAL_SERVER_ERROR",
-              message: "Failed to create enriched POI data",
-            },
+            statusCode: 500,
+            error: "Internal Server Error",
+            message: "Failed to create enriched POI data",
           });
         }
 
@@ -259,10 +255,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         const message = error instanceof Error ? error.message : String(error);
         enrichmentOutcome = { httpStatus: 500, message };
         return await reply.status(500).send({
-          error: {
-            type: "INTERNAL_SERVER_ERROR",
-            message,
-          },
+          statusCode: 500,
+          error: "Internal Server Error",
+          message,
         });
       } finally {
         if (resolveEnrichment !== undefined) {
