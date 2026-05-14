@@ -4,6 +4,7 @@ import {
   PoiEnrichedRepository,
   PoiRepository,
   ProcessingResultRepository,
+  PushDeviceRepository,
   SearchRepository,
   StaffToolsRepository,
   UserFeedbackRepository,
@@ -24,6 +25,7 @@ export interface DbRepositories {
   location: UserLocationRepository;
   visitedPoi: VisitedPoiRepository;
   processingResult: ProcessingResultRepository;
+  pushDevice: PushDeviceRepository;
   staffTools: StaffToolsRepository;
 }
 
@@ -51,6 +53,7 @@ export default fp(
         location: new UserLocationRepository(db),
         visitedPoi: new VisitedPoiRepository(db),
         processingResult: new ProcessingResultRepository(db),
+        pushDevice: new PushDeviceRepository(db),
         staffTools: new StaffToolsRepository(db),
       };
 

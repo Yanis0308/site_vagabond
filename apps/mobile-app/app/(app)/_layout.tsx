@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import { type ReactElement } from "react";
 
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
+import { usePushDeviceRegistration } from "@/hooks/other/usePushDeviceRegistration";
 import { useStartupPhotoRecovery } from "@/hooks/other/useStartupPhotoRecovery";
 import { useUserLocationTracking } from "@/hooks/other/useUserLocationTracking";
 import { useUserLocationWatcher } from "@/hooks/other/useUserLocationWatcher";
@@ -13,6 +14,8 @@ export default function RootLayout(): ReactElement | null {
   useUserLocationTracking();
   // Re-upload any photos that failed during a previous session
   useStartupPhotoRecovery();
+  // Synchronise le token FCM avec l'API au mount et à chaque rotation
+  usePushDeviceRegistration();
 
   return (
     <Stack screenOptions={defaultScreenOptions}>

@@ -25,6 +25,7 @@ import healthRoute from "./routes/health/index.js";
 import leaderboardRoute from "./routes/leaderboard/index.js";
 import locationRoute from "./routes/location/index.js";
 import poisIdRoute from "./routes/pois/[id].js";
+import pushDevicesRoute from "./routes/push-devices/index.js";
 import searchRoute from "./routes/search/index.js";
 import staffToolsRoute from "./routes/staff-tools/index.js";
 import { STAFF_TOOLS_API_PREFIX } from "./routes/staff-tools/path.js";
@@ -93,6 +94,7 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   await fastify.register(healthRoute, { prefix: "api" });
   await fastify.register(leaderboardRoute, { prefix: "api/leaderboard" });
   await fastify.register(locationRoute, { prefix: "api/location" });
+  await fastify.register(pushDevicesRoute, { prefix: "api/push-devices" });
   await fastify.register(poisIdRoute, { prefix: "api/pois" });
   await fastify.register(searchRoute, { prefix: "api/search" });
   await fastify.register(uploadRoute, { prefix: "api/upload" });

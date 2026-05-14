@@ -241,6 +241,44 @@ export const users = pgTable("users", {
   isPrivate: boolean("is_private").default(false).notNull(),
 });
 
+export const pushDevices = pgTable(
+  "push_devices",
+  {
+    id: serial().primaryKey().notNull(),
+    createdAt: created_at,
+    updatedAt: updated_at,
+    userId: varchar("user_id", { length: 1000 }).notNull(),
+    token: varchar({ length: 4000 }).notNull(),
+    platform: varchar({ length: 10 }).notNull(),
+    appVersion: varchar("app_version", { length: 50 }).notNull(),
+    osVersion: varchar("os_version", { length: 50 }).notNull(),
+    deviceModel: varchar("device_model", { length: 100 }),
+    lastSeenAt: timestamp("last_seen_at", { precision: 3 }).notNull(),
+    disabledAt: timestamp("disabled_at", { precision: 3 }),
+  },
+  (table) => [
+    uniqueIndex("push_devices_token_key").using(
+      "btree",
+      table.token.asc().nullsLast().op("text_ops"),
+    ),
+    index("push_devices_user_id_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("text_ops"),
+    ),
+    index("push_devices_disabled_at_idx").using(
+      "btree",
+      table.disabledAt.asc().nullsLast().op("timestamp_ops"),
+    ),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.userId],
+      name: "push_devices_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+  ],
+);
+
 export const pois = pgTable(
   "pois",
   {
@@ -513,9 +551,17 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   visitedPois: many(visitedPois),
   userLocations: many(userLocations),
   userFeedbacks: many(userFeedbacks),
+  pushDevices: many(pushDevices),
   appReview: one(appReview, {
     fields: [users.userId],
     references: [appReview.userId],
+  }),
+}));
+
+export const pushDevicesRelations = relations(pushDevices, ({ one }) => ({
+  user: one(users, {
+    fields: [pushDevices.userId],
+    references: [users.userId],
   }),
 }));
 

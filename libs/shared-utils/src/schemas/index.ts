@@ -4,6 +4,7 @@ import * as leaderboard from "./api/leaderboard.js";
 import * as location from "./api/location.js";
 import { PoiCategoryTypesSchema } from "./api/poi-categories.js";
 import * as poiEnriched from "./api/poi-enriched.js";
+import * as pushDevice from "./api/push-device.js";
 import * as response from "./api/response.js";
 import * as scrape from "./api/scrape.js";
 import * as search from "./api/search.js";
@@ -36,6 +37,7 @@ export const allJsonSchemas = {
   ...jinaSearch,
   PoiCategoryTypesSchema,
   ...poiEnriched,
+  ...pushDevice,
   ...visitedPoi,
   ...user,
   ...userFeedback,

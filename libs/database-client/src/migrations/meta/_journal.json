@@ -169,6 +169,13 @@
       "when": 1777472977464,
       "tag": "0023_glamorous_vargas",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1778166375405,
+      "tag": "0024_omniscient_talkback",
+      "breakpoints": true
     }
   ]
 }

@@ -44,6 +44,13 @@ export {
   type PoiEnrichedData,
   PoiEnrichedDataSchema,
 } from "./schemas/api/poi-enriched.js";
+export {
+  type DeletePushDeviceRequest,
+  DeletePushDeviceRequestSchema,
+  type RegisterPushDeviceRequest,
+  RegisterPushDeviceRequestSchema,
+  RegisterPushDeviceResponseSchema,
+} from "./schemas/api/push-device.js";
 export { EmptyResponseSchema } from "./schemas/api/response.js";
 export {
   ScrapeDataScraperQuerySchema,
