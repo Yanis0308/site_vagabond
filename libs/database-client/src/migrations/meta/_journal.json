@@ -183,6 +183,13 @@
       "when": 1779272252517,
       "tag": "0025_vg_470_perf_pagination",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1779292376307,
+      "tag": "0026_vg_search_path_hardening",
+      "breakpoints": true
     }
   ]
 }
