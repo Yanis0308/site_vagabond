@@ -71,10 +71,13 @@ export type ProcessingStatusEnum =
 export const imageSourceEnum = pgEnum("ImageSourceEnum", ["CAMERA", "GALLERY"]);
 export type ImageSourceEnum = (typeof imageSourceEnum.enumValues)[number];
 
-const created_at = timestamp("created_at", { precision: 3 })
-  .defaultNow()
-  .notNull();
-const updated_at = timestamp("updated_at", { precision: 3 })
+const timestampWithTz = (
+  name?: string,
+): ReturnType<typeof timestamp<string, "date">> =>
+  timestamp(name ?? "", { precision: 3, withTimezone: true });
+
+const created_at = timestampWithTz("created_at").defaultNow().notNull();
+const updated_at = timestampWithTz("updated_at")
   .defaultNow()
   .notNull()
   .$onUpdate(() => new Date());
@@ -97,7 +100,7 @@ export const userLocations = pgTable(
     updatedAt: updated_at,
     userId: varchar("user_id", { length: 1000 }).notNull(),
     ...coordsColumns,
-    timestamp: timestamp({ precision: 3 }).notNull(),
+    timestamp: timestampWithTz().notNull(),
   },
   (table) => [
     // Index composite B-tree : accélère les requêtes filtrant par utilisateur puis triant par date
@@ -106,8 +109,8 @@ export const userLocations = pgTable(
       "btree",
       // op("text_ops") : classe d'opérateurs pour les comparaisons de texte (=, <, >, LIKE)
       table.userId.asc().nullsLast().op("text_ops"),
-      // op("timestamp_ops") : classe d'opérateurs pour les comparaisons de timestamps (=, <, >)
-      table.timestamp.desc().nullsLast().op("timestamp_ops"),
+      // op("timestamptz_ops") : classe d'opérateurs pour les comparaisons de timestamptz (=, <, >)
+      table.timestamp.desc().nullsLast().op("timestamptz_ops"),
     ),
     // Index spatial GiST : accélère les requêtes géographiques (ST_DWithin, ST_Contains, ST_Distance, etc.)
     index("user_locations_coords_idx").using(
@@ -119,8 +122,8 @@ export const userLocations = pgTable(
     // Ex: "toutes les positions des dernières 24h" (l'index composite ci-dessus ne couvre pas ce cas)
     index("user_locations_timestamp_idx").using(
       "btree",
-      // op("timestamp_ops") : classe d'opérateurs pour les comparaisons de timestamps
-      table.timestamp.desc().nullsLast().op("timestamp_ops"),
+      // op("timestamptz_ops") : classe d'opérateurs pour les comparaisons de timestamptz
+      table.timestamp.desc().nullsLast().op("timestamptz_ops"),
     ),
     // Clé étrangère vers la table users, avec suppression / mise à jour en cascade
     foreignKey({
@@ -156,6 +159,20 @@ export const visitedPois = pgTable(
     index("idx_visited_pois_poi_id").using(
       "btree",
       table.poiId.asc().nullsLast().op("text_ops"),
+    ),
+    // Cursor pagination "mes visited POIs" : ORDER BY created_at DESC, id DESC + WHERE user_id = ?
+    index("idx_visited_pois_user_id_created_at_id").using(
+      "btree",
+      table.userId.asc().nullsLast().op("text_ops"),
+      table.createdAt.desc(),
+      table.id.desc(),
+    ),
+    // Cursor pagination "qui a visité ce POI" : ORDER BY created_at DESC, id DESC + WHERE poi_id = ?
+    index("idx_visited_pois_poi_id_created_at_id").using(
+      "btree",
+      table.poiId.asc().nullsLast().op("text_ops"),
+      table.createdAt.desc(),
+      table.id.desc(),
     ),
     index("idx_visited_pois_location_id").using(
       "btree",
@@ -236,7 +253,7 @@ export const users = pgTable("users", {
   fullName: varchar("full_name", { length: 1000 }),
   nickname: varchar({ length: 1000 }),
   oauthProviders: varchar("oauth_providers", { length: 1000 }).array(),
-  lastLogin: timestamp("last_login", { precision: 3 }).defaultNow().notNull(),
+  lastLogin: timestampWithTz("last_login").defaultNow().notNull(),
   role: roleEnum().default("USER").notNull(),
   isPrivate: boolean("is_private").default(false).notNull(),
 });
@@ -293,6 +310,7 @@ export const pois = pgTable(
     filterLevel: poiFilterLevelEnum("filter_level")
       .default("UNKNOWN")
       .notNull(),
+    visitCount: integer("visit_count").default(0).notNull(),
   },
   (table) => [
     index("coords_index").using(
@@ -419,7 +437,7 @@ export const processingResults = pgTable(
     ),
     index("idx_processing_results_updated_at").using(
       "btree",
-      table.updatedAt.desc().nullsLast().op("timestamp_ops"),
+      table.updatedAt.desc().nullsLast().op("timestamptz_ops"),
     ),
     // Accelerate findExistingSuccessResultByUrl: WHERE type, version, status, input->>'url'
     index("idx_processing_results_url_lookup").using(
@@ -472,6 +490,7 @@ export const userFeedbacks = pgTable(
     appVersion: varchar("app_version", { length: 100 }).notNull(),
     os: varchar({ length: 100 }).notNull(),
     createdAt: created_at,
+    updatedAt: updated_at,
   },
   (table) => [
     index("idx_user_feedbacks_user_id").using(
@@ -519,6 +538,49 @@ export const appReview = pgTable(
       columns: [table.userId],
       foreignColumns: [users.userId],
       name: "app_review_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+  ],
+);
+
+// Compteurs polymorphes par période — cf. ADR-0002.
+// period_type est varchar + union TS pour pouvoir ajouter "weekly"/"yearly"/event sans migration.
+export type PeriodType = "all_time" | "monthly";
+
+export const userPeriodScores = pgTable(
+  "user_period_scores",
+  {
+    id: serial().primaryKey().notNull(),
+    userId: varchar("user_id", { length: 1000 }).notNull(),
+    periodType: varchar("period_type", { length: 50 })
+      .$type<PeriodType>()
+      .notNull(),
+    periodKey: varchar("period_key", { length: 32 }).notNull(),
+    count: integer().default(0).notNull(),
+    createdAt: created_at,
+    updatedAt: updated_at,
+  },
+  (table) => [
+    // Unicité sur le triplet métier — ON CONFLICT cible cet index.
+    uniqueIndex("user_period_scores_uniq").using(
+      "btree",
+      table.userId.asc().nullsLast().op("text_ops"),
+      table.periodType.asc().nullsLast().op("text_ops"),
+      table.periodKey.asc().nullsLast().op("text_ops"),
+    ),
+    // Sert ORDER BY count DESC pour le leaderboard, après filtrage (period_type, period_key)
+    index("idx_user_period_scores_leaderboard").using(
+      "btree",
+      table.periodType.asc().nullsLast().op("text_ops"),
+      table.periodKey.asc().nullsLast().op("text_ops"),
+      table.count.desc(),
+      table.userId.asc().nullsLast().op("text_ops"),
+    ),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.userId],
+      name: "user_period_scores_user_id_fkey",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),

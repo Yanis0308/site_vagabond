@@ -1,11 +1,13 @@
 import { FlashList } from "@shopify/flash-list";
-import type { BriefVisitedPoi } from "@vagabond/shared-utils";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react-native";
 import { memo, type ReactElement, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Pressable } from "react-native";
 
 import { Box } from "@/components/ui/box";
+import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
+import { Spinner } from "@/components/ui/spinner";
+import { useVisitedPoisByBoundary } from "@/hooks/queries/useVisitedPoisByBoundary";
 
 import { CustomText } from "../custom-ui/CustomText";
 import { ProfilePoiItem } from "./ProfilePoiItem";
@@ -20,16 +22,16 @@ interface ProfileHierarchicalAccordionProps {
   countries: CountryType[];
   allowVisitedPoiNavigation: boolean;
   allowProfileEdit: boolean;
+  // Si défini, charge les visited POIs d'un autre user (profil tiers).
+  userId?: string;
 }
 
-// Types pour les items plats
 type FlatItem =
   | { type: "region"; data: RegionType; level: 0; id: string }
   | { type: "dept"; data: DepartementType; level: 1; id: string }
   | { type: "city"; data: CityType; level: 2; id: string }
-  | { type: "poi"; data: BriefVisitedPoi; level: 3; id: string };
+  | { type: "cityPois"; cityId: string; level: 3; id: string };
 
-// Fonction pour aplatir la hiérarchie
 const flattenHierarchy = (
   countries: CountryType[],
   expandedRegions: Set<string>,
@@ -66,15 +68,12 @@ const flattenHierarchy = (
               });
 
               if (expandedCities.has(city.zoneId)) {
-                const pois = city.pois;
-                for (const poi of pois) {
-                  result.push({
-                    type: "poi",
-                    data: poi,
-                    level: 3,
-                    id: `poi-${poi.id}`,
-                  });
-                }
+                result.push({
+                  type: "cityPois",
+                  cityId: city.zoneId,
+                  level: 3,
+                  id: `pois-${city.zoneId}`,
+                });
               }
             }
           }
@@ -86,7 +85,6 @@ const flattenHierarchy = (
   return result;
 };
 
-// Composant pour rendre un item de région
 const RegionItem = memo(
   ({
     region,
@@ -118,10 +116,8 @@ const RegionItem = memo(
     );
   },
 );
-
 RegionItem.displayName = "RegionItem";
 
-// Composant pour rendre un item de département
 const DepartementItem = memo(
   ({
     departement,
@@ -151,10 +147,8 @@ const DepartementItem = memo(
     );
   },
 );
-
 DepartementItem.displayName = "DepartementItem";
 
-// Composant pour rendre un item de ville
 const CityItem = memo(
   ({
     city,
@@ -184,115 +178,94 @@ const CityItem = memo(
     );
   },
 );
-
 CityItem.displayName = "CityItem";
 
-// Composant pour rendre un item plat
-const FlatItemRenderer = memo(
+// Sous-composant qui fetch les Visited POIs d'une ville quand elle est expanded.
+// Lazy : pas de fetch tant que la ville reste collapsed (la query n'existe pas dans flatItems).
+const CityPoisList = memo(
   ({
-    item,
-    expandedRegions,
-    expandedDepartements,
-    expandedCities,
-    toggleRegion,
-    toggleDepartement,
-    toggleCity,
+    cityId,
     allowVisitedPoiNavigation,
     allowProfileEdit,
+    userId,
   }: {
-    item: FlatItem;
-    expandedRegions: Set<string>;
-    expandedDepartements: Set<string>;
-    expandedCities: Set<string>;
-    toggleRegion: (id: string) => void;
-    toggleDepartement: (id: string) => void;
-    toggleCity: (id: string) => void;
+    cityId: string;
     allowVisitedPoiNavigation: boolean;
     allowProfileEdit: boolean;
+    userId?: string;
   }): ReactElement => {
-    // Create callbacks before switch to avoid hook rule violations
-    const regionToggle = useCallback(() => {
-      if (item.type === "region") {
-        toggleRegion(item.data.zoneId);
-      }
-    }, [item, toggleRegion]);
+    const { t } = useTranslation("common");
+    const {
+      items,
+      fetchNextPage,
+      hasNextPage,
+      isFetching,
+      isFetchingNextPage,
+      isLoading,
+    } = useVisitedPoisByBoundary({
+      boundaryId: cityId,
+      userId,
+    });
 
-    const deptToggle = useCallback(() => {
-      if (item.type === "dept") {
-        toggleDepartement(item.data.zoneId);
-      }
-    }, [item, toggleDepartement]);
-
-    const cityToggle = useCallback(() => {
-      if (item.type === "city") {
-        toggleCity(item.data.zoneId);
-      }
-    }, [item, toggleCity]);
-
-    switch (item.type) {
-      case "region":
-        return (
-          <RegionItem
-            region={item.data}
-            isExpanded={expandedRegions.has(item.data.zoneId)}
-            onToggle={regionToggle}
-          />
-        );
-      case "dept":
-        return (
-          <DepartementItem
-            departement={item.data}
-            isExpanded={expandedDepartements.has(item.data.zoneId)}
-            onToggle={deptToggle}
-          />
-        );
-      case "city":
-        return (
-          <CityItem
-            city={item.data}
-            isExpanded={expandedCities.has(item.data.zoneId)}
-            onToggle={cityToggle}
-          />
-        );
-      case "poi":
-        return (
-          <Box className="pl-6">
-            <ProfilePoiItem
-              poi={item.data}
-              allowNavigation={allowVisitedPoiNavigation}
-              allowProfileEdit={allowProfileEdit}
-            />
+    // CityPoisList est une suite de ProfilePoiItem dans un FlashList parent.
+    return (
+      <Box className="pl-6">
+        {isLoading ? (
+          <Box className="w-full items-center justify-center px-4 py-6">
+            <Spinner size="small" color={themeColors.primary[500].hex} />
           </Box>
-        );
-      default:
-        return <Box />;
-    }
+        ) : null}
+        {items.map((vp) => (
+          <ProfilePoiItem
+            key={vp.id}
+            poi={{
+              id: vp.id,
+              poiId: vp.poiId,
+              name: vp.name,
+              coords: vp.coords,
+              createdAt: vp.createdAt,
+              comment: vp.comment,
+              rating: vp.rating,
+              imageKey: vp.imageKey,
+            }}
+            allowNavigation={allowVisitedPoiNavigation}
+            allowProfileEdit={allowProfileEdit}
+          />
+        ))}
+        {isFetchingNextPage ? (
+          <Box className="w-full items-center justify-center p-4">
+            <Spinner size="small" color={themeColors.primary[500].hex} />
+          </Box>
+        ) : hasNextPage ? (
+          <Pressable
+            onPress={() => {
+              void fetchNextPage();
+            }}
+            disabled={isFetching}
+          >
+            <Box className="mx-4 my-2 flex-row items-center justify-center gap-1 rounded-lg bg-primary-50 px-4 py-3">
+              <CustomText className="text-sm font-semibold text-primary-600">
+                {t("load_more")}
+              </CustomText>
+              <ChevronDownIcon size={16} color={themeColors.primary[600].hex} />
+            </Box>
+          </Pressable>
+        ) : null}
+      </Box>
+    );
   },
 );
-
-FlatItemRenderer.displayName = "FlatItemRenderer";
+CityPoisList.displayName = "CityPoisList";
 
 export const ProfileHierarchicalAccordion = memo(
   ({
     countries,
     allowVisitedPoiNavigation,
     allowProfileEdit,
+    userId,
   }: ProfileHierarchicalAccordionProps): ReactElement => {
-    // Initialize all cities as expanded by default
-    const defaultExpandedCities = useMemo(() => {
-      const citiesSet = new Set<string>();
-      for (const country of countries) {
-        for (const region of country.regions) {
-          for (const dept of region.departements) {
-            for (const city of dept.cities) {
-              citiesSet.add(city.zoneId);
-            }
-          }
-        }
-      }
-      return citiesSet;
-    }, [countries]);
-
+    // v2 : toutes les villes collapsed par défaut.
+    // L'user expand explicitement → fetch des POIs déclenché à ce moment-là.
     const [expandedRegions, setExpandedRegions] = useState<Set<string>>(
       new Set(),
     );
@@ -300,49 +273,36 @@ export const ProfileHierarchicalAccordion = memo(
       Set<string>
     >(new Set());
     const [expandedCities, setExpandedCities] = useState<Set<string>>(
-      defaultExpandedCities,
+      new Set(),
     );
 
-    // Fonction pour basculer l'expansion d'une région
     const toggleRegion = useCallback((regionId: string) => {
       setExpandedRegions((prev) => {
         const next = new Set(prev);
-        if (next.has(regionId)) {
-          next.delete(regionId);
-        } else {
-          next.add(regionId);
-        }
+        if (next.has(regionId)) next.delete(regionId);
+        else next.add(regionId);
         return next;
       });
     }, []);
 
-    // Fonction pour basculer l'expansion d'un département
     const toggleDepartement = useCallback((deptId: string) => {
       setExpandedDepartements((prev) => {
         const next = new Set(prev);
-        if (next.has(deptId)) {
-          next.delete(deptId);
-        } else {
-          next.add(deptId);
-        }
+        if (next.has(deptId)) next.delete(deptId);
+        else next.add(deptId);
         return next;
       });
     }, []);
 
-    // Fonction pour basculer l'expansion d'une ville
     const toggleCity = useCallback((cityId: string) => {
       setExpandedCities((prev) => {
         const next = new Set(prev);
-        if (next.has(cityId)) {
-          next.delete(cityId);
-        } else {
-          next.add(cityId);
-        }
+        if (next.has(cityId)) next.delete(cityId);
+        else next.add(cityId);
         return next;
       });
     }, []);
 
-    // Aplatir la hiérarchie en une seule liste
     const flatItems = useMemo(
       () =>
         flattenHierarchy(
@@ -354,21 +314,52 @@ export const ProfileHierarchicalAccordion = memo(
       [countries, expandedRegions, expandedDepartements, expandedCities],
     );
 
-    // Fonction pour rendre chaque item
     const renderItem = useCallback(
-      ({ item }: { item: FlatItem }) => (
-        <FlatItemRenderer
-          item={item}
-          expandedRegions={expandedRegions}
-          expandedDepartements={expandedDepartements}
-          expandedCities={expandedCities}
-          toggleRegion={toggleRegion}
-          toggleDepartement={toggleDepartement}
-          toggleCity={toggleCity}
-          allowVisitedPoiNavigation={allowVisitedPoiNavigation}
-          allowProfileEdit={allowProfileEdit}
-        />
-      ),
+      ({ item }: { item: FlatItem }) => {
+        switch (item.type) {
+          case "region":
+            return (
+              <RegionItem
+                region={item.data}
+                isExpanded={expandedRegions.has(item.data.zoneId)}
+                onToggle={() => {
+                  toggleRegion(item.data.zoneId);
+                }}
+              />
+            );
+          case "dept":
+            return (
+              <DepartementItem
+                departement={item.data}
+                isExpanded={expandedDepartements.has(item.data.zoneId)}
+                onToggle={() => {
+                  toggleDepartement(item.data.zoneId);
+                }}
+              />
+            );
+          case "city":
+            return (
+              <CityItem
+                city={item.data}
+                isExpanded={expandedCities.has(item.data.zoneId)}
+                onToggle={() => {
+                  toggleCity(item.data.zoneId);
+                }}
+              />
+            );
+          case "cityPois":
+            return (
+              <CityPoisList
+                cityId={item.cityId}
+                allowVisitedPoiNavigation={allowVisitedPoiNavigation}
+                allowProfileEdit={allowProfileEdit}
+                userId={userId}
+              />
+            );
+          default:
+            return <Box />;
+        }
+      },
       [
         expandedRegions,
         expandedDepartements,
@@ -378,10 +369,10 @@ export const ProfileHierarchicalAccordion = memo(
         toggleCity,
         allowVisitedPoiNavigation,
         allowProfileEdit,
+        userId,
       ],
     );
 
-    // Extracteur de clé
     const keyExtractor = useCallback((item: FlatItem) => item.id, []);
 
     return (

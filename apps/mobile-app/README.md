@@ -390,6 +390,25 @@ const shadowStyles = StyleSheet.create({
 
 Nous suivons cette issue concernant un problème de typage dans Gluestack UI : https://github.com/gluestack/gluestack-ui/issues/2898
 
+### Pagination cursor avec `useInfiniteQuery`
+
+Pattern utilisé pour les listes paginées (avis d'un POI, leaderboard, visited POIs d'une boundary) :
+
+```ts
+const query = useInfiniteQuery({
+  queryKey: [...],
+  queryFn: ({ pageParam }) => getFooV2({ after: pageParam }),
+  initialPageParam: undefined,
+  getNextPageParam: (last) => last.nextCursor ?? undefined,
+});
+```
+
+Côté FlatList/FlashList :
+
+- `onEndReached={hasNextPage ? handler : undefined}` — désactive le handler quand la pagination est finie pour éviter les fires parasites de [RN#23060](https://github.com/facebook/react-native/issues/23060).
+- Dans le handler, garde `if (hasNextPage && !isFetchingNextPage)` — TanStack Query dedup synchroniquement les appels concurrents via `isFetchingNextPage`.
+- `ListFooterComponent` doit avoir une **taille fixe** quand `hasNextPage` est `true` ; sinon le changement de hauteur entre "loader visible" et "rien" relance `onEndReached` en boucle (cf. [facebook/react-native#48273](https://github.com/facebook/react-native/issues/48273)).
+
 ## Ressources
 
 - [Expo Documentation](https://docs.expo.dev/)

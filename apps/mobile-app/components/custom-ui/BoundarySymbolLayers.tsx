@@ -179,17 +179,17 @@ export const BoundarySymbolLayers = ({
       );
       if (shouldShowPoisStats && zone.total_pois_count > 0) {
         let poisPercent = Math.ceil(
-          (zone.validated_pois_count / zone.total_pois_count) * 100,
+          (zone.visited_pois_count / zone.total_pois_count) * 100,
         );
         // Minimum 1% si au moins un poi est validé
-        if (zone.validated_pois_count > 0 && poisPercent === 0) {
+        if (zone.visited_pois_count > 0 && poisPercent === 0) {
           poisPercent = 1;
         }
 
         if (poisPercent > 0) {
-          displayText += `\n${zone.validated_pois_count}/${zone.total_pois_count} points ${poisPercent}%`;
+          displayText += `\n${zone.visited_pois_count}/${zone.total_pois_count} points ${poisPercent}%`;
         } else {
-          displayText += `\n${zone.validated_pois_count}/${zone.total_pois_count} points`;
+          displayText += `\n${zone.visited_pois_count}/${zone.total_pois_count} points`;
         }
       }
 

@@ -41,7 +41,7 @@ export default function UserProfilePage(): ReactElement | null {
     >
       <ProfileContent
         userData={userData}
-        zonesStats={zonesData?.zonesStats}
+        zonesStats={zonesData}
         showSignOutButton={false}
         allowVisitedPoiNavigation={false}
       />

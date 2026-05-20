@@ -176,6 +176,13 @@
       "when": 1778166375405,
       "tag": "0024_omniscient_talkback",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1779272252517,
+      "tag": "0025_vg_470_perf_pagination",
+      "breakpoints": true
     }
   ]
 }

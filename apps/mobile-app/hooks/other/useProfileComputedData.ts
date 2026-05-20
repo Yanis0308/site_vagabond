@@ -1,4 +1,4 @@
-import type { ZoneUserStat } from "@vagabond/shared-utils";
+import type { ZoneUserStatV2 } from "@vagabond/shared-utils";
 import { useMemo } from "react";
 
 import {
@@ -15,7 +15,7 @@ interface UseProfileComputedDataReturn {
 }
 
 export const useProfileComputedData = (
-  zoneStats?: ZoneUserStat[],
+  zoneStats?: ZoneUserStatV2[],
 ): UseProfileComputedDataReturn => {
   const zoneHierarchy = useZoneHierarchy(zoneStats);
 

@@ -23,6 +23,7 @@ import underPressurePlugin from "./plugins/under-pressure.js";
 // Routes
 import healthRoute from "./routes/health/index.js";
 import leaderboardRoute from "./routes/leaderboard/index.js";
+import leaderboardV2Route from "./routes/leaderboard/v2.js";
 import locationRoute from "./routes/location/index.js";
 import poisIdRoute from "./routes/pois/[id].js";
 import pushDevicesRoute from "./routes/push-devices/index.js";
@@ -33,7 +34,9 @@ import uploadRoute from "./routes/upload/index.js";
 import userFeedbacksRoute from "./routes/user-feedbacks/index.js";
 import usersRoute from "./routes/users/index.js";
 import visitedPoisRoute from "./routes/visited-pois/index.js";
+import visitedPoisV2Route from "./routes/visited-pois/v2.js";
 import zonesRoute from "./routes/zones/index.js";
+import zonesV2Route from "./routes/zones/v2.js";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- AppOptions is a placeholder for future options
 export interface AppOptions {
@@ -103,6 +106,11 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   await fastify.register(visitedPoisRoute, { prefix: "api/visited-pois" });
   await fastify.register(zonesRoute, { prefix: "api/zones" });
   await fastify.register(staffToolsRoute, { prefix: STAFF_TOOLS_API_PREFIX });
+
+  // v2 routes (cf. ADR-0001 : versioning par préfixe URL pour les breaking changes)
+  await fastify.register(visitedPoisV2Route, { prefix: "api/v2/visited-pois" });
+  await fastify.register(leaderboardV2Route, { prefix: "api/v2/leaderboard" });
+  await fastify.register(zonesV2Route, { prefix: "api/v2/zones" });
 };
 
 export default app;

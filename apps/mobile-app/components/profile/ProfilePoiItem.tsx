@@ -23,9 +23,13 @@ interface ProfilePoiItemProps {
   allowProfileEdit: boolean;
 }
 
+const THUMBNAIL_SIZE = 70;
+
+// Thumbnail carrée. La rangée n'a pas de hauteur fixée — sans dimension
+// explicite l'image rendrait à son ratio natif et dépasserait la row.
 const galleryImageStyle: ViewStyle = {
-  width: 70,
-  height: "100%",
+  width: THUMBNAIL_SIZE,
+  height: THUMBNAIL_SIZE,
 };
 
 export const ProfilePoiItem = memo(
@@ -67,8 +71,8 @@ export const ProfilePoiItem = memo(
     const imageElement: ReactElement = (
       <CustomImage
         sources={imageSources}
-        height={"full"}
-        width={70}
+        height={THUMBNAIL_SIZE}
+        width={THUMBNAIL_SIZE}
         contentFit="cover"
         showLoader={true}
       />

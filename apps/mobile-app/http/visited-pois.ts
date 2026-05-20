@@ -3,6 +3,7 @@ import {
   GetVisitedPoisResponseSchema,
   validateWithSchema,
   type VisitedPoi,
+  VisitedPoisV2ResponseSchema,
 } from "@vagabond/shared-utils";
 import { HTTPError } from "ky";
 
@@ -30,6 +31,59 @@ export const getUserVisitedPois = async (): Promise<VisitedPoi[]> => {
 
 export const deleteVisitedPoi = async (visitedPoiId: number): Promise<void> => {
   await apiClient.delete(`api/visited-pois/${visitedPoiId}`);
+};
+
+// v2 : pagination cursor — timeline visited POIs du user
+export const getUserVisitedPoisV2 = async ({
+  after,
+  limit = 20,
+  boundaryId,
+  userId,
+}: {
+  after?: string;
+  limit?: number;
+  boundaryId?: string;
+  userId?: string;
+}): Promise<{ items: VisitedPoi[]; nextCursor: string | null }> => {
+  const searchParams: Record<string, string | number> = { limit };
+  if (after !== undefined) searchParams.after = after;
+  if (boundaryId !== undefined) searchParams.boundaryId = boundaryId;
+  if (userId !== undefined) searchParams.userId = userId;
+
+  const rawResult = await apiClient
+    .get("api/v2/visited-pois", { searchParams })
+    .json();
+
+  if (!validateWithSchema(VisitedPoisV2ResponseSchema, rawResult)) {
+    throw new Error("Invalid response");
+  }
+
+  return rawResult.data;
+};
+
+// v2 : pagination cursor — visiteurs d'un POI
+export const getVisitedPoisByPoiIdV2 = async ({
+  poiId,
+  after,
+  limit = 20,
+}: {
+  poiId: string;
+  after?: string;
+  limit?: number;
+}): Promise<{ items: VisitedPoi[]; nextCursor: string | null }> => {
+  // ⚠️ Cf. getUserVisitedPoisV2 — objet plain vs URLSearchParams (bug RN polyfill).
+  const searchParams: Record<string, string | number> = { limit };
+  if (after !== undefined) searchParams.after = after;
+
+  const rawResult = await apiClient
+    .get(`api/v2/visited-pois/${poiId}`, { searchParams })
+    .json();
+
+  if (!validateWithSchema(VisitedPoisV2ResponseSchema, rawResult)) {
+    throw new Error("Invalid response");
+  }
+
+  return rawResult.data;
 };
 
 export type VisitedPoiImageStatus = "has-image" | "no-image" | "unknown";

@@ -89,10 +89,9 @@ export const PolaroidReview = memo(
             </Text>
           </Box>
 
-          {/* Commentaire en dessous */}
-          <Box className="pt-2">
+          <Box className="pt-2" style={{ minHeight: 80 }}>
             <Text
-              className="text-sm text-black-300"
+              className="text-sm leading-[14px] text-black-300"
               numberOfLines={shouldShowReadMore ? 3 : undefined}
             >
               {commentText}

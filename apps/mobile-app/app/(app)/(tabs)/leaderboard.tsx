@@ -9,11 +9,7 @@ import { useWindowDimensions } from "react-native";
 import { TabView } from "react-native-tab-view";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
-import {
-  LeaderboardHeader,
-  LeaderboardScene,
-  LeaderboardTabBar,
-} from "@/components/leaderboard";
+import { LeaderboardScene, LeaderboardTabBar } from "@/components/leaderboard";
 import { CustomScreenContainer } from "@/components/navigation/CustomScreenContainer";
 import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
@@ -61,11 +57,6 @@ export default function Leaderboard(): ReactElement {
   );
 
   const navigationState = useMemo(() => ({ index, routes }), [index, routes]);
-
-  const currentPeriod = useMemo(
-    () => (index === 0 ? "all-time" : "monthly"),
-    [index],
-  );
 
   useEffect(() => {
     void trackEvent("leaderboard_viewed", {
@@ -130,9 +121,6 @@ export default function Leaderboard(): ReactElement {
     >
       <Box className="flex size-full">
         <VStack className="flex size-full">
-          {/* Header avec stats */}
-          <LeaderboardHeader currentUser={currentUser} period={currentPeriod} />
-
           {/* TabView */}
           <Box className="flex-1">
             <TabView

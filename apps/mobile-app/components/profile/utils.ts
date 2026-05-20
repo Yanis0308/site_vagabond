@@ -1,12 +1,12 @@
-import type { BriefVisitedPoi } from "@vagabond/shared-utils";
-
-// Types pour la hiérarchie des zones
+// Types pour la hiérarchie des zones — adaptés au schema v2 (sans validated_pois embarqués).
+// Les POIs visités sont lazy-loadés à l'expansion via useVisitedPoisByBoundary.
 export interface City {
   zoneId: string;
   name: string;
   totalPoisCount: number;
   validatedPoisCount: number;
-  pois: BriefVisitedPoi[];
+  lastVisitedPoiAt: string | null;
+  lastVisitedPoiName: string | null;
 }
 
 export interface Departement {
@@ -59,22 +59,33 @@ export interface ProgressData {
   total: number;
 }
 
-// Fonction pour trier les POIs par date décroissante
-export function sortPoisByDate(pois: BriefVisitedPoi[]): BriefVisitedPoi[] {
-  return [...pois].sort((a, b) => {
-    const dateA = new Date(a.createdAt).getTime();
-    const dateB = new Date(b.createdAt).getTime();
-    return dateB - dateA; // Plus récent en premier
-  });
+function timestamp(at: string | null): number {
+  return at !== null ? new Date(at).getTime() : 0;
 }
 
-// Fonction pour obtenir la date du POI le plus récent dans une zone
-export function getLatestPoiDate(pois: BriefVisitedPoi[]): number {
-  if (pois.length === 0) return 0;
-  return Math.max(...pois.map((poi) => new Date(poi.createdAt).getTime()));
+function latestCityTimestamp(cities: CityType[]): number {
+  let latest = 0;
+  for (const city of cities) {
+    const ts = timestamp(city.lastVisitedPoiAt);
+    if (ts > latest) {
+      latest = ts;
+    }
+  }
+  return latest;
 }
 
-// Fonction pour trier les régions par date du POI le plus récent (récursif)
+function latestRegionTimestamp(region: RegionType): number {
+  let latest = 0;
+  for (const dept of region.departements) {
+    const ts = latestCityTimestamp(dept.cities);
+    if (ts > latest) {
+      latest = ts;
+    }
+  }
+  return latest;
+}
+
+// Tri par date du dernier POI visité (récent en premier) — dérivé des villes.
 export function sortRegionsByLatestPoiDate(
   regions: RegionType[],
 ): RegionType[] {
@@ -83,24 +94,9 @@ export function sortRegionsByLatestPoiDate(
       ...region,
       departements: sortDepartementsByLatestPoiDate(region.departements),
     }))
-    .sort((a, b) => {
-      // Obtenir la date la plus récente parmi tous les POIs de la région
-      const getAllPoisFromRegion = (r: RegionType): BriefVisitedPoi[] => {
-        const allPois: BriefVisitedPoi[] = [];
-        for (const dept of r.departements) {
-          for (const city of dept.cities) {
-            allPois.push(...city.pois);
-          }
-        }
-        return allPois;
-      };
-      const dateA = getLatestPoiDate(getAllPoisFromRegion(a));
-      const dateB = getLatestPoiDate(getAllPoisFromRegion(b));
-      return dateB - dateA;
-    });
+    .sort((a, b) => latestRegionTimestamp(b) - latestRegionTimestamp(a));
 }
 
-// Fonction pour trier les départements par date du POI le plus récent (récursif)
 export function sortDepartementsByLatestPoiDate(
   departements: DepartementType[],
 ): DepartementType[] {
@@ -109,49 +105,30 @@ export function sortDepartementsByLatestPoiDate(
       ...dept,
       cities: sortCitiesByLatestPoiDate(dept.cities),
     }))
-    .sort((a, b) => {
-      // Obtenir la date la plus récente parmi tous les POIs du département
-      const getAllPoisFromDepartement = (
-        d: DepartementType,
-      ): BriefVisitedPoi[] => {
-        const allPois: BriefVisitedPoi[] = [];
-        for (const city of d.cities) {
-          allPois.push(...city.pois);
-        }
-        return allPois;
-      };
-      const dateA = getLatestPoiDate(getAllPoisFromDepartement(a));
-      const dateB = getLatestPoiDate(getAllPoisFromDepartement(b));
-      return dateB - dateA;
-    });
+    .sort(
+      (a, b) => latestCityTimestamp(b.cities) - latestCityTimestamp(a.cities),
+    );
 }
 
-// Fonction pour trier les villes par date du POI le plus récent
 export function sortCitiesByLatestPoiDate(cities: CityType[]): CityType[] {
-  return [...cities]
-    .map((city) => ({
-      ...city,
-      pois: sortPoisByDate(city.pois),
-    }))
-    .sort((a, b) => {
-      const dateA = getLatestPoiDate(a.pois);
-      const dateB = getLatestPoiDate(b.pois);
-      return dateB - dateA;
-    });
+  return [...cities].sort(
+    (a, b) => timestamp(b.lastVisitedPoiAt) - timestamp(a.lastVisitedPoiAt),
+  );
 }
 
 // Nombre total de départements en France métropolitaine
 const TOTAL_DEPARTEMENTS_FRANCE = 96;
 
-// Fonction pour calculer les statistiques
+// Le `lastVisited*` est désormais fourni par l'API (last_visited_poi_at/name par boundary).
+// On agrège sur les villes en prenant le max, plus de scan de l'arbre des POIs.
 export function calculateStats(zoneHierarchy: CountryType[]): Stats {
   let visitedPlaces = 0;
   let regions = 0;
   let departements = 0;
   let cities = 0;
 
-  let latestPoi: BriefVisitedPoi | null = null;
-  let latestPoiDate = 0;
+  let latestDate = 0;
+  let latestName: string | null = null;
 
   for (const country of zoneHierarchy) {
     for (const region of country.regions) {
@@ -161,23 +138,15 @@ export function calculateStats(zoneHierarchy: CountryType[]): Stats {
         for (const city of dept.cities) {
           cities++;
           visitedPlaces += city.validatedPoisCount;
-
-          // Trouver le POI le plus récent pendant la boucle
-          for (const poi of city.pois) {
-            const poiDate = new Date(poi.createdAt).getTime();
-            if (poiDate > latestPoiDate) {
-              latestPoiDate = poiDate;
-              latestPoi = poi;
-            }
+          const cityAt = timestamp(city.lastVisitedPoiAt);
+          if (cityAt > latestDate) {
+            latestDate = cityAt;
+            latestName = city.lastVisitedPoiName;
           }
         }
       }
     }
   }
-
-  const lastVisitedDate =
-    latestPoiDate > 0 ? new Date(latestPoiDate) : undefined;
-  const lastVisitedPlaceName = latestPoi?.name;
 
   return {
     visitedPlaces,
@@ -185,12 +154,11 @@ export function calculateStats(zoneHierarchy: CountryType[]): Stats {
     departements,
     totalDepartements: TOTAL_DEPARTEMENTS_FRANCE,
     cities,
-    lastVisitedDate,
-    lastVisitedPlaceName,
+    lastVisitedDate: latestDate > 0 ? new Date(latestDate) : undefined,
+    lastVisitedPlaceName: latestName ?? undefined,
   };
 }
 
-// Fonction pour calculer le pourcentage de régions visitées
 export function calculateRegionsProgress(
   zoneHierarchy: CountryType[],
 ): ProgressData {

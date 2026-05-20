@@ -8,6 +8,7 @@ import { Box } from "@/components/ui/box";
 import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
 import { Spinner } from "@/components/ui/spinner";
 import { useLeaderboard } from "@/hooks/queries/useLeaderboard";
+import { useLeaderboardMe } from "@/hooks/queries/useLeaderboardMe";
 
 interface LeaderboardSceneProps {
   currentUser: { id: string } | undefined;
@@ -16,7 +17,9 @@ interface LeaderboardSceneProps {
 
 export const LeaderboardScene = memo(
   ({ currentUser, period }: LeaderboardSceneProps): ReactElement => {
-    const { data: leaderboardData, isLoading } = useLeaderboard(period);
+    const { items, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+      useLeaderboard(period);
+    const { data: meData } = useLeaderboardMe(period);
 
     const keyExtractor = useCallback(
       (item: LeaderboardUser) => item.userId,
@@ -38,6 +41,24 @@ export const LeaderboardScene = memo(
       [],
     );
 
+    const onEndReached = useCallback(() => {
+      if (hasNextPage && !isFetchingNextPage) {
+        void fetchNextPage();
+      }
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+    const ListFooterComponent = useCallback(
+      () =>
+        hasNextPage ? (
+          <Box className="w-full items-center justify-center py-6">
+            {isFetchingNextPage ? (
+              <Spinner size="large" color={themeColors.primary[500].hex} />
+            ) : null}
+          </Box>
+        ) : null,
+      [hasNextPage, isFetchingNextPage],
+    );
+
     if (isLoading) {
       return (
         <Box className="flex-1 items-center justify-center px-4">
@@ -46,10 +67,7 @@ export const LeaderboardScene = memo(
       );
     }
 
-    if (
-      leaderboardData?.users === undefined ||
-      leaderboardData.users.length === 0
-    ) {
+    if (items.length === 0) {
       return (
         <Box className="flex-1 items-center justify-center px-4">
           <CustomText className="text-gray-500">
@@ -61,11 +79,19 @@ export const LeaderboardScene = memo(
 
     return (
       <Box className="flex-1 px-4 pt-2">
+        {meData?.me !== undefined && meData.me !== null ? (
+          <Box className="mb-2 border-b border-gray-200 pb-2">
+            <LeaderboardUserItem user={meData.me} isCurrentUser />
+          </Box>
+        ) : null}
         <FlashList
-          data={leaderboardData.users}
+          data={items}
           keyExtractor={keyExtractor}
           renderItem={renderItem}
           ItemSeparatorComponent={ItemSeparatorComponent}
+          onEndReached={hasNextPage ? onEndReached : undefined}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={ListFooterComponent}
         />
       </Box>
     );

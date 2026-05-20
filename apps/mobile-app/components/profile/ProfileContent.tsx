@@ -1,5 +1,5 @@
 import { FlashList } from "@shopify/flash-list";
-import type { UserMe, ZoneUserStat } from "@vagabond/shared-utils";
+import type { UserMe, ZoneUserStatV2 } from "@vagabond/shared-utils";
 import { type ReactElement, useCallback, useMemo } from "react";
 import { type Optional } from "utility-types";
 
@@ -35,7 +35,7 @@ interface ProfileContentProps {
     >,
     "email" | "isPrivate"
   > | null;
-  zonesStats?: ZoneUserStat[];
+  zonesStats?: ZoneUserStatV2[];
   showSignOutButton: boolean;
   allowVisitedPoiNavigation: boolean;
 }
@@ -48,13 +48,15 @@ export function ProfileContent({
 }: ProfileContentProps): ReactElement {
   const { data: currentUser } = useUsersMe();
   const allowProfileEdit = userData?.id === currentUser?.id;
+  // On ne passe pas userId si c'est notre propre profil
+  const targetUserIdForVisitedPois =
+    allowProfileEdit || userData?.id === undefined ? undefined : userData.id;
   const { sortedHierarchy, stats, progress } =
     useProfileComputedData(zonesStats);
 
   const sections = useMemo<ProfileSection[]>(() => {
-    const isOwnProfile = userData?.id === currentUser?.id;
     const isViewingPrivateProfile =
-      !isOwnProfile && (userData?.isPrivate ?? false);
+      !allowProfileEdit && (userData?.isPrivate ?? false);
 
     const baseSections: ProfileSection[] = [
       { type: "header" },
@@ -78,7 +80,7 @@ export function ProfileContent({
     sortedHierarchy,
     showSignOutButton,
     userData,
-    currentUser,
+    allowProfileEdit,
   ]);
 
   const renderItem = useCallback(
@@ -121,6 +123,7 @@ export function ProfileContent({
                 countries={item.data}
                 allowVisitedPoiNavigation={allowVisitedPoiNavigation}
                 allowProfileEdit={allowProfileEdit}
+                userId={targetUserIdForVisitedPois}
               />
             </Box>
           );
@@ -140,7 +143,13 @@ export function ProfileContent({
           return null;
       }
     },
-    [userData, allowProfileEdit, zonesStats, allowVisitedPoiNavigation],
+    [
+      userData,
+      allowProfileEdit,
+      zonesStats,
+      allowVisitedPoiNavigation,
+      targetUserIdForVisitedPois,
+    ],
   );
 
   const keyExtractor = useCallback((item: ProfileSection, index: number) => {

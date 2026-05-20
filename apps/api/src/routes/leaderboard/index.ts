@@ -1,5 +1,7 @@
 import { type FastifyPluginCallbackTypebox } from "@fastify/type-provider-typebox";
 import {
+  LeaderboardMeQuerySchema,
+  LeaderboardMeResponseSchema,
   LeaderboardQuerySchema,
   LeaderboardResponseSchema,
 } from "@vagabond/shared-utils";
@@ -32,6 +34,33 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           users,
           period,
         },
+      });
+    },
+  );
+
+  fastify.get(
+    "/me",
+    {
+      schema: {
+        tags: ["leaderboard"],
+        security: [{ bearerAuth: [] }],
+        querystring: LeaderboardMeQuerySchema,
+        response: {
+          200: LeaderboardMeResponseSchema,
+        },
+      },
+    },
+    async function (request, reply) {
+      const { period } = request.query;
+
+      const { me, neighbors } =
+        await fastify.dbRepositories.user.getLeaderboardMe({
+          userId: request.user.uid,
+          period,
+        });
+
+      return await reply.status(200).send({
+        data: { me, neighbors, period },
       });
     },
   );

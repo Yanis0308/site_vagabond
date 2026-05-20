@@ -28,7 +28,7 @@ export default function ProfileScreen(): ReactElement {
     >
       <ProfileContent
         userData={userData}
-        zonesStats={zonesData?.zonesStats}
+        zonesStats={zonesData}
         showSignOutButton={true}
         allowVisitedPoiNavigation={true}
       />

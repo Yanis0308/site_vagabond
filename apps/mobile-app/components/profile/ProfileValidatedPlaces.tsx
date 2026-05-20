@@ -11,6 +11,7 @@ interface ProfileValidatedPlacesProps {
   countries: CountryType[];
   allowVisitedPoiNavigation: boolean;
   allowProfileEdit: boolean;
+  userId?: string;
 }
 
 export const ProfileValidatedPlaces = memo(
@@ -18,6 +19,7 @@ export const ProfileValidatedPlaces = memo(
     countries,
     allowVisitedPoiNavigation,
     allowProfileEdit,
+    userId,
   }: ProfileValidatedPlacesProps): ReactElement => {
     const { t } = useTranslation("common");
 
@@ -38,6 +40,7 @@ export const ProfileValidatedPlaces = memo(
             countries={countries}
             allowVisitedPoiNavigation={allowVisitedPoiNavigation}
             allowProfileEdit={allowProfileEdit}
+            userId={userId}
           />
         )}
       </Box>

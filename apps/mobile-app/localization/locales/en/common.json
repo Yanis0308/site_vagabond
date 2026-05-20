@@ -38,6 +38,7 @@
   "last_place_visited_on_no_name": "Last place visited on {{date}}",
   "cities": "cities",
   "departements": "departments",
+  "load_more": "Load more",
   "review_form": {
     "upload_error_title": "Error",
     "upload_error_message": "Failed to upload the photo. Would you like to try again?",

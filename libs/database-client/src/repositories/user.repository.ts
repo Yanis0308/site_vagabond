@@ -1,18 +1,71 @@
 import { getUserDisplayName, logger } from "@vagabond/shared-utils";
 import {
   and,
+  asc,
   countDistinct,
   desc,
   eq,
   exists,
+  gt,
   gte,
   max,
+  or,
   sql,
 } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
-import { appReview, poiBoundaries, users, visitedPois } from "../schema.js";
+import {
+  appReview,
+  type PeriodType,
+  poiBoundaries,
+  userPeriodScores,
+  users,
+  visitedPois,
+} from "../schema.js";
 import { isUniqueConstraintViolationError } from "../utils.js";
+
+interface LeaderboardCursor {
+  score: number;
+  userId: string;
+}
+
+function encodeLeaderboardCursor(cursor: LeaderboardCursor): string {
+  return Buffer.from(JSON.stringify(cursor)).toString("base64url");
+}
+
+function decodeLeaderboardCursor(s: string): LeaderboardCursor | null {
+  try {
+    const parsed: unknown = JSON.parse(
+      Buffer.from(s, "base64url").toString("utf-8"),
+    );
+    if (
+      typeof parsed === "object" &&
+      parsed !== null &&
+      "score" in parsed &&
+      "userId" in parsed &&
+      typeof parsed.score === "number" &&
+      typeof parsed.userId === "string"
+    ) {
+      return { score: parsed.score, userId: parsed.userId };
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function leaderboardPeriodToTuple(period: "all-time" | "monthly"): {
+  periodType: PeriodType;
+  periodKey: string;
+} {
+  if (period === "all-time") {
+    return { periodType: "all_time", periodKey: "" };
+  }
+  const now = new Date();
+  const year = now.getUTCFullYear();
+  const month = String(now.getUTCMonth() + 1).padStart(2, "0");
+  return { periodType: "monthly", periodKey: `${year}-${month}` };
+}
 
 export interface UserInfo {
   email: string;
@@ -302,5 +355,284 @@ export class UserRepository {
       }
       throw error;
     }
+  }
+
+  // Leaderboard v2 : lecture depuis user_period_scores avec cursor pagination.
+  // Le cursor encode (score, userId) — tiebreaker stable sur userId asc.
+  async getLeaderboardV2({
+    period,
+    after,
+    limit,
+  }: {
+    period: "all-time" | "monthly";
+    after: string | undefined;
+    limit: number;
+  }): Promise<{ items: LeaderboardResult; nextCursor: string | null }> {
+    const { periodType, periodKey } = leaderboardPeriodToTuple(period);
+    const cursor = after !== undefined ? decodeLeaderboardCursor(after) : null;
+
+    const rows = await this.db
+      .select({
+        userId: users.userId,
+        fullName: users.fullName,
+        nickname: users.nickname,
+        email: users.email,
+        createdAt: users.createdAt,
+        visitedPoisCount: userPeriodScores.count,
+        lastVisitedPoiDate:
+          sql`(SELECT MAX(${visitedPois.createdAt}) FROM ${visitedPois} WHERE ${visitedPois.userId} = ${users.userId})`
+            .mapWith((v: unknown): Date | null => {
+              if (v === null) return null;
+              if (v instanceof Date) return v;
+              if (typeof v === "string") return new Date(v);
+              return null;
+            })
+            .as("last_visited_poi_date"),
+      })
+      .from(userPeriodScores)
+      .innerJoin(users, eq(users.userId, userPeriodScores.userId))
+      .where(
+        and(
+          eq(userPeriodScores.periodType, periodType),
+          eq(userPeriodScores.periodKey, periodKey),
+          cursor !== null
+            ? or(
+                sql`${userPeriodScores.count} < ${cursor.score}`,
+                and(
+                  eq(userPeriodScores.count, cursor.score),
+                  gt(userPeriodScores.userId, cursor.userId),
+                ),
+              )
+            : undefined,
+        ),
+      )
+      .orderBy(desc(userPeriodScores.count), asc(userPeriodScores.userId))
+      .limit(limit + 1);
+
+    const hasMore = rows.length > limit;
+    const items = hasMore ? rows.slice(0, limit) : rows;
+    const last = items[items.length - 1];
+    const nextCursor =
+      hasMore && last !== undefined
+        ? encodeLeaderboardCursor({
+            score: last.visitedPoisCount,
+            userId: last.userId,
+          })
+        : null;
+
+    // Rank absolu : on calcule celui du 1er item avec une seule query (COUNT
+    // des users devant lui), puis on incrémente. Comme on lit la même slice
+    // ORDER BY (count DESC, userId ASC) que celle qui donnerait le rank
+    // global, les items sont consécutifs dans le classement => rank[i+1] =
+    // rank[i] + 1.
+    let baseRank = 0;
+    const first = items[0];
+    if (first !== undefined) {
+      const rankRows = await this.db
+        .select({
+          rank: sql`COUNT(*) + 1`.mapWith(Number),
+        })
+        .from(userPeriodScores)
+        .where(
+          and(
+            eq(userPeriodScores.periodType, periodType),
+            eq(userPeriodScores.periodKey, periodKey),
+            or(
+              sql`${userPeriodScores.count} > ${first.visitedPoisCount}`,
+              and(
+                eq(userPeriodScores.count, first.visitedPoisCount),
+                sql`${userPeriodScores.userId} < ${first.userId}`,
+              ),
+            ),
+          ),
+        );
+      baseRank = rankRows[0]?.rank ?? 1;
+    }
+
+    return {
+      items: items.map((row, idx) => ({
+        userId: row.userId,
+        fullName: getUserDisplayName(row.fullName, row.email),
+        nickname: row.nickname,
+        visitedPoisCount: row.visitedPoisCount,
+        registrationDate: row.createdAt.toISOString(),
+        lastVisitedPoiDate:
+          row.lastVisitedPoiDate !== null
+            ? row.lastVisitedPoiDate.toISOString()
+            : null,
+        rank: baseRank + idx,
+      })),
+      nextCursor,
+    };
+  }
+
+  // Mon rank + voisins immédiats — pour la section sticky du leaderboard.
+  async getLeaderboardMe({
+    userId,
+    period,
+    neighborsEachSide = 2,
+  }: {
+    userId: string;
+    period: "all-time" | "monthly";
+    neighborsEachSide?: number;
+  }): Promise<{
+    me: LeaderboardResult[number] | null;
+    neighbors: LeaderboardResult;
+  }> {
+    const { periodType, periodKey } = leaderboardPeriodToTuple(period);
+
+    const [myScoreRow] = await this.db
+      .select({
+        count: userPeriodScores.count,
+      })
+      .from(userPeriodScores)
+      .where(
+        and(
+          eq(userPeriodScores.userId, userId),
+          eq(userPeriodScores.periodType, periodType),
+          eq(userPeriodScores.periodKey, periodKey),
+        ),
+      );
+
+    if (myScoreRow === undefined) {
+      return { me: null, neighbors: [] };
+    }
+
+    const myScore = myScoreRow.count;
+
+    // Rank = nombre de users devant moi + 1
+    const [rankRow] = await this.db
+      .select({
+        rank: sql`COUNT(*) + 1`.mapWith(Number),
+      })
+      .from(userPeriodScores)
+      .where(
+        and(
+          eq(userPeriodScores.periodType, periodType),
+          eq(userPeriodScores.periodKey, periodKey),
+          or(
+            sql`${userPeriodScores.count} > ${myScore}`,
+            and(
+              eq(userPeriodScores.count, myScore),
+              sql`${userPeriodScores.userId} < ${userId}`,
+            ),
+          ),
+        ),
+      );
+
+    const myRank = rankRow?.rank ?? 1;
+
+    // Voisins : ceux devant moi (score >= moi) et ceux derrière (score <= moi)
+    // Limite : neighborsEachSide de chaque côté + moi-même au milieu
+    const aboveRows = await this.db
+      .select({
+        userId: users.userId,
+        fullName: users.fullName,
+        nickname: users.nickname,
+        email: users.email,
+        createdAt: users.createdAt,
+        score: userPeriodScores.count,
+      })
+      .from(userPeriodScores)
+      .innerJoin(users, eq(users.userId, userPeriodScores.userId))
+      .where(
+        and(
+          eq(userPeriodScores.periodType, periodType),
+          eq(userPeriodScores.periodKey, periodKey),
+          or(
+            sql`${userPeriodScores.count} > ${myScore}`,
+            and(
+              eq(userPeriodScores.count, myScore),
+              sql`${userPeriodScores.userId} < ${userId}`,
+            ),
+          ),
+        ),
+      )
+      .orderBy(asc(userPeriodScores.count), desc(userPeriodScores.userId))
+      .limit(neighborsEachSide);
+
+    const belowRows = await this.db
+      .select({
+        userId: users.userId,
+        fullName: users.fullName,
+        nickname: users.nickname,
+        email: users.email,
+        createdAt: users.createdAt,
+        score: userPeriodScores.count,
+      })
+      .from(userPeriodScores)
+      .innerJoin(users, eq(users.userId, userPeriodScores.userId))
+      .where(
+        and(
+          eq(userPeriodScores.periodType, periodType),
+          eq(userPeriodScores.periodKey, periodKey),
+          or(
+            sql`${userPeriodScores.count} < ${myScore}`,
+            and(
+              eq(userPeriodScores.count, myScore),
+              sql`${userPeriodScores.userId} > ${userId}`,
+            ),
+          ),
+        ),
+      )
+      .orderBy(desc(userPeriodScores.count), asc(userPeriodScores.userId))
+      .limit(neighborsEachSide);
+
+    // Récupérer mon user info + last visited poi
+    const [myUser] = await this.db
+      .select({
+        userId: users.userId,
+        fullName: users.fullName,
+        nickname: users.nickname,
+        email: users.email,
+        createdAt: users.createdAt,
+        lastVisitedPoiDate: max(visitedPois.createdAt),
+      })
+      .from(users)
+      .leftJoin(visitedPois, eq(visitedPois.userId, users.userId))
+      .where(eq(users.userId, userId))
+      .groupBy(users.userId);
+
+    const me =
+      myUser !== undefined
+        ? {
+            userId: myUser.userId,
+            fullName: getUserDisplayName(myUser.fullName, myUser.email),
+            nickname: myUser.nickname,
+            visitedPoisCount: myScore,
+            registrationDate: myUser.createdAt.toISOString(),
+            lastVisitedPoiDate:
+              myUser.lastVisitedPoiDate !== null
+                ? myUser.lastVisitedPoiDate.toISOString()
+                : null,
+            rank: myRank,
+          }
+        : null;
+
+    // Ranks pour les voisins : interpolés à partir de myRank
+    // (above sont rank-N..rank-1, below sont rank+1..rank+N)
+    const aboveSorted = [...aboveRows].reverse(); // remettre par rank croissant
+    const neighbors: LeaderboardResult = [
+      ...aboveSorted.map((row, idx) => ({
+        userId: row.userId,
+        fullName: getUserDisplayName(row.fullName, row.email),
+        nickname: row.nickname,
+        visitedPoisCount: row.score,
+        registrationDate: row.createdAt.toISOString(),
+        lastVisitedPoiDate: null,
+        rank: myRank - (aboveSorted.length - idx),
+      })),
+      ...belowRows.map((row, idx) => ({
+        userId: row.userId,
+        fullName: getUserDisplayName(row.fullName, row.email),
+        nickname: row.nickname,
+        visitedPoisCount: row.score,
+        registrationDate: row.createdAt.toISOString(),
+        lastVisitedPoiDate: null,
+        rank: myRank + idx + 1,
+      })),
+    ];
+
+    return { me, neighbors };
   }
 }

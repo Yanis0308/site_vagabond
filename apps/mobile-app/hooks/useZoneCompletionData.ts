@@ -1,10 +1,10 @@
-import type { ZoneUserStat } from "@vagabond/shared-utils";
+import type { ZoneUserStatV2 } from "@vagabond/shared-utils";
 
 import { useUserZoneStats } from "@/hooks/queries/useZonesStats";
 import { getZoneState } from "@/utils/zoneState";
 
 export const useZoneCompletionData = (): {
-  completionData: Record<string, ZoneUserStat> | undefined;
+  completionData: Record<string, ZoneUserStatV2> | undefined;
   zonesByLevelAndState: Record<
     string,
     { completed: string[]; inProgress: string[]; unvisited: string[] }
@@ -12,9 +12,8 @@ export const useZoneCompletionData = (): {
   hasCompletionData: boolean;
 } => {
   const { data: zonesData } = useUserZoneStats();
-  const userZoneStats = zonesData?.zonesStats;
 
-  const completionData = userZoneStats?.reduce<Record<string, ZoneUserStat>>(
+  const completionData = zonesData?.reduce<Record<string, ZoneUserStatV2>>(
     (acc, zone) => {
       const formattedZoneId = zone.zone_id.replace("OSM-", "");
       acc[formattedZoneId] = zone;

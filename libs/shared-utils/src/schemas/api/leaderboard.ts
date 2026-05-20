@@ -1,6 +1,12 @@
 import { type Static, Type } from "typebox";
 
-import { ApiResponseSchema, DateSchema, Nullable } from "../utils.js";
+import {
+  ApiResponseSchema,
+  CursorPaginatedResponseSchema,
+  CursorPaginationQuerySchema,
+  DateSchema,
+  Nullable,
+} from "../utils.js";
 
 export const LeaderboardPeriodEnumSchema = Type.Enum(["all-time", "monthly"], {
   $id: "LeaderboardPeriodEnum",
@@ -35,6 +41,59 @@ export const LeaderboardResponseSchema = ApiResponseSchema(
   "LeaderboardResponse",
 );
 
+// ----------------------------------------------------------------------------
+// v2 : cursor pagination — /api/v2/leaderboard
+// ----------------------------------------------------------------------------
+
+export const LeaderboardV2QuerySchema = Type.Object(
+  {
+    period: LeaderboardPeriodEnumSchema,
+    ...CursorPaginationQuerySchema.properties,
+  },
+  { $id: "LeaderboardV2Query" },
+);
+export type LeaderboardV2Query = Static<typeof LeaderboardV2QuerySchema>;
+
+export const LeaderboardV2ResponseSchema = ApiResponseSchema(
+  Type.Object(
+    {
+      ...CursorPaginatedResponseSchema(
+        LeaderboardUserSchema,
+        "LeaderboardV2Items",
+      ).properties,
+      period: LeaderboardPeriodEnumSchema,
+    },
+    { $id: "LeaderboardV2ResponseData" },
+  ),
+  "LeaderboardV2Response",
+);
+
+// ----------------------------------------------------------------------------
+// /api/leaderboard/me — ma position + voisinage
+// ----------------------------------------------------------------------------
+
+export const LeaderboardMeQuerySchema = Type.Object(
+  {
+    period: LeaderboardPeriodEnumSchema,
+  },
+  { $id: "LeaderboardMeQuery" },
+);
+export type LeaderboardMeQuery = Static<typeof LeaderboardMeQuerySchema>;
+
+export const LeaderboardMeResponseSchema = ApiResponseSchema(
+  Type.Object(
+    {
+      me: Nullable(LeaderboardUserSchema),
+      neighbors: Type.Array(LeaderboardUserSchema),
+      period: LeaderboardPeriodEnumSchema,
+    },
+    { $id: "LeaderboardMeResponseData" },
+  ),
+  "LeaderboardMeResponse",
+);
+
 export type LeaderboardQuery = Static<typeof LeaderboardQuerySchema>;
 export type LeaderboardUser = Static<typeof LeaderboardUserSchema>;
 export type LeaderboardResponse = Static<typeof LeaderboardResponseSchema>;
+export type LeaderboardV2Response = Static<typeof LeaderboardV2ResponseSchema>;
+export type LeaderboardMeResponse = Static<typeof LeaderboardMeResponseSchema>;

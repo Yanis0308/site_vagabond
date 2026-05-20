@@ -26,6 +26,10 @@ export {
   ReadyResponseSchema,
 } from "./schemas/api/health.js";
 export {
+  type LeaderboardMeQuery,
+  LeaderboardMeQuerySchema,
+  type LeaderboardMeResponse,
+  LeaderboardMeResponseSchema,
   type LeaderboardPeriodEnum,
   LeaderboardPeriodEnumSchema,
   type LeaderboardQuery,
@@ -34,6 +38,10 @@ export {
   LeaderboardResponseSchema,
   type LeaderboardUser,
   LeaderboardUserSchema,
+  type LeaderboardV2Query,
+  LeaderboardV2QuerySchema,
+  type LeaderboardV2Response,
+  LeaderboardV2ResponseSchema,
 } from "./schemas/api/leaderboard.js";
 export {
   type UserLocationRequest,
@@ -119,12 +127,20 @@ export {
   ImageSourceSchema,
   type VisitedPoi,
   VisitedPoiSchema,
+  type VisitedPoisV2Query,
+  VisitedPoisV2QuerySchema,
+  type VisitedPoisV2Response,
+  VisitedPoisV2ResponseSchema,
 } from "./schemas/api/visited-poi.js";
 export {
   GetUserZoneStatsResponseSchema,
+  type GetUserZoneStatsV2Response,
+  GetUserZoneStatsV2ResponseSchema,
   type ZoneStat,
   type ZoneUserStat,
   ZoneUserStatSchema,
+  type ZoneUserStatV2,
+  ZoneUserStatV2Schema,
 } from "./schemas/api/zones.js";
 export {
   type AppInitializationState,
@@ -185,6 +201,13 @@ export {
   type PoiEnriched,
   PoiEnrichedSchema,
 } from "./schemas/processors/llm.js";
+export {
+  ApiResponseSchema,
+  CursorPaginatedResponseSchema,
+  CursorPaginationQuerySchema,
+  DateSchema,
+  Nullable,
+} from "./schemas/utils.js";
 export { logger } from "./utils/logger.js";
 export { getFilterLevelName } from "./utils/poi.js";
 export { slugifyNickname } from "./utils/slug.js";

@@ -55,7 +55,7 @@ export function RenderListItem({
 }: RenderListItemProps): ReactElement | null {
   switch (item.type) {
     case "reviews":
-      return <ReviewsList visitedPois={visitedPois} />;
+      return <ReviewsList poiId={placeId} />;
     case "header":
       return (
         <HeaderSection

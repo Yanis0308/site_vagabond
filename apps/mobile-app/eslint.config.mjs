@@ -81,6 +81,11 @@ export default [
           message:
             "Use router.navigate() instead of router.push(); use router.dismiss() to close a modal.",
         },
+        {
+          selector: "NewExpression[callee.name='URLSearchParams']",
+          message:
+            "Do not use URLSearchParams (RN polyfill is buggy: ky reads it via iteration which silently drops entries — confirmed on VG-470 cursor pagination). Pass a plain object to ky's `searchParams`: { foo, bar } instead.",
+        },
       ],
     },
   },

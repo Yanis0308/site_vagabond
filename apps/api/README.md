@@ -169,10 +169,22 @@ Tous les endpoints (sauf `/api/leaderboard`) nécessitent une authentification v
 
 #### POIs visités
 
-- **GET** `/api/visited-pois` - Liste tous les POIs visités par l'utilisateur
+- **GET** `/api/visited-pois` - Liste tous les POIs visités par l'utilisateur (legacy non paginé)
 - **GET** `/api/visited-pois/:poiId` - Récupère un POI visité spécifique
 - **POST** `/api/visited-pois` - Marque un POI comme visité
 - **DELETE** `/api/visited-pois/:poiId` - Supprime un POI visité
+- **GET** `/api/v2/visited-pois?after=&limit=&boundaryId?=&userId?=` - Timeline du user, **pagination cursor** (`{ items, nextCursor }`)
+- **GET** `/api/v2/visited-pois/:poiId?after=&limit=` - Avis d'un POI, **pagination cursor**
+
+#### Leaderboard v2
+
+- **GET** `/api/v2/leaderboard?period=&after=&limit=` - Classement, **pagination cursor**
+
+#### Pagination cursor
+
+Les endpoints `/api/v2/*` paginés utilisent un cursor opaque encodé en base64url (`{ createdAt, id }` ou équivalent). Schéma partagé : `CursorPaginationQuerySchema` dans `@vagabond/shared-utils`. Le tuple `(timestamp, id)` garantit la progression même quand plusieurs lignes ont le même `created_at`. Tant que le serveur renvoie `nextCursor: string`, le client continue ; à la fin, `nextCursor: null`.
+
+Côté repo, **ne jamais** caster un cursor en `::timestamp` à la main — utiliser `lt`/`eq` Drizzle natifs avec un `Date`. Les colonnes datetime sont en `timestamptz` (cf. `libs/database-client/README.md` §Timestamps).
 
 #### Upload
 

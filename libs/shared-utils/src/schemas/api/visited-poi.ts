@@ -1,7 +1,13 @@
 import { type Static, Type } from "typebox";
 
 import { CoordsSchema, SimplifiedCoordsSchema } from "../geo.js";
-import { ApiResponseSchema, Nullable } from "../utils.js";
+import {
+  ApiResponseSchema,
+  CursorPaginatedResponseSchema,
+  CursorPaginationQuerySchema,
+  DateSchema,
+  Nullable,
+} from "../utils.js";
 
 export const ImageSourceSchema = Type.Union(
   [Type.Literal("CAMERA"), Type.Literal("GALLERY")],
@@ -13,10 +19,12 @@ export const VisitedPoiSchema = Type.Object(
   {
     id: Type.Number(),
     poiId: Type.String(),
+    name: Type.Optional(Type.String()),
+    coords: SimplifiedCoordsSchema,
     zoneId: Type.Optional(Type.String()),
     userId: Type.String(),
     username: Type.String(),
-    createdAt: Type.String(),
+    createdAt: DateSchema,
     comment: Nullable(Type.String()),
     rating: Type.Number(),
     imageKey: Nullable(Type.String()),
@@ -31,7 +39,7 @@ export const BriefVisitedPoiSchema = Type.Object(
     poiId: Type.String(),
     name: Type.Optional(Type.String()),
     coords: SimplifiedCoordsSchema,
-    createdAt: Type.String(),
+    createdAt: DateSchema,
     comment: Nullable(Type.String()),
     rating: Type.Number(),
     imageKey: Nullable(Type.String()),
@@ -68,8 +76,31 @@ export const GetVisitedPoisResponseSchema = ApiResponseSchema(
   "GetVisitedPoisResponse",
 );
 
+// ----------------------------------------------------------------------------
+// v2 : cursor pagination — /api/v2/visited-pois et /api/v2/visited-pois/:poiId
+// ----------------------------------------------------------------------------
+
+export const VisitedPoisV2QuerySchema = Type.Object(
+  {
+    ...CursorPaginationQuerySchema.properties,
+    boundaryId: Type.Optional(Type.String()),
+    // Si omis, on lit les visits de l'utilisateur connecté. Sinon on lit
+    // celles du profil ciblé (avec check privacy : compte privé => liste
+    // vide pour ne pas leak les POIs visités).
+    userId: Type.Optional(Type.String()),
+  },
+  { $id: "VisitedPoisV2Query" },
+);
+export type VisitedPoisV2Query = Static<typeof VisitedPoisV2QuerySchema>;
+
+export const VisitedPoisV2ResponseSchema = ApiResponseSchema(
+  CursorPaginatedResponseSchema(VisitedPoiSchema, "VisitedPoisV2ResponseData"),
+  "VisitedPoisV2Response",
+);
+
 export type VisitedPoi = Static<typeof VisitedPoiSchema>;
 export type BriefVisitedPoi = Static<typeof BriefVisitedPoiSchema>;
 export type CreateVisitedPoiRequest = Static<
   typeof CreateVisitedPoiRequestSchema
 >;
+export type VisitedPoisV2Response = Static<typeof VisitedPoisV2ResponseSchema>;

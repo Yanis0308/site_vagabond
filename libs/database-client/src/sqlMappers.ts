@@ -13,6 +13,28 @@ export function mapWithNullableString(v: unknown): string | null {
 }
 
 /**
+ * Mapper for SQL timestamp/timestamptz columns → ISO 8601 string.
+ * Use with .mapWith(mapWithIsoDate) to guarantee the emitted payload matches
+ * the TypeBox `format: "date-time"` schema (see DateSchema). pg renvoie
+ * généralement une Date mais parfois une string raw selon le code path.
+ */
+export function mapWithIsoDate(v: unknown): string {
+  if (v instanceof Date) return v.toISOString();
+  if (typeof v === "string") return new Date(v).toISOString();
+  throw new Error(
+    `mapWithIsoDate: unexpected value type ${typeof v} (value: ${String(v)})`,
+  );
+}
+
+/**
+ * Idem `mapWithIsoDate` mais autorise null (pour des colonnes nullable).
+ */
+export function mapWithNullableIsoDate(v: unknown): string | null {
+  if (v === null || v === undefined) return null;
+  return mapWithIsoDate(v);
+}
+
+/**
  * Creates a mapper for JSONB results validated via AJV against a JSON schema.
  * Use with .mapWith(mapWithJsonSchema(schema)) instead of sql<T>.
  * Validators are cached in memory by schema reference to avoid recompilation.
