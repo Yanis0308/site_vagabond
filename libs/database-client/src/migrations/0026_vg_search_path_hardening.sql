@@ -11,10 +11,13 @@
 --   schema. postgis is intentionally left in place (moving it would invalidate
 --   too many dependent objects and is not recommended by Supabase).
 --
--- Order matters: functions are redefined first so their bodies reference the
--- new schema location, then the extension is moved. The ALTER EXTENSION is
--- wrapped in a conditional block so this migration can be safely re-applied
--- (e.g. when manually pre-applied on an environment blocked by 0025).
+-- Order matters: the `extensions` schema is created first (idempotent — on
+-- Supabase it already exists), then functions are redefined so their bodies
+-- reference the new schema location, then the extension is moved. The ALTER
+-- EXTENSION is wrapped in a conditional block so this migration can be safely
+-- re-applied (e.g. when manually pre-applied on an environment blocked by 0025).
+CREATE SCHEMA IF NOT EXISTS extensions;
+--> statement-breakpoint
 CREATE OR REPLACE FUNCTION public.normalize_search_text(input_text TEXT)
 RETURNS TEXT
 LANGUAGE plpgsql
