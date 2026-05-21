@@ -2,6 +2,9 @@ export type SignInMethod = "google" | "apple";
 export type PhotoSource = "camera" | "gallery";
 export type LeaderboardPeriod = "all_time" | "monthly";
 export type SocialPlatform = "instagram" | "facebook" | "twitter";
+export type NotifPromptSource = "pre_prompt" | "profile_row";
+export type NotifPromptAction = "accepted" | "dismissed";
+export type NotifPermissionStatus = "granted" | "denied" | "provisional";
 
 export interface EventSchemas {
   sign_in_started: { method: SignInMethod };
@@ -47,6 +50,13 @@ export interface EventSchemas {
   app_review_dismissed: { visited_poi_count: number; is_re_prompt: boolean };
 
   api_error: { endpoint: string; status: number; method: string };
+
+  notif_prompt_shown: { source: NotifPromptSource };
+  notif_prompt_response: { action: NotifPromptAction };
+  notif_permission_resolved: {
+    source: NotifPromptSource;
+    status: NotifPermissionStatus;
+  };
 }
 
 export type EventName = keyof EventSchemas;

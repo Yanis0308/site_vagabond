@@ -51,7 +51,7 @@ export function useAppReviewVisitedPoiCountAtDismissal(): {
     visitedPoiCountAtDismissal: isHydrated ? raw : undefined,
     isHydrated,
     setVisitedPoiCountAtDismissal: async (value: number): Promise<void> => {
-      await setValue(value);
+      await setValue(() => value);
     },
   };
 }

@@ -10,11 +10,17 @@ import { type Static, Type } from "typebox";
 
 import { logger } from "@/utils/logger";
 
+// After this delay we force a re-upsert even if the cached entry still
+// matches, so the backend refreshes `lastSeenAt` and clears any stale
+// `disabledAt` set server-side (e.g. token-not-registered → re-enabled).
+export const PUSH_DEVICE_CACHE_TTL_MS = 24 * 60 * 60 * 1_000;
+
 const PushDeviceCacheEntrySchema = Type.Object({
   userId: Type.String(),
   token: Type.String(),
   appVersion: Type.String(),
   osVersion: Type.String(),
+  lastSyncedAt: Type.String(),
 });
 
 export type PushDeviceCacheEntry = Static<typeof PushDeviceCacheEntrySchema>;
@@ -52,11 +58,25 @@ export const readPushDeviceCache =
   };
 
 export const writePushDeviceCache = async (
-  entry: PushDeviceCacheEntry,
+  entry: Omit<PushDeviceCacheEntry, "lastSyncedAt">,
 ): Promise<void> => {
-  await getDefaultStore().set(pushDeviceCacheAtom, entry);
+  await getDefaultStore().set(pushDeviceCacheAtom, {
+    ...entry,
+    lastSyncedAt: new Date().toISOString(),
+  });
 };
 
 export const clearPushDeviceCache = async (): Promise<void> => {
   await getDefaultStore().set(pushDeviceCacheAtom, null);
+};
+
+export const isPushDeviceCacheStale = (
+  entry: PushDeviceCacheEntry,
+  now: Date = new Date(),
+): boolean => {
+  const lastSyncedTime = new Date(entry.lastSyncedAt).getTime();
+  if (Number.isNaN(lastSyncedTime)) {
+    return true;
+  }
+  return now.getTime() - lastSyncedTime > PUSH_DEVICE_CACHE_TTL_MS;
 };

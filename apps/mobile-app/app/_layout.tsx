@@ -9,6 +9,7 @@ import * as SplashScreen from "expo-splash-screen";
 import * as SystemUI from "expo-system-ui";
 import { useAtomValue, useSetAtom } from "jotai";
 import { type ReactElement, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import {
@@ -26,6 +27,7 @@ import { useReactQueryFocusManager } from "@/hooks/other/useReactQueryFocusManag
 import { clearUser, identifyUser } from "@/lib/analytics/analytics";
 import { AppErrorBoundary } from "@/lib/analytics/error-boundary";
 import { useScreenTracking } from "@/lib/analytics/screen-tracking";
+import { ensureNotificationChannels } from "@/lib/notifications/channels";
 import {
   authenticatedUserAtom,
   authReadyAtom,
@@ -49,6 +51,7 @@ export default function RootLayout(): ReactElement {
   const authenticatedUser = useAtomValue(authenticatedUserAtom);
   const setAuthenticatedUser = useSetAtom(authenticatedUserAtom);
   const setAuthReady = useSetAtom(authReadyAtom);
+  const { t, i18n } = useTranslation("common");
 
   // Analytics screen tracking via Expo Router segments
   useScreenTracking();
@@ -111,6 +114,14 @@ export default function RootLayout(): ReactElement {
   useEffect(() => {
     void SystemUI.setBackgroundColorAsync("transparent");
   }, []);
+
+  // Declare Android notification channels (no-op on iOS, idempotent).
+  // Re-runs on language change so channel names stay localized.
+  // `t` identity is stable in react-i18next across language switches; the
+  // real trigger we want is `i18n.language`.
+  useEffect(() => {
+    void ensureNotificationChannels((id) => t(`notifications.channels.${id}`));
+  }, [t, i18n.language]);
 
   return (
     <AppErrorBoundary>

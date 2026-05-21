@@ -56,12 +56,16 @@
       "@vagabond/shared-utils>ajv": "catalog:",
       "@vagabond/shared-utils>dotenv": "catalog:",
       "@vagabond/mobile-app>ajv": "catalog:",
-      "basic-ftp": ">=5.2.0"
+      "basic-ftp": ">=5.2.0",
+      "pg": "8.20.0"
     },
     "patchedDependencies": {
       "ajv@8.17.1": "patches/ajv@8.17.1.patch",
       "fastify": "patches/fastify.patch",
       "@nandorojo/galeria@3.0.0": "patches/@nandorojo__galeria@3.0.0.patch"
     }
+  },
+  "volta": {
+    "node": "22.22.2"
   }
 }

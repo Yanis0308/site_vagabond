@@ -1,4 +1,5 @@
 import { type ConfigContext, type ExpoConfig } from "expo/config";
+import permissions from "react-native-permissions/expo";
 import { type DeepPartial } from "utility-types";
 import { z } from "zod";
 
@@ -13,6 +14,7 @@ const RuntimeConfigSchema = z.object({
   mapboxBoundariesTilesetUrl: z.string(),
   mapboxPoisTilesetUrl: z.string(),
   isDevEnv: z.boolean(),
+  buildProfile: z.enum(["development", "preview", "production"]),
 });
 
 const appConfigSchema = z.object({
@@ -62,6 +64,11 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         process.env.EXPO_PUBLIC_BOUNDARIES_MAPBOX_TILESET_URL,
       mapboxPoisTilesetUrl: process.env.EXPO_PUBLIC_POIS_MAPBOX_TILESET_URL,
       isDevEnv: process.env.BUILD_PROFILE !== "production",
+      buildProfile: process.env.BUILD_PROFILE as
+        | "development"
+        | "preview"
+        | "production"
+        | undefined,
     },
   };
 
@@ -104,6 +111,13 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       usesAppleSignIn: true,
       entitlements: {
         "com.apple.developer.applesignin": ["Default"],
+        // Required for APNs / push notifications. Value must match the
+        // provisioning profile: "development" for the development build,
+        // "production" for preview (TestFlight) and production (App Store).
+        "aps-environment":
+          parsedConfig.data.runtimeConfig.buildProfile === "development"
+            ? "development"
+            : "production",
       },
       googleServicesFile: parsedConfig.data.googleServicesFiles.ios,
       config: {
@@ -120,6 +134,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       permissions: [
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.POST_NOTIFICATIONS",
       ],
       package: parsedConfig.data.packageAndBundleIdentifier,
       googleServicesFile: parsedConfig.data.googleServicesFiles.android,
@@ -130,6 +148,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       favicon: "./assets/images/favicon.png",
     },
     plugins: [
+      permissions({
+        iosPermissions: [
+          "LocationWhenInUse",
+          "Notifications",
+          "Camera",
+          "PhotoLibrary",
+        ],
+      }),
       "expo-router",
       [
         "expo-font",
@@ -151,6 +177,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       "@react-native-firebase/crashlytics",
       "@react-native-firebase/auth",
       "@react-native-firebase/messaging",
+      "react-native-notify-kit",
       [
         "expo-build-properties",
         {

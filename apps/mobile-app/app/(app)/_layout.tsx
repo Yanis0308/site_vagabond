@@ -1,8 +1,10 @@
 import { Stack } from "expo-router";
 import { type ReactElement } from "react";
 
+import { PushPermissionPrePromptModal } from "@/components/notifications/PushPermissionPrePromptModal";
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
 import { usePushDeviceRegistration } from "@/hooks/other/usePushDeviceRegistration";
+import { usePushPermissionPrompt } from "@/hooks/other/usePushPermissionPrompt";
 import { useStartupPhotoRecovery } from "@/hooks/other/useStartupPhotoRecovery";
 import { useUserLocationTracking } from "@/hooks/other/useUserLocationTracking";
 import { useUserLocationWatcher } from "@/hooks/other/useUserLocationWatcher";
@@ -16,29 +18,38 @@ export default function RootLayout(): ReactElement | null {
   useStartupPhotoRecovery();
   // Synchronise le token FCM avec l'API au mount et à chaque rotation
   usePushDeviceRegistration();
+  // Pré-prompt in-app pour les notifications (1 seule exposition à vie en V0)
+  const pushPermissionPrompt = usePushPermissionPrompt();
 
   return (
-    <Stack screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="(tabs)" />
-      <Stack.Screen name="validate-place/review-form" />
-      <Stack.Screen name="search" />
-      <Stack.Screen
-        name="user-feedback/index"
-        options={{ headerShown: false, presentation: "modal" }}
+    <>
+      <Stack screenOptions={defaultScreenOptions}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="validate-place/review-form" />
+        <Stack.Screen name="search" />
+        <Stack.Screen
+          name="user-feedback/index"
+          options={{ headerShown: false, presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="user-feedback/[placeId]"
+          options={{ headerShown: false, presentation: "modal" }}
+        />
+        <Stack.Screen
+          name="user-feedback/place-suggestion"
+          options={{ headerShown: false, presentation: "modal" }}
+        />
+        <Stack.Screen name="user/[userId]" />
+        <Stack.Screen
+          name="user/edit-nickname"
+          options={{ animation: "slide_from_bottom" }}
+        />
+      </Stack>
+      <PushPermissionPrePromptModal
+        isOpen={pushPermissionPrompt.isOpen}
+        onAccept={pushPermissionPrompt.onAccept}
+        onDismiss={pushPermissionPrompt.onDismiss}
       />
-      <Stack.Screen
-        name="user-feedback/[placeId]"
-        options={{ headerShown: false, presentation: "modal" }}
-      />
-      <Stack.Screen
-        name="user-feedback/place-suggestion"
-        options={{ headerShown: false, presentation: "modal" }}
-      />
-      <Stack.Screen name="user/[userId]" />
-      <Stack.Screen
-        name="user/edit-nickname"
-        options={{ animation: "slide_from_bottom" }}
-      />
-    </Stack>
+    </>
   );
 }

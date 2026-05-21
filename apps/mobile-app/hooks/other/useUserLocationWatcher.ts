@@ -1,23 +1,35 @@
 import * as Location from "expo-location";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
+import { Platform } from "react-native";
+import { check, PERMISSIONS, request, RESULTS } from "react-native-permissions";
 
+import { locationPermissionResolvedAtom } from "@/stores/locationPermissionResolvedAtom";
 import { userLocationAtom } from "@/stores/userLocationAtom";
 import { logger } from "@/utils/logger";
 
+const LOCATION_PERMISSION =
+  Platform.OS === "ios"
+    ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+    : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION;
+
 export const useUserLocationWatcher = (): void => {
   const setUserLocation = useSetAtom(userLocationAtom);
+  const setLocationPermissionResolved = useSetAtom(
+    locationPermissionResolvedAtom,
+  );
 
   useEffect(() => {
     let subscription: { remove: () => void } | null = null;
 
     const setupLocation = async (): Promise<void> => {
-      let { status } = await Location.getForegroundPermissionsAsync();
-      if (status !== Location.PermissionStatus.GRANTED) {
-        status = (await Location.requestForegroundPermissionsAsync()).status;
+      let status = await check(LOCATION_PERMISSION);
+      if (status === RESULTS.DENIED) {
+        status = await request(LOCATION_PERMISSION);
       }
+      setLocationPermissionResolved(true);
 
-      if (status !== Location.PermissionStatus.GRANTED) {
+      if (status !== RESULTS.GRANTED) {
         logger("[LocationWatcher] Permission not granted");
         return;
       }
@@ -40,5 +52,5 @@ export const useUserLocationWatcher = (): void => {
         subscription = null;
       }
     };
-  }, [setUserLocation]);
+  }, [setUserLocation, setLocationPermissionResolved]);
 };

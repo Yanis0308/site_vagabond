@@ -201,5 +201,23 @@
     "private_label": "Profil privé",
     "public_hint": "Vos lieux visités sont visibles par les autres utilisateurs",
     "private_hint": "Vos lieux visités sont uniquement visibles par vous"
+  },
+  "notifications": {
+    "channels": {
+      "activity_progression": "Activité et progression",
+      "proximity": "À proximité",
+      "inactivity": "Rappels d'inactivité"
+    },
+    "push_permission_pre_prompt": {
+      "title": "Recevoir les notifications ?",
+      "body": "Reste informé quand un nouveau lieu se trouve près de toi, ou quand tu arrives dans une nouvelle ville à explorer.",
+      "cta_accept": "Ok",
+      "close": "Fermer"
+    },
+    "manage_row": {
+      "title": "Gérer les notifications",
+      "subtitle_granted": "Activées",
+      "subtitle_denied": "Désactivées au niveau système"
+    }
   }
 }

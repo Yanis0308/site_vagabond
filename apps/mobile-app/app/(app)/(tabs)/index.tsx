@@ -5,6 +5,7 @@ import { router, useFocusEffect } from "expo-router";
 import { useAtomValue, useSetAtom } from "jotai";
 import { type ReactElement, useEffect, useRef } from "react";
 import { Alert, Platform } from "react-native";
+import { PERMISSIONS, request, RESULTS } from "react-native-permissions";
 import { useSharedValue } from "react-native-reanimated";
 
 import { AppReviewModal } from "@/components/app-review/AppReviewModal";
@@ -168,8 +169,12 @@ export default function MapsTab(): ReactElement {
         source: "camera",
       });
     }
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-    if (status !== ImagePicker.PermissionStatus.GRANTED) {
+    const cameraPermission =
+      Platform.OS === "ios"
+        ? PERMISSIONS.IOS.CAMERA
+        : PERMISSIONS.ANDROID.CAMERA;
+    const status = await request(cameraPermission);
+    if (status !== RESULTS.GRANTED) {
       Alert.alert(
         "Permission refusée",
         "Nous avons besoin d'accéder à votre caméra",
@@ -216,8 +221,12 @@ export default function MapsTab(): ReactElement {
         source: "gallery",
       });
     }
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (status !== ImagePicker.PermissionStatus.GRANTED) {
+    const photoPermission =
+      Platform.OS === "ios"
+        ? PERMISSIONS.IOS.PHOTO_LIBRARY
+        : PERMISSIONS.ANDROID.READ_MEDIA_IMAGES;
+    const status = await request(photoPermission);
+    if (status !== RESULTS.GRANTED && status !== RESULTS.LIMITED) {
       Alert.alert(
         "Permission refusée",
         "Nous avons besoin d'accéder à votre galerie",

@@ -5,6 +5,7 @@ import { type Optional } from "utility-types";
 
 import { ProfileDeleteAccountButton } from "@/components/profile/ProfileDeleteAccountButton";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
+import { ProfileManageNotificationsRow } from "@/components/profile/ProfileManageNotificationsRow";
 import { ProfileOverallProgress } from "@/components/profile/ProfileOverallProgress";
 import { ProfileSignOutButton } from "@/components/profile/ProfileSignOutButton";
 import { ProfileStatsGrid } from "@/components/profile/ProfileStatsGrid";
@@ -24,6 +25,7 @@ type ProfileSection =
   | { type: "progress"; data: ProgressData }
   | { type: "stats"; data: Stats }
   | { type: "validatedPlaces"; data: CountryType[] }
+  | { type: "manageNotifications" }
   | { type: "signOut" }
   | { type: "deleteAccount" };
 
@@ -69,6 +71,7 @@ export function ProfileContent({
     }
 
     if (showSignOutButton) {
+      baseSections.push({ type: "manageNotifications" });
       baseSections.push({ type: "signOut" });
       baseSections.push({ type: "deleteAccount" });
     }
@@ -125,6 +128,12 @@ export function ProfileContent({
                 allowProfileEdit={allowProfileEdit}
                 userId={targetUserIdForVisitedPois}
               />
+            </Box>
+          );
+        case "manageNotifications":
+          return (
+            <Box className="px-4">
+              <ProfileManageNotificationsRow />
             </Box>
           );
         case "signOut":
