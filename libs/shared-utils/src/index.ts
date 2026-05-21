@@ -1,5 +1,30 @@
 export { NICKNAME_MAX_LENGTH } from "./constants.js";
 export {
+  IGNORED_DETECTION_HOURS,
+  MAX_PUSH_PER_DAY,
+  MAX_PUSH_PER_WEEK,
+  MIN_HOURS_BETWEEN_PUSH,
+  QUIET_HOURS_END,
+  QUIET_HOURS_START,
+  RECENT_SESSION_HOURS,
+} from "./notifications/anti-spam.js";
+export { renderTemplate } from "./notifications/render.js";
+export {
+  NOTIFICATION_TEMPLATE_KEYS,
+  type NotificationTemplateKey,
+} from "./notifications/template-keys.js";
+export { NOTIFICATION_TEMPLATES } from "./notifications/templates.js";
+export {
+  NOTIFICATION_CHANNEL_IDS,
+  NOTIFICATION_PRIORITIES,
+  type NotificationChannelId,
+  type NotificationPriority,
+  type NotificationTemplate,
+  type NotificationTemplateVariant,
+  type NotificationTriggerSource,
+  type RenderedTemplate,
+} from "./notifications/types.js";
+export {
   type AboutItem,
   AboutItemSchema,
   type AboutOption,

@@ -1,3 +1,4 @@
+import { type NotificationChannelId } from "@vagabond/shared-utils";
 import { Platform } from "react-native";
 import notifee, {
   type AndroidChannel,
@@ -5,11 +6,6 @@ import notifee, {
 } from "react-native-notify-kit";
 
 import { logger } from "@/utils/logger";
-
-export type NotificationChannelId =
-  | "activity_progression"
-  | "proximity"
-  | "inactivity";
 
 interface NotificationChannelDescriptor {
   id: NotificationChannelId;
