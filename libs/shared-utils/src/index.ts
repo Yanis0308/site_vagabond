@@ -234,7 +234,7 @@ export {
   Nullable,
 } from "./schemas/utils.js";
 export { logger } from "./utils/logger.js";
-export { getFilterLevelName } from "./utils/poi.js";
+export { getFilterLevelName, getMvtIdFromPoiId } from "./utils/poi.js";
 export { slugifyNickname } from "./utils/slug.js";
 export { getUserDisplayName } from "./utils/user.js";
 export { generateValidator, validateWithSchema } from "./utils/validation.js";

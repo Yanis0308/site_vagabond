@@ -3,25 +3,32 @@ import { type ReactElement } from "react";
 
 import { MAP_LAYER_IDS } from "@/constants/MapLayerIds";
 import { voronoi } from "@/constants/MapLayersStyles";
+import { MAP_SOURCE_LAYER_IDS } from "@/constants/MapSources";
+
+// Aligné sur MapPOILayers : voronoi/icônes apparaissent au même niveau de zoom.
+const MIN_ZOOM_LEVEL = 10;
 
 interface MapVoronoiLayersProps {
   sourceId: string;
-  visitedPoiIds: string[];
   selectedPlaceId?: string | null;
 }
 
+// VG-471 — Le visited/unvisited est piloté via feature-state ["feature-state", "visited"],
+// posé par useApplyVisitedFeatureStates. Plus aucune liste d'IDs n'est passée en prop ni
+// inlinée dans les expressions de style : zéro scan O(K) par frame.
 export const MapVoronoiLayers = ({
   sourceId,
-  visitedPoiIds,
   selectedPlaceId,
 }: MapVoronoiLayersProps): ReactElement => {
   const selectedId = selectedPlaceId ?? "";
+
+  const isVisitedExpr = ["boolean", ["feature-state", "visited"], false];
 
   const voronoiFillColor = [
     "case",
     ["==", ["get", "poiId"], ["literal", selectedId]],
     voronoi.fill.childColor.selected,
-    ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+    isVisitedExpr,
     voronoi.fill.childColor.completed,
     voronoi.fill.childColor.unvisited,
   ];
@@ -30,7 +37,7 @@ export const MapVoronoiLayers = ({
     "case",
     ["==", ["get", "poiId"], ["literal", selectedId]],
     voronoi.line.childColor.selected,
-    ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+    isVisitedExpr,
     voronoi.line.childColor.completed,
     voronoi.line.childColor.unvisited,
   ];
@@ -46,7 +53,7 @@ export const MapVoronoiLayers = ({
     "case",
     ["==", ["get", "poiId"], ["literal", selectedId]],
     voronoi.fill.opacity.selected,
-    ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
+    isVisitedExpr,
     voronoi.fill.opacity.completed,
     voronoi.fill.opacity.unvisited,
   ];
@@ -56,7 +63,8 @@ export const MapVoronoiLayers = ({
       <FillLayer
         id={MAP_LAYER_IDS.VORONOI_FOG_FILL}
         sourceID={sourceId}
-        sourceLayerID="voronoi-zones-layer-v1"
+        sourceLayerID={MAP_SOURCE_LAYER_IDS.VORONOI_ZONES}
+        minZoomLevel={MIN_ZOOM_LEVEL}
         style={{
           fillColor: voronoiFillColor,
           fillOpacity: voronoiFillOpacity,
@@ -66,7 +74,8 @@ export const MapVoronoiLayers = ({
       <LineLayer
         id={MAP_LAYER_IDS.VORONOI_ZONE_OUTLINES}
         sourceID={sourceId}
-        sourceLayerID="voronoi-zones-layer-v1"
+        sourceLayerID={MAP_SOURCE_LAYER_IDS.VORONOI_ZONES}
+        minZoomLevel={MIN_ZOOM_LEVEL}
         style={{
           lineColor: voronoiLineColor,
           lineWidth: voronoiLineWidth,

@@ -240,6 +240,15 @@ local function filter_historic(tags)
     })
   end
 
+  -- Filter level LAXISTE: historic = castle (no conditions) — keep all castles
+  if tags.historic == "castle" then
+    return with_category({
+      class = "historic",
+      subclass = "castle",
+      filter_level = FILTER_LEVEL_LAXISTE,
+    })
+  end
+
   return nil
 end
 
@@ -314,12 +323,22 @@ end
 
 -- Leisure filter handler
 local function filter_leisure(tags)
-  -- Filter level STRICT: leisure = marina + (wikidata or wikipedia)
-  -- Note: park is commented out to reduce volume
-  if tags.leisure == "marina" and has_wiki_reference(tags) then
+  -- Filter level STRICT: leisure = park, marina + (wikidata or wikipedia)
+  if (tags.leisure == "marina" or tags.leisure == "park") and has_wiki_reference(
+    tags
+  ) then
     return with_category({
       class = "leisure",
       subclass = tags.leisure,
+      filter_level = FILTER_LEVEL_STRICT,
+    })
+  end
+
+  -- Filter level STRICT: leisure = stadium + wikidata AND wikipedia (both required)
+  if tags.leisure == "stadium" and tags.wikidata and tags.wikipedia then
+    return with_category({
+      class = "leisure",
+      subclass = "stadium",
       filter_level = FILTER_LEVEL_STRICT,
     })
   end

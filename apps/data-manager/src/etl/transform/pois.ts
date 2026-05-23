@@ -2,6 +2,7 @@ import {
   type ExtractedPoiDatabaseRow,
   ExtractedPoiDatabaseRowSchema,
   getFilterLevelName,
+  getMvtIdFromPoiId,
   logger,
   validateWithSchema,
 } from "@vagabond/shared-utils";
@@ -66,6 +67,7 @@ export async function processPois(
 // Types for GeoJSON export (Mapbox tileset)
 interface PoiGeoJSONProperties {
   poiId: string;
+  mvtId: number;
   name: string | null;
   filterLevel: string;
   mainCategory: string;
@@ -95,6 +97,7 @@ export async function generatePoisGeoJSON(
         type: "Feature",
         properties: {
           poiId: poi.id,
+          mvtId: getMvtIdFromPoiId(poi.id),
           name: poi.tags.name ?? null,
           filterLevel: getFilterLevelName(poi.filter_level),
           mainCategory: poi.main_category,

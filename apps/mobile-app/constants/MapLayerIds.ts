@@ -35,6 +35,7 @@ export const MAP_LAYER_IDS = {
 
   // POIs
   POI_ALL_POINTS: "all-points",
-  POI_ICONS: "custom-marker-symbol",
+  POI_ICONS_COLOR: "custom-marker-symbol-color",
+  POI_ICONS_BW: "custom-marker-symbol-bw",
   POI_LABELS: "place-names",
 } as const;

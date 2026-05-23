@@ -2,7 +2,7 @@ import { type MapView } from "@rnmapbox/maps";
 import { booleanPointInPolygon, point } from "@turf/turf";
 import { type Feature, type MultiPolygon, type Polygon } from "geojson";
 
-const SOURCE_ID = "remote-boundaries-source-lines";
+import { MAP_SOURCE_IDS } from "@/constants/MapSources";
 
 const isPolygonFeature = (f: Feature): f is Feature<Polygon | MultiPolygon> =>
   f.geometry.type === "Polygon" || f.geometry.type === "MultiPolygon";
@@ -17,7 +17,7 @@ export const getZoneFromLocation = async (
 
   // querySourceFeatures retourne Promise<GeoJSON.FeatureCollection> — pas de cast nécessaire.
   const result = await mapRef.querySourceFeatures(
-    SOURCE_ID,
+    MAP_SOURCE_IDS.BOUNDARIES_LINES,
     [],
     [sourceLayerId],
   );

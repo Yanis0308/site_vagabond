@@ -77,7 +77,7 @@ console.log("=".repeat(80));
 
 // PostgreSQL tuning for ETL (hierarchy queries, index creation)
 // Use \\" so the shell receives \" and properly quotes the database name (hyphens require quoting in PostgreSQL)
-await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "ALTER DATABASE \\"vagabond-data-manager\\" SET statement_timeout = '10min';"`;
+await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "ALTER DATABASE \\"vagabond-data-manager\\" SET statement_timeout = '1h';"`;
 await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "ALTER DATABASE \\"vagabond-data-manager\\" SET max_parallel_workers_per_gather = 4;"`;
 await $`docker exec postgresql-postgis-data-manager psql -U user -d vagabond-data-manager -c "ALTER DATABASE \\"vagabond-data-manager\\" SET work_mem = '1024MB';"`;
 console.log(

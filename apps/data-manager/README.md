@@ -64,7 +64,7 @@ Génère un dossier `output/schema_country_timestamp/` avec sous-dossiers `db/` 
 Chargement des fichiers JSONL en base de données :
 
 ```bash
-pnpm run load-db --transform-dir=france_2024_01_15_2025-01-01-12-00-00
+pnpm run load-db -- --transform-dir france_2024_01_15_2025-01-01-12-00-00
 ```
 
 **Obligatoire :** `--transform-dir` doit pointer vers un dossier existant dans `output/`.

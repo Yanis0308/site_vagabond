@@ -71,14 +71,14 @@ async function uploadSource(sourceId, filePath, username, label) {
 
 // Create and publish tileset
 async function createAndPublishTileset(username) {
-  const tilesetId = `${username}.pois-tileset-v1`;
+  const tilesetId = `${username}.pois-tileset-v2`;
   const recipeFilePath = `src/etl/load/pois-recipe.json`;
 
   console.log(`\n=== CREATE AND PUBLISH TILESET ===`);
 
   try {
     console.log(`🔨 Create tileset: ${tilesetId}`);
-    await $`tilesets create ${tilesetId} --recipe ${recipeFilePath} --name "POIs Tileset v1"`.pipe(
+    await $`tilesets create ${tilesetId} --recipe ${recipeFilePath} --name "POIs Tileset v2"`.pipe(
       process.stdout,
     );
 
@@ -150,8 +150,8 @@ async function main() {
 
     // 1. Upload sources
     console.log("\n=== UPLOAD DES SOURCES ===");
-    await uploadSource("pois-src-v1", geoJsonFile, username, "POIs");
-    await uploadSource("voronoi-src-v1", voronoiFile, username, "Voronoi");
+    await uploadSource("pois-src-v2", geoJsonFile, username, "POIs");
+    await uploadSource("voronoi-src-v2", voronoiFile, username, "Voronoi");
 
     // 2. Create and publish tileset
     await createAndPublishTileset(username);
@@ -162,10 +162,10 @@ async function main() {
     );
 
     console.log("\n📊 Tileset créé:");
-    console.log(`  • ${username}.pois-tileset-v1`);
+    console.log(`  • ${username}.pois-tileset-v2`);
     console.log("\n📋 Sources uploadées:");
-    console.log(`  • pois-src-v1`);
-    console.log(`  • voronoi-src-v1`);
+    console.log(`  • pois-src-v2`);
+    console.log(`  • voronoi-src-v2`);
   } catch (error) {
     console.error("❌ Erreur lors de l'upload Mapbox:", error.message);
     process.exit(1);

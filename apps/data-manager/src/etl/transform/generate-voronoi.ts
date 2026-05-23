@@ -1,5 +1,5 @@
 import * as turf from "@turf/turf";
-import { logger } from "@vagabond/shared-utils";
+import { getMvtIdFromPoiId, logger } from "@vagabond/shared-utils";
 import { Delaunay } from "d3-delaunay";
 import {
   type Feature,
@@ -19,6 +19,7 @@ import { type JsonlAssociationRecord, type JsonlPoiRecord } from "../types";
 
 interface VoronoiZoneProperties {
   poiId: string;
+  mvtId: number;
   cityId: string;
   cityName: string | null;
 }
@@ -267,6 +268,7 @@ async function processCityVoronoi(
         type: "Feature",
         properties: {
           poiId: poi.id,
+          mvtId: getMvtIdFromPoiId(poi.id),
           cityId,
           cityName: cityFeature.properties.name,
         },
@@ -355,6 +357,7 @@ async function processCityVoronoi(
         type: "Feature" as const,
         properties: {
           poiId: correspondingPoi.id,
+          mvtId: getMvtIdFromPoiId(correspondingPoi.id),
           cityId,
           cityName,
         },

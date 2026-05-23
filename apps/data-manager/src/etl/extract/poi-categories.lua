@@ -1,26 +1,28 @@
-local M = {}
+﻿local M = {}
 
 -- Priority list for main_category determination (lower index = higher priority)
 -- Must include all categories returned by resolve_category; unknown categories get DEFAULT_PRIORITY
 local PRIORITY_CATEGORIES = {
-  aquarium = 1,
-  zoo = 2,
-  museum = 3,
-  castle = 4,
-  place_of_worship = 5,
-  monument = 6,
-  theatre = 7,
-  townhall = 8,
-  fountain = 9,
-  bridge = 10,
-  marina = 11,
-  tower = 12,
-  viewpoint = 13,
-  memorial = 14,
-  sculpture = 15,
-  artwork = 16,
-  small_monument = 17,
-  attraction = 18,
+  stadium = 1,
+  aquarium = 2,
+  zoo = 3,
+  museum = 4,
+  castle = 5,
+  place_of_worship = 6,
+  monument = 7,
+  theatre = 8,
+  townhall = 9,
+  fountain = 10,
+  bridge = 11,
+  marina = 12,
+  tower = 13,
+  viewpoint = 14,
+  memorial = 15,
+  sculpture = 16,
+  artwork = 17,
+  small_monument = 18,
+  attraction = 19,
+  park = 20,
 }
 
 -- Default priority for unknown categories (sorted last for main_category)

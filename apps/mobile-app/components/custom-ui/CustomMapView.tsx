@@ -21,6 +21,8 @@ import { BoundarySymbolLayers } from "@/components/custom-ui/BoundarySymbolLayer
 import { MapPOILayers } from "@/components/custom-ui/MapPOILayers";
 import { MapVoronoiLayers } from "@/components/custom-ui/MapVoronoiLayers";
 import { config } from "@/constants/Config";
+import { MAP_SOURCE_IDS } from "@/constants/MapSources";
+import { useApplyVisitedFeatureStates } from "@/hooks/maps/useApplyVisitedFeatureStates";
 import { useMapImages } from "@/hooks/maps/useMapImages";
 import { type OnPressEventPoi } from "@/hooks/maps/useMapLogic";
 import { useUserVisitedPois } from "@/hooks/queries/useUserVisitedPois";
@@ -49,7 +51,13 @@ export const CustomMapView = function CustomMapView({
   const images = useMapImages();
   const {
     data: { visitedPoiIds },
+    isSuccess: isVisitedReady,
   } = useUserVisitedPois();
+  const { onDidFinishLoadingStyle } = useApplyVisitedFeatureStates(
+    mapRef,
+    visitedPoiIds,
+    isVisitedReady,
+  );
 
   const pulsing = { isEnabled: false };
 
@@ -57,9 +65,6 @@ export const CustomMapView = function CustomMapView({
     ne: [21.62109, 57.32652], // Northeast corner
     sw: [-13.88672, 35.46067], // Southwest corner
   };
-
-  const boundariesSourceId = "remote-boundaries-source";
-  const poisSourceId = "remote-pois-source";
 
   // Wrapper for vector source press events
   const handleVectorSourcePress = (event: OnPressEvent): void => {
@@ -72,6 +77,7 @@ export const CustomMapView = function CustomMapView({
       style={{ flex: 1 }}
       styleURL={config.mapboxStyleUrl}
       onCameraChanged={onCameraChanged}
+      onDidFinishLoadingStyle={onDidFinishLoadingStyle}
       projection={"globe"}
       compassEnabled={false}
       scaleBarEnabled={false}
@@ -104,51 +110,49 @@ export const CustomMapView = function CustomMapView({
 
       {/* 1. Boundary Fills (Bottom) */}
       <VectorSource
-        id={boundariesSourceId}
+        id={MAP_SOURCE_IDS.BOUNDARIES}
         url={config.mapboxBoundariesTilesetUrl}
       >
-        <BoundaryFillLayer sourceId={boundariesSourceId} />
+        <BoundaryFillLayer sourceId={MAP_SOURCE_IDS.BOUNDARIES} />
       </VectorSource>
 
       {/* 2. Voronoi Zones */}
       <VectorSource
-        id={`${poisSourceId}-voronoi`}
+        id={MAP_SOURCE_IDS.POIS_VORONOI}
         url={config.mapboxPoisTilesetUrl}
       >
         <MapVoronoiLayers
-          sourceId={`${poisSourceId}-voronoi`}
-          visitedPoiIds={visitedPoiIds}
+          sourceId={MAP_SOURCE_IDS.POIS_VORONOI}
           selectedPlaceId={selectedPlace?.id}
         />
       </VectorSource>
 
       {/* 3. Boundary Lines */}
       <VectorSource
-        id={`${boundariesSourceId}-lines`}
+        id={MAP_SOURCE_IDS.BOUNDARIES_LINES}
         url={config.mapboxBoundariesTilesetUrl}
       >
-        <BoundaryLineLayer sourceId={`${boundariesSourceId}-lines`} />
+        <BoundaryLineLayer sourceId={MAP_SOURCE_IDS.BOUNDARIES_LINES} />
       </VectorSource>
 
       {/* 4. POIs */}
       <VectorSource
-        id={poisSourceId}
+        id={MAP_SOURCE_IDS.POIS}
         url={config.mapboxPoisTilesetUrl}
         onPress={handleVectorSourcePress}
       >
         <MapPOILayers
-          sourceId={poisSourceId}
+          sourceId={MAP_SOURCE_IDS.POIS}
           selectedPlace={selectedPlace}
-          visitedPoiIds={visitedPoiIds}
         />
       </VectorSource>
 
       {/* 5. Boundary Labels (Top) */}
       <VectorSource
-        id={`${boundariesSourceId}-labels`}
+        id={MAP_SOURCE_IDS.BOUNDARIES_LABELS}
         url={config.mapboxBoundariesTilesetUrl}
       >
-        <BoundarySymbolLayers sourceId={`${boundariesSourceId}-labels`} />
+        <BoundarySymbolLayers sourceId={MAP_SOURCE_IDS.BOUNDARIES_LABELS} />
       </VectorSource>
     </MapView>
   );

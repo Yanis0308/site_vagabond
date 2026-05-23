@@ -2,12 +2,12 @@ import { SymbolLayer } from "@rnmapbox/maps";
 import { type ReactElement } from "react";
 
 import { MAP_LAYER_IDS } from "@/constants/MapLayerIds";
+import { MAP_SOURCE_LAYER_IDS } from "@/constants/MapSources";
 import { type PoiType } from "@/utils/types";
 
 interface MapPOILayersProps {
   sourceId: string;
   selectedPlace: PoiType | null;
-  visitedPoiIds: string[];
 }
 
 // Constants for zoom-based sizing
@@ -19,7 +19,7 @@ const ZOOM_LEVELS = {
 
 // POI layer configuration
 const POI_LAYER_CONFIG = {
-  sourceLayerId: "pois-data-layer-v1",
+  sourceLayerId: MAP_SOURCE_LAYER_IDS.POIS_DATA,
   minZoomLevel: 10,
   // maxZoomLevel: 22,
 } as const;
@@ -40,11 +40,6 @@ const SIZES = {
   },
   textSize: {
     [ZOOM_LEVELS.MIN]: { selected: 14, important: 8, other: 6 },
-    // [ZOOM_LEVELS.MID]: {
-    //   selected: 12,
-    //   important: 11,
-    //   other: 9,
-    // },
     [ZOOM_LEVELS.MAX]: {
       selected: 14,
       important: 12,
@@ -78,15 +73,6 @@ const createSizeInterpolation = (sizeConfig: SizeConfig, selectedId: string) =>
       sizeConfig[ZOOM_LEVELS.MIN].important,
       sizeConfig[ZOOM_LEVELS.MIN].other,
     ],
-    // ZOOM_LEVELS.MID,
-    // [
-    //   "case",
-    //   ["==", ["get", "poiId"], selectedId],
-    //   sizeConfig[ZOOM_LEVELS.MID].selected,
-    //   createFilterLevelCondition(),
-    //   sizeConfig[ZOOM_LEVELS.MID].important,
-    //   sizeConfig[ZOOM_LEVELS.MID].other,
-    // ],
     ZOOM_LEVELS.MAX,
     [
       "case",
@@ -113,15 +99,6 @@ const createTextSizeInterpolation = (selectedId: string) =>
       SIZES.textSize[ZOOM_LEVELS.MIN].important,
       SIZES.textSize[ZOOM_LEVELS.MIN].other,
     ],
-    // ZOOM_LEVELS.MID,
-    // [
-    //   "case",
-    //   ["==", ["get", "poiId"], selectedId],
-    //   // SIZES.textSize[ZOOM_LEVELS.MID].selected,
-    //   createFilterLevelCondition(),
-    //   // SIZES.textSize[ZOOM_LEVELS.MID].important,
-    //   // SIZES.textSize[ZOOM_LEVELS.MID].other,
-    // ],
     ZOOM_LEVELS.MAX,
     [
       "case",
@@ -133,85 +110,93 @@ const createTextSizeInterpolation = (selectedId: string) =>
     ],
   ] as const;
 
+// VG-471 — feature-state interdit dans iconImage (layout property). Solution :
+// 2 SymbolLayer superposées sur la même VectorSource, l'une `-color-v1` rendue
+// quand visited, l'autre `-bw-v1` rendue quand !visited. La bascule passe par
+// iconOpacity (paint property) qui, lui, accepte feature-state. iconAllowOverlap
+// reste true sur les deux (cohérent avec le comportement existant).
+const isVisitedExpr = ["boolean", ["feature-state", "visited"], false];
+
+const buildIconImageExpr = (suffix: "-color-v1" | "-bw-v1"): unknown[] => [
+  "concat",
+  [
+    "coalesce",
+    [
+      "match",
+      ["get", "mainCategory"],
+      "place_of_worship",
+      "religion",
+      "small_monument",
+      "small-monument",
+      ["get", "mainCategory"],
+    ],
+    "attraction",
+  ],
+  suffix,
+];
+
 export const MapPOILayers = ({
   sourceId,
   selectedPlace,
-  visitedPoiIds,
 }: MapPOILayersProps): ReactElement => {
+  // symbolSortKey est une layout property : feature-state y est interdit, donc
+  // le tri ne peut pas dépendre du statut visited. Le sortKey reste piloté par
+  // la sélection (-1000) et le filterLevel.
+  const symbolSortKey = [
+    "+",
+    ["case", ["==", ["get", "poiId"], selectedPlace?.id ?? ""], -1000, 0],
+    [
+      "case",
+      ["==", ["get", "filterLevel"], "STRICT"],
+      10,
+      ["==", ["get", "filterLevel"], "STANDARD"],
+      20,
+      ["==", ["get", "filterLevel"], "INTERMEDIATE"],
+      30,
+      ["==", ["get", "filterLevel"], "LAXIST"],
+      40,
+      0,
+    ],
+  ];
+
+  const commonLayerProps = {
+    sourceID: sourceId,
+    sourceLayerID: POI_LAYER_CONFIG.sourceLayerId,
+    minZoomLevel: POI_LAYER_CONFIG.minZoomLevel,
+  };
+
+  const iconCommonStyle = {
+    iconAllowOverlap: true,
+    iconSize: createSizeInterpolation(SIZES.iconSize, selectedPlace?.id ?? ""),
+    symbolSortKey,
+  };
+
   return (
     <>
-      {/* Couche pour les icônes sur tous les points */}
+      {/* Couche couleur : rendue quand feature-state visited === true */}
       <SymbolLayer
-        id={MAP_LAYER_IDS.POI_ICONS}
-        sourceID={sourceId}
-        sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
-        minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
-        // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
+        id={MAP_LAYER_IDS.POI_ICONS_COLOR}
+        {...commonLayerProps}
         style={{
-          // Category icons from Mapbox Studio: {category}-bw-v1 (unvisited) / {category}-color-v1 (visited)
-          // Maps mainCategory to icon name: place_of_worship→religion, small_monument→small-monument, fallback→attraction
-          iconImage: [
-            "concat",
-            [
-              "coalesce",
-              [
-                "match",
-                ["get", "mainCategory"],
-                "place_of_worship",
-                "religion",
-                "small_monument",
-                "small-monument",
-                ["get", "mainCategory"],
-              ],
-              "attraction",
-            ],
-            [
-              "case",
-              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
-              "-color-v1",
-              "-bw-v1",
-            ],
-          ],
-          iconAllowOverlap: true,
-          iconSize: createSizeInterpolation(
-            SIZES.iconSize,
-            selectedPlace?.id ?? "",
-          ),
-          // Priorité d'affichage : le point sélectionné a la priorité maximale
-          symbolSortKey: [
-            "+",
-            // PRIORITÉ MAXIMALE : Point sélectionné (-1000 points)
-            [
-              "case",
-              ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
-              -1000,
-              0,
-            ],
-            // Bonus pour les POI visités
-            ["case", ["get", "isVisited"], 0, 100],
-            // Bonus pour les niveaux de filtrage importants
-            [
-              "case",
-              ["==", ["get", "filterLevel"], "STRICT"],
-              10,
-              ["==", ["get", "filterLevel"], "STANDARD"],
-              20,
-              ["==", ["get", "filterLevel"], "INTERMEDIATE"],
-              30,
-              ["==", ["get", "filterLevel"], "LAXIST"],
-              40,
-              0, // UNKNOWN ou autres
-            ],
-          ],
+          ...iconCommonStyle,
+          iconImage: buildIconImageExpr("-color-v1"),
+          iconOpacity: ["case", isVisitedExpr, 1, 0],
+        }}
+      />
+      {/* Couche N&B : rendue quand feature-state visited === false */}
+      <SymbolLayer
+        id={MAP_LAYER_IDS.POI_ICONS_BW}
+        {...commonLayerProps}
+        style={{
+          ...iconCommonStyle,
+          iconImage: buildIconImageExpr("-bw-v1"),
+          iconOpacity: ["case", isVisitedExpr, 0, 1],
         }}
       />
       {/* Couche pour les noms des lieux - sans overlap */}
       <SymbolLayer
         id={MAP_LAYER_IDS.POI_LABELS}
-        sourceID={sourceId}
-        sourceLayerID={POI_LAYER_CONFIG.sourceLayerId}
-        minZoomLevel={POI_LAYER_CONFIG.minZoomLevel}
-        // maxZoomLevel={POI_LAYER_CONFIG.maxZoomLevel}
+        {...commonLayerProps}
         style={{
           textField: ["get", "name"],
           textFont: ["Open Sans Semibold", "Arial Unicode MS Regular"],
@@ -230,25 +215,15 @@ export const MapPOILayers = ({
           textOffset: [0, 0.75], // Décalage vers le bas pour éviter le chevauchement avec l'icône
           textAllowOverlap: false, // Les textes ne se chevauchent pas
           textIgnorePlacement: false,
-          textOptional: true, // Permet de masquer le texte si pas de place
-          // Priorité d'affichage : le point sélectionné a la priorité maximale
+          textOptional: true,
           symbolSortKey: [
             "+",
-            // PRIORITÉ MAXIMALE : Point sélectionné (-1000 points)
             [
               "case",
               ["==", ["get", "poiId"], selectedPlace?.id ?? ""],
               -1000,
               0,
             ],
-            // Bonus pour les POI visités
-            [
-              "case",
-              ["in", ["get", "poiId"], ["literal", visitedPoiIds]],
-              0,
-              100,
-            ],
-            // Bonus pour les niveaux de filtrage importants
             [
               "case",
               ["==", ["get", "filterLevel"], "STRICT"],
@@ -259,7 +234,7 @@ export const MapPOILayers = ({
               20,
               ["==", ["get", "filterLevel"], "LAXIST"],
               30,
-              40, // UNKNOWN ou autres
+              40,
             ],
           ],
         }}
