@@ -1,10 +1,13 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { type ReactElement, useEffect, useMemo, useState } from "react";
+import { type ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
-import { CustomTextarea } from "@/components/custom-ui/CustomTextarea";
+import {
+  CustomTextarea,
+  type CustomTextareaRef,
+} from "@/components/custom-ui/CustomTextarea";
 import { OptionChip } from "@/components/place-details/user-feedback-modal/OptionChip";
 import {
   buildMapFeedbackInput,
@@ -23,6 +26,7 @@ export default function UserFeedbackMapRoute(): ReactElement {
   const { t } = useTranslation("common");
   const normalizedCity = normalizeStringSearchParam(city);
   const mutation = useCreateUserFeedback();
+  const textareaRef = useRef<CustomTextareaRef>(null);
   const [selectedType, setSelectedType] = useState<MapFeedbackType | null>(
     null,
   );
@@ -103,6 +107,9 @@ export default function UserFeedbackMapRoute(): ReactElement {
                 if (mutation.isError) {
                   mutation.reset();
                 }
+                setTimeout(() => {
+                  textareaRef.current?.focus();
+                }, 100);
               }}
             />
           );
@@ -114,6 +121,7 @@ export default function UserFeedbackMapRoute(): ReactElement {
           {t("user_feedback.map.modal.message_label")}
         </CustomText>
         <CustomTextarea
+          ref={textareaRef}
           placeholder={placeholder}
           value={message}
           isInvalid={isMessageTooShort}

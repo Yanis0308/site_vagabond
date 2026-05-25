@@ -110,7 +110,7 @@
       }
     },
     "place_details": {
-      "cta": "Report an error",
+      "cta": "⚠\uFE0F Report an error",
       "modal": {
         "title": "Report an error",
         "subtitle": "Your feedback helps improve Vagabond 🙌 It takes less than 10 seconds.",

@@ -20,7 +20,7 @@ export const PlaceDetailsUserFeedback = ({
         className="self-center px-4 py-2"
         href={`/user-feedback/${placeId}`}
       >
-        <ButtonText className="text-base text-primary-600">
+        <ButtonText className="text-base text-primary-600 no-underline">
           {t("user_feedback.place_details.cta")}
         </ButtonText>
       </Button>

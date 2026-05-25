@@ -4,15 +4,13 @@ import {
   LocationPuck,
   type MapState,
   MapView,
-  UserTrackingMode,
   VectorSource,
+  Viewport,
 } from "@rnmapbox/maps";
-import {
-  type CameraRef,
-  type UserTrackingModeChangeCallback,
-} from "@rnmapbox/maps/lib/typescript/src/components/Camera";
+import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
+import { type Viewport as ViewportRef } from "@rnmapbox/maps/lib/typescript/src/components/Viewport";
 import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
-import { type ReactElement, type RefObject } from "react";
+import { type ReactElement, type RefObject, useCallback } from "react";
 import { Platform } from "react-native";
 
 import { BoundaryFillLayer } from "@/components/custom-ui/BoundaryFillLayer";
@@ -28,36 +26,43 @@ import { type OnPressEventPoi } from "@/hooks/maps/useMapLogic";
 import { useUserVisitedPois } from "@/hooks/queries/useUserVisitedPois";
 import { type PoiType } from "@/utils/types";
 
-// Types
 interface CustomMapViewProps {
   mapRef: RefObject<MapView | null>;
   cameraRef: RefObject<CameraRef | null>;
+  viewportRef: RefObject<ViewportRef | null>;
   selectedPlace: PoiType | null;
-  isFollowingUser: boolean;
   onCameraChanged: (mapState: MapState) => void;
-  onUserTrackingModeChange: UserTrackingModeChangeCallback;
+  onViewportStatusChanged: (event: {
+    from: { kind: string };
+    to: { kind: string; state?: { kind: string } };
+    reason: string;
+  }) => void;
   onPress: (event: OnPressEventPoi) => void;
+  onMapReady: () => void;
 }
 
 export const CustomMapView = function CustomMapView({
   mapRef,
   cameraRef,
+  viewportRef,
   selectedPlace,
-  isFollowingUser,
   onCameraChanged,
-  onUserTrackingModeChange,
+  onViewportStatusChanged,
   onPress,
+  onMapReady,
 }: CustomMapViewProps): ReactElement {
   const images = useMapImages();
   const {
     data: { visitedPoiIds },
     isSuccess: isVisitedReady,
   } = useUserVisitedPois();
-  const { onDidFinishLoadingStyle } = useApplyVisitedFeatureStates(
-    mapRef,
-    visitedPoiIds,
-    isVisitedReady,
-  );
+  const { onDidFinishLoadingStyle: applyVisitedStates } =
+    useApplyVisitedFeatureStates(mapRef, visitedPoiIds, isVisitedReady);
+
+  const handleDidFinishLoadingStyle = useCallback((): void => {
+    applyVisitedStates();
+    onMapReady();
+  }, [applyVisitedStates, onMapReady]);
 
   const pulsing = { isEnabled: false };
 
@@ -66,7 +71,6 @@ export const CustomMapView = function CustomMapView({
     sw: [-13.88672, 35.46067], // Southwest corner
   };
 
-  // Wrapper for vector source press events
   const handleVectorSourcePress = (event: OnPressEvent): void => {
     onPress(event as OnPressEventPoi);
   };
@@ -77,22 +81,14 @@ export const CustomMapView = function CustomMapView({
       style={{ flex: 1 }}
       styleURL={config.mapboxStyleUrl}
       onCameraChanged={onCameraChanged}
-      onDidFinishLoadingStyle={onDidFinishLoadingStyle}
+      onDidFinishLoadingStyle={handleDidFinishLoadingStyle}
       projection={"globe"}
       compassEnabled={false}
       scaleBarEnabled={false}
       pitchEnabled={false}
     >
-      <Camera
-        pitch={0}
-        heading={0}
-        ref={cameraRef}
-        maxBounds={maxBounds}
-        followUserLocation={isFollowingUser}
-        followUserMode={UserTrackingMode.Follow}
-        followZoomLevel={14}
-        onUserTrackingModeChange={onUserTrackingModeChange}
-      />
+      <Camera ref={cameraRef} maxBounds={maxBounds} />
+      <Viewport ref={viewportRef} onStatusChanged={onViewportStatusChanged} />
       <LocationPuck
         puckBearingEnabled
         puckBearing="heading"

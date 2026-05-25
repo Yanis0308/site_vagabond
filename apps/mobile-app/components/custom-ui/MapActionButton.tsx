@@ -5,7 +5,7 @@ import {
   SlidersHorizontal,
   TriangleAlert,
 } from "lucide-react-native";
-import React, { memo, useCallback } from "react";
+import React, { memo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { cn } from "@/utils/cn";
@@ -15,7 +15,11 @@ import { Button, ButtonIcon } from "../ui/button";
 import { themeColors } from "../ui/gluestack-ui-provider/config";
 
 export type MapActionType =
-  | { type: "locate"; onPress?: () => void; isCentered?: boolean }
+  | {
+      type: "locate";
+      onPress?: () => void;
+      isCentered?: boolean;
+    }
   | { type: "compass"; onPress?: () => void; heading: number }
   | { type: "feedback"; onPress?: () => void }
   | { type: "filter"; onPress?: () => void }
@@ -36,10 +40,10 @@ export const MapActionButton = memo(function MapActionButton({
       ? t("user_feedback.place_suggestion.button_a11y_label")
       : undefined;
 
-  const icon = useCallback(() => {
+  const renderIcon = (): React.JSX.Element | null => {
     switch (action.type) {
       case "locate":
-        return action.isCentered ? (
+        return action.isCentered === true ? (
           <LocateFixedIcon
             color={themeColors.burntOrange["700"].hex}
             size={32}
@@ -87,17 +91,20 @@ export const MapActionButton = memo(function MapActionButton({
       default:
         return null;
     }
-  }, [action]);
+  };
 
   return (
     <Button
       onPress={action.onPress}
       action="mapAction"
       size="none"
-      className={cn("border border-burntOrange-700", className)}
+      className={cn(
+        "h-[50px] w-[50px] border border-burntOrange-700",
+        className,
+      )}
       accessibilityLabel={accessibilityLabel}
     >
-      <ButtonIcon as={icon} />
+      <ButtonIcon as={renderIcon} />
     </Button>
   );
 });

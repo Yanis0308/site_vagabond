@@ -5,7 +5,10 @@ import { Platform } from "react-native";
 import { check, PERMISSIONS, request, RESULTS } from "react-native-permissions";
 
 import { locationPermissionResolvedAtom } from "@/stores/locationPermissionResolvedAtom";
-import { userLocationAtom } from "@/stores/userLocationAtom";
+import {
+  userLocationAtom,
+  userLocationPermissionAtom,
+} from "@/stores/userLocationAtom";
 import { logger } from "@/utils/logger";
 
 const LOCATION_PERMISSION =
@@ -18,6 +21,7 @@ export const useUserLocationWatcher = (): void => {
   const setLocationPermissionResolved = useSetAtom(
     locationPermissionResolvedAtom,
   );
+  const setPermissionStatus = useSetAtom(userLocationPermissionAtom);
 
   useEffect(() => {
     let subscription: { remove: () => void } | null = null;
@@ -31,9 +35,11 @@ export const useUserLocationWatcher = (): void => {
 
       if (status !== RESULTS.GRANTED) {
         logger("[LocationWatcher] Permission not granted");
+        setPermissionStatus("denied");
         return;
       }
 
+      setPermissionStatus("granted");
       subscription = await Location.watchPositionAsync(
         {
           accuracy: Location.Accuracy.Highest,
@@ -52,5 +58,5 @@ export const useUserLocationWatcher = (): void => {
         subscription = null;
       }
     };
-  }, [setUserLocation, setLocationPermissionResolved]);
+  }, [setUserLocation, setLocationPermissionResolved, setPermissionStatus]);
 };

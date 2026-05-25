@@ -150,18 +150,11 @@ export default function UserFeedbackRoute(): ReactElement | null {
         <InformationStep
           selectedInformationType={selectedInformationType}
           onSelectInformationType={handleSelectInformationType}
-          onBack={handleBack}
         />
       );
     }
 
-    return (
-      <CommentStep
-        message={message}
-        onChangeMessage={setMessage}
-        onBack={handleBack}
-      />
-    );
+    return <CommentStep message={message} onChangeMessage={setMessage} />;
   };
 
   return (
@@ -173,11 +166,12 @@ export default function UserFeedbackRoute(): ReactElement | null {
       successMessageKey="user_feedback.place_details.modal.success_message"
       isPending={mutation.isPending}
       isSuccess={mutation.isSuccess}
-      showFooter={currentStep === "comment"}
+      showSubmit={currentStep === "comment"}
       isSubmitDisabled={isSubmitDisabled}
       errorMessage={mutation.error?.message}
       onClose={handleClose}
       onSubmit={handleSubmit}
+      onBack={currentStep !== "reason" ? handleBack : undefined}
       onRetry={handleSubmit}
       onSuccessClose={handleClose}
     >

@@ -14,6 +14,7 @@ interface MapButtonsProps {
   onFilterPress?: () => void;
   isCentered?: boolean;
   heading?: number;
+  isLocationDenied: boolean;
 }
 
 export const MapButtons = memo(
@@ -25,7 +26,8 @@ export const MapButtons = memo(
     onFilterPress,
     isCentered = false,
     heading = 0,
-  }: MapButtonsProps) => {
+    isLocationDenied,
+  }: MapButtonsProps): React.JSX.Element => {
     const safeAreaInsets = useSafeAreaCustom();
     const { height: displayHeight } = useWindowDimensions();
     const bottomMargin =
@@ -76,7 +78,9 @@ export const MapButtons = memo(
           >
             <MapActionButton action={compassAction} />
           </View>
-          <MapActionButton action={locateAction} />
+          {!isLocationDenied && onLocatePress !== undefined && (
+            <MapActionButton action={locateAction} />
+          )}
           {onFeedbackPress !== undefined && (
             <MapActionButton action={feedbackAction} />
           )}

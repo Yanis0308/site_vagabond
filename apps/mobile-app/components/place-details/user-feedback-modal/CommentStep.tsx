@@ -1,47 +1,45 @@
-import { type ReactElement } from "react";
+import { type ReactElement, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { View } from "react-native";
 
 import { CustomText } from "@/components/custom-ui/CustomText";
-import { CustomTextarea } from "@/components/custom-ui/CustomTextarea";
-import { Button, ButtonText } from "@/components/ui/button";
+import {
+  CustomTextarea,
+  type CustomTextareaRef,
+} from "@/components/custom-ui/CustomTextarea";
 
 interface CommentStepProps {
   message: string;
   onChangeMessage: (value: string) => void;
-  onBack: () => void;
 }
 
 export const CommentStep = ({
   message,
   onChangeMessage,
-  onBack,
 }: CommentStepProps): ReactElement => {
   const { t } = useTranslation("common");
+  const textareaRef = useRef<CustomTextareaRef>(null);
+
+  useEffect(() => {
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 100);
+  }, []);
 
   return (
-    <View>
-      <View className="gap-3">
-        <CustomText className="text-sm font-semibold text-typography-900">
-          {t("user_feedback.place_details.modal.free_text_label")}
-        </CustomText>
-        <CustomTextarea
-          placeholder={t(
-            "user_feedback.place_details.modal.free_text_placeholder",
-          )}
-          value={message}
-          onChange={onChangeMessage}
-        />
-      </View>
-
-      <Button
-        action="secondary"
-        size="medium"
-        className="mt-6"
-        onPress={onBack}
-      >
-        <ButtonText>{t("user_feedback.place_details.modal.back")}</ButtonText>
-      </Button>
+    <View className="gap-3">
+      <CustomText className="text-sm font-semibold text-typography-900">
+        {t("user_feedback.place_details.modal.free_text_label")}
+      </CustomText>
+      <CustomTextarea
+        ref={textareaRef}
+        autoFocus
+        placeholder={t(
+          "user_feedback.place_details.modal.free_text_placeholder",
+        )}
+        value={message}
+        onChange={onChangeMessage}
+      />
     </View>
   );
 };

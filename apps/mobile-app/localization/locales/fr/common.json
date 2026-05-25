@@ -110,7 +110,7 @@
       }
     },
     "place_details": {
-      "cta": "Signaler une erreur",
+      "cta": "⚠\uFE0F Signaler une erreur",
       "modal": {
         "title": "Signaler une erreur",
         "subtitle": "Ton avis nous aide à améliorer Vagabond 🙌 Ça prend moins de 10 secondes.",

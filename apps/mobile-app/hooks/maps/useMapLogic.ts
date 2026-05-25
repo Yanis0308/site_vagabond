@@ -1,13 +1,17 @@
 import { type MapState, type MapView } from "@rnmapbox/maps";
-import {
-  type CameraRef,
-  type UserTrackingModeChangeCallback,
-} from "@rnmapbox/maps/lib/typescript/src/components/Camera";
+import { type CameraRef } from "@rnmapbox/maps/lib/typescript/src/components/Camera";
+import { type Viewport } from "@rnmapbox/maps/lib/typescript/src/components/Viewport";
 import { type OnPressEvent } from "@rnmapbox/maps/lib/typescript/src/types/OnPressEvent";
 import { useThrottler } from "@tanstack/react-pacer";
 import { type PoiFilterLevelEnum } from "@vagabond/shared-utils";
 import { type Feature, type Geometry } from "geojson";
-import { type RefObject, useEffect, useRef, useState } from "react";
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { usePlaceSelection } from "@/hooks/other/usePlaceSelection";
 import {
@@ -44,10 +48,16 @@ interface UseMapLogicReturn {
   // Refs
   mapRef: RefObject<MapView | null>;
   cameraRef: RefObject<CameraRef | null>;
+  viewportRef: RefObject<Viewport | null>;
 
   // Event handlers
   onCameraChanged: (mapState: MapState) => void;
-  onUserTrackingModeChange: UserTrackingModeChangeCallback;
+  onViewportStatusChanged: (event: {
+    from: { kind: string };
+    to: { kind: string; state?: { kind: string } };
+    reason: string;
+  }) => void;
+  onMapReady: () => void;
   onPress: (event: OnPressEventPoi) => void;
 
   // Actions
@@ -65,19 +75,38 @@ export const useMapLogic = (): UseMapLogicReturn => {
   // États pour le zoom et heading (uniquement pour affichage en temps réel)
   const [headingRealtime, setHeadingRealtime] = useState(0);
   const [zoomRealtime, setZoomRealtime] = useState<number | null>(null);
-  // Follow on by default — Mapbox waits for the first GPS fix and then
-  // centers on the puck, replacing the previous "first-centering" effect.
-  const [isFollowingUser, setIsFollowingUser] = useState(true);
+  const [isFollowingUser, setIsFollowingUser] = useState(false);
   const [mapCenter, setMapCenter] = useState<MapCenter | null>(null);
 
   const mapRef = useRef<MapView>(null);
   const cameraRef = useRef<CameraRef>(null);
+  const viewportRef = useRef<Viewport>(null);
 
   // Hook unifié pour gérer la sélection de lieu
   const { setSelectedPlace } = usePlaceSelection();
 
+  const followPuck = useCallback(async (immediate: boolean): Promise<void> => {
+    if (viewportRef.current === null) return;
+    const succeeded = await viewportRef.current.transitionTo(
+      {
+        kind: "followPuck",
+        options: { zoom: 14, bearing: "keep", pitch: "keep" },
+      },
+      immediate
+        ? { kind: "immediate" }
+        : { kind: "default", maxDurationMs: 1500 },
+    );
+    if (succeeded) {
+      setIsFollowingUser(true);
+    }
+  }, []);
+
+  const onMapReady = useCallback((): void => {
+    void followPuck(true);
+  }, [followPuck]);
+
   const moveToUserLocation = (): void => {
-    setIsFollowingUser(true);
+    void followPuck(false);
   };
 
   const resetMapOrientation = (): void => {
@@ -99,7 +128,9 @@ export const useMapLogic = (): UseMapLogicReturn => {
       return;
     }
 
-    setIsFollowingUser(false);
+    if (viewportRef.current !== null) {
+      void viewportRef.current.idle();
+    }
 
     // Apply north offset for POI to keep it visible above the bottom sheet
     // The bottom sheet occupies 60% of the screen height, so we shift the camera
@@ -145,8 +176,28 @@ export const useMapLogic = (): UseMapLogicReturn => {
     cameraChangedDebouncer.maybeExecute(mapState);
   };
 
-  const onUserTrackingModeChange: UserTrackingModeChangeCallback = (event) => {
-    setIsFollowingUser(event.nativeEvent.payload.followUserLocation);
+  const onViewportStatusChanged = (event: {
+    from: { kind: string };
+    to: { kind: string; state?: { kind: string } };
+    reason: string;
+  }): void => {
+    const { to, reason } = event;
+
+    if (reason === "TransitionStarted") return;
+
+    if (to.kind === "idle") {
+      setIsFollowingUser(false);
+      return;
+    }
+
+    if (to.kind === "state" && to.state?.kind === "followPuck") {
+      setIsFollowingUser(true);
+      return;
+    }
+
+    if (reason === "UserInteraction") {
+      setIsFollowingUser(false);
+    }
   };
 
   const onPress = (event: OnPressEventPoi): void => {
@@ -203,10 +254,12 @@ export const useMapLogic = (): UseMapLogicReturn => {
     // Refs
     mapRef,
     cameraRef,
+    viewportRef,
 
     // Event handlers
     onCameraChanged,
-    onUserTrackingModeChange,
+    onViewportStatusChanged,
+    onMapReady,
     onPress,
 
     // Actions

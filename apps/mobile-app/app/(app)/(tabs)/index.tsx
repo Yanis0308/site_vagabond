@@ -27,6 +27,7 @@ import { mapService } from "@/services/MapService";
 import { saveDraftPhoto } from "@/services/photoStorage";
 import { currentPhotoAtom } from "@/stores/currentPhotoAtom";
 import { displayingLoaderAtom } from "@/stores/displayingLoaderAtom";
+import { userLocationPermissionAtom } from "@/stores/userLocationAtom";
 import { compressImage } from "@/utils/imageCompressor";
 import { logger } from "@/utils/logger";
 import { waitForFile } from "@/utils/waitForFile";
@@ -36,8 +37,10 @@ export default function MapsTab(): ReactElement {
   const {
     mapRef,
     cameraRef,
+    viewportRef,
     onCameraChanged,
-    onUserTrackingModeChange,
+    onViewportStatusChanged,
+    onMapReady,
     onPress,
     moveToUserLocation,
     resetMapOrientation,
@@ -47,6 +50,9 @@ export default function MapsTab(): ReactElement {
     moveToPlace,
     mapCenter,
   } = useMapLogic();
+
+  const locationPermissionStatus = useAtomValue(userLocationPermissionAtom);
+  const isLocationDenied = locationPermissionStatus === "denied";
 
   const zoneName = useMapZoneInfo({
     mapView: mapRef.current,
@@ -268,16 +274,18 @@ export default function MapsTab(): ReactElement {
         <CustomMapView
           mapRef={mapRef}
           cameraRef={cameraRef}
+          viewportRef={viewportRef}
           selectedPlace={selectedPlace}
-          isFollowingUser={isFollowingUser}
           onCameraChanged={onCameraChanged}
-          onUserTrackingModeChange={onUserTrackingModeChange}
+          onViewportStatusChanged={onViewportStatusChanged}
+          onMapReady={onMapReady}
           onPress={onPress}
         />
 
         <MapButtons
+          isLocationDenied={isLocationDenied}
           onCompassPress={resetMapOrientation}
-          onLocatePress={() => {
+          onLocatePress={(): void => {
             void trackEvent("map_recenter_pressed");
             moveToUserLocation();
           }}

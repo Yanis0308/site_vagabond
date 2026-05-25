@@ -14,7 +14,7 @@ const RuntimeConfigSchema = z.object({
   mapboxBoundariesTilesetUrl: z.string(),
   mapboxPoisTilesetUrl: z.string(),
   isDevEnv: z.boolean(),
-  buildProfile: z.enum(["development", "preview", "production"]),
+  buildProfile: z.enum(["development", "preview", "production"]).optional(),
 });
 
 const appConfigSchema = z.object({

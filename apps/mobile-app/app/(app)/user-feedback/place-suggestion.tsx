@@ -75,6 +75,7 @@ export default function PlaceSuggestionRoute(): ReactElement {
         </CustomText>
         <Input className="rounded-2xl border border-background-300 bg-background-50">
           <InputField
+            autoFocus
             value={placeName}
             onChangeText={(value: string) => {
               setPlaceName(value);
@@ -83,7 +84,6 @@ export default function PlaceSuggestionRoute(): ReactElement {
             placeholder={t(
               "user_feedback.place_suggestion.modal.place_name_placeholder",
             )}
-            className="px-4 py-3"
           />
         </Input>
       </View>
@@ -103,7 +103,6 @@ export default function PlaceSuggestionRoute(): ReactElement {
             placeholder={t(
               "user_feedback.place_suggestion.modal.address_placeholder",
             )}
-            className="px-4 py-3"
           />
         </Input>
       </View>
