@@ -14,6 +14,7 @@ import {
 import escapeHtml from "escape-html";
 import { getAuth } from "firebase-admin/auth";
 
+import { asMobileRequest } from "../../types/mobile-request.js";
 import { captureAndLog } from "../../utils/logger.js";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
@@ -29,18 +30,19 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const user = request.user.db;
+      const { user } = asMobileRequest(request);
+      const dbUser = user.db;
       const hasAppReview = await fastify.dbRepositories.user.hasUserAppReview(
-        user.userId,
+        dbUser.userId,
       );
 
       return await reply.status(200).send({
         data: {
-          ...user,
-          id: user.userId,
-          lastLogin: user.lastLogin.toISOString(),
-          createdAt: user.createdAt.toISOString(),
-          oauthProviders: user.oauthProviders ?? [],
+          ...dbUser,
+          id: dbUser.userId,
+          lastLogin: dbUser.lastLogin.toISOString(),
+          createdAt: dbUser.createdAt.toISOString(),
+          oauthProviders: dbUser.oauthProviders ?? [],
           hasAppReview,
         },
       });
@@ -59,7 +61,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const user = request.user.db;
+      const { user } = asMobileRequest(request);
+      const dbUser = user.db;
       const { nickname, isPrivate } = request.body;
 
       const updateData: Parameters<
@@ -68,7 +71,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       if (nickname !== undefined) updateData.nickname = nickname;
       if (isPrivate !== undefined) updateData.isPrivate = isPrivate;
 
-      await fastify.dbRepositories.user.updateUser(user.userId, updateData);
+      await fastify.dbRepositories.user.updateUser(dbUser.userId, updateData);
 
       return await reply.status(200).send({ data: {} });
     },
@@ -122,7 +125,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const { userId } = request.user.db;
+      const { user } = asMobileRequest(request);
+      const { userId } = user.db;
       const { positive, comment } = request.body;
 
       try {
@@ -145,8 +149,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       if (!positive) {
         void (async (): Promise<void> => {
           try {
-            const safeFullName = escapeHtml(request.user.db.fullName);
-            const safeEmail = escapeHtml(request.user.email);
+            const safeFullName = escapeHtml(user.db.fullName);
+            const safeEmail = escapeHtml(user.email);
             const safeComment = escapeHtml(comment);
 
             await fastify.slack.sendAppReviewMessage(
@@ -184,7 +188,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const { userId } = request.user.db;
+      const { user } = asMobileRequest(request);
+      const { userId } = user.db;
 
       await fastify.dbRepositories.user.deleteUser(userId);
 

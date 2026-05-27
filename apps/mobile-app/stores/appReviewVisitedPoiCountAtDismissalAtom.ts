@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { validateWithSchema } from "@vagabond/shared-utils";
+import { generateValidator } from "@vagabond/shared-utils";
 import { useAtom } from "jotai";
 import {
   atomWithStorage,
@@ -12,12 +12,16 @@ import { logger } from "@/utils/logger";
 
 const AppReviewVisitedPoiCountAtDismissalSchema = Type.Number();
 
+const validateAppReviewVisitedPoiCountAtDismissal = generateValidator(
+  AppReviewVisitedPoiCountAtDismissalSchema,
+);
+
 type AppReviewVisitedPoiCountAtDismissal = number | undefined;
 
 const storage = withStorageValidator<AppReviewVisitedPoiCountAtDismissal>(
   (value: unknown): value is AppReviewVisitedPoiCountAtDismissal => {
     if (value === undefined) return true;
-    if (!validateWithSchema(AppReviewVisitedPoiCountAtDismissalSchema, value)) {
+    if (!validateAppReviewVisitedPoiCountAtDismissal(value)) {
       logger(
         "Invalid app review visited-poi-count-at-dismissal value, atom should be cleared",
         value,

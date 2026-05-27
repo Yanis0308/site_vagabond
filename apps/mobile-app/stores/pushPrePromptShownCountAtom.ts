@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { validateWithSchema } from "@vagabond/shared-utils";
+import { generateValidator } from "@vagabond/shared-utils";
 import { useAtom } from "jotai";
 import {
   atomWithStorage,
@@ -14,10 +14,14 @@ const PushPrePromptShownCountSchema = Type.Number();
 
 type PushPrePromptShownCount = number | undefined;
 
+const validatePushPrePromptShownCount = generateValidator(
+  PushPrePromptShownCountSchema,
+);
+
 const storage = withStorageValidator<PushPrePromptShownCount>(
   (value: unknown): value is PushPrePromptShownCount => {
     if (value === undefined) return true;
-    if (!validateWithSchema(PushPrePromptShownCountSchema, value)) {
+    if (!validatePushPrePromptShownCount(value)) {
       logger(
         "Invalid push-pre-prompt-shown-count value, atom should be cleared",
         value,

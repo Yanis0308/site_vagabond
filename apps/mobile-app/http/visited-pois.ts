@@ -1,7 +1,7 @@
 import {
   CheckVisitedPoiImageResponseSchema,
+  generateValidator,
   GetVisitedPoisResponseSchema,
-  validateWithSchema,
   type VisitedPoi,
   VisitedPoisV2ResponseSchema,
 } from "@vagabond/shared-utils";
@@ -9,10 +9,20 @@ import { HTTPError } from "ky";
 
 import { apiClient } from "@/http/api-client";
 
+const validateGetVisitedPoisResponse = generateValidator(
+  GetVisitedPoisResponseSchema,
+);
+const validateCheckVisitedPoiImageResponse = generateValidator(
+  CheckVisitedPoiImageResponseSchema,
+);
+const validateVisitedPoisV2Response = generateValidator(
+  VisitedPoisV2ResponseSchema,
+);
+
 export const getVisitedPois = async (poiId: string): Promise<VisitedPoi[]> => {
   const rawResult = await apiClient.get(`api/visited-pois/${poiId}`).json();
 
-  if (!validateWithSchema(GetVisitedPoisResponseSchema, rawResult)) {
+  if (!validateGetVisitedPoisResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 
@@ -22,7 +32,7 @@ export const getVisitedPois = async (poiId: string): Promise<VisitedPoi[]> => {
 export const getUserVisitedPois = async (): Promise<VisitedPoi[]> => {
   const rawResult = await apiClient.get("api/visited-pois").json();
 
-  if (!validateWithSchema(GetVisitedPoisResponseSchema, rawResult)) {
+  if (!validateGetVisitedPoisResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 
@@ -54,7 +64,7 @@ export const getUserVisitedPoisV2 = async ({
     .get("api/v2/visited-pois", { searchParams })
     .json();
 
-  if (!validateWithSchema(VisitedPoisV2ResponseSchema, rawResult)) {
+  if (!validateVisitedPoisV2Response(rawResult)) {
     throw new Error("Invalid response");
   }
 
@@ -79,7 +89,7 @@ export const getVisitedPoisByPoiIdV2 = async ({
     .get(`api/v2/visited-pois/${poiId}`, { searchParams })
     .json();
 
-  if (!validateWithSchema(VisitedPoisV2ResponseSchema, rawResult)) {
+  if (!validateVisitedPoisV2Response(rawResult)) {
     throw new Error("Invalid response");
   }
 
@@ -96,7 +106,7 @@ export const checkVisitedPoiHasImage = async (
       .get(`api/visited-pois/${visitedPoiId}/status`)
       .json();
 
-    if (!validateWithSchema(CheckVisitedPoiImageResponseSchema, rawResult)) {
+    if (!validateCheckVisitedPoiImageResponse(rawResult)) {
       return "unknown";
     }
 

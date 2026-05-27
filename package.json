@@ -12,10 +12,16 @@
     "prepare": "husky",
     "prettier-write": "prettier . --write",
     "build": "turbo run build",
+    "build:libs": "turbo run build --filter=./libs/*",
     "check-all": "turbo run typescript-check lint-check prettier-check i18n-check",
     "check-affected": "turbo run typescript-check lint-check prettier-check i18n-check --filter=[HEAD]",
     "fix-all": "turbo run lint-fix prettier-fix",
-    "clean-all": "turbo run clean && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' \\; -print"
+    "clean-all": "turbo run clean && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' \\; -print",
+    "develop:api": "turbo watch develop --filter=@vagabond/api",
+    "develop:dashboard": "turbo watch develop --filter=@vagabond/dashboard",
+    "develop:website": "turbo watch develop --filter=@vagabond/website",
+    "develop:mobile": "turbo watch develop --filter=@vagabond/mobile-app",
+    "develop:scraper": "turbo watch develop --filter=@vagabond/data-scraper"
   },
   "dependencies": {
     "dayjs": "catalog:",

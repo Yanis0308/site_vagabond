@@ -8,6 +8,8 @@ import {
   VisitedPoisV2ResponseSchema,
 } from "@vagabond/shared-utils";
 
+import { asMobileRequest } from "../../types/mobile-request.js";
+
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
     "/",
@@ -23,7 +25,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     },
     async function (request, reply) {
       const { after, limit, boundaryId, userId: targetUserId } = request.query;
-      const callerId = request.user.uid;
+      const { user } = asMobileRequest(request);
+      const callerId = user.uid;
       const effectiveUserId = targetUserId ?? callerId;
 
       if (targetUserId !== undefined && targetUserId !== callerId) {

@@ -14,7 +14,7 @@ FROM base AS build
 COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run --filter @vagabond/api build
+RUN pnpm exec turbo run build --filter=@vagabond/api
 RUN pnpm deploy --filter @vagabond/api --prod /prod/api
 # RUN ls -la /prod/api
 

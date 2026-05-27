@@ -1,0 +1,105 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+:root {
+  /* Primary — Electric Purple */
+  --primary: #9b4dca;
+  --primary-foreground: #ffffff;
+  --primary-400: #8c2aca;
+  --primary-500: #9b4dca;
+  --primary-600: #7c3ea2;
+  --primary-700: #5d2e79;
+
+  /* Secondary — Hot Coral */
+  --secondary: #ff5c5c;
+  --secondary-foreground: #ffffff;
+  --secondary-500: #ff5c5c;
+
+  /* Background — Crème */
+  --background: #fdf8f1;
+  --foreground: #262627;
+  --background-50: #ffffff;
+  --background-100: #fdf8f1;
+  --background-200: #faf1e4;
+  --background-300: #f8ead7;
+  --background-500: #f5e6c3;
+
+  /* Typography */
+  --typography-900: #262627;
+  --typography-600: #737373;
+  --typography-500: #8c8c8c;
+
+  /* Shadcn semantic tokens (utilisés au batch 2 par les composants Mira) */
+  --card: #ffffff;
+  --card-foreground: #262627;
+  --popover: #ffffff;
+  --popover-foreground: #262627;
+  --muted: #faf1e4;
+  --muted-foreground: #737373;
+  --accent: #faf1e4;
+  --accent-foreground: #262627;
+  --destructive: #ef4444;
+  --border: #f8ead7;
+  --input: #f8ead7;
+  --ring: #9b4dca;
+
+  /* Radius */
+  --radius: 0.625rem;
+  --radius-pill: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(38, 38, 39, 0.08);
+  --shadow-purple: 0 20px 60px rgba(155, 77, 202, 0.2);
+  --shadow-coral: 0 8px 24px rgba(255, 92, 92, 0.3);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand colors for direct usage */
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-secondary-500: var(--secondary-500);
+  --color-background-50: var(--background-50);
+  --color-background-100: var(--background-100);
+  --color-background-200: var(--background-200);
+  --color-background-300: var(--background-300);
+  --color-background-500: var(--background-500);
+  --color-typography-900: var(--typography-900);
+  --color-typography-600: var(--typography-600);
+  --color-typography-500: var(--typography-500);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+}
+
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}

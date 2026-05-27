@@ -1,17 +1,22 @@
 import {
+  generateValidator,
   type UserMe,
   type UserPublicInfo,
   UserPublicInfoResponseSchema,
   UsersMeResponseSchema,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
 
+const validateUsersMeResponse = generateValidator(UsersMeResponseSchema);
+const validateUserPublicInfoResponse = generateValidator(
+  UserPublicInfoResponseSchema,
+);
+
 export const getMe = async (): Promise<UserMe> => {
   const rawResult = await apiClient.get("api/users/me").json();
 
-  if (!validateWithSchema(UsersMeResponseSchema, rawResult)) {
+  if (!validateUsersMeResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 
@@ -30,7 +35,7 @@ export const getUserPublicInfo = async (
 ): Promise<UserPublicInfo> => {
   const rawResult = await apiClient.get(`api/users/${userId}`).json();
 
-  if (!validateWithSchema(UserPublicInfoResponseSchema, rawResult)) {
+  if (!validateUserPublicInfoResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 

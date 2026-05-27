@@ -1,12 +1,13 @@
 import { requestContext } from "@fastify/request-context";
 import * as Sentry from "@sentry/node";
 import { type User as SentryUser } from "@sentry/node";
-import { type DbUser } from "@vagabond/database-client";
 import fp from "fastify-plugin";
 import { type auth } from "firebase-admin";
 import { getAuth } from "firebase-admin/auth";
 
+import { DASHBOARD_API_PREFIX } from "../routes/dashboard/path.js";
 import { STAFF_TOOLS_API_PREFIX } from "../routes/staff-tools/path.js";
+import { asMobileRequest } from "../types/mobile-request.js";
 import { captureAndLog } from "../utils/logger.js";
 
 function buildSentryUserFromDecodedToken(
@@ -46,14 +47,6 @@ function buildSentryUserFromDbAndToken(params: {
   };
 }
 
-declare module "fastify" {
-  interface FastifyRequest {
-    user: auth.DecodedIdToken & {
-      db: DbUser;
-    };
-  }
-}
-
 // Liste des chemins publics
 const PUBLIC_PATHS: Array<string | RegExp> = [
   "/api/live",
@@ -67,6 +60,12 @@ const PUBLIC_PATHS: Array<string | RegExp> = [
 export default fp(
   (fastify) => {
     fastify.addHook("onRequest", async (request, reply) => {
+      // Les routes Dashboard sont authentifiées par `auth-dashboard.ts` (JWT
+      // Supabase). Ce hook ne s'occupe que de Firebase (Mobile App + staff).
+      if (request.url.startsWith(`${DASHBOARD_API_PREFIX}/`)) {
+        return;
+      }
+
       const isPublicPath = PUBLIC_PATHS.some((path) => {
         if (path instanceof RegExp) {
           return path.test(request.url);
@@ -119,8 +118,10 @@ export default fp(
         const { user: dbUser, isNew } =
           await fastify.dbRepositories.user.upsertUser(userId, currentUserInfo);
 
-        // Attach DB user to request.user
-        request.user = Object.assign(decodedToken, { db: dbUser });
+        // Attach DB user to request.user (cast par intersection, cf. ADR 0009).
+        asMobileRequest(request).user = Object.assign(decodedToken, {
+          db: dbUser,
+        });
 
         // Staff-tools routes : accessibles uniquement aux ADMIN sur le serveur dev
         if (request.url.startsWith(`${STAFF_TOOLS_API_PREFIX}/`)) {

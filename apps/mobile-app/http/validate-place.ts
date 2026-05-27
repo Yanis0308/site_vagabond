@@ -1,11 +1,15 @@
 import {
   type CreateVisitedPoiRequest,
   CreateVisitedPoiResponseSchema,
-  validateWithSchema,
+  generateValidator,
 } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
 import { logger } from "@/utils/logger";
+
+const validateCreateVisitedPoiResponse = generateValidator(
+  CreateVisitedPoiResponseSchema,
+);
 
 export const validatePlace = async (
   placeId: string,
@@ -16,7 +20,7 @@ export const validatePlace = async (
     .json();
   logger("=== validate place result:", JSON.stringify(rawResult));
 
-  if (!validateWithSchema(CreateVisitedPoiResponseSchema, rawResult)) {
+  if (!validateCreateVisitedPoiResponse(rawResult)) {
     throw new Error("Invalid response from validate place");
   }
 

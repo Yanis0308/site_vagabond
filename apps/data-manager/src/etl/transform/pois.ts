@@ -1,10 +1,10 @@
 import {
   type ExtractedPoiDatabaseRow,
   ExtractedPoiDatabaseRowSchema,
+  generateValidator,
   getFilterLevelName,
   getMvtIdFromPoiId,
   logger,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 import { type Feature, type Point } from "geojson";
 
@@ -13,8 +13,7 @@ import { JsonlFileReader, JsonlFileWriter } from "../jsonl-utils";
 import { type JsonlPoiRecord } from "../types";
 import { processStreamInBatches } from "./stream-processor";
 
-const validateRows = (value: unknown): value is ExtractedPoiDatabaseRow =>
-  validateWithSchema(ExtractedPoiDatabaseRowSchema, value);
+const validateRows = generateValidator(ExtractedPoiDatabaseRowSchema);
 
 export async function processPois(
   schema: string,

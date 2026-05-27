@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
+  generateValidator,
   type SearchResult,
   SearchResultSchema,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 import { useAtom, useSetAtom } from "jotai";
 import {
@@ -26,6 +26,10 @@ const RecentSearchesRecordSchema = Type.Record(
   RecentSearchSchema,
 );
 
+const validateRecentSearchesRecord = generateValidator(
+  RecentSearchesRecordSchema,
+);
+
 // RecentSearch type inferred from schema
 export type RecentSearch = Static<typeof RecentSearchSchema>;
 
@@ -40,7 +44,7 @@ const recordToSortedArray = (record: RecentSearchesRecord): RecentSearch[] => {
 // Storage with validation using withStorageValidator - it's return default value if validation fails
 const storage = withStorageValidator<RecentSearchesRecord>(
   (value: unknown): value is RecentSearchesRecord => {
-    if (!validateWithSchema(RecentSearchesRecordSchema, value)) {
+    if (!validateRecentSearchesRecord(value)) {
       logger("Invalid recent searches data, atom should be cleared", value);
       return false;
     }

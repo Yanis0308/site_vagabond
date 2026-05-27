@@ -3,7 +3,18 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
+      "inputs": [
+        "src/**",
+        "tsconfig.json",
+        "tsconfig.*.json",
+        "package.json"
+      ],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+    },
+    "develop": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
     },
     "typescript-check": {
       "dependsOn": ["^build"],

@@ -1,4 +1,4 @@
-# CLAUDE.md - Vagagond POC
+﻿# CLAUDE.md - Vagagond POC
 
 ## Project Overview
 
@@ -36,8 +36,11 @@ vagagond-poc/
 ## Essential Commands
 
 ```bash
-# Install dependencies (also rebuilds libs via postinstall)
+# Install dependencies
 pnpm install
+
+# Build the shared libs once (cached afterwards)
+pnpm build:libs
 
 # Run all checks (TypeScript + ESLint + Prettier) — used by CI and pre-commit hook
 pnpm check-all
@@ -48,17 +51,17 @@ pnpm fix-all
 # Format all files with Prettier
 pnpm prettier-write
 
-# API development
-cd apps/api && pnpm run develop
-
-# Mobile development
-cd apps/mobile-app && pnpm run develop
-
-# Website development (requires Docker for PostgreSQL)
-cd apps/website && pnpm docker:up && pnpm run develop
+# App development (run from the repo root — Turbo rebuilds libs in watch mode)
+pnpm develop:api         # @vagabond/api
+pnpm develop:dashboard   # @vagabond/dashboard
+pnpm develop:website     # @vagabond/website (requires Docker: cd apps/website && pnpm docker:up first)
+pnpm develop:mobile      # @vagabond/mobile-app
+pnpm develop:scraper     # @vagabond/data-scraper
 ```
 
-**Important**: After modifying any file in `libs/`, run `pnpm install` to rebuild the libraries so apps pick up the changes.
+**How lib rebuilds work**: The `develop:*` scripts use `turbo watch develop`. Turbo builds each lib once (with cache), starts the app's watcher, and re-runs only the affected lib's build when its sources change. The app's own watcher (tsc-watch / next dev / expo) then reloads on the new `dist/`.
+
+If you start an app directly (`cd apps/<app> && pnpm develop`), Turbo is bypassed — you must run `pnpm build:libs` manually after editing anything under `libs/`.
 
 ## Code Quality & Linting
 
@@ -160,10 +163,12 @@ refactor/VG-123-description
 - `.env.example` exists at root (for SafeQL database URL)
 - Each app may have its own `.env` — never commit `.env` files
 - Node.js 20.x required (CI matrix)
+- **Ports** are configurable per app via `.env` (defaults: API `PORT=3000`, website `WEBSITE_PORT=3001`, dashboard `DASHBOARD_PORT=3002`, mobile `MOBILE_APP_PORT=8081`, Postgres host `5432`, scraper `PORT=3234`). See each app's `.env.example`.
+- **Do not read `process.env` in application code** — use each app's config layer (`apps/api/src/plugins/config.ts`, `apps/dashboard/lib/config/public.ts`, `apps/mobile-app/app.config.ts`, etc.). Exceptions: `dotenv.config()` at boot and `NODE_ENV` for dev/prod mode.
 
 ## Common Gotchas
 
-1. **Libs need rebuild**: After changing `libs/*`, run `pnpm install` to trigger postinstall builds
+1. **Libs need rebuild**: Run apps through `pnpm develop:<app>` from the repo root so Turbo rebuilds libs on file changes. If you run the app directly from `apps/<app>/`, call `pnpm build:libs` from the root manually after each lib edit.
 2. **Patched dependencies**: `ajv` and `fastify` have pnpm patches in `patches/` — be careful when upgrading these
 3. **SafeQL**: Database query validation is configured in `eslint-safeql.config.mjs` — requires a running PostgreSQL for type checking
 4. **The project README is in French** — the team works in French

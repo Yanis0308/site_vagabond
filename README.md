@@ -90,12 +90,17 @@ pnpm install
 Cette commande :
 
 - Installe toutes les dépendances du monorepo
-- Rebuild automatiquement les bibliothèques (`@vagabond/api-utils`, `@vagabond/database-client`, `@vagabond/shared-utils`) grâce aux scripts `postinstall` configurés
 - Applique les patchs pnpm configurés (voir la section [Patchs pnpm](#patchs-pnpm) pour plus de détails)
 
-Les bibliothèques sont compilées automatiquement après l'installation grâce aux scripts `postinstall` définis dans leurs `package.json`.
+Après l'installation, builder les bibliothèques une première fois :
 
-> **Important** : Lorsqu'une bibliothèque (`/libs`) est modifiée, il faut relancer `pnpm install` pour rebuilder la bibliothèque. Voir la section [Modifier les bibliothèques partagées](#modifier-les-bibliothèques-partagées) pour plus de détails.
+```bash
+pnpm build:libs
+```
+
+Cette commande utilise Turbo pour builder `@vagabond/api-utils`, `@vagabond/database-client` et `@vagabond/shared-utils` en respectant leur ordre de dépendance et en mettant les résultats en cache.
+
+> **Important** : Pour le développement, utilisez les scripts `pnpm develop:<app>` à la racine (voir la section [Modifier les bibliothèques partagées](#modifier-les-bibliothèques-partagées)). Ils orchestrent automatiquement le rebuild des libs via `turbo watch`.
 
 ## Notes techniques
 
@@ -188,12 +193,23 @@ Ce projet est organisé comme un monorepo. Voir la section [Projets](#projets) p
 
 ### Modifier les bibliothèques partagées
 
-**Important** : Lorsque vous modifiez du code dans `/libs`, vous devez exécuter `pnpm install` pour mettre à jour les dépendances pour `/apps`. Il n'est **pas nécessaire** d'exécuter `pnpm build` manuellement pour `/libs` car la construction se fait automatiquement.
+Le rebuild des bibliothèques (`/libs`) est orchestré par [Turbo](https://turborepo.com/) :
+
+- **Au premier démarrage** : `pnpm build:libs` à la racine compile les trois libs (résultat mis en cache).
+- **Pendant le développement** : lancez l'application via les scripts racine — ils enchaînent un build initial des libs (cache hit instantané si rien n'a changé) puis démarrent l'app en mode watch.
 
 ```bash
-# Après avoir modifié du code dans /libs
-pnpm install
+# Au choix selon l'app sur laquelle vous travaillez
+pnpm develop:api         # @vagabond/api
+pnpm develop:dashboard   # @vagabond/dashboard
+pnpm develop:website     # @vagabond/website
+pnpm develop:mobile      # @vagabond/mobile-app
+pnpm develop:scraper     # @vagabond/data-scraper
 ```
+
+Quand vous modifiez un fichier dans `/libs/*/src/`, `turbo watch` rebuild uniquement la lib touchée, et le watcher de l'app (tsc-watch / next dev / expo) recharge le code automatiquement.
+
+> Si vous préférez lancer l'app directement (`cd apps/<app> && pnpm develop`), pensez à rebuild les libs manuellement après chaque modification : `pnpm build:libs` depuis la racine.
 
 ### Convention de nommage des branches
 

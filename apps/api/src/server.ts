@@ -1,4 +1,4 @@
-// Read the .env file.
+﻿// Read the .env file.
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -10,6 +10,7 @@ import Fastify from "fastify";
 
 import { loggerConfig } from "./lib/logger.js";
 import { shutdownState } from "./lib/shutdown-state.js";
+import { getListenPort } from "./plugins/config.js";
 import { captureAndLog } from "./utils/logger.js";
 
 // Instantiate Fastify with shared logger config (Fastify 5 does not accept pre-instantiated logger)
@@ -75,7 +76,7 @@ closeWithGrace({ delay: 30_000 }, async function ({ signal, err }) {
 
 const start = async (): Promise<void> => {
   try {
-    const port = 3000;
+    const port = getListenPort();
 
     await app.listen({
       port,

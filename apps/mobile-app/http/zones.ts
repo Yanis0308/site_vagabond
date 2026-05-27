@@ -1,12 +1,19 @@
 import {
+  generateValidator,
   GetUserZoneStatsResponseSchema,
   GetUserZoneStatsV2ResponseSchema,
-  validateWithSchema,
   type ZoneUserStat,
   type ZoneUserStatV2,
 } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
+
+const validateGetUserZoneStatsResponse = generateValidator(
+  GetUserZoneStatsResponseSchema,
+);
+const validateGetUserZoneStatsV2Response = generateValidator(
+  GetUserZoneStatsV2ResponseSchema,
+);
 
 export const getUserZoneStats = async (
   userId?: string,
@@ -15,7 +22,7 @@ export const getUserZoneStats = async (
     .get(`api/zones/stats/${userId ?? "me"}`)
     .json();
 
-  if (!validateWithSchema(GetUserZoneStatsResponseSchema, rawResult)) {
+  if (!validateGetUserZoneStatsResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 
@@ -30,7 +37,7 @@ export const getUserZoneStatsV2 = async (
     .get(`api/v2/zones/stats/${userId ?? "me"}`)
     .json();
 
-  if (!validateWithSchema(GetUserZoneStatsV2ResponseSchema, rawResult)) {
+  if (!validateGetUserZoneStatsV2Response(rawResult)) {
     throw new Error("Invalid response");
   }
 

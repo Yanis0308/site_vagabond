@@ -37,6 +37,30 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - run: pnpm i --frozen-lockfile
+
+      # `.npmrc` a `inject-workspace-packages=true` (requis par `pnpm deploy`
+      # dans les Dockerfiles API/scraper). Conséquence : `pnpm install` copie
+      # les packages workspace SANS leur `dist/` (pas encore buildé). On doit
+      # donc (1) builder les libs, puis (2) refaire un install pour
+      # re-injecter les copies cette fois AVEC `dist/`, avant que les checks
+      # ne tentent d'importer leurs types.
+      - run: pnpm run build:libs
+        env:
+          TURBO_TELEMETRY_DISABLED: 1
+      - run: pnpm i --frozen-lockfile
+
       - run: pnpm run check-all
         env:
           TURBO_TELEMETRY_DISABLED: 1
+
+      # Build prod du Dashboard : valide que `next build` passe (server components,
+      # Suspense boundaries, etc.) — `check-all` ne fait que typecheck/lint/prettier.
+      # Les `NEXT_PUBLIC_*` sont injectées en placeholders : `publicEnv` (Zod) valide
+      # uniquement le format (URL / non-vide), le build ne fait aucun appel réseau.
+      - name: Build dashboard
+        run: pnpm turbo run build --filter=@vagabond/dashboard
+        env:
+          TURBO_TELEMETRY_DISABLED: 1
+          NEXT_PUBLIC_SUPABASE_URL: https://placeholder.supabase.co
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_placeholder
+          NEXT_PUBLIC_API_URL: http://localhost:3000

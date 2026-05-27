@@ -1,10 +1,12 @@
 import {
   type CreateUserFeedbackRequest,
   EmptyResponseSchema,
-  validateWithSchema,
+  generateValidator,
 } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
+
+const validateEmptyResponse = generateValidator(EmptyResponseSchema);
 
 export const createUserFeedback = async (
   body: CreateUserFeedbackRequest,
@@ -13,7 +15,7 @@ export const createUserFeedback = async (
     .post("api/user-feedbacks", { json: body })
     .json();
 
-  if (!validateWithSchema(EmptyResponseSchema, rawResult)) {
+  if (!validateEmptyResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 };

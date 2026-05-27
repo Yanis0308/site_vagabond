@@ -14,7 +14,7 @@ FROM base AS build
 COPY . /app
 WORKDIR /app
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run --filter @vagabond/data-scraper build
+RUN pnpm exec turbo run build --filter=@vagabond/data-scraper
 RUN pnpm deploy --filter @vagabond/data-scraper --prod /prod/data-scraper
 
 # Use Puppeteer base image for runtime

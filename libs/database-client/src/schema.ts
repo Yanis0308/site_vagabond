@@ -16,6 +16,7 @@ import {
   serial,
   timestamp,
   uniqueIndex,
+  uuid,
   varchar,
 } from "drizzle-orm/pg-core";
 
@@ -75,6 +76,14 @@ const timestampWithTz = (
   name?: string,
 ): ReturnType<typeof timestamp<string, "date">> =>
   timestamp(name ?? "", { precision: 3, withTimezone: true });
+
+// Typages Dashboard : `varchar` typé (cf. ADR 0006) plutôt que pgEnum, pour
+// éviter les migrations à chaque ajout de valeur.
+export const BUSINESS_TYPES = ["staff", "tourist_office"] as const;
+export type BusinessType = (typeof BUSINESS_TYPES)[number];
+
+export const SCOPE_MODES = ["ALL", "BOUNDARIES"] as const;
+export type ScopeMode = (typeof SCOPE_MODES)[number];
 
 const created_at = timestampWithTz("created_at").defaultNow().notNull();
 const updated_at = timestampWithTz("updated_at")
@@ -519,6 +528,103 @@ export const userFeedbacks = pgTable(
     })
       .onUpdate("cascade")
       .onDelete("set null"),
+  ],
+);
+
+// Identités côté Dashboard (cf. ADR 0005). UUID Supabase, populations
+// disjointes de `users` (Firebase / Mobile App). Pas de FK vers `auth.users`
+// pour ne pas coupler nos migrations au schéma géré par Supabase ; rows
+// orphelines après suppression Supabase = inerte (pas de token → pas d'accès).
+export const dashboardUsers = pgTable("dashboard_users", {
+  id: uuid().primaryKey().notNull(),
+  createdAt: created_at,
+  updatedAt: updated_at,
+  email: varchar({ length: 1000 }).notNull(),
+  // Nullable : Supabase OTP ne capture pas le nom à l'inscription ; peuplé plus
+  // tard via un endpoint profile.
+  name: varchar({ length: 1000 }),
+  lastLogin: timestampWithTz("last_login").defaultNow().notNull(),
+});
+
+// Tenants du Dashboard (cf. ADR 0008). Organization = entité interne Vagagond
+// (`business_type='staff'`) ou cliente B2B (`business_type='tourist_office'`).
+// Le `slug` porte les URLs publiques (`/api/dashboard/orgs/:orgSlug/*`) ; l'`id`
+// serial est l'identifiant interne.
+export const dashboardOrganizations = pgTable("dashboard_organizations", {
+  id: serial().primaryKey().notNull(),
+  createdAt: created_at,
+  updatedAt: updated_at,
+  slug: varchar({ length: 200 }).notNull().unique(),
+  name: varchar({ length: 500 }).notNull(),
+  businessType: varchar("business_type", { length: 50 })
+    .$type<BusinessType>()
+    .notNull(),
+  // Mode de scoping géographique : `ALL` = visibilité globale (typiquement
+  // `business_type='staff'`), `BOUNDARIES` = restreint aux entrées de la table
+  // `dashboard_organization_boundaries`.
+  scopeMode: varchar("scope_mode", { length: 20 }).$type<ScopeMode>().notNull(),
+  // Entitlements de l'org (cf. ADR 0009). Liste de slugs de features activées.
+  // Les orgs `business_type='staff'` bypassent ce check (cf. `orgHasFeature`
+  // côté shared-utils). Valeurs hors enum filtrées silencieusement à la
+  // lecture par `OrganizationRepository` — pas de FK ni de contrainte CHECK.
+  features: varchar({ length: 200 }).array().notNull().default([]),
+  createdBy: uuid("created_by").references(() => dashboardUsers.id, {
+    onDelete: "set null",
+  }),
+});
+
+// Liaison N:M user ↔ org (cf. ADR 0008). Un user peut être membre de plusieurs
+// orgs (staff intervenant chez un client). Tous les memberships d'une org
+// confèrent les mêmes droits (pas de RBAC intra-org en V0).
+export const dashboardMemberships = pgTable(
+  "dashboard_memberships",
+  {
+    id: serial().primaryKey().notNull(),
+    createdAt: created_at,
+    updatedAt: updated_at,
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => dashboardUsers.id, { onDelete: "cascade" }),
+    organizationId: integer("organization_id")
+      .notNull()
+      .references(() => dashboardOrganizations.id, { onDelete: "cascade" }),
+    createdBy: uuid("created_by").references(() => dashboardUsers.id, {
+      onDelete: "set null",
+    }),
+  },
+  (table) => [
+    uniqueIndex("dashboard_memberships_user_org_key").on(
+      table.userId,
+      table.organizationId,
+    ),
+  ],
+);
+
+// Périmètre géographique d'une organisation (cf. ADR 0008, Boundary Scope).
+// Pas de FK sur `boundary_id` : le data-manager fait du DELETE + INSERT sur
+// les boundaries lors des re-imports OSM ; on tolère des liens orphelins
+// temporaires que le JOIN au middleware ignore naturellement.
+export const dashboardOrganizationBoundaries = pgTable(
+  "dashboard_organization_boundaries",
+  {
+    id: serial().primaryKey().notNull(),
+    createdAt: created_at,
+    updatedAt: updated_at,
+    organizationId: integer("organization_id")
+      .notNull()
+      .references(() => dashboardOrganizations.id, { onDelete: "cascade" }),
+    boundaryId: varchar("boundary_id", { length: 1000 }).notNull(),
+    createdBy: uuid("created_by").references(() => dashboardUsers.id, {
+      onDelete: "set null",
+    }),
+  },
+  (table) => [
+    uniqueIndex("dashboard_org_boundaries_org_boundary_key").on(
+      table.organizationId,
+      table.boundaryId,
+    ),
+    // Pour les lookups inverses (« quelles orgs scopent cette boundary ? »).
+    index("dashboard_org_boundaries_boundary_id_idx").on(table.boundaryId),
   ],
 );
 

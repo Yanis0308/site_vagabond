@@ -1,4 +1,4 @@
-# API Vagabond
+﻿# API Vagabond
 
 API backend principale basée sur **Fastify** avec **TypeScript**. Fournit les endpoints REST pour la gestion des POIs (Points d'Intérêt), utilisateurs, recherches et enrichissement de données via LLM (Google AI, Groq). Intègre **Firebase Admin**, **AWS S3**, **PostgreSQL** via Drizzle ORM, et **Slack** pour les notifications.
 
@@ -53,7 +53,7 @@ apps/api/
 
 Les plugins sont enregistrés dans un ordre spécifique pour garantir les dépendances :
 
-1. **Config** - Configuration et variables d'environnement
+1. **Config** - Variables d'environnement via Zod dans `plugins/config.ts` (port lu par `server.ts` via `getListenPort()`)
 2. **Schemas** - Ajout des schémas de validation TypeBox
 3. **Security** - Helmet et CORS
 4. **Swagger** - Documentation API
@@ -70,17 +70,27 @@ Les plugins sont enregistrés dans un ordre spécifique pour garantir les dépen
 ```bash
 # Depuis la racine du monorepo
 pnpm install
-
-# Depuis le dossier de l'API
-cd apps/api
-pnpm install
+pnpm build:libs   # build initial des libs partagées (cache Turbo)
 ```
+
+> Pour le développement, préférez `pnpm develop:api` depuis la racine — il orchestre le rebuild automatique des libs (voir [Scripts disponibles](#scripts-disponibles)).
 
 ## Configuration
 
 ### Variables d'environnement
 
-Créez un fichier `.env` à la racine de `apps/api/` basé sur `.env.example` :
+Créez un fichier `.env` à la racine de `apps/api/` basé sur `.env.example`.
+
+### Ports (développement local)
+
+| Variable             | Défaut | Fichier                         | Usage                                                         |
+| -------------------- | ------ | ------------------------------- | ------------------------------------------------------------- |
+| `PORT`               | `3000` | `apps/api/.env`                 | Port d'écoute Fastify (`plugins/config.ts`)                   |
+| `DOCKER_DB_API_PORT` | `5432` | `apps/api/dev/.env` (versionné) | Port hôte Postgres Docker ; nom du projet / conteneur Compose |
+
+`API_DATABASE_URL` dans `.env` doit utiliser le même port que `DOCKER_DB_API_PORT` (ex. `@localhost:5432/vagabond`). Pour un worktree en parallèle, modifie `dev/.env` (ex. `5433`) puis aligne `API_DATABASE_URL`.
+
+**Docker Postgres** : Docker Compose Up sur `dev/docker-compose.yml` (charge automatiquement `dev/.env`).
 
 ```bash
 # Firebase Admin SDK
@@ -124,7 +134,10 @@ WIKIMEDIA_OAUTH2_CLIENT_SECRET=<client-secret>
 ## Scripts disponibles
 
 ```bash
-# Développement (watch mode)
+# Développement (watch mode) — depuis la racine, recommandé (rebuild auto des libs)
+pnpm develop:api
+
+# Développement local (sans rebuild auto des libs ; nécessite `pnpm build:libs` au préalable)
 pnpm develop
 
 # Build

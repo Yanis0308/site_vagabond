@@ -1,11 +1,13 @@
 import {
+  generateValidator,
   SearchResponseSchema,
   type SearchResult,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
 import { logger } from "@/utils/logger";
+
+const validateSearchResponse = generateValidator(SearchResponseSchema);
 
 export const searchPlaces = async (query: string): Promise<SearchResult[]> => {
   const rawResult = await apiClient
@@ -14,7 +16,7 @@ export const searchPlaces = async (query: string): Promise<SearchResult[]> => {
     })
     .json();
 
-  if (!validateWithSchema(SearchResponseSchema, rawResult)) {
+  if (!validateSearchResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 

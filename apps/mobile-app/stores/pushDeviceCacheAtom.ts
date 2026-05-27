@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { validateWithSchema } from "@vagabond/shared-utils";
+import { generateValidator } from "@vagabond/shared-utils";
 import { getDefaultStore } from "jotai";
 import {
   atomWithStorage,
@@ -27,10 +27,14 @@ export type PushDeviceCacheEntry = Static<typeof PushDeviceCacheEntrySchema>;
 
 type PushDeviceCacheValue = PushDeviceCacheEntry | null;
 
+const validatePushDeviceCacheEntry = generateValidator(
+  PushDeviceCacheEntrySchema,
+);
+
 const storage = withStorageValidator<PushDeviceCacheValue>(
   (value: unknown): value is PushDeviceCacheValue => {
     if (value === null) return true;
-    if (!validateWithSchema(PushDeviceCacheEntrySchema, value)) {
+    if (!validatePushDeviceCacheEntry(value)) {
       logger("Invalid push device cache value, atom should be cleared", value);
       return false;
     }

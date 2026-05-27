@@ -13,8 +13,7 @@
     "prettier-fix": "prettier . --write",
     "build": "pnpm run clean && tsc",
     "watch": "pnpm run clean && tsc --watch",
-    "clean": "rm -rf dist",
-    "postinstall": "pnpm run build"
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@fastify/compress": "^8.1.0",

@@ -15,13 +15,12 @@
     "build": "pnpm run clean && tsc && cp -r src/migrations dist/migrations",
     "watch": "pnpm run clean && tsc --watch",
     "clean": "rm -rf dist",
-    "develop": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Drizzle\" -c \"yellow.bold,cyan.bold\" \"pnpm:watch\" \"pnpm:drizzle-generate\"",
-    "postinstall": "pnpm run build"
+    "develop": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Drizzle\" -c \"yellow.bold,cyan.bold\" \"pnpm:watch\" \"pnpm:drizzle-generate\""
   },
   "dependencies": {
     "@vagabond/shared-utils": "workspace:*",
-    "drizzle-orm": "^0.45.0",
-    "pg": "^8.13.1"
+    "drizzle-orm": "catalog:",
+    "pg": "catalog:"
   },
   "devDependencies": {
     "@types/node": "^22.9.0",

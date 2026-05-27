@@ -5,6 +5,7 @@ import {
   UserLocationRequestSchema,
 } from "@vagabond/shared-utils";
 
+import { asMobileRequest } from "../../types/mobile-request.js";
 import { captureAndLog } from "../../utils/logger.js";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
@@ -22,12 +23,13 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const user = request.user.db;
+      const { user } = asMobileRequest(request);
+      const dbUser = user.db;
       const { timestamp, ...coords } = request.body;
 
       try {
         await fastify.dbRepositories.location.insertLocation({
-          userId: user.userId,
+          userId: dbUser.userId,
           ...coords,
           timestamp: new Date(timestamp),
         });
@@ -36,7 +38,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       } catch (error) {
         captureAndLog(fastify, error, "Error saving user location", {
           tags: { operation: "location-save" },
-          extra: { userId: user.userId },
+          extra: { userId: dbUser.userId },
         });
 
         return await reply.status(500).send({

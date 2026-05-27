@@ -1,12 +1,9 @@
-# Local Postgres for Payload CMS. From apps/website:
-#   docker compose -f dev/docker-compose.yml up -d
-# Stop: docker compose -f dev/docker-compose.yml down
-# Reset data: add -v to down
+﻿# Local Postgres for Payload CMS. Requires dev/.env (DOCKER_DB_CMS_PORT).
 version: "3.8"
-name: vagabond-website
+name: vagabond-website-${DOCKER_DB_CMS_PORT?}
 services:
   db:
-    container_name: postgresql-website
+    container_name: postgresql-website-${DOCKER_DB_CMS_PORT?}
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
@@ -16,12 +13,13 @@ services:
     volumes:
       - website-db-data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "${DOCKER_DB_CMS_PORT?}:5432"
     networks:
       - backend
 
 volumes:
   website-db-data:
+    name: website-db-data-${DOCKER_DB_CMS_PORT?}
 
 networks:
   backend:

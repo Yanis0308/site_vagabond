@@ -31,11 +31,11 @@ export const Nullable = <T extends TSchema>(T: T): TUnion<[T, TNull]> => {
   return Type.Union([T, Type.Null()]);
 };
 
-// Type aligné avec le runtime : `validateWithSchema` ne fait pas de
-// `Value.Decode`, donc même avec un `Type.Codec` le mobile reçoit toujours une
-// string ISO. On reste sur une string typée pour éviter le mismatch type/runtime
-// et on garantit la validation stricte via `format: "date-time"` (ajv-formats
-// mode "full" est chargé côté validation utility).
+// Type aligné avec le runtime : `generateValidator` retourne un validateur AJV
+// qui ne fait pas de `Value.Decode`, donc même avec un `Type.Codec` le mobile
+// reçoit toujours une string ISO. On reste sur une string typée pour éviter le
+// mismatch type/runtime et on garantit la validation stricte via
+// `format: "date-time"` (ajv-formats mode "full" est chargé côté validation utility).
 export const DateSchema = Type.String({
   format: "date-time",
   $id: "VagabondDate",

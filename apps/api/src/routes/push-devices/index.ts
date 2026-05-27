@@ -7,6 +7,7 @@ import {
   RegisterPushDeviceResponseSchema,
 } from "@vagabond/shared-utils";
 
+import { asMobileRequest } from "../../types/mobile-request.js";
 import { captureAndLog } from "../../utils/logger.js";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
@@ -24,7 +25,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const { userId } = request.user.db;
+      const { user } = asMobileRequest(request);
+      const { userId } = user.db;
       const { token, platform, appVersion, osVersion, deviceModel } =
         request.body;
 
@@ -68,7 +70,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const { userId } = request.user.db;
+      const { user } = asMobileRequest(request);
+      const { userId } = user.db;
       const { token } = request.body;
 
       try {

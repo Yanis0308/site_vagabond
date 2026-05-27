@@ -12,6 +12,7 @@ import {
 } from "@vagabond/shared-utils";
 
 import { notifyPoiValidatedOnSlack } from "../../services/poi-validation-slack.service.js";
+import { asMobileRequest } from "../../types/mobile-request.js";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
@@ -26,8 +27,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
+      const { user } = asMobileRequest(request);
       const visitedPois = await fastify.dbRepositories.visitedPoi.findByUserId(
-        request.user.uid,
+        user.uid,
       );
 
       return await reply.status(200).send({ data: visitedPois });
@@ -74,13 +76,11 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
+      const { user } = asMobileRequest(request);
       const { id } = request.params;
 
       const deletedVisitedPois =
-        await fastify.dbRepositories.visitedPoi.deleteByIdAndUser(
-          id,
-          request.user.uid,
-        );
+        await fastify.dbRepositories.visitedPoi.deleteByIdAndUser(id, user.uid);
 
       if (deletedVisitedPois.length === 0) {
         return await reply.status(404).send({
@@ -111,13 +111,14 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
+      const { user } = asMobileRequest(request);
       const { poiId } = request.params;
       const { imageKey, imageSource, rating, comment, coords } = request.body;
 
       const visitedPoi =
         await fastify.dbRepositories.visitedPoi.findByPoiAndUser(
           poiId,
-          request.user.uid,
+          user.uid,
         );
 
       if (visitedPoi !== undefined) {
@@ -136,7 +137,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           rating,
           comment,
           coords,
-          userId: request.user.uid,
+          userId: user.uid,
         });
 
       // Send HTTP response immediately
@@ -150,10 +151,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           visitedPoiId,
           poiId,
           photoUrl: `${fastify.config.cdnUrl}/${imageKey}`,
-          userDisplayName: request.user.db.nickname ?? request.user.db.fullName,
-          userFullName: request.user.db.fullName,
-          userEmail: request.user.email ?? "—",
-          userId: request.user.uid,
+          userDisplayName: user.db.nickname ?? user.db.fullName,
+          userFullName: user.db.fullName,
+          userEmail: user.email ?? "—",
+          userId: user.uid,
           rating,
           comment,
           createdAt: new Date(),
@@ -180,13 +181,11 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
+      const { user } = asMobileRequest(request);
       const { id } = request.params;
 
       const visitedPoi =
-        await fastify.dbRepositories.visitedPoi.findByIdAndUser(
-          id,
-          request.user.uid,
-        );
+        await fastify.dbRepositories.visitedPoi.findByIdAndUser(id, user.uid);
 
       if (visitedPoi === undefined) {
         return await reply.status(404).send({

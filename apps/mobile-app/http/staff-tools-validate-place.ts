@@ -1,10 +1,14 @@
 import {
+  generateValidator,
   StaffToolsValidatePlaceResponseSchema,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
 import { logger } from "@/utils/logger";
+
+const validateStaffToolsValidatePlaceResponse = generateValidator(
+  StaffToolsValidatePlaceResponseSchema,
+);
 
 export const staffToolsValidatePlace = async (
   placeId: string,
@@ -14,7 +18,7 @@ export const staffToolsValidatePlace = async (
     .json();
   logger("=== staff-tools validate place result:", JSON.stringify(rawResult));
 
-  if (!validateWithSchema(StaffToolsValidatePlaceResponseSchema, rawResult)) {
+  if (!validateStaffToolsValidatePlaceResponse(rawResult)) {
     throw new Error("Invalid response from staff-tools validate place");
   }
 

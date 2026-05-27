@@ -1,4 +1,4 @@
-# Website Vagabond
+﻿# Website Vagabond
 
 Site web marketing **Next.js 16** avec **Payload CMS** pour la gestion de contenu, **next-intl** pour l'internationalisation (11 langues), et **Tailwind CSS 4** pour le styling. Intègre **Vercel Analytics**, des pages SEO dynamiques (sitemap, robots, JSON-LD), et un blog géré via Payload.
 
@@ -82,7 +82,8 @@ apps/website/
 │   ├── seed.ts                  # Script de seed principal
 │   └── seed-villes.ts           # Seed des villes françaises
 ├── dev/
-│   └── docker-compose.yml       # PostgreSQL local (port 5433)
+│   ├── docker-compose.yml       # PostgreSQL local
+│   └── .env                     # DOCKER_DB_CMS_PORT (versionné)
 ├── public/
 │   ├── images/                  # Images statiques (logos, screenshots, badges)
 │   └── llms.txt                 # Fichier LLMs.txt
@@ -94,11 +95,10 @@ apps/website/
 ```bash
 # Depuis la racine du monorepo
 pnpm install
-
-# Depuis le dossier du website
-cd apps/website
-pnpm install
+pnpm build:libs   # build initial des libs partagées
 ```
+
+> Pour le développement, préférez `pnpm develop:website` depuis la racine (rebuild auto des libs via turbo watch).
 
 ## Configuration
 
@@ -107,12 +107,16 @@ pnpm install
 Le site utilise PostgreSQL pour Payload CMS. Un fichier Docker Compose est fourni :
 
 ```bash
-# Démarrer PostgreSQL (port 5433)
+# Démarrer PostgreSQL (charge dev/.env versionné)
 pnpm docker:up
 
 # Arrêter PostgreSQL
 pnpm docker:down
 ```
+
+**VS Code (extension Docker)** : Compose Up sur `dev/docker-compose.yml` charge `dev/.env` automatiquement.
+
+Port hôte : `DOCKER_DB_CMS_PORT` dans `dev/.env` (défaut `5433`). `DATABASE_URL` dans `.env.local` doit utiliser le même port.
 
 ### Variables d'environnement
 
@@ -157,7 +161,11 @@ pnpm seed
 ## Scripts disponibles
 
 ```bash
-# Développement (Turbopack)
+# Développement (Turbopack) — depuis la racine, recommandé (rebuild auto des libs)
+# Écoute par défaut sur http://localhost:3001 (WEBSITE_PORT surchargeable)
+pnpm develop:website
+
+# Ou en local (nécessite `pnpm build:libs` au préalable)
 pnpm develop
 
 # Build

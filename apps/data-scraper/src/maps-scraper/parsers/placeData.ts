@@ -1,9 +1,9 @@
 import {
   type AboutItem,
+  generateValidator,
   type GoogleMapsPlaceStrict,
   GoogleMapsPlaceStrictSchema,
   type LinkSource,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 
 import {
@@ -14,6 +14,10 @@ import {
 } from "../utils/jsonParser.js";
 import { logUtils } from "../utils/logging.js";
 import { parseReviews } from "./reviews.js";
+
+const validateGoogleMapsPlaceStrict = generateValidator(
+  GoogleMapsPlaceStrictSchema,
+);
 
 /**
  * Extract hours from darray
@@ -352,7 +356,7 @@ export function parsePlaceData(rawJson: string): GoogleMapsPlaceStrict | null {
     }
 
     // Validate against strict schema
-    if (!validateWithSchema(GoogleMapsPlaceStrictSchema, entry)) {
+    if (!validateGoogleMapsPlaceStrict(entry)) {
       logUtils.warn(
         prefix,
         emoji,

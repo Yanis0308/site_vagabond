@@ -1,7 +1,7 @@
 import {
   type FileInfo,
+  generateValidator,
   UploadFileResponseSchema,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 import {
   type FileSystemUploadResult,
@@ -12,6 +12,8 @@ import {
 import { config } from "@/constants/Config";
 
 import { getFirebaseIdToken } from "./firebase-auth";
+
+const validateUploadFileResponse = generateValidator(UploadFileResponseSchema);
 
 async function sendUploadRequest(
   url: string,
@@ -66,7 +68,7 @@ export const uploadVisitedPoiPhoto = async (
   }
 
   const parsed: unknown = JSON.parse(result.body);
-  if (!validateWithSchema(UploadFileResponseSchema, parsed)) {
+  if (!validateUploadFileResponse(parsed)) {
     throw new Error("Invalid upload response");
   }
 

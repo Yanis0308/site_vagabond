@@ -1,4 +1,4 @@
-import {
+﻿import {
   addSchemasPlugin,
   compressPlugin,
   databasePlugin,
@@ -8,6 +8,7 @@ import { type FastifyPluginAsync } from "fastify";
 
 // Plugins
 import authPlugin from "./plugins/auth.js";
+import authDashboardPlugin from "./plugins/auth-dashboard.js";
 import bodyDecodePlugin from "./plugins/body-decode.js";
 import configPlugin from "./plugins/config.js";
 import firebasePlugin from "./plugins/firebase.js";
@@ -21,6 +22,13 @@ import slackPlugin from "./plugins/slack.js";
 import swaggerPlugin from "./plugins/swagger.js";
 import underPressurePlugin from "./plugins/under-pressure.js";
 // Routes
+import dashboardMeRoute from "./routes/dashboard/me.js";
+import dashboardOrgAppReviewsRoute from "./routes/dashboard/orgs/app-reviews.js";
+import dashboardOrgFeedbacksRoute from "./routes/dashboard/orgs/feedbacks.js";
+import dashboardOrgPoisRoute from "./routes/dashboard/orgs/pois.js";
+import dashboardOrgStatsRoute from "./routes/dashboard/orgs/stats.js";
+import dashboardOrgUsersRoute from "./routes/dashboard/orgs/users.js";
+import { DASHBOARD_API_PREFIX } from "./routes/dashboard/path.js";
 import healthRoute from "./routes/health/index.js";
 import leaderboardRoute from "./routes/leaderboard/index.js";
 import leaderboardV2Route from "./routes/leaderboard/v2.js";
@@ -90,8 +98,13 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   await fastify.register(s3Plugin, opts);
   await fastify.register(slackPlugin, opts);
 
-  // 10. Auth (must be after firebase, database, and request-context)
+  // 10. Auth Mobile/staff (Firebase, must be after firebase, database, and request-context)
   await fastify.register(authPlugin, opts);
+
+  // 10b. Auth Dashboard (Supabase JWT + tenant context, cf. ADR 0009).
+  // L'autorisation fine (feature gate par org) est portée par chaque route via
+  // le preHandler `requireFeature` (cf. utils/dashboard-feature-gate.ts).
+  await fastify.register(authDashboardPlugin, opts);
 
   // 11. Routes
   await fastify.register(healthRoute, { prefix: "api" });
@@ -111,6 +124,20 @@ const app: FastifyPluginAsync<AppOptions> = async (fastify, opts) => {
   await fastify.register(visitedPoisV2Route, { prefix: "api/v2/visited-pois" });
   await fastify.register(leaderboardV2Route, { prefix: "api/v2/leaderboard" });
   await fastify.register(zonesV2Route, { prefix: "api/v2/zones" });
+
+  // Dashboard — deux espaces (cf. ADR 0009) :
+  //   /api/dashboard/me/*            → identité hors-org (picker)
+  //   /api/dashboard/orgs/:orgSlug/* → toutes les routes Dashboard, chacune
+  //                                    gardée par sa feature (cf. requireFeature)
+  await fastify.register(dashboardMeRoute, {
+    prefix: `${DASHBOARD_API_PREFIX}/me`,
+  });
+  const orgPrefix = `${DASHBOARD_API_PREFIX}/orgs/:orgSlug`;
+  await fastify.register(dashboardOrgStatsRoute, { prefix: orgPrefix });
+  await fastify.register(dashboardOrgPoisRoute, { prefix: orgPrefix });
+  await fastify.register(dashboardOrgUsersRoute, { prefix: orgPrefix });
+  await fastify.register(dashboardOrgFeedbacksRoute, { prefix: orgPrefix });
+  await fastify.register(dashboardOrgAppReviewsRoute, { prefix: orgPrefix });
 };
 
 export default app;

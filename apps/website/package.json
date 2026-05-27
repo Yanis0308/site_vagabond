@@ -1,10 +1,10 @@
 {
-  "name": "website",
+  "name": "@vagabond/website",
   "version": "0.0.1",
   "type": "module",
   "private": true,
   "scripts": {
-    "develop": "next dev --turbopack",
+    "develop": "next dev --turbopack -p ${WEBSITE_PORT:-3001}",
     "build": "NODE_OPTIONS='--conditions react-server' payload generate:importmap && next build",
     "ci": "payload migrate && pnpm build",
     "start": "next start",

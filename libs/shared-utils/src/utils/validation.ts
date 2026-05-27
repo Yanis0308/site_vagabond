@@ -19,7 +19,6 @@ const validatorCache = new Map<string | TSchema, ValidateFunction>();
 
 /**
  * Generate and cache a validator function for a schema.
- * Use validateWithSchema for direct validation; use this when you need the validator function (e.g. mapWith).
  * @param schema - The TypeBox schema to validate against
  * @returns A function that validates a value against the schema
  */
@@ -50,18 +49,4 @@ export function generateValidator<T extends TSchema>(
     }
     return result;
   };
-}
-
-/**
- * Validate a value against a schema, using a cached generated validator
- * @param schema - The TypeBox schema to validate against
- * @param value - The value to validate
- * @returns True if the value is valid, false otherwise
- */
-export function validateWithSchema<T extends TSchema>(
-  schema: T,
-  value: unknown,
-): value is Static<T> {
-  const validate = generateValidator(schema);
-  return validate(value);
 }

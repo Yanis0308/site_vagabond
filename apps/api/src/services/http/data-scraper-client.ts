@@ -1,8 +1,8 @@
 import {
+  generateValidator,
   type GoogleMapsPlaceStrict,
   GoogleMapsPlaceStrictSchema,
   ScrapeDataScraperResponseSchema,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 import type { FastifyInstance } from "fastify";
 import type { KyInstance } from "ky";
@@ -31,6 +31,13 @@ export type GoogleMapsScrapeResponse =
 
 // Legacy type for backward compatibility (deprecated)
 export type ScrapeResponse = GoogleMapsScrapeResponse;
+
+const validateScrapeDataScraperResponse = generateValidator(
+  ScrapeDataScraperResponseSchema,
+);
+const validateGoogleMapsPlaceStrict = generateValidator(
+  GoogleMapsPlaceStrictSchema,
+);
 
 /**
  * Create a data-scraper HTTP client with Basic Auth
@@ -78,7 +85,7 @@ export async function scrapeGoogleMaps(
       })
       .json<unknown>();
 
-    if (!validateWithSchema(ScrapeDataScraperResponseSchema, rawResult)) {
+    if (!validateScrapeDataScraperResponse(rawResult)) {
       getLogger(fastify).error(
         { rawResult },
         "Invalid response from data-scraper service",
@@ -100,9 +107,7 @@ export async function scrapeGoogleMaps(
     // Validate the place if it exists
     let validatedPlace: GoogleMapsPlaceStrict | null = null;
     if (validatedResult.place !== null) {
-      if (
-        validateWithSchema(GoogleMapsPlaceStrictSchema, validatedResult.place)
-      ) {
+      if (validateGoogleMapsPlaceStrict(validatedResult.place)) {
         validatedPlace = validatedResult.place;
       } else {
         getLogger(fastify).warn(

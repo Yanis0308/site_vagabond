@@ -1,8 +1,8 @@
 import {
   type BoundaryHierarchyRow,
   BoundaryHierarchyRowSchema,
+  generateValidator,
   logger,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 import * as fs from "fs";
 import { dirname } from "path";
@@ -17,10 +17,9 @@ import { knexInstance } from "./stream-processor";
 
 const MAX_IDS_PER_QUERY = 2000;
 
-const validateBoundaryHierarchyRows = (
-  value: unknown,
-): value is BoundaryHierarchyRow =>
-  validateWithSchema(BoundaryHierarchyRowSchema, value);
+const validateBoundaryHierarchyRows = generateValidator(
+  BoundaryHierarchyRowSchema,
+);
 
 export async function processBoundaryHierarchies(
   schema: string,

@@ -12,6 +12,7 @@ import crypto from "crypto";
 import sharp from "sharp";
 
 import { notifyPoiValidatedOnSlack } from "../../services/poi-validation-slack.service.js";
+import { asMobileRequest } from "../../types/mobile-request.js";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_MIME_TYPES = ["image/jpeg", "image/png"];
@@ -34,6 +35,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
+      const { user } = asMobileRequest(request);
       const { visitedPoiId } = request.query;
       const data = await request.file();
 
@@ -60,7 +62,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         visitedPoiContext =
           await fastify.dbRepositories.visitedPoi.findContextByIdAndUser(
             visitedPoiId,
-            request.user.uid,
+            user.uid,
           );
 
         if (visitedPoiContext === undefined) {
@@ -81,8 +83,8 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       // visitedPoiId → deterministic key; otherwise SHA-256 of buffer to avoid collisions.
       const key =
         visitedPoiId !== undefined
-          ? `${request.user.uid}-${visitedPoiId}.jpg`
-          : `${request.user.uid}-${crypto.createHash("sha256").update(editedBuffer).digest("hex")}.jpg`;
+          ? `${user.uid}-${visitedPoiId}.jpg`
+          : `${user.uid}-${crypto.createHash("sha256").update(editedBuffer).digest("hex")}.jpg`;
 
       const upload = new Upload({
         client: fastify.s3,
@@ -117,11 +119,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
             visitedPoiId,
             poiId: contextForSlack.poiId,
             photoUrl: `${fastify.config.cdnUrl}/${finalKey}`,
-            userDisplayName:
-              request.user.db.nickname ?? request.user.db.fullName,
-            userFullName: request.user.db.fullName,
-            userEmail: request.user.email ?? "—",
-            userId: request.user.uid,
+            userDisplayName: user.db.nickname ?? user.db.fullName,
+            userFullName: user.db.fullName,
+            userEmail: user.email ?? "—",
+            userId: user.uid,
             rating: contextForSlack.rating,
             comment: contextForSlack.comment,
             createdAt: contextForSlack.createdAt,

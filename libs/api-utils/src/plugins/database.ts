@@ -1,12 +1,18 @@
 import {
   BoundaryRepository,
+  DashboardAppReviewRepository,
+  DashboardFeedbackRepository,
+  DashboardListingsRepository,
+  DashboardUserRepository,
   getDrizzleClient,
+  OrganizationRepository,
   PoiEnrichedRepository,
   PoiRepository,
   ProcessingResultRepository,
   PushDeviceRepository,
   SearchRepository,
   StaffToolsRepository,
+  StatsRepository,
   UserFeedbackRepository,
   UserLocationRepository,
   UserRepository,
@@ -21,6 +27,12 @@ export interface DbRepositories {
   boundary: BoundaryRepository;
   search: SearchRepository;
   user: UserRepository;
+  dashboardUser: DashboardUserRepository;
+  dashboardListings: DashboardListingsRepository;
+  dashboardFeedback: DashboardFeedbackRepository;
+  dashboardAppReview: DashboardAppReviewRepository;
+  organization: OrganizationRepository;
+  stats: StatsRepository;
   userFeedback: UserFeedbackRepository;
   location: UserLocationRepository;
   visitedPoi: VisitedPoiRepository;
@@ -49,6 +61,12 @@ export default fp(
         boundary: new BoundaryRepository(db),
         search: new SearchRepository(db),
         user: new UserRepository(db),
+        dashboardUser: new DashboardUserRepository(db),
+        dashboardListings: new DashboardListingsRepository(db),
+        dashboardFeedback: new DashboardFeedbackRepository(db),
+        dashboardAppReview: new DashboardAppReviewRepository(db),
+        organization: new OrganizationRepository(db),
+        stats: new StatsRepository(db),
         userFeedback: new UserFeedbackRepository(db),
         location: new UserLocationRepository(db),
         visitedPoi: new VisitedPoiRepository(db),

@@ -25,6 +25,67 @@ export {
   type RenderedTemplate,
 } from "./notifications/types.js";
 export {
+  type DashboardAppReviewItem,
+  DashboardAppReviewItemSchema,
+  type DashboardAppReviewsQuery,
+  DashboardAppReviewsQuerySchema,
+  GetDashboardAppReviewsResponseSchema,
+} from "./schemas/api/dashboard/app-reviews.js";
+export {
+  ALL_DASHBOARD_FEATURES,
+  type DashboardFeature,
+  DashboardFeatureSchema,
+  filterValidDashboardFeatures,
+  orgHasFeature,
+} from "./schemas/api/dashboard/features.js";
+export {
+  type DashboardFeedbackItem,
+  DashboardFeedbackItemSchema,
+  type DashboardFeedbacksQuery,
+  DashboardFeedbacksQuerySchema,
+  GetDashboardFeedbacksResponseSchema,
+} from "./schemas/api/dashboard/feedbacks.js";
+export {
+  type BoundaryScope,
+  BoundaryScopeSchema,
+  type DashboardBusinessType,
+  DashboardBusinessTypeSchema,
+  type DashboardMe,
+  DashboardMeSchema,
+  type DashboardMeUser,
+  DashboardMeUserSchema,
+  type DashboardOrg,
+  DashboardOrgSchema,
+  type DashboardScopeMode,
+  DashboardScopeModeSchema,
+  GetDashboardMeResponseSchema,
+} from "./schemas/api/dashboard/me.js";
+export {
+  type DashboardPoiItem,
+  DashboardPoiItemSchema,
+  type DashboardPoisQuery,
+  DashboardPoisQuerySchema,
+  GetDashboardPoisResponseSchema,
+} from "./schemas/api/dashboard/pois.js";
+export {
+  type DashboardStatsCounters,
+  DashboardStatsCountersSchema,
+  type DashboardStatsData,
+  DashboardStatsDataSchema,
+  type DashboardStatsQuery,
+  DashboardStatsQuerySchema,
+  type DashboardStatsTimeseriesPoint,
+  DashboardStatsTimeseriesPointSchema,
+  GetDashboardStatsResponseSchema,
+} from "./schemas/api/dashboard/stats.js";
+export {
+  type DashboardUserItem,
+  DashboardUserItemSchema,
+  type DashboardUsersQuery,
+  DashboardUsersQuerySchema,
+  GetDashboardUsersResponseSchema,
+} from "./schemas/api/dashboard/users.js";
+export {
   type AboutItem,
   AboutItemSchema,
   type AboutOption,
@@ -237,4 +298,4 @@ export { logger } from "./utils/logger.js";
 export { getFilterLevelName, getMvtIdFromPoiId } from "./utils/poi.js";
 export { slugifyNickname } from "./utils/slug.js";
 export { getUserDisplayName } from "./utils/user.js";
-export { generateValidator, validateWithSchema } from "./utils/validation.js";
+export { generateValidator } from "./utils/validation.js";

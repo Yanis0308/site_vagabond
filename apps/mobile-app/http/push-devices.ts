@@ -1,10 +1,14 @@
 import {
+  generateValidator,
   type RegisterPushDeviceRequest,
   RegisterPushDeviceResponseSchema,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
+
+const validateRegisterPushDeviceResponse = generateValidator(
+  RegisterPushDeviceResponseSchema,
+);
 
 export const registerPushDevice = async (
   payload: RegisterPushDeviceRequest,
@@ -13,7 +17,7 @@ export const registerPushDevice = async (
     .post("api/push-devices", { json: payload })
     .json();
 
-  if (!validateWithSchema(RegisterPushDeviceResponseSchema, rawResult)) {
+  if (!validateRegisterPushDeviceResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 

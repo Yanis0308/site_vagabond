@@ -10,8 +10,8 @@ Ce projet s'inspire du projet open source [gosom/google-maps-scraper](https://gi
 
 ```bash
 # Depuis la racine du monorepo
-cd apps/data-scraper
 pnpm install
+pnpm build:libs   # build initial des libs partagées
 ```
 
 ## 🚀 Démarrage
@@ -19,7 +19,8 @@ pnpm install
 ### Mode développement
 
 ```bash
-pnpm develop
+# Depuis la racine, recommandé (rebuild auto des libs via turbo watch)
+pnpm develop:scraper
 ```
 
 Le serveur démarre sur `http://localhost:3001` (configurable via variables d'environnement).

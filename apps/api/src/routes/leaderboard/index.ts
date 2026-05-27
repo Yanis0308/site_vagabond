@@ -7,6 +7,8 @@ import {
 } from "@vagabond/shared-utils";
 import dayjs from "dayjs";
 
+import { asMobileRequest } from "../../types/mobile-request.js";
+
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
     "/",
@@ -52,10 +54,11 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
     },
     async function (request, reply) {
       const { period } = request.query;
+      const { user } = asMobileRequest(request);
 
       const { me, neighbors } =
         await fastify.dbRepositories.user.getLeaderboardMe({
-          userId: request.user.uid,
+          userId: user.uid,
           period,
         });
 

@@ -1,5 +1,3 @@
-
-
 ## Checklist
 
 - [ ] Titre de la PR au format : `feat(VG-XXX): description de la PR`

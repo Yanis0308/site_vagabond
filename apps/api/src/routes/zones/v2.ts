@@ -4,6 +4,8 @@ import {
 } from "@fastify/type-provider-typebox";
 import { GetUserZoneStatsV2ResponseSchema } from "@vagabond/shared-utils";
 
+import { asMobileRequest } from "../../types/mobile-request.js";
+
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
   fastify.get(
     "/stats/me",
@@ -17,8 +19,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
+      const { user } = asMobileRequest(request);
       const stats = await fastify.dbRepositories.boundary.findUserZoneStatsV2(
-        request.user.uid,
+        user.uid,
       );
 
       return await reply.status(200).send({ data: stats });

@@ -3,11 +3,13 @@ import {
   type GoogleGenerativeAIProviderOptions,
 } from "@ai-sdk/google";
 import { createGroq } from "@ai-sdk/groq";
-import { PoiEnrichedSchema, validateWithSchema } from "@vagabond/shared-utils";
+import { generateValidator, PoiEnrichedSchema } from "@vagabond/shared-utils";
 import { generateText, jsonSchema, Output } from "ai";
 import type { FastifyInstance } from "fastify";
 
 import { getLogger } from "../../utils/logger.js";
+
+const validatePoiEnriched = generateValidator(PoiEnrichedSchema);
 import {
   createErrorResponse,
   createSuccessResponse,
@@ -84,7 +86,7 @@ export async function generateEnrichedPoiWithGemini(
     const parsedData: unknown = JSON.parse(text);
 
     // Validate the parsed data against the TypeBox schema
-    const isValid = validateWithSchema(PoiEnrichedSchema, parsedData);
+    const isValid = validatePoiEnriched(parsedData);
 
     if (!isValid) {
       return createValidationErrorResponse(fastify, parsedData, "Gemini");
@@ -159,7 +161,7 @@ export async function generateEnrichedPoiWithGroq(
     const parsedData: unknown = JSON.parse(text);
 
     // Validate the parsed data against the TypeBox schema
-    const isValid = validateWithSchema(PoiEnrichedSchema, parsedData);
+    const isValid = validatePoiEnriched(parsedData);
 
     if (!isValid) {
       return createValidationErrorResponse(fastify, parsedData, "Groq");

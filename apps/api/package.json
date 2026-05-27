@@ -57,6 +57,7 @@
     "firebase-admin": "^13.0.1",
     "geolib": "catalog:",
     "gpt-tokenizer": "^3.4.0",
+    "jose": "^5.9.6",
     "ky": "^1.14.2",
     "pg-boss": "^12.16.0",
     "pino": "^10.3.1",

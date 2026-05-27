@@ -1,8 +1,8 @@
 import {
+  generateValidator,
   JinaApiResponseSchema,
   type JinaScrapeSuccessData,
   type JinaSearchParams,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 import type { FastifyInstance } from "fastify";
 import type { KyInstance } from "ky";
@@ -16,6 +16,8 @@ import type {
 import { createBaseClient } from "./base-client.js";
 
 export type JinaSearchResponse = ScrapingResponse<JinaScrapeSuccessData>;
+
+const validateJinaApiResponse = generateValidator(JinaApiResponseSchema);
 
 /**
  * Create a Jina AI Search HTTP client for s.jina.ai
@@ -58,7 +60,7 @@ export async function searchWithJinaSearch(
       })
       .json<unknown>();
 
-    if (!validateWithSchema(JinaApiResponseSchema, rawResult)) {
+    if (!validateJinaApiResponse(rawResult)) {
       getLogger(fastify).error(
         { rawResult },
         "Jina Search API returned invalid response structure",

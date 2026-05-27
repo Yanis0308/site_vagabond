@@ -1,7 +1,4 @@
-import {
-  FormattedPageSchema,
-  validateWithSchema,
-} from "@vagabond/shared-utils";
+import { FormattedPageSchema, generateValidator } from "@vagabond/shared-utils";
 import type { FastifyInstance } from "fastify";
 import type { KyInstance } from "ky";
 
@@ -13,6 +10,8 @@ import type {
 } from "../processing/scraping-processor.interface.js";
 import { createBaseClient } from "./base-client.js";
 import { JINA_READER_CONFIG } from "./jina-reader-config.js";
+
+const validateFormattedPage = generateValidator(FormattedPageSchema);
 
 export interface JinaReaderSuccessData {
   title: string;
@@ -107,7 +106,7 @@ export async function readUrlWithJinaReader(
 
     const pageData = envelope.data;
 
-    if (!validateWithSchema(FormattedPageSchema, pageData)) {
+    if (!validateFormattedPage(pageData)) {
       getLogger(fastify).error(
         { rawResult, url },
         "Jina Reader API returned invalid response structure",

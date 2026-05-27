@@ -1,14 +1,16 @@
 import {
+  generateValidator,
   logger,
   type PoiEnriched,
   PoiEnrichedSchema,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 import { and, eq } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import { poiEnriched } from "../schema.js";
 import { POI_ENRICHED_VERSION } from "../versions.js";
+
+const validatePoiEnriched = generateValidator(PoiEnrichedSchema);
 
 export interface CreatePoiEnrichedInput {
   poiId: string;
@@ -44,7 +46,7 @@ export class PoiEnrichedRepository {
     const enrichedData = enriched.enrichedData;
 
     // Validate the JSON against PoiEnrichedSchema
-    if (!validateWithSchema(PoiEnrichedSchema, enrichedData)) {
+    if (!validatePoiEnriched(enrichedData)) {
       // Log validation errors but don't expose them to the user
       logger.error(
         `Invalid enriched data for POI ${poiId}:`,
@@ -68,7 +70,7 @@ export class PoiEnrichedRepository {
     data: CreatePoiEnrichedInput,
   ): Promise<PoiEnrichedWithData | undefined> {
     // Validate the enriched data before storing
-    const isValid = validateWithSchema(PoiEnrichedSchema, data.enrichedData);
+    const isValid = validatePoiEnriched(data.enrichedData);
 
     if (!isValid) {
       throw new Error(

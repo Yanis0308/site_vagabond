@@ -13,6 +13,7 @@ import {
   completeZone,
   randomImageKey,
 } from "../../services/staff-tools-zone-completion.service.js";
+import { asMobileRequest } from "../../types/mobile-request.js";
 
 // Note: l'accès staff-only + dev-server est garanti par le hook onRequest dans plugins/auth.ts
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
@@ -32,8 +33,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
+      const { user } = asMobileRequest(request);
       const { poiId } = request.params;
-      const userId = request.user.uid;
+      const userId = user.uid;
 
       const existing = await fastify.dbRepositories.visitedPoi.findByPoiAndUser(
         poiId,
@@ -85,6 +87,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
+      const { user } = asMobileRequest(request);
       const { poiId, boundaryLevel, percentage } = request.body;
 
       try {
@@ -92,7 +95,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           poiId,
           boundaryLevel,
           percentage,
-          request.user.uid,
+          user.uid,
           fastify.dbRepositories,
         );
 

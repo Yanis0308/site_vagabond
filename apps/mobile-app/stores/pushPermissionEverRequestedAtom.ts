@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { validateWithSchema } from "@vagabond/shared-utils";
+import { generateValidator } from "@vagabond/shared-utils";
 import { useAtom } from "jotai";
 import {
   atomWithStorage,
@@ -22,10 +22,14 @@ const PushPermissionEverRequestedSchema = Type.Boolean();
 
 type PushPermissionEverRequested = boolean | undefined;
 
+const validatePushPermissionEverRequested = generateValidator(
+  PushPermissionEverRequestedSchema,
+);
+
 const storage = withStorageValidator<PushPermissionEverRequested>(
   (value: unknown): value is PushPermissionEverRequested => {
     if (value === undefined) return true;
-    if (!validateWithSchema(PushPermissionEverRequestedSchema, value)) {
+    if (!validatePushPermissionEverRequested(value)) {
       logger(
         "Invalid push-permission-ever-requested value, atom should be cleared",
         value,

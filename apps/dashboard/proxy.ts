@@ -1,0 +1,14 @@
+import { type NextRequest, type NextResponse } from "next/server";
+
+import { updateSession } from "@/lib/supabase/proxy";
+
+export async function proxy(request: NextRequest): Promise<NextResponse> {
+  return await updateSession(request);
+}
+
+export const config = {
+  matcher: [
+    // Match tout sauf static, image, favicon, robots, fichiers images
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
+};

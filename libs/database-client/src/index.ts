@@ -1,12 +1,18 @@
 export { getDrizzleClient } from "./drizzleClient.js";
 export { getPgSslOptions, type PgSslOptions } from "./pg-ssl.js";
 export * from "./repositories/boundary.repository.js";
+export * from "./repositories/dashboard-app-review.repository.js";
+export * from "./repositories/dashboard-feedback.repository.js";
+export * from "./repositories/dashboard-listings.repository.js";
+export * from "./repositories/dashboard-user.repository.js";
+export * from "./repositories/organization.repository.js";
 export * from "./repositories/poi.repository.js";
 export * from "./repositories/poi-enriched.repository.js";
 export * from "./repositories/processing-result.repository.js";
 export * from "./repositories/push-device.repository.js";
 export * from "./repositories/search.repository.js";
 export * from "./repositories/staff-tools.repository.js";
+export * from "./repositories/stats.repository.js";
 export * from "./repositories/user.repository.js";
 export * from "./repositories/user-feedback.repository.js";
 export * from "./repositories/user-location.repository.js";

@@ -1,4 +1,4 @@
-import { type UserFeedbackCategory } from "@vagabond/shared-utils";
+﻿import { type UserFeedbackCategory } from "@vagabond/shared-utils";
 import dotenv from "dotenv";
 import fp from "fastify-plugin";
 import fs from "fs";
@@ -10,8 +10,7 @@ export const isDev = process.env.NODE_ENV === "development";
 
 // Définition du schéma de configuration
 const RawConfigSchema = z.object({
-  //NODE_ENV: z.enum(["development", "production", "test"]),
-  //PORT: z.string().transform(Number),
+  PORT: z.coerce.number().int().min(1).max(65535).default(3000),
   FIREBASE_ADMIN_SERVICE_ACCOUNT_FILE_BASE64: z.string(),
   API_DATABASE_URL: z.string(),
   AWS_ACCESS_KEY_ID: z.string(),
@@ -36,6 +35,8 @@ const RawConfigSchema = z.object({
   GROQ_API_KEY: z.string(),
   SENTRY_DSN: z.string(),
   SENTRY_ENVIRONMENT: z.string(),
+  SUPABASE_URL: z.string().url(),
+  SUPABASE_JWKS_URL: z.string().url(),
   APP_ENV: z.enum(["development", "production"]).optional(),
   FLY_APP_NAME: z.string().optional(),
   FLY_VM_MEMORY_MB: z.coerce.number().int().positive().default(1024),
@@ -57,6 +58,8 @@ const RawConfigSchema = z.object({
 export interface Config {
   isDev: boolean;
   isDevServer: boolean;
+  port: number;
+  publicBaseUrl: string;
   appServerName: string | undefined;
   serverMemoryMb: number;
   databaseUrl: string;
@@ -93,6 +96,10 @@ export interface Config {
     enrichmentConcurrency: number;
     archiveDays: number;
   };
+  supabase: {
+    url: string;
+    jwksUrl: string;
+  };
 }
 
 // Déclaration pour étendre l'interface Fastify
@@ -100,6 +107,12 @@ declare module "fastify" {
   interface FastifyInstance {
     config: Config;
   }
+}
+
+/** Listen port for server.ts — same Zod rules as RawConfigSchema.PORT. */
+export function getListenPort(): number {
+  dotenv.config();
+  return RawConfigSchema.parse(process.env).PORT;
 }
 
 export default fp(
@@ -127,6 +140,8 @@ export default fp(
       const config: Config = {
         isDev,
         isDevServer: rawConfig.APP_ENV === "development",
+        port: rawConfig.PORT,
+        publicBaseUrl: `http://localhost:${String(rawConfig.PORT)}`,
         appServerName: rawConfig.FLY_APP_NAME,
         serverMemoryMb: rawConfig.FLY_VM_MEMORY_MB,
         databaseUrl: rawConfig.API_DATABASE_URL,
@@ -169,6 +184,10 @@ export default fp(
           schema: rawConfig.PGBOSS_SCHEMA,
           enrichmentConcurrency: rawConfig.PGBOSS_ENRICHMENT_CONCURRENCY,
           archiveDays: rawConfig.PGBOSS_ARCHIVE_DAYS,
+        },
+        supabase: {
+          url: rawConfig.SUPABASE_URL,
+          jwksUrl: rawConfig.SUPABASE_JWKS_URL,
         },
       };
 

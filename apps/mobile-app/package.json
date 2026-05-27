@@ -15,7 +15,7 @@
     "lint-fix": "eslint . --fix",
     "prettier-check": "prettier . --check",
     "prettier-fix": "prettier . --write",
-    "develop": "dotenvx run -f .env.local -- expo start --clear",
+    "develop": "dotenvx run -f .env.local -- sh -c 'expo start --clear --port \"${MOBILE_APP_PORT:-8081}\"'",
     "build-local-ios-simulator": "dotenvx run -f .env.local -- eas build --platform ios --profile development-simulator --local",
     "build-cloud-ios-simulator": "dotenvx run -f .env.local -- eas build --platform ios --profile development-simulator",
     "build-local-ios-dev": "dotenvx run -f .env.local -- eas build --platform ios --profile development --local",

@@ -1,4 +1,4 @@
-# Mobile App Vagabond
+﻿# Mobile App Vagabond
 
 Application mobile React Native avec **Expo** et **Expo Router**. Utilise **NativeWind** (Tailwind CSS), **React Query**, **Mapbox**, **Firebase Auth**, **Jotai** pour l'état global, et **i18next** pour l'internationalisation. Supporte iOS et Android avec builds via EAS (Expo Application Services).
 
@@ -74,11 +74,10 @@ L'application utilise **Expo Router** avec un système de routes basé sur les f
 ```bash
 # Depuis la racine du monorepo
 pnpm install
-
-# Depuis le dossier de l'app mobile
-cd apps/mobile-app
-pnpm install
+pnpm build:libs   # build initial des libs partagées
 ```
+
+> Pour le développement, préférez `pnpm develop:mobile` depuis la racine (rebuild auto des libs via turbo watch).
 
 ## Configuration
 
@@ -131,7 +130,11 @@ Les scripts utilisent automatiquement les bons fichiers selon le contexte :
 ### Développement
 
 ```bash
-# Démarrer le serveur de développement
+# Démarrer depuis la racine (recommandé — rebuild auto des libs)
+# Metro écoute par défaut sur le port 8081 (MOBILE_APP_PORT surchargeable dans .env.local)
+pnpm develop:mobile
+
+# Ou en local (nécessite `pnpm build:libs` au préalable)
 pnpm develop
 
 # Vérifier la configuration Expo

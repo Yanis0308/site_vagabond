@@ -6,6 +6,7 @@ import {
   getUserDisplayName,
 } from "@vagabond/shared-utils";
 
+import { asMobileRequest } from "../../types/mobile-request.js";
 import { captureAndLog } from "../../utils/logger.js";
 
 const routes: FastifyPluginCallbackTypebox = (fastify) => {
@@ -23,9 +24,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
+      const { user } = asMobileRequest(request);
       await fastify.dbRepositories.userFeedback.create({
         ...request.body,
-        userId: request.user.uid,
+        userId: user.uid,
       });
 
       const { targetPoiId, ...body } = request.body;
@@ -56,10 +58,10 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           await fastify.slack.sendUserFeedbackMessage({
             feedback: request.body,
             userDisplayName:
-              request.user.db.nickname ??
-              getUserDisplayName(request.user.db.fullName, request.user.email),
-            userFullName: request.user.db.fullName,
-            userEmail: request.user.email ?? "Email inconnu",
+              user.db.nickname ??
+              getUserDisplayName(user.db.fullName, user.email),
+            userFullName: user.db.fullName,
+            userEmail: user.email ?? "Email inconnu",
             targetPoiName: poiInfo?.name ?? null,
             targetPoiId: targetPoiId ?? null,
             targetPoiLocation:

@@ -1,4 +1,4 @@
-import swagger from "@fastify/swagger";
+﻿import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import { type FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
@@ -15,7 +15,7 @@ export default fp(
         },
         servers: [
           {
-            url: "http://localhost:3000",
+            url: fastify.config.publicBaseUrl,
             description: "Development server",
           },
         ],
@@ -56,6 +56,6 @@ export default fp(
   },
   {
     name: "swagger",
-    dependencies: ["add-schemas"],
+    dependencies: ["custom-config", "add-schemas"],
   },
 );

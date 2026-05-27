@@ -1,15 +1,25 @@
 import {
+  generateValidator,
   type LeaderboardMeResponse,
   LeaderboardMeResponseSchema,
   type LeaderboardResponse,
   LeaderboardResponseSchema,
   type LeaderboardV2Response,
   LeaderboardV2ResponseSchema,
-  validateWithSchema,
 } from "@vagabond/shared-utils";
 
 import { apiClient } from "@/http/api-client";
 import { logger } from "@/utils/logger";
+
+const validateLeaderboardResponse = generateValidator(
+  LeaderboardResponseSchema,
+);
+const validateLeaderboardV2Response = generateValidator(
+  LeaderboardV2ResponseSchema,
+);
+const validateLeaderboardMeResponse = generateValidator(
+  LeaderboardMeResponseSchema,
+);
 
 export const getLeaderboard = async (
   period: "all-time" | "monthly" = "all-time",
@@ -20,7 +30,7 @@ export const getLeaderboard = async (
     })
     .json();
 
-  if (!validateWithSchema(LeaderboardResponseSchema, rawResult)) {
+  if (!validateLeaderboardResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 
@@ -46,7 +56,7 @@ export const getLeaderboardV2 = async ({
     .get("api/v2/leaderboard", { searchParams })
     .json();
 
-  if (!validateWithSchema(LeaderboardV2ResponseSchema, rawResult)) {
+  if (!validateLeaderboardV2Response(rawResult)) {
     throw new Error("Invalid response");
   }
 
@@ -61,7 +71,7 @@ export const getLeaderboardMe = async (
     .get("api/leaderboard/me", { searchParams: { period } })
     .json();
 
-  if (!validateWithSchema(LeaderboardMeResponseSchema, rawResult)) {
+  if (!validateLeaderboardMeResponse(rawResult)) {
     throw new Error("Invalid response");
   }
 
