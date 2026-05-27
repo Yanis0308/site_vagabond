@@ -107,7 +107,7 @@ function extractTextFromNode(node: UnistNode): string {
 function replaceLinksWithText<T extends UnistNode>(tree: T): T {
   const mapped = map(tree as Parameters<typeof map>[0], (node) => {
     if ((node as UnistNode).type === "link") {
-      const text = extractTextFromNode(node as UnistNode);
+      const text = extractTextFromNode(node);
       return { type: "text", value: text };
     }
     return node;

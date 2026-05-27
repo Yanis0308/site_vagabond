@@ -43,7 +43,7 @@ function normalizeStateData(stateData: unknown): unknown {
     typeof stateData === "object" &&
     stateData !== null &&
     "hg" in stateData &&
-    Array.isArray((stateData as { hg: unknown }).hg)
+    Array.isArray(stateData.hg)
   ) {
     logUtils.warn(
       "VALIDATOR",
@@ -71,7 +71,7 @@ function normalizeStateData(stateData: unknown): unknown {
         typeof parsed === "object" &&
         parsed !== null &&
         "hg" in parsed &&
-        Array.isArray((parsed as { hg: unknown }).hg)
+        Array.isArray(parsed.hg)
       ) {
         logUtils.warn(
           "VALIDATOR",

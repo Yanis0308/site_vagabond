@@ -50,7 +50,7 @@
     "@hookform/resolvers": "^3.9.0",
     "@invertase/react-native-apple-authentication": "^2.4.0",
     "@legendapp/motion": "^2.5.3",
-    "@nandorojo/galeria": "^3.0.0",
+    "@nandorojo/galeria": "3.0.0",
     "@ngneat/falso": "^7.2.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-firebase/analytics": "23.4.1",

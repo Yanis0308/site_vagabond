@@ -50,14 +50,13 @@ export function mapWithJsonSchema<T extends TSchema>(
   return (v: unknown): Static<T> => {
     const parsed = parseJsonbValue(v);
     if (parsed === null || parsed === undefined) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- empty array for array schemas when DB returns null
       return [] as Static<T>;
     }
     if (!validate(parsed)) {
       const schemaId = (schema as { $id?: string }).$id ?? "unknown";
       throw new Error(`JSONB validation failed for schema ${schemaId}`);
     }
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- validated by AJV type guard
+
     return parsed;
   };
 }

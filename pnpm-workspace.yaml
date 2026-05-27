@@ -2,6 +2,22 @@ packages:
   - "apps/*"
   - "libs/*"
 
+# pnpm 11 requiert d'approuver explicitement les postinstall scripts (binaires
+# natifs, téléchargements, etc.). Tous nos packages "ignored builds" sont
+# légitimes : binaires natifs requis (sharp, swc, esbuild, parcel/watcher,
+# unrs-resolver), download Chromium (puppeteer pour data-scraper), runtime
+# native code (firebase/util, protobufjs), worker service (msw).
+allowBuilds:
+  "@firebase/util": true
+  "@parcel/watcher": true
+  "@swc/core": true
+  esbuild: true
+  msw: true
+  protobufjs: true
+  puppeteer: true
+  sharp: true
+  unrs-resolver: true
+
 catalog:
   # Core utilities
   dayjs: ^1.11.13
@@ -49,3 +65,16 @@ catalog:
   # React
   react: 19.1.0
   react-dom: 19.1.0
+
+overrides:
+  "@gluestack-ui/linear-gradient>expo-linear-gradient": "~15.0.7"
+  "@vagabond/shared-utils>ajv": "catalog:"
+  "@vagabond/shared-utils>dotenv": "catalog:"
+  "@vagabond/mobile-app>ajv": "catalog:"
+  "basic-ftp": ">=5.2.0"
+  "pg": "8.20.0"
+
+patchedDependencies:
+  "ajv@8.17.1": "patches/ajv@8.17.1.patch"
+  "fastify": "patches/fastify.patch"
+  "@nandorojo/galeria@3.0.0": "patches/@nandorojo__galeria@3.0.0.patch"

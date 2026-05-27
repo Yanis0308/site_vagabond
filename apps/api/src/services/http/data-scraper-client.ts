@@ -98,11 +98,7 @@ export async function scrapeGoogleMaps(
       return errorResponse;
     }
 
-    const validatedResult = rawResult as {
-      success: boolean;
-      place: GoogleMapsPlaceStrict | null;
-      error?: string;
-    };
+    const validatedResult = rawResult;
 
     // Validate the place if it exists
     let validatedPlace: GoogleMapsPlaceStrict | null = null;
@@ -130,7 +126,7 @@ export async function scrapeGoogleMaps(
     const successResponse: ScrapingSuccessResponse<GoogleMapsScrapeSuccessData> =
       {
         success: true,
-        ...({ place: validatedPlace } as GoogleMapsScrapeSuccessData),
+        ...{ place: validatedPlace },
       };
 
     return successResponse;

@@ -18,7 +18,7 @@ export class PoiRepository {
 
     const values = data.map((item) => ({
       id: item.id,
-      source: item.source as "OSM", // Cast if needed or ensure type match
+      source: item.source,
       sourceId: item.sourceId,
       coords: sql`ST_SetSRID(ST_MakePoint(${item.coords.longitude}, ${item.coords.latitude}), 4326)`,
       filterLevel: item.filterLevel,

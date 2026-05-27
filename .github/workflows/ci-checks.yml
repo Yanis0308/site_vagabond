@@ -37,18 +37,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "pnpm"
       - run: pnpm i --frozen-lockfile
-
-      # `.npmrc` a `inject-workspace-packages=true` (requis par `pnpm deploy`
-      # dans les Dockerfiles API/scraper). Conséquence : `pnpm install` copie
-      # les packages workspace SANS leur `dist/` (pas encore buildé). On doit
-      # donc (1) builder les libs, puis (2) refaire un install pour
-      # re-injecter les copies cette fois AVEC `dist/`, avant que les checks
-      # ne tentent d'importer leurs types.
-      - run: pnpm run build:libs
-        env:
-          TURBO_TELEMETRY_DISABLED: 1
-      - run: pnpm i --frozen-lockfile
-
       - run: pnpm run check-all
         env:
           TURBO_TELEMETRY_DISABLED: 1

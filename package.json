@@ -4,7 +4,7 @@
   "description": "",
   "private": true,
   "author": "",
-  "packageManager": "pnpm@10.1.0",
+  "packageManager": "pnpm@11.4.0",
   "engines": {
     "node": ">=22.12.0"
   },
@@ -55,21 +55,6 @@
     "typescript": "catalog:",
     "typescript-eslint": "catalog:",
     "utility-types": "^3.11.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "@gluestack-ui/linear-gradient>expo-linear-gradient": "~15.0.7",
-      "@vagabond/shared-utils>ajv": "catalog:",
-      "@vagabond/shared-utils>dotenv": "catalog:",
-      "@vagabond/mobile-app>ajv": "catalog:",
-      "basic-ftp": ">=5.2.0",
-      "pg": "8.20.0"
-    },
-    "patchedDependencies": {
-      "ajv@8.17.1": "patches/ajv@8.17.1.patch",
-      "fastify": "patches/fastify.patch",
-      "@nandorojo/galeria@3.0.0": "patches/@nandorojo__galeria@3.0.0.patch"
-    }
   },
   "volta": {
     "node": "22.22.2"

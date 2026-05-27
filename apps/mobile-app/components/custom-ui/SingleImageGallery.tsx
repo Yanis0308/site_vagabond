@@ -14,7 +14,7 @@ const hasStringUri = (value: unknown): value is { uri: string } =>
   typeof value === "object" &&
   value !== null &&
   "uri" in value &&
-  typeof (value as { uri: unknown }).uri === "string";
+  typeof value.uri === "string";
 
 const extractGalleryUrl = (
   source: ImageLoadAsyncSource | ImageLoadAsyncSource[],

@@ -19,7 +19,7 @@ export const useImageFromMultipleSources = (
   options: UseImageFromMultipleSourcesOptions,
 ): UseQueryResult<ImageRef | number | null> => {
   return useQuery<ImageRef | number | null>({
-    queryKey: ["imageSources", sources, options.maxImageSize],
+    queryKey: ["imageSources", sources, options],
     queryFn: async () => {
       for (const source of sources) {
         try {

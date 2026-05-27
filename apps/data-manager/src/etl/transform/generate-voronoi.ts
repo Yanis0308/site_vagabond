@@ -166,7 +166,7 @@ function clipPolygonToBoundary(
     } else {
       for (const poly of result as number[][][][]) {
         if (poly.length > 0 && poly[0] !== undefined && poly[0].length >= 3) {
-          polygons.push(poly as Polygon["coordinates"]);
+          polygons.push(poly);
         }
       }
     }
@@ -315,7 +315,7 @@ async function processCityVoronoi(
           type: "Feature",
           properties: {},
           geometry: { type: "Polygon", coordinates: [coords] },
-        } as Feature<Polygon>,
+        },
         poiIndex: i,
       });
     }
