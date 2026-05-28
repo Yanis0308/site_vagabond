@@ -20,12 +20,13 @@ const workspaceRoot = resolve(__dirname, "../..");
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
 const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
-const isDev = process.env.NODE_ENV !== "production";
 
-// CSP : 'unsafe-eval' nécessaire en dev pour Turbopack ; retiré en prod.
+// CSP : 'unsafe-eval' nécessaire pour Turbopack en dev ET pour la compilation
+// runtime d'AJV côté browser (cf. `generateValidator` dans shared-utils) en prod.
+// TODO: basculer sur Value.Check de TypeBox (pas d'eval) ou pré-compiler les schémas via ajv/dist/standalone.
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
   "style-src 'self' 'unsafe-inline'",
   `connect-src 'self' ${supabaseUrl} ${apiUrl}`.trim(),
   "img-src 'self' data: blob:",
