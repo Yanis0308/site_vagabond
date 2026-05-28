@@ -12,8 +12,8 @@
     "prettier-check": "prettier . --check",
     "prettier-fix": "prettier . --write",
     "build": "pnpm run clean && tsc",
-    "watch": "pnpm run clean && tsc --watch",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "develop": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@fastify/compress": "^8.1.0",

@@ -24,7 +24,7 @@ vagagond-poc/
 
 ## Tech Stack
 
-- **Package manager**: pnpm 10.1.0 (workspaces)
+- **Package manager**: pnpm 11.4.0 (workspaces + catalogs)
 - **Language**: TypeScript 5.9 (strict mode)
 - **Backend**: Fastify 5, Drizzle ORM, PostgreSQL, Firebase Admin, AWS S3
 - **Mobile**: React Native 19.1, Expo 54, Expo Router, NativeWind (Tailwind), Mapbox, Jotai, React Query, Gluestack UI
@@ -51,17 +51,26 @@ pnpm fix-all
 # Format all files with Prettier
 pnpm prettier-write
 
-# App development (run from the repo root — Turbo rebuilds libs in watch mode)
+# App development (run from the repo root — lance UNIQUEMENT l'app en watch ;
+# build initial des libs au démarrage via dependsOn ^build dans turbo.json)
 pnpm develop:api         # @vagabond/api
 pnpm develop:dashboard   # @vagabond/dashboard
 pnpm develop:website     # @vagabond/website (requires Docker: cd apps/website && pnpm docker:up first)
 pnpm develop:mobile      # @vagabond/mobile-app
 pnpm develop:scraper     # @vagabond/data-scraper
+
+# Watch des 3 libs en parallèle — à lancer dans un second terminal SI tu vas
+# modifier des libs pendant la session dev. Sinon `develop:<app>` suffit.
+pnpm develop:libs
 ```
 
-**How lib rebuilds work**: The `develop:*` scripts use `turbo watch develop`. Turbo builds each lib once (with cache), starts the app's watcher, and re-runs only the affected lib's build when its sources change. The app's own watcher (tsc-watch / next dev / expo) then reloads on the new `dist/`.
+**How lib rebuilds work**: workspace deps résolues par **symlink** dans `node_modules` (pas d'`inject-workspace-packages`).
 
-If you start an app directly (`cd apps/<app> && pnpm develop`), Turbo is bypassed — you must run `pnpm build:libs` manually after editing anything under `libs/`.
+- `pnpm develop:<app>` ne watch que l'app. Les libs sont buildées une fois au démarrage via `dependsOn: ["^build"]`, puis figées.
+- `pnpm develop:libs` lance les 3 `tsc --watch` en parallèle, à ouvrir dans un second terminal si on modifie les libs pendant la session.
+
+Sous `develop:libs`, modif de `libs/<foo>/src/*.ts` → `tsc --watch` rebuild `dist/` → symlink propage vers les consumers → watcher de l'app détecte. Pas de `pnpm install`.
+
 
 ## Code Quality & Linting
 
@@ -162,13 +171,19 @@ refactor/VG-123-description
 
 - `.env.example` exists at root (for SafeQL database URL)
 - Each app may have its own `.env` — never commit `.env` files
-- Node.js 20.x required (CI matrix)
+- Node.js 22.12+ required (CI matrix, engines)
 - **Ports** are configurable per app via `.env` (defaults: API `PORT=3000`, website `WEBSITE_PORT=3001`, dashboard `DASHBOARD_PORT=3002`, mobile `MOBILE_APP_PORT=8081`, Postgres host `5432`, scraper `PORT=3234`). See each app's `.env.example`.
 - **Do not read `process.env` in application code** — use each app's config layer (`apps/api/src/plugins/config.ts`, `apps/dashboard/lib/config/public.ts`, `apps/mobile-app/app.config.ts`, etc.). Exceptions: `dotenv.config()` at boot and `NODE_ENV` for dev/prod mode.
 
 ## Common Gotchas
 
-1. **Libs need rebuild**: Run apps through `pnpm develop:<app>` from the repo root so Turbo rebuilds libs on file changes. If you run the app directly from `apps/<app>/`, call `pnpm build:libs` from the root manually after each lib edit.
-2. **Patched dependencies**: `ajv` and `fastify` have pnpm patches in `patches/` — be careful when upgrading these
-3. **SafeQL**: Database query validation is configured in `eslint-safeql.config.mjs` — requires a running PostgreSQL for type checking
-4. **The project README is in French** — the team works in French
+1. **Libs watch propagation**: `pnpm develop:<app>` ne watch QUE l'app (les libs sont buildées une fois au démarrage). Si tu modifies les libs pendant la session, ouvre `pnpm develop:libs` dans un terminal séparé — la cascade `tsc --watch` → symlink → app watcher se déclenche automatiquement, sans `pnpm install`.
+3. **Patched dependencies**: `ajv` et `fastify` ont des pnpm patches dans `patches/` (déclarés dans `pnpm-workspace.yaml` → `patchedDependencies`). À surveiller lors des upgrades.
+5. **`pnpm-lock.yaml` regen**: avec pnpm 11, `pnpm install` après suppression du lockfile peut dire "Already up to date" tant que `node_modules/.pnpm/lock.yaml` (cache interne) est cohérent. Force la regen avec :
+   ```bash
+   rm -rf node_modules apps/*/node_modules libs/*/node_modules pnpm-lock.yaml
+   pnpm install --ignore-scripts  # première passe → lockfile
+   pnpm install                   # seconde passe → postinstall scripts (puppeteer download, etc.)
+   ```
+6. **SafeQL**: Database query validation is configured in `eslint-safeql.config.mjs` — requires a running PostgreSQL for type checking
+7. **The project README is in French** — the team works in French

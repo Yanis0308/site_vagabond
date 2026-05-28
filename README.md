@@ -100,7 +100,7 @@ pnpm build:libs
 
 Cette commande utilise Turbo pour builder `@vagabond/api-utils`, `@vagabond/database-client` et `@vagabond/shared-utils` en respectant leur ordre de dépendance et en mettant les résultats en cache.
 
-> **Important** : Pour le développement, utilisez les scripts `pnpm develop:<app>` à la racine (voir la section [Modifier les bibliothèques partagées](#modifier-les-bibliothèques-partagées)). Ils orchestrent automatiquement le rebuild des libs via `turbo watch`.
+> **Important** : Pour le développement, utilisez les scripts `pnpm develop:<app>` à la racine (voir la section [Modifier les bibliothèques partagées](#modifier-les-bibliothèques-partagées)). Ils lancent l'app et chaque lib en `tsc --watch` parallèle ; les workspace deps sont résolues par symlink, donc les modifs de libs se propagent automatiquement aux apps sans `pnpm install`.
 
 ## Notes techniques
 
@@ -120,7 +120,7 @@ Nous suivons cette issue concernant un problème de typage dans Gluestack UI : h
 
 ## Patchs pnpm pour tous les projets
 
-Ce projet utilise les patchs pnpm suivants (configurés dans `package.json` sous `pnpm.patchedDependencies`):
+Ce projet utilise les patchs pnpm suivants (configurés dans `pnpm-workspace.yaml` sous `patchedDependencies`, depuis pnpm 11 — auparavant dans `package.json`):
 
 - **ajv@8.17.1** (`patches/ajv@8.17.1.patch`)
   - Modifie le comportement d'ajv pour logger des warnings au lieu de lancer des erreurs pour les références de schéma ambiguës ou les schémas dupliqués
@@ -193,23 +193,28 @@ Ce projet est organisé comme un monorepo. Voir la section [Projets](#projets) p
 
 ### Modifier les bibliothèques partagées
 
-Le rebuild des bibliothèques (`/libs`) est orchestré par [Turbo](https://turborepo.com/) :
+Les workspace deps (`@vagabond/api-utils`, `@vagabond/database-client`, `@vagabond/shared-utils`) sont résolues par **symlink** dans les `node_modules` des apps. Pas besoin de `pnpm install` après modif de lib.
 
-- **Au premier démarrage** : `pnpm build:libs` à la racine compile les trois libs (résultat mis en cache).
-- **Pendant le développement** : lancez l'application via les scripts racine — ils enchaînent un build initial des libs (cache hit instantané si rien n'a changé) puis démarrent l'app en mode watch.
+`pnpm develop:<app>` ne watch QUE l'app. Les libs sont buildées une fois au démarrage (via `dependsOn: ["^build"]` dans `turbo.json`) puis figées. Si vous prévoyez de modifier les libs, ouvrez `pnpm develop:libs` dans un terminal séparé.
 
 ```bash
-# Au choix selon l'app sur laquelle vous travaillez
+# Terminal 1 — l'app
 pnpm develop:api         # @vagabond/api
 pnpm develop:dashboard   # @vagabond/dashboard
 pnpm develop:website     # @vagabond/website
 pnpm develop:mobile      # @vagabond/mobile-app
 pnpm develop:scraper     # @vagabond/data-scraper
+
+# Terminal 2 (optionnel) — watch des libs
+pnpm develop:libs
 ```
 
-Quand vous modifiez un fichier dans `/libs/*/src/`, `turbo watch` rebuild uniquement la lib touchée, et le watcher de l'app (tsc-watch / next dev / expo) recharge le code automatiquement.
+Avec `develop:libs` en cours, une modif dans `/libs/<foo>/src/` rebuild son `dist/` et le watcher de l'app reload (latence 2–5s).
 
-> Si vous préférez lancer l'app directement (`cd apps/<app> && pnpm develop`), pensez à rebuild les libs manuellement après chaque modification : `pnpm build:libs` depuis la racine.
+**Après un `git pull`** : turbo détecte les libs périmées via le hash des inputs et rebuild automatiquement au démarrage. Exceptions :
+
+- `package.json` / `pnpm-lock.yaml` / `pnpm-workspace.yaml` modifiés → `pnpm install`
+- `libs/database-client/src/schema.ts` modifié → `pnpm --filter @vagabond/database-client drizzle-generate` (pas de watch sur drizzle, requiert une DB live)
 
 ### Convention de nommage des branches
 

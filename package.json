@@ -17,11 +17,12 @@
     "check-affected": "turbo run typescript-check lint-check prettier-check i18n-check --filter=[HEAD]",
     "fix-all": "turbo run lint-fix prettier-fix",
     "clean-all": "turbo run clean && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' \\; -print",
-    "develop:api": "turbo watch develop --filter=@vagabond/api",
-    "develop:dashboard": "turbo watch develop --filter=@vagabond/dashboard",
-    "develop:website": "turbo watch develop --filter=@vagabond/website",
-    "develop:mobile": "turbo watch develop --filter=@vagabond/mobile-app",
-    "develop:scraper": "turbo watch develop --filter=@vagabond/data-scraper"
+    "develop:libs": "turbo run develop --filter=./libs/*",
+    "develop:api": "turbo run develop --filter=@vagabond/api",
+    "develop:dashboard": "turbo run develop --filter=@vagabond/dashboard",
+    "develop:website": "turbo run develop --filter=@vagabond/website",
+    "develop:mobile": "turbo run develop --filter=@vagabond/mobile-app",
+    "develop:scraper": "turbo run develop --filter=@vagabond/data-scraper"
   },
   "dependencies": {
     "dayjs": "catalog:",
@@ -38,7 +39,6 @@
     "@tanstack/eslint-plugin-query": "^5.91.4",
     "@ts-safeql/eslint-plugin": "^4.2.0",
     "@types/geojson": "catalog:",
-    "concurrently": "^9.1.2",
     "eslint": "catalog:",
     "eslint-config-prettier": "catalog:",
     "eslint-plugin-goodeffects": "^1.0.2",

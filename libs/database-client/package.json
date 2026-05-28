@@ -13,9 +13,8 @@
     "prettier-fix": "prettier . --write",
     "drizzle-generate": "drizzle-kit generate",
     "build": "pnpm run clean && tsc && cp -r src/migrations dist/migrations",
-    "watch": "pnpm run clean && tsc --watch",
     "clean": "rm -rf dist",
-    "develop": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Drizzle\" -c \"yellow.bold,cyan.bold\" \"pnpm:watch\" \"pnpm:drizzle-generate\""
+    "develop": "tsc --watch --preserveWatchOutput"
   },
   "dependencies": {
     "@vagabond/shared-utils": "workspace:*",

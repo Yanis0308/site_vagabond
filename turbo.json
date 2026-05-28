@@ -13,6 +13,7 @@
     },
     "develop": {
       "dependsOn": ["^build"],
+      "outputs": ["dist/**"],
       "cache": false,
       "persistent": true
     },
