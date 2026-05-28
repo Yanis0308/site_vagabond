@@ -14,7 +14,7 @@ export const BoundaryScopeSchema = Type.Union(
       boundaryIds: Type.Array(Type.String()),
     }),
   ],
-  { $id: "BoundaryScope", discriminator: "kind" },
+  { $id: "BoundaryScope" },
 );
 
 export const DashboardBusinessTypeSchema = Type.Union(
