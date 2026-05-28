@@ -36,16 +36,27 @@ COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # 3. Builder : ajoute le source code et build l'API + ses libs.
+# Note : `turbo prune --docker` ne copie pas les fichiers root hors du graphe
+# workspace (package.json/lockfile/turbo.json). On ramène manuellement
+# `tsconfig.base.json` car les tsconfigs des libs l'étendent (sans lui,
+# `skipLibCheck` disparaît et `tsc` part valider les types de typebox).
 FROM deps AS builder
 WORKDIR /app
 COPY --from=pruner /app/out/full/ .
+COPY --from=pruner /app/tsconfig.base.json ./tsconfig.base.json
 RUN pnpm exec turbo run build --filter=@vagabond/api
 
 # 4. Runtime : réinstalle en `--prod` pour élaguer les devDeps du node_modules.
+# `CI=true` : sinon pnpm 11 demande confirmation TTY avant de purger les
+# devDeps héritées de la stage builder (ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY).
+# `--ignore-scripts` : le script root `prepare` lance `husky` (devDep), qui
+# disparaît avec la purge. Les postinstall des prod deps ont déjà tourné dans
+# la stage `deps` et leurs artefacts sont intacts via les COPY successifs.
 FROM base AS api
+ENV CI=true
 WORKDIR /app
 COPY --from=builder /app .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prod
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --prod --ignore-scripts
 WORKDIR /app/apps/api
 EXPOSE 3000
 CMD ["pnpm", "start"]
