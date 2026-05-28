@@ -40,6 +40,11 @@ jobs:
       - run: pnpm run check-all
         env:
           TURBO_TELEMETRY_DISABLED: 1
+          # `better-tailwindcss/enforce-canonical-classes` appelle Tailwind via
+          # synckit (worker thread + Atomics.wait). Le timeout par défaut (10s)
+          # est dépassé sur les runners ubuntu-latest sur les gros fichiers du
+          # website. Bump à 60s.
+          SYNCKIT_TIMEOUT: 60000
 
       # Build prod du Dashboard : valide que `next build` passe (server components,
       # Suspense boundaries, etc.) — `check-all` ne fait que typecheck/lint/prettier.

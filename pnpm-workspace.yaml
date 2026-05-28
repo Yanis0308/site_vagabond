@@ -5,8 +5,8 @@ packages:
 # pnpm 11 requiert d'approuver explicitement les postinstall scripts (binaires
 # natifs, téléchargements, etc.). Tous nos packages "ignored builds" sont
 # légitimes : binaires natifs requis (sharp, swc, esbuild, parcel/watcher,
-# unrs-resolver), download Chromium (puppeteer pour data-scraper), runtime
-# native code (firebase/util, protobufjs), worker service (msw).
+# unrs-resolver), runtime native code (firebase/util, protobufjs), worker
+# service (msw).
 allowBuilds:
   "@firebase/util": true
   "@parcel/watcher": true
@@ -14,7 +14,10 @@ allowBuilds:
   esbuild: true
   msw: true
   protobufjs: true
-  puppeteer: true
+  # data-scraper n'est plus maintenu — on bloque explicitement le download
+  # Chromium de puppeteer (sinon pnpm 11 erreurs avec ERR_PNPM_IGNORED_BUILDS
+  # tant que l'entry est absente du allowBuilds).
+  puppeteer: false
   sharp: true
   unrs-resolver: true
 

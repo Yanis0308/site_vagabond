@@ -1,5 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalPassThroughEnv": ["SYNCKIT_TIMEOUT"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
