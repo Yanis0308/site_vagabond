@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "catalog:",
     "@types/pg": "catalog:",
     "@types/qrcode": "^1.5.6",
@@ -54,7 +55,6 @@
     "pg": "catalog:",
     "postcss": "^8",
     "prettier": "catalog:",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "tailwindcss": "^4.1.18",
     "shadcn": "^4.0.5",
     "typescript": "catalog:"

@@ -27,10 +27,10 @@ export const ImageLoader = ({
   return (
     <View
       className={cn(
-        "absolute inset-0 flex items-center justify-center transition-opacity duration-300 ease-in-out",
+        `absolute inset-0 flex items-center justify-center transition-opacity duration-300 ease-in-out`,
         {
           "opacity-100": displayLoader,
-          "opacity-0 pointer-events-none": !displayLoader,
+          "pointer-events-none opacity-0": !displayLoader,
         },
         className,
       )}

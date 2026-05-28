@@ -6,7 +6,6 @@ import tanstackQuery from "@tanstack/eslint-plugin-query";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import reactYouMightNotNeedAnEffect from "eslint-plugin-react-you-might-not-need-an-effect";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
-import tailwindcss from "eslint-plugin-tailwindcss";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
@@ -29,9 +28,6 @@ export default tseslint.config(
 
   // eslint-comments
   eslintComments.recommended,
-
-  // tailwindcss
-  ...tailwindcss.configs["flat/recommended"],
 
   // tanstack query
   ...tanstackQuery.configs["flat/recommended"],

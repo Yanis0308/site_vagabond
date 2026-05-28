@@ -21,7 +21,7 @@ export function AnimatedGradientText({
   return (
     <span
       className={cn(
-        "animate-gradient-text bg-[length:200%_auto] bg-clip-text text-transparent",
+        `animate-gradient-text bg-size-[200%_auto] bg-clip-text text-transparent`,
         "bg-linear-to-r from-[#8C2ACA] via-[#FF5C5C] to-[#8C2ACA]",
         className,
       )}

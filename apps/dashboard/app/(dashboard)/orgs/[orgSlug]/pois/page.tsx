@@ -84,7 +84,7 @@ export default function PoisPage({
               filterLevel: e.target.value as PoiFilterLevelEnum | "ALL",
             }));
           }}
-          className="border-input bg-input/20 rounded-md border px-2 py-1.5 text-sm"
+          className="rounded-md border border-input bg-input/20 px-2 py-1.5 text-sm"
         >
           {FILTER_LEVEL_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -100,7 +100,7 @@ export default function PoisPage({
               disabled: e.target.value as DashboardPoisFilters["disabled"],
             }));
           }}
-          className="border-input bg-input/20 rounded-md border px-2 py-1.5 text-sm"
+          className="rounded-md border border-input bg-input/20 px-2 py-1.5 text-sm"
         >
           {DISABLED_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -111,7 +111,7 @@ export default function PoisPage({
       </div>
 
       {error !== null && (
-        <p className="text-destructive text-sm">
+        <p className="text-sm text-destructive">
           Erreur de chargement : {String(error)}
         </p>
       )}
@@ -132,7 +132,7 @@ export default function PoisPage({
               <TableRow>
                 <TableCell
                   colSpan={5}
-                  className="text-muted-foreground text-center"
+                  className="text-center text-muted-foreground"
                 >
                   Aucun POI
                 </TableCell>

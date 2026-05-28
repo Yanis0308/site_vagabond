@@ -40,10 +40,15 @@ export default async function ExplorerPage(): Promise<ReactNode> {
             ]}
           />
 
-          <h1 className="font-display text-foreground text-3xl font-bold md:text-4xl">
+          <h1
+            className="
+              font-display text-3xl font-bold text-foreground
+              md:text-4xl
+            "
+          >
             {t("hubTitle")}
           </h1>
-          <p className="text-typography-600 mt-4 max-w-3xl text-lg">
+          <p className="mt-4 max-w-3xl text-lg text-typography-600">
             {t("hubDescription")}
           </p>
 
@@ -52,10 +57,16 @@ export default async function ExplorerPage(): Promise<ReactNode> {
           </div>
 
           <div className="mt-16">
-            <h2 className="font-display text-foreground mb-6 text-2xl font-bold">
+            <h2 className="mb-6 font-display text-2xl font-bold text-foreground">
               {t("regionsTitle")}
             </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div
+              className="
+                grid grid-cols-1 gap-4
+                sm:grid-cols-2
+                lg:grid-cols-3
+              "
+            >
               {regions.map((region) => (
                 <RegionCard
                   key={region.slug}

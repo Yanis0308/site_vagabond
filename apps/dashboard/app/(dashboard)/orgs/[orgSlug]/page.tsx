@@ -38,16 +38,22 @@ export default function OrgHomePage({
       </div>
 
       {error !== null && (
-        <p className="text-destructive text-sm">
+        <p className="text-sm text-destructive">
           Erreur lors du chargement : {String(error)}
         </p>
       )}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div
+        className="
+          grid grid-cols-1 gap-4
+          sm:grid-cols-2
+          lg:grid-cols-4
+        "
+      >
         {COUNTER_LABELS.map((counter) => (
           <Card key={counter.key}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-muted-foreground text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-muted-foreground">
                 {counter.label}
               </CardTitle>
             </CardHeader>
@@ -64,7 +70,12 @@ export default function OrgHomePage({
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      <div
+        className="
+          grid grid-cols-1 gap-4
+          lg:grid-cols-2
+        "
+      >
         <StatsChart
           title="Visites"
           data={data?.timeseries ?? []}

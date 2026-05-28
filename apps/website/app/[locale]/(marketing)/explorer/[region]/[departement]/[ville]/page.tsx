@@ -54,11 +54,16 @@ export default async function VillePage({ params }: Props): Promise<ReactNode> {
             ]}
           />
 
-          <h1 className="font-display text-foreground text-3xl font-bold md:text-4xl">
+          <h1
+            className="
+              font-display text-3xl font-bold text-foreground
+              md:text-4xl
+            "
+          >
             {t("villeTitlePrefix")} {villeData.nom} {t("villeTitleSuffix")}
           </h1>
 
-          <p className="text-typography-600 mt-6 text-lg">
+          <p className="mt-6 text-lg text-typography-600">
             {villeData.descriptionSeo ??
               `${t("villeTitlePrefix")} ${villeData.nom} ${t("villeTitleSuffix")}`}
           </p>

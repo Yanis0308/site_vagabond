@@ -35,10 +35,15 @@ export default async function BlogPage({
   return (
     <section className="px-6 py-12">
       <div className="mx-auto max-w-6xl">
-        <h1 className="font-display text-foreground text-3xl font-bold md:text-4xl">
+        <h1
+          className="
+            font-display text-3xl font-bold text-foreground
+            md:text-4xl
+          "
+        >
           {t("title")}
         </h1>
-        <p className="text-typography-600 mt-3 text-lg">{t("subtitle")}</p>
+        <p className="mt-3 text-lg text-typography-600">{t("subtitle")}</p>
 
         <div className="mt-8">
           <CategoryFilter
@@ -49,7 +54,13 @@ export default async function BlogPage({
         </div>
 
         {articles.length > 0 ? (
-          <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            className="
+              mt-8 grid grid-cols-1 gap-6
+              sm:grid-cols-2
+              lg:grid-cols-3
+            "
+          >
             {articles.map((article) => (
               <ArticleCard
                 key={article.slug}
@@ -63,7 +74,7 @@ export default async function BlogPage({
             ))}
           </div>
         ) : (
-          <p className="text-typography-500 mt-12 text-center text-lg">
+          <p className="mt-12 text-center text-lg text-typography-500">
             {t("noArticles")}
           </p>
         )}

@@ -1,4 +1,5 @@
 import rootConfig from "../../eslint.config.mjs";
+import { tailwindcss } from "../../eslint.frontend.config.mjs";
 import expoFlatConfig from "eslint-config-expo/flat.js";
 import i18nextPlugin from "eslint-plugin-i18next";
 import reactCompiler from "eslint-plugin-react-compiler";
@@ -15,6 +16,8 @@ export default [
 
   // Expo flat config (React, import resolution, expo rules - TypeScript excluded to avoid plugin conflict)
   ...expoFlatConfigWithoutTypescript,
+
+  tailwindcss("./tailwind.config.js"),
 
   // i18next
   {

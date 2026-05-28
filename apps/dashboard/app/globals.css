@@ -44,6 +44,14 @@
   --input: #f8ead7;
   --ring: #9b4dca;
 
+  /* Sidebar (composant shadcn) — mappé sur le design system Mira */
+  --sidebar: var(--background-100);
+  --sidebar-foreground: var(--foreground);
+  --sidebar-accent: var(--accent);
+  --sidebar-accent-foreground: var(--accent-foreground);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--ring);
+
   /* Radius */
   --radius: 0.625rem;
   --radius-pill: 9999px;
@@ -73,6 +81,14 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+
+  /* Sidebar — exposition Tailwind v4 (utilities `bg-sidebar`, `text-sidebar-foreground`, etc.) */
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
 
   /* Brand colors for direct usage */
   --color-primary-400: var(--primary-400);

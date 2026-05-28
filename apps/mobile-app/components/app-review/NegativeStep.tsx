@@ -45,7 +45,11 @@ export const NegativeStep = ({
       <Pressable
         onPress={onSubmit}
         disabled={isPending}
-        className="items-center rounded-2xl bg-primary-600 px-6 py-4 active:opacity-70 disabled:opacity-40"
+        className="
+          items-center rounded-2xl bg-primary-600 px-6 py-4
+          active:opacity-70
+          disabled:opacity-40
+        "
       >
         {isPending ? (
           <Spinner color="white" />
@@ -59,7 +63,11 @@ export const NegativeStep = ({
       <Pressable
         onPress={onBack}
         disabled={isPending}
-        className="mt-3 items-center py-2 active:opacity-50 disabled:opacity-40"
+        className="
+          mt-3 items-center py-2
+          active:opacity-50
+          disabled:opacity-40
+        "
       >
         <CustomText className="text-sm text-typography-700">
           {t("app_review.negative.cancel")}

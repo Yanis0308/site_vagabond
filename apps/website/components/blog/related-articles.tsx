@@ -24,10 +24,16 @@ export function RelatedArticles({ title, articles, locale }: Props): ReactNode {
   return (
     <section className="px-6 py-12">
       <div className="mx-auto max-w-5xl">
-        <h2 className="font-display text-foreground mb-6 text-2xl font-bold">
+        <h2 className="mb-6 font-display text-2xl font-bold text-foreground">
           {title}
         </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          className="
+            grid grid-cols-1 gap-4
+            sm:grid-cols-2
+            lg:grid-cols-3
+          "
+        >
           {articles.map((article) => (
             <ArticleCard
               key={article.slug}

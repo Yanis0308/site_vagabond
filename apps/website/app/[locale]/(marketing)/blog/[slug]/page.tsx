@@ -77,7 +77,7 @@ export default async function ArticlePage({
           />
 
           {/* Meta */}
-          <div className="text-typography-500 mb-4 flex flex-wrap items-center gap-3 text-sm">
+          <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-typography-500">
             {article.publishedAt !== null ? (
               <time dateTime={article.publishedAt}>
                 {new Date(article.publishedAt).toLocaleDateString(locale, {
@@ -98,21 +98,26 @@ export default async function ArticlePage({
           </div>
 
           {/* Title */}
-          <h1 className="font-display text-foreground text-3xl leading-tight font-bold md:text-4xl">
+          <h1
+            className="
+              font-display text-3xl/tight font-bold text-foreground
+              md:text-4xl
+            "
+          >
             {article.title}
           </h1>
 
           {/* TL;DR */}
           {article.excerpt !== null ? (
-            <div className="bg-background-200 border-primary-500 mt-8 rounded-xl border-l-4 p-6">
-              <p className="text-typography-600 text-sm leading-relaxed font-medium">
+            <div className="mt-8 rounded-xl border-l-4 border-primary-500 bg-background-200 p-6">
+              <p className="text-sm/relaxed font-medium text-typography-600">
                 {article.excerpt}
               </p>
             </div>
           ) : null}
 
           {/* Content placeholder */}
-          <div className="prose prose-neutral mt-8 max-w-none">
+          <div className="prose mt-8 max-w-none prose-neutral">
             <p className="text-typography-500 italic">
               Le contenu riche de cet article sera rendu via le serializer
               Lexical une fois le contenu créé dans Payload CMS.

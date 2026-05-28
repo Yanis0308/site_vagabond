@@ -57,7 +57,7 @@ export function ShimmerBorder({
       {/* Rotating shimmer — oversized to cover corners during rotation */}
       <div
         aria-hidden="true"
-        className="animate-shimmer-rotate absolute inset-[-100%]"
+        className="absolute -inset-full animate-shimmer-rotate"
         style={{
           background: `conic-gradient(from 0deg, transparent 0%, ${shimmerColor} 10%, transparent 20%)`,
         }}

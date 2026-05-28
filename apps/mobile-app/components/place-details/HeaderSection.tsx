@@ -76,7 +76,12 @@ export const HeaderSection = ({
     isLoadingEnriched && !hasEnrichedPhotos && visitedPois.length === 0;
 
   return (
-    <Center className={`z-20 px-2 ${!hasNoVisibleImages ? "pb-4" : ""}`}>
+    <Center
+      className={`
+        z-20 px-2
+        ${!hasNoVisibleImages ? "pb-4" : ""}
+      `}
+    >
       <Animated.View style={[imageBoxAnimatedStyle]} className="w-full">
         {!showLoadingPlaceholder && !hasNoVisibleImages && (
           <CustomImage

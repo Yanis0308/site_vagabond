@@ -57,7 +57,11 @@ export function LocaleSwitcher(): ReactNode {
       <Menu.Trigger
         disabled={isPending}
         className={cn(
-          "text-typography-600 hover:text-foreground flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium transition-colors outline-none",
+          `
+            flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-typography-600
+            transition-colors outline-none
+            hover:text-foreground
+          `,
           "hover:bg-background-100",
           isPending && "opacity-50",
         )}
@@ -89,7 +93,11 @@ export function LocaleSwitcher(): ReactNode {
           align="end"
           sideOffset={6}
         >
-          <Menu.Popup className="bg-background-50 border-background-200 z-50 min-w-[10rem] rounded-xl border py-1.5 shadow-lg outline-none">
+          <Menu.Popup
+            className="
+              z-50 min-w-40 rounded-xl border border-background-200 bg-background-50 py-1.5 shadow-lg outline-none
+            "
+          >
             {routing.locales.map((loc) => {
               const config = LOCALE_CONFIG[loc];
               const isCurrent = loc === locale;
@@ -100,10 +108,13 @@ export function LocaleSwitcher(): ReactNode {
                     handleLocaleChange(loc);
                   }}
                   className={cn(
-                    "flex cursor-pointer items-center justify-between px-3 py-2 text-sm transition-colors outline-none",
+                    `flex cursor-pointer items-center justify-between px-3 py-2 text-sm transition-colors outline-none`,
                     isCurrent
-                      ? "text-primary-500 font-semibold"
-                      : "text-typography-600 hover:text-foreground hover:bg-background-100",
+                      ? "font-semibold text-primary-500"
+                      : `
+                        text-typography-600
+                        hover:bg-background-100 hover:text-foreground
+                      `,
                   )}
                 >
                   <span>{config.nativeName}</span>

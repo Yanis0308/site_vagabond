@@ -1,6 +1,7 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 
 import rootConfig from "../../eslint.config.mjs";
+import { tailwindcss } from "../../eslint.frontend.config.mjs";
 
 // Filter out @typescript-eslint plugin (root config provides it) and strip
 // the eslint-config-next parser so the root's @typescript-eslint/parser with
@@ -19,20 +20,7 @@ export default [
   ...rootConfig,
   ...nextConfigFiltered,
 
-  // eslint-plugin-tailwindcss v3 is entirely incompatible with Tailwind v4 for now
-  // Class ordering is handled by prettier-plugin-tailwindcss.
-  {
-    rules: {
-      "tailwindcss/classnames-order": "off",
-      "tailwindcss/enforces-negative-arbitrary-values": "off",
-      "tailwindcss/enforces-shorthand": "off",
-      "tailwindcss/migration-from-tailwind-2": "off",
-      "tailwindcss/no-arbitrary-value": "off",
-      "tailwindcss/no-custom-classname": "off",
-      "tailwindcss/no-contradicting-classname": "off",
-      "tailwindcss/no-unnecessary-arbitrary-value": "off",
-    },
-  },
+  tailwindcss("app/globals.css"),
 
   // Seed scripts — console output is expected, return types not required
   {

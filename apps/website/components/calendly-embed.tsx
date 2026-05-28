@@ -12,9 +12,9 @@ interface Props {
 
 export function CalendlyEmbed({ title, subtitle }: Props): ReactNode {
   return (
-    <div className="border-border flex flex-col items-center gap-4 rounded-2xl border p-6">
-      <p className="text-foreground text-sm font-medium">{title}</p>
-      <p className="text-typography-500 text-xs">{subtitle}</p>
+    <div className="flex flex-col items-center gap-4 rounded-2xl border border-border p-6">
+      <p className="text-sm font-medium text-foreground">{title}</p>
+      <p className="text-xs text-typography-500">{subtitle}</p>
       <iframe
         src={publicEnv.CALENDLY_URL}
         title="Calendly"

@@ -45,9 +45,7 @@ export function AppSidebar({
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="px-2 py-2 text-sm font-semibold">
-          Vagagond Dashboard
-        </div>
+        <div className="p-2 text-sm font-semibold">Vagagond Dashboard</div>
         <OrgPicker />
       </SidebarHeader>
       <SidebarContent>
@@ -76,7 +74,7 @@ export function AppSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <div className="text-muted-foreground truncate px-2 py-1 text-xs">
+        <div className="truncate px-2 py-1 text-xs text-muted-foreground">
           {userEmail ?? "Anonyme"}
         </div>
         <form action="/auth/sign-out" method="POST">

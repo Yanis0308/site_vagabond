@@ -40,7 +40,7 @@ export const EmojiContentBox = ({
     <Box className={cn(containerClassName)}>
       <CustomText
         type="ratingText"
-        className={cn("absolute -left-3 z-[1] text-[32px] -top-4")}
+        className={cn("absolute -left-3 -top-4 z-[1] text-[32px]")}
       >
         {emoji}
       </CustomText>

@@ -2,10 +2,14 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+@plugin "@tailwindcss/typography";
+
 :root {
   /* Primary — Electric Purple */
   --primary: #9b4dca;
   --primary-foreground: #ffffff;
+  --primary-50: #f5e8fa;
+  --primary-200: #e2c3f0;
   --primary-400: #8c2aca;
   --primary-500: #9b4dca;
   --primary-600: #7c3ea2;
@@ -79,6 +83,8 @@
   --color-ring: var(--ring);
 
   /* Brand colors for direct usage */
+  --color-primary-50: var(--primary-50);
+  --color-primary-200: var(--primary-200);
   --color-primary-400: var(--primary-400);
   --color-primary-500: var(--primary-500);
   --color-primary-600: var(--primary-600);

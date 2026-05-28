@@ -40,10 +40,10 @@ const LOGOS = [
 
 export function TrustBar({ label, subtitle }: Props): ReactNode {
   return (
-    <section className="bg-background-200 overflow-hidden px-6 py-5">
+    <section className="overflow-hidden bg-background-200 px-6 py-5">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4">
-        <span className="text-typography-500 text-sm font-medium">{label}</span>
-        <div className="[mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+        <span className="text-sm font-medium text-typography-500">{label}</span>
+        <div className="mask-[linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
           <Marquee duration="30s" pauseOnHover gap="3rem" repeat={6}>
             {LOGOS.map((logo) => (
               <Image
@@ -58,7 +58,7 @@ export function TrustBar({ label, subtitle }: Props): ReactNode {
           </Marquee>
         </div>
         {subtitle !== undefined && (
-          <p className="text-typography-500 mx-auto max-w-2xl text-center text-sm leading-relaxed">
+          <p className="mx-auto max-w-2xl text-center text-sm/relaxed text-typography-500">
             {subtitle}
           </p>
         )}

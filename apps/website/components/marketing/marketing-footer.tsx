@@ -10,13 +10,19 @@ export async function MarketingFooter(): Promise<ReactNode> {
   return (
     <footer className="bg-typography-900 text-background-200">
       <div className="mx-auto max-w-7xl px-6 py-16">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div
+          className="
+            grid grid-cols-1 gap-10
+            sm:grid-cols-2
+            lg:grid-cols-4
+          "
+        >
           {/* Brand column */}
           <div className="flex flex-col gap-4">
             <span className="font-display text-xl font-bold text-white">
               Vagabond
             </span>
-            <p className="text-background-300 text-sm">{t("tagline")}</p>
+            <p className="text-sm text-background-300">{t("tagline")}</p>
           </div>
 
           {/* Explorer column */}
@@ -70,7 +76,10 @@ export async function MarketingFooter(): Promise<ReactNode> {
             <nav className="flex flex-col gap-2">
               <a
                 href="mailto:contact@vagabond.gg"
-                className="text-background-300 hover:text-primary-400 text-sm transition-colors"
+                className="
+                  text-sm text-background-300 transition-colors
+                  hover:text-primary-400
+                "
               >
                 contact@vagabond.gg
               </a>
@@ -80,7 +89,7 @@ export async function MarketingFooter(): Promise<ReactNode> {
         </div>
 
         {/* Copyright */}
-        <div className="text-background-300 mt-12 border-t border-white/10 pt-8 text-center text-sm">
+        <div className="mt-12 border-t border-white/10 pt-8 text-center text-sm text-background-300">
           {t("copyright", { year: String(year) })}
         </div>
       </div>
@@ -98,7 +107,10 @@ function FooterLink({
   return (
     <Link
       href={href}
-      className="text-background-300 hover:text-primary-400 text-sm transition-colors"
+      className="
+        text-sm text-background-300 transition-colors
+        hover:text-primary-400
+      "
     >
       {children}
     </Link>

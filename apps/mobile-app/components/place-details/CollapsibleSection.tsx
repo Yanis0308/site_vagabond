@@ -57,7 +57,10 @@ export const CollapsibleSection = ({
     <Box className={cn("gap-1", className)}>
       <Pressable
         onPress={toggleOpen}
-        className="flex-row items-center justify-between py-2 active:opacity-70"
+        className="
+          flex-row items-center justify-between py-2
+          active:opacity-70
+        "
       >
         <Box className="flex-1 flex-row items-center gap-2">
           <CustomText type="ratingText" className="w-6 text-lg">

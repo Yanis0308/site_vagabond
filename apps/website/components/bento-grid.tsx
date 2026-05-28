@@ -13,7 +13,10 @@ export function BentoGrid({ children, className }: Props): ReactNode {
   return (
     <div
       className={cn(
-        "grid auto-rows-[minmax(200px,1fr)] grid-cols-1 gap-4 md:grid-cols-12",
+        `
+          grid auto-rows-[minmax(200px,1fr)] grid-cols-1 gap-4
+          md:grid-cols-12
+        `,
         className,
       )}
     >
@@ -47,7 +50,11 @@ export function BentoCard({
   return (
     <div
       className={cn(
-        "bg-background-100 border-background-300 hover:border-primary-400 flex flex-col justify-between rounded-2xl border p-6 transition-all duration-300 [transform-style:preserve-3d] hover:shadow-lg",
+        `
+          flex flex-col justify-between rounded-2xl border border-background-300 bg-background-100 p-6 transition-all
+          duration-300 transform-3d
+          hover:border-primary-400 hover:shadow-lg
+        `,
         span === "large" ? "md:col-span-7" : "md:col-span-5",
         className,
       )}

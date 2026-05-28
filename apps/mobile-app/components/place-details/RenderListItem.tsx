@@ -83,7 +83,7 @@ export function RenderListItem({
         <StarRating
           rating={item.rating}
           size={18}
-          className={cn("mb-2 self-center mt-4")}
+          className={cn("mb-2 mt-4 self-center")}
           ratingCount={item.count}
         />
       );

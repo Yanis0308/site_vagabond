@@ -32,12 +32,22 @@ export function HeroSection({
   mention,
 }: Props): ReactNode {
   return (
-    <section className="bg-background-100 relative overflow-hidden px-6 pt-12 pb-20">
-      <DotPattern className="[mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_80%)]" />
+    <section className="relative overflow-hidden bg-background-100 px-6 pt-12 pb-20">
+      <DotPattern className="mask-[radial-gradient(ellipse_at_center,black_40%,transparent_80%)]" />
 
-      <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-12 lg:flex-row lg:gap-16">
+      <div
+        className="
+          relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-12
+          lg:flex-row lg:gap-16
+        "
+      >
         {/* Text content */}
-        <div className="flex flex-1 flex-col items-center text-center lg:items-start lg:text-left">
+        <div
+          className="
+            flex flex-1 flex-col items-center text-center
+            lg:items-start lg:text-left
+          "
+        >
           <BlurFade delay={0.05}>
             <Badge
               variant="secondary"
@@ -48,7 +58,13 @@ export function HeroSection({
           </BlurFade>
 
           <BlurFade delay={0.1}>
-            <h1 className="font-display text-4xl leading-tight font-bold md:text-5xl lg:text-6xl">
+            <h1
+              className="
+                font-display text-4xl/tight font-bold
+                md:text-5xl
+                lg:text-6xl
+              "
+            >
               <AnimatedGradientText>{title}</AnimatedGradientText>
             </h1>
           </BlurFade>
@@ -56,16 +72,26 @@ export function HeroSection({
           <BlurFade delay={0.2}>
             <div className="mt-6 flex items-start gap-6">
               <div className="flex flex-col">
-                <p className="text-typography-600 max-w-md text-lg md:text-xl">
+                <p
+                  className="
+                    max-w-md text-lg text-typography-600
+                    md:text-xl
+                  "
+                >
                   {subtitle}
                 </p>
-                <p className="text-typography-500 mt-4 flex items-center gap-2 text-sm">
+                <p className="mt-4 flex items-center gap-2 text-sm text-typography-500">
                   <span className="text-yellow-500">★★★★★</span>
                   {socialProof}
                 </p>
               </div>
-              <div className="hidden shrink-0 flex-col items-center gap-1.5 lg:flex">
-                <div className="border-background-300 w-[200px] rounded-xl border bg-white p-2.5 shadow-sm">
+              <div
+                className="
+                  hidden shrink-0 flex-col items-center gap-1.5
+                  lg:flex
+                "
+              >
+                <div className="w-[200px] rounded-xl border border-background-300 bg-white p-2.5 shadow-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element -- data URL from server-generated QR */}
                   <img
                     src={qrDataUrl}
@@ -75,7 +101,7 @@ export function HeroSection({
                     className="h-auto w-full"
                   />
                 </div>
-                <p className="text-typography-500 text-xs">{qrLabel}</p>
+                <p className="text-xs text-typography-500">{qrLabel}</p>
               </div>
             </div>
           </BlurFade>
@@ -83,16 +109,26 @@ export function HeroSection({
           <BlurFade delay={0.35}>
             <div className="mt-6">
               <AppStoreBadges position="hero" />
-              <p className="text-typography-500 mt-3 text-sm">{mention}</p>
+              <p className="mt-3 text-sm text-typography-500">{mention}</p>
             </div>
           </BlurFade>
         </div>
 
         {/* Phone mockup with MagicUI iPhone frame */}
         <div className="flex flex-1 items-center justify-center">
-          <div className="animate-float relative">
-            <div className="from-primary-400/20 to-secondary-500/15 absolute top-1/4 left-1/2 h-[400px] w-[300px] -translate-x-1/2 rounded-full bg-gradient-to-br blur-3xl" />
-            <div className="relative z-10 w-[280px] md:w-[340px]">
+          <div className="relative animate-float">
+            <div
+              className="
+                absolute top-1/4 left-1/2 h-[400px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br
+                from-primary-400/20 to-secondary-500/15 blur-3xl
+              "
+            />
+            <div
+              className="
+                relative z-10 w-[280px]
+                md:w-[340px]
+              "
+            >
               <IphoneMockup src="/images/hero-mockup.png" />
             </div>
           </div>

@@ -31,13 +31,21 @@ export function MapSection({
   return (
     <section className="px-6 py-20">
       <div className="mx-auto max-w-5xl text-center">
-        <h2 className="font-display text-foreground mb-8 text-3xl font-bold md:text-4xl">
+        <h2
+          className="
+            mb-8 font-display text-3xl font-bold text-foreground
+            md:text-4xl
+          "
+        >
           {title}
         </h2>
         <div className="relative mx-auto mb-8 max-w-3xl overflow-hidden">
           <div
             aria-hidden="true"
-            className="from-primary-400/10 to-secondary-500/10 absolute top-1/2 left-1/2 -z-10 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br blur-2xl"
+            className="
+              absolute top-1/2 left-1/2 -z-10 size-[120%] -translate-1/2 rounded-full bg-linear-to-br
+              from-primary-400/10 to-secondary-500/10 blur-2xl
+            "
           />
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
@@ -48,7 +56,7 @@ export function MapSection({
             <FranceMap regions={regions} placesLabel={placesLabel} />
           </motion.div>
         </div>
-        <p className="text-typography-600 mx-auto max-w-2xl text-lg">
+        <p className="mx-auto max-w-2xl text-lg text-typography-600">
           {description}
         </p>
         <Link href="/explorer" className="mt-6 inline-block">

@@ -45,7 +45,7 @@ export const PolaroidBase = memo(
         style={isSmall ? shadowStyles.ratingBlock : shadowStyles.polaroidBlock}
         className={cn(
           "relative rotate-[-2.85deg] rounded-2xl bg-background-50",
-          isSmall ? "p-2 w-[60vw]" : "p-4 w-[90%]",
+          isSmall ? "w-[60vw] p-2" : "w-[90%] p-4",
           className,
         )}
       >

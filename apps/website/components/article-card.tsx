@@ -42,7 +42,12 @@ export function ArticleCard({
         }
       }}
     >
-      <Card className="hover:border-primary-400 h-full transition-all hover:shadow-lg">
+      <Card
+        className="
+          h-full transition-all
+          hover:border-primary-400 hover:shadow-lg
+        "
+      >
         <CardContent className="flex flex-col gap-3 p-5">
           <div className="flex items-center gap-2">
             {categoryName !== undefined ? (
@@ -62,20 +67,20 @@ export function ArticleCard({
               </Badge>
             ) : null}
             {readingTime !== undefined ? (
-              <span className="text-typography-500 text-xs">
+              <span className="text-xs text-typography-500">
                 {readingTime} min
               </span>
             ) : null}
           </div>
-          <h3 className="font-display text-foreground text-lg leading-tight font-bold">
+          <h3 className="font-display text-lg/tight font-bold text-foreground">
             {title}
           </h3>
           {excerpt !== null ? (
-            <p className="text-typography-600 line-clamp-2 text-sm">
+            <p className="line-clamp-2 text-sm text-typography-600">
               {excerpt}
             </p>
           ) : null}
-          <div className="text-typography-500 mt-auto flex items-center gap-2 text-xs">
+          <div className="mt-auto flex items-center gap-2 text-xs text-typography-500">
             {publishedAt !== null ? (
               <time dateTime={publishedAt}>
                 {new Date(publishedAt).toLocaleDateString(locale ?? "fr", {

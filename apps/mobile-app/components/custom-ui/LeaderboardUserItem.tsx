@@ -79,9 +79,11 @@ export const LeaderboardUserItem = memo(
             {/* Rank */}
             <Box className="w-14 items-center">
               <CustomText
-                className={`text-center font-bold ${getRankColor(user.rank)} ${getRankTextSize(
-                  user.rank,
-                )}`}
+                className={`
+                  text-center font-bold
+                  ${getRankColor(user.rank)}
+                  ${getRankTextSize(user.rank)}
+                `}
                 style={{
                   lineHeight: user.rank < 4 ? 44 : undefined,
                   textAlignVertical: "center",

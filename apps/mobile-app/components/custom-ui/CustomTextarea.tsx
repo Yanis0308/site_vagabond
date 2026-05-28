@@ -38,7 +38,7 @@ export const CustomTextarea = memo(
         <Textarea
           isInvalid={isInvalid}
           className={cn(
-            "border border-background-300 rounded-2xl border-solid bg-background-50 flex justify-start",
+            `flex justify-start rounded-2xl border border-solid border-background-300 bg-background-50`,
             props.className,
           )}
         >

@@ -42,7 +42,10 @@ export function OrgPicker(): ReactNode {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        className="hover:bg-sidebar-accent flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left text-sm"
+        className="
+          flex w-full items-center justify-between rounded-md px-2 py-1.5 text-left text-sm
+          hover:bg-sidebar-accent
+        "
         aria-label="Changer d'organisation"
       >
         <span className="truncate">

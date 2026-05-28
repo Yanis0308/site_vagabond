@@ -8,7 +8,7 @@ export default async function ConfidentialitePage(): Promise<ReactNode> {
   const t = await getTranslations("legal");
 
   return (
-    <article className="prose prose-neutral max-w-none">
+    <article className="prose max-w-none prose-neutral">
       <h1>{t("confTitle")}</h1>
 
       <h2>Données collectées</h2>

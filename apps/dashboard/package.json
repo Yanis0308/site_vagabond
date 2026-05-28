@@ -46,7 +46,6 @@
     "eslint-config-next": "catalog:",
     "postcss": "^8",
     "prettier": "catalog:",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "shadcn": "^4.0.5",
     "tailwindcss": "^4.1.18",
     "typescript": "catalog:"

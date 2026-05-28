@@ -86,7 +86,10 @@ export const ProfileManageNotificationsRow = memo((): ReactElement => {
       onPress={(): void => void handlePress()}
       accessibilityRole="button"
       accessibilityLabel={t("notifications.manage_row.title")}
-      className="rounded-lg bg-background-100 px-4 py-3 active:opacity-70"
+      className="
+        rounded-lg bg-background-100 px-4 py-3
+        active:opacity-70
+      "
     >
       <HStack className="items-center justify-between">
         <VStack className="flex-1 gap-1">

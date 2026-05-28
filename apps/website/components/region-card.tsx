@@ -20,12 +20,17 @@ export function RegionCard({
 }: Props): ReactNode {
   return (
     <Link href={`/explorer/${slug}`}>
-      <Card className="hover:border-primary-400 h-full transition-all hover:shadow-lg">
+      <Card
+        className="
+          h-full transition-all
+          hover:border-primary-400 hover:shadow-lg
+        "
+      >
         <CardContent className="flex flex-col gap-2 p-5">
-          <h3 className="font-display text-foreground text-lg font-bold">
+          <h3 className="font-display text-lg font-bold text-foreground">
             {nom}
           </h3>
-          <div className="text-typography-600 flex gap-4 text-sm">
+          <div className="flex gap-4 text-sm text-typography-600">
             <span>
               {nbPois.toLocaleString("fr-FR")} {placesLabel}
             </span>

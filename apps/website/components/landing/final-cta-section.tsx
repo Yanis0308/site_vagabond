@@ -22,18 +22,32 @@ export function FinalCtaSection({
   qrAlt,
 }: Props): ReactNode {
   return (
-    <section className="from-primary-500 to-primary-700 relative overflow-hidden bg-gradient-to-br px-6 py-20 text-center text-white">
+    <section
+      className="
+        relative overflow-hidden bg-linear-to-br from-primary-500 to-primary-700 px-6 py-20 text-center text-white
+      "
+    >
       {/* Animated particles background */}
       <Particles quantity={40} color="#ffffff" size={2} speed={0.2} />
 
       {/* Subtle radial glow */}
       <div
         aria-hidden="true"
-        className="animate-pulse-glow absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.15)_0%,transparent_70%)]"
+        className="
+          absolute inset-0 animate-pulse-glow
+          bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.15)_0%,transparent_70%)]
+        "
       />
 
       <BlurFade delay={0.2} className="relative z-10 mx-auto max-w-2xl">
-        <h2 className="font-display text-3xl font-bold md:text-4xl">{title}</h2>
+        <h2
+          className="
+            font-display text-3xl font-bold
+            md:text-4xl
+          "
+        >
+          {title}
+        </h2>
         <p className="mt-4 text-lg text-white/80">{subtitle}</p>
         <AppStoreBadges className="mt-8 justify-center" position="final_cta" />
         <div className="mt-8 flex flex-col items-center gap-3">

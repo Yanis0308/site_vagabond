@@ -68,16 +68,31 @@ export default async function ProPage(): Promise<ReactNode> {
         <Particles quantity={25} size={0.9} color="#9b4dca" speed={0.12} />
 
         <BlurFade delay={0} className="relative z-10 mx-auto max-w-4xl">
-          <div className="border-primary-200 bg-primary-50 text-primary-600 mb-5 inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-sm font-medium">
-            <span className="bg-primary-500 size-2 rounded-full" />
+          <div
+            className="
+              mb-5 inline-flex items-center gap-2 rounded-full border border-primary-200 bg-primary-50 px-4 py-1.5
+              text-sm font-medium text-primary-600
+            "
+          >
+            <span className="size-2 rounded-full bg-primary-500" />
             Vagabond Pro
           </div>
 
-          <h1 className="font-display text-foreground text-5xl leading-tight font-bold md:text-6xl">
+          <h1
+            className="
+              font-display text-5xl/tight font-bold text-foreground
+              md:text-6xl
+            "
+          >
             {t("heroTitle")}
           </h1>
 
-          <p className="text-typography-600 mx-auto mt-6 max-w-2xl text-lg md:text-xl">
+          <p
+            className="
+              mx-auto mt-6 max-w-2xl text-lg text-typography-600
+              md:text-xl
+            "
+          >
             {t("heroSubtitle")}
           </p>
 
@@ -101,19 +116,27 @@ export default async function ProPage(): Promise<ReactNode> {
 
       {/* ── PAS — Problem / Agitation / Solution ── */}
       <section className="px-6 py-20">
-        <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
+        <div
+          className="
+            mx-auto grid max-w-5xl gap-6
+            md:grid-cols-3
+          "
+        >
           {PAS_ITEMS.map((item) => (
             <BlurFade key={item.titleKey} delay={0}>
               <SpotlightCard
-                className="border-background-200 bg-background-50 h-full rounded-2xl border p-6"
+                className="h-full rounded-2xl border border-background-200 bg-background-50 p-6"
                 spotlightColor={item.spotlightColor}
               >
                 <h2
-                  className={`font-display text-xl font-bold ${item.colorClass}`}
+                  className={`
+                    font-display text-xl font-bold
+                    ${item.colorClass}
+                  `}
                 >
                   {t(item.titleKey)}
                 </h2>
-                <p className="text-typography-600 mt-3 text-sm leading-relaxed">
+                <p className="mt-3 text-sm/relaxed text-typography-600">
                   {t(item.textKey)}
                 </p>
               </SpotlightCard>
@@ -132,10 +155,10 @@ export default async function ProPage(): Promise<ReactNode> {
                   key={feat.title}
                   span={i === 0 || i === 3 ? "large" : "small"}
                 >
-                  <h3 className="font-display text-foreground text-lg font-bold">
+                  <h3 className="font-display text-lg font-bold text-foreground">
                     {feat.title}
                   </h3>
-                  <p className="text-typography-600 mt-2 text-sm leading-relaxed">
+                  <p className="mt-2 text-sm/relaxed text-typography-600">
                     {feat.description}
                   </p>
                 </BentoCard>
@@ -149,25 +172,40 @@ export default async function ProPage(): Promise<ReactNode> {
       <section id="contact" className="px-6 py-20">
         <div className="mx-auto max-w-4xl">
           <BlurFade delay={0}>
-            <h2 className="font-display text-foreground mb-2 text-center text-3xl font-bold md:text-4xl">
+            <h2
+              className="
+                mb-2 text-center font-display text-3xl font-bold text-foreground
+                md:text-4xl
+              "
+            >
               {t("contactTitle")}
             </h2>
-            <p className="text-typography-600 mb-10 text-center">
+            <p className="mb-10 text-center text-typography-600">
               {t("contactSubtitle")}
             </p>
           </BlurFade>
 
-          <div className="grid gap-8 md:grid-cols-2">
+          <div
+            className="
+              grid gap-8
+              md:grid-cols-2
+            "
+          >
             {/* Email + LinkedIn card */}
             <BlurFade delay={0.1}>
-              <div className="border-background-200 bg-background-50 flex h-full flex-col items-center justify-center rounded-2xl border px-8 py-12">
-                <p className="text-typography-500 text-sm">
+              <div
+                className="
+                  flex h-full flex-col items-center justify-center rounded-2xl border border-background-200
+                  bg-background-50 px-8 py-12
+                "
+              >
+                <p className="text-sm text-typography-500">
                   {t("contactEmailLabel")}
                 </p>
                 <ContactEmailMailtoLink
                   href="mailto:contact@vagabond.gg"
                   page="pro"
-                  className="text-foreground mt-3 block text-2xl font-bold"
+                  className="mt-3 block text-2xl font-bold text-foreground"
                 >
                   contact@vagabond.gg
                 </ContactEmailMailtoLink>
@@ -178,15 +216,18 @@ export default async function ProPage(): Promise<ReactNode> {
                   analyticsPage="pro"
                 />
 
-                <div className="border-background-200 mt-6 w-full border-t pt-6 text-center">
-                  <p className="text-typography-500 text-sm">
+                <div className="mt-6 w-full border-t border-background-200 pt-6 text-center">
+                  <p className="text-sm text-typography-500">
                     {t("contactLinkedinLabel")}
                   </p>
                   <a
                     href={publicEnv.CEO_LINKEDIN_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-foreground mt-3 inline-flex items-center gap-2 text-lg font-semibold hover:underline"
+                    className="
+                      mt-3 inline-flex items-center gap-2 text-lg font-semibold text-foreground
+                      hover:underline
+                    "
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

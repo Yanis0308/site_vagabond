@@ -68,7 +68,11 @@ export function MobileNavDrawer(): ReactNode {
             href={publicEnv.TAAP_IT_MOBILE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-primary-500 text-primary-foreground hover:bg-primary-600 mt-4 rounded-lg px-3 py-3 text-center text-base font-semibold transition-colors"
+            className="
+              mt-4 rounded-lg bg-primary-500 p-3 text-center text-base font-semibold text-primary-foreground
+              transition-colors
+              hover:bg-primary-600
+            "
             onClick={(): void => {
               trackTaapDownloadClick("nav_mobile");
               close();

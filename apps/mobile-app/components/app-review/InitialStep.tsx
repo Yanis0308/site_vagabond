@@ -33,7 +33,10 @@ export const InitialStep = ({
         <Pressable
           onPress={onThumbsDown}
           disabled={isPending}
-          className="size-16 items-center justify-center rounded-full bg-secondary-50 active:opacity-70"
+          className="
+            size-16 items-center justify-center rounded-full bg-secondary-50
+            active:opacity-70
+          "
         >
           <ThumbsDown
             size={32}
@@ -45,7 +48,10 @@ export const InitialStep = ({
         <Pressable
           onPress={onThumbsUp}
           disabled={isPending}
-          className="size-16 items-center justify-center rounded-full bg-success-50 active:opacity-70"
+          className="
+            size-16 items-center justify-center rounded-full bg-success-50
+            active:opacity-70
+          "
         >
           {isPending ? (
             <Spinner color={themeColors.success["600"].hex} />

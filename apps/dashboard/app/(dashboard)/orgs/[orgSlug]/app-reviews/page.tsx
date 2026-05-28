@@ -60,7 +60,7 @@ export default function AppReviewsPage({
                 .value as DashboardAppReviewsFilters["positive"],
             });
           }}
-          className="border-input bg-input/20 rounded-md border px-2 py-1.5 text-sm"
+          className="rounded-md border border-input bg-input/20 px-2 py-1.5 text-sm"
         >
           {POSITIVE_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -71,7 +71,7 @@ export default function AppReviewsPage({
       </div>
 
       {error !== null && (
-        <p className="text-destructive text-sm">
+        <p className="text-sm text-destructive">
           Erreur de chargement : {String(error)}
         </p>
       )}
@@ -91,7 +91,7 @@ export default function AppReviewsPage({
               <TableRow>
                 <TableCell
                   colSpan={4}
-                  className="text-muted-foreground text-center"
+                  className="text-center text-muted-foreground"
                 >
                   Aucune review
                 </TableCell>
@@ -99,7 +99,7 @@ export default function AppReviewsPage({
             )}
             {rows.map((row) => (
               <TableRow key={row.id}>
-                <TableCell className="text-muted-foreground whitespace-nowrap">
+                <TableCell className="whitespace-nowrap text-muted-foreground">
                   {new Date(row.createdAt).toLocaleString("fr-FR")}
                 </TableCell>
                 <TableCell>{row.userDisplayName}</TableCell>

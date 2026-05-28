@@ -84,26 +84,31 @@ export default async function DepartementPage({
             ]}
           />
 
-          <h1 className="font-display text-foreground text-3xl font-bold md:text-4xl">
+          <h1
+            className="
+              font-display text-3xl font-bold text-foreground
+              md:text-4xl
+            "
+          >
             {t("deptTitlePrefix")} {dept.nom} {t("deptTitleSuffix")}
           </h1>
 
           <div className="mt-8 flex flex-wrap gap-6">
-            <div className="bg-background-200 rounded-xl px-6 py-4 text-center">
-              <span className="font-display text-primary-500 text-3xl font-bold">
+            <div className="rounded-xl bg-background-200 px-6 py-4 text-center">
+              <span className="font-display text-3xl font-bold text-primary-500">
                 {dept.numero}
               </span>
-              <p className="text-typography-600 text-sm">département</p>
+              <p className="text-sm text-typography-600">département</p>
             </div>
-            <div className="bg-background-200 rounded-xl px-6 py-4 text-center">
-              <span className="font-display text-primary-500 text-3xl font-bold">
+            <div className="rounded-xl bg-background-200 px-6 py-4 text-center">
+              <span className="font-display text-3xl font-bold text-primary-500">
                 {dept.nbPois.toLocaleString(locale)}
               </span>
-              <p className="text-typography-600 text-sm">{t("pois")}</p>
+              <p className="text-sm text-typography-600">{t("pois")}</p>
             </div>
           </div>
 
-          <div className="text-typography-600 mt-8 text-lg">
+          <div className="mt-8 text-lg text-typography-600">
             <p>
               Les villes et communes du {dept.nom} seront bientôt disponibles.
               En attendant, téléchargez Vagabond pour explorer ce département.

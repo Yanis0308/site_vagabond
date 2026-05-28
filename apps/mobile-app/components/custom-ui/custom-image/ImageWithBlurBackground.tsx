@@ -56,7 +56,7 @@ export const ImageWithBlurBackground = ({
       <Image
         source={source}
         className={cn(
-          "absolute inset-0 size-full transition-opacity duration-300 ease-in-out rounded-lg",
+          `absolute inset-0 size-full rounded-lg transition-opacity duration-300 ease-in-out`,
           {
             "opacity-0": displayLoader,
             "opacity-100": !displayLoader,

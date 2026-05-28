@@ -62,10 +62,15 @@ export default async function FaqPage(): Promise<ReactNode> {
               { label: t("title") },
             ]}
           />
-          <h1 className="font-display text-foreground mt-6 text-3xl font-bold md:text-4xl">
+          <h1
+            className="
+              mt-6 font-display text-3xl font-bold text-foreground
+              md:text-4xl
+            "
+          >
             {t("title")}
           </h1>
-          <p className="text-typography-600 mt-3 text-lg">{t("subtitle")}</p>
+          <p className="mt-3 text-lg text-typography-600">{t("subtitle")}</p>
         </div>
       </section>
 

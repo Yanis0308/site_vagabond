@@ -89,7 +89,7 @@ export default function LoginPage(): ReactNode {
                 required
               />
               {error !== null && (
-                <p className="text-destructive text-sm">{error}</p>
+                <p className="text-sm text-destructive">{error}</p>
               )}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Envoi…" : "Recevoir le code"}
@@ -114,7 +114,7 @@ export default function LoginPage(): ReactNode {
                 required
               />
               {error !== null && (
-                <p className="text-destructive text-sm">{error}</p>
+                <p className="text-sm text-destructive">{error}</p>
               )}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Vérification…" : "Se connecter"}

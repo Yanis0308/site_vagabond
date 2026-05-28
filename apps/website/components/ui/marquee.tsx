@@ -48,8 +48,8 @@ export function Marquee({
             vertical
               ? "animate-marquee-vertical flex-col"
               : "animate-marquee flex-row",
-            pauseOnHover && "group-hover:[animation-play-state:paused]",
-            reverse && "[animation-direction:reverse]",
+            pauseOnHover && "group-hover:paused",
+            reverse && "direction-[reverse]",
           )}
           style={{ gap: "var(--gap)" }}
         >

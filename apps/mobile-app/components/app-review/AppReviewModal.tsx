@@ -117,7 +117,10 @@ export const AppReviewModal = ({
             accessibilityRole="button"
             accessibilityLabel={t("app_review.close")}
             hitSlop={8}
-            className="absolute right-3 top-3 z-10 size-7 items-center justify-center rounded-full bg-background-200 active:opacity-70"
+            className="
+              absolute right-3 top-3 z-10 size-7 items-center justify-center rounded-full bg-background-200
+              active:opacity-70
+            "
           >
             <X
               size={16}

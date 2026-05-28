@@ -45,7 +45,12 @@ export async function MarketingNav(): Promise<ReactNode> {
         </Link>
 
         {/* Desktop links */}
-        <div className="hidden items-center gap-6 md:flex">
+        <div
+          className="
+            hidden items-center gap-6
+            md:flex
+          "
+        >
           <NavLink href="/explorer">{t("explorer")}</NavLink>
           <NavLink href="/pro">{t("pro")}</NavLink>
           <NavLink href="/blog">{t("blog")}</NavLink>
@@ -54,7 +59,12 @@ export async function MarketingNav(): Promise<ReactNode> {
         </div>
 
         {/* Desktop CTA + locale */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div
+          className="
+            hidden items-center gap-3
+            md:flex
+          "
+        >
           <LocaleSwitcher />
           <NavTaapLink
             href={publicEnv.TAAP_IT_DESKTOP_URL}
@@ -66,7 +76,12 @@ export async function MarketingNav(): Promise<ReactNode> {
         </div>
 
         {/* Mobile */}
-        <div className="flex items-center gap-2 md:hidden">
+        <div
+          className="
+            flex items-center gap-2
+            md:hidden
+          "
+        >
           <LocaleSwitcher />
           <MobileNavDrawer />
         </div>

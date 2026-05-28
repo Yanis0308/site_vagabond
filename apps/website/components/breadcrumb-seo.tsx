@@ -20,7 +20,7 @@ export async function BreadcrumbSeo({ items }: Props): Promise<ReactNode> {
     <>
       <JsonLd data={breadcrumbListSchema(items, locale)} />
       <nav aria-label="Breadcrumb" className="mb-6">
-        <ol className="text-typography-500 flex flex-wrap items-center gap-1 text-sm">
+        <ol className="flex flex-wrap items-center gap-1 text-sm text-typography-500">
           {items.map((item, index) => (
             <li key={item.label} className="flex items-center gap-1">
               {index > 0 ? (
@@ -31,7 +31,10 @@ export async function BreadcrumbSeo({ items }: Props): Promise<ReactNode> {
               {item.href !== undefined ? (
                 <Link
                   href={item.href}
-                  className="hover:text-primary-500 transition-colors"
+                  className="
+                    transition-colors
+                    hover:text-primary-500
+                  "
                 >
                   {item.label}
                 </Link>

@@ -21,17 +21,30 @@ export function StatsSection({ title, stats }: Props): ReactNode {
   return (
     <section className="bg-background-100 px-6 py-20">
       <div className="mx-auto max-w-5xl">
-        <h2 className="font-display text-foreground mb-10 text-center text-3xl font-bold md:text-4xl">
+        <h2
+          className="
+            mb-10 text-center font-display text-3xl font-bold text-foreground
+            md:text-4xl
+          "
+        >
           {title}
         </h2>
-        <div className="via-primary-400/30 mx-auto h-px max-w-2xl bg-gradient-to-r from-transparent to-transparent" />
-        <div className="grid grid-cols-2 gap-6 py-12 md:grid-cols-4">
+        <div className="mx-auto h-px max-w-2xl bg-linear-to-r from-transparent via-primary-400/30 to-transparent" />
+        <div
+          className="
+            grid grid-cols-2 gap-6 py-12
+            md:grid-cols-4
+          "
+        >
           {stats.map((stat, index) => (
             <BlurFade key={stat.label} delay={index * 0.1}>
-              <div className="border-background-300/50 bg-background-50/50 rounded-2xl border px-8 py-8">
+              <div className="rounded-2xl border border-background-300/50 bg-background-50/50 p-8">
                 <div className="flex flex-col items-center gap-1">
                   <motion.span
-                    className="font-display text-primary-500 text-4xl font-bold md:text-5xl"
+                    className="
+                      font-display text-4xl font-bold text-primary-500
+                      md:text-5xl
+                    "
                     whileInView={{ scale: [1, 1.08, 1] }}
                     viewport={{ once: true, amount: 0.5 }}
                     transition={{
@@ -47,7 +60,7 @@ export function StatsSection({ title, stats }: Props): ReactNode {
                     />
                   </motion.span>
                   <motion.span
-                    className="text-typography-600 text-sm"
+                    className="text-sm text-typography-600"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true, amount: 0.5 }}
@@ -63,7 +76,7 @@ export function StatsSection({ title, stats }: Props): ReactNode {
             </BlurFade>
           ))}
         </div>
-        <div className="via-primary-400/30 mx-auto h-px max-w-2xl bg-gradient-to-r from-transparent to-transparent" />
+        <div className="mx-auto h-px max-w-2xl bg-linear-to-r from-transparent via-primary-400/30 to-transparent" />
       </div>
     </section>
   );

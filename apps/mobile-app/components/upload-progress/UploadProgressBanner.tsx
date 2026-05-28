@@ -20,7 +20,7 @@ export function UploadProgressBanner({
   return (
     <Box
       className={cx(
-        "self-end rounded-md p-2 mr-2",
+        "mr-2 self-end rounded-md p-2",
         status === "success" ? "bg-success-600" : "bg-primary-500",
       )}
     >

@@ -78,7 +78,7 @@ export const SocialMediaSection = memo(
     }
 
     return (
-      <Box className={cn("bg-white rounded-lg mx-4 mt-6", className)}>
+      <Box className={cn("mx-4 mt-6 rounded-lg bg-white", className)}>
         <CustomText type="rating" className="px-6 py-2 text-primary-700">
           {"Réseaux sociaux"}
         </CustomText>
@@ -90,7 +90,10 @@ export const SocialMediaSection = memo(
                 onPress={() => {
                   handlePress(item.url, item.platform);
                 }}
-                className="px-6 active:opacity-70"
+                className="
+                  px-6
+                  active:opacity-70
+                "
               >
                 <Box className="flex-row items-center gap-3 py-2">
                   <Box className="w-6 items-center">

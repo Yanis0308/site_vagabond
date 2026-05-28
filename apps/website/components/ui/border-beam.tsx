@@ -32,7 +32,11 @@ export function BorderBeam({
 }: Props): ReactNode {
   return (
     <div
-      className="pointer-events-none absolute inset-0 rounded-[inherit] border-transparent [mask-image:linear-gradient(transparent,transparent),linear-gradient(#000,#000)] [mask-composite:intersect] [mask-clip:padding-box,border-box]"
+      className="
+        pointer-events-none absolute inset-0 rounded-[inherit] border-transparent
+        mask-[linear-gradient(transparent,transparent),linear-gradient(#000,#000)] mask-intersect
+        [mask-clip:padding-box,border-box]
+      "
       style={{
         borderWidth: `${String(borderWidth)}px`,
         borderStyle: "solid",

@@ -75,32 +75,43 @@ export default async function RegionPage({
             ]}
           />
 
-          <h1 className="font-display text-foreground text-3xl font-bold md:text-4xl">
+          <h1
+            className="
+              font-display text-3xl font-bold text-foreground
+              md:text-4xl
+            "
+          >
             {t("regionTitlePrefix")} {region.nomComplet ?? region.nom}{" "}
             {t("regionTitleSuffix")}
           </h1>
 
           <div className="mt-8 flex flex-wrap gap-6">
-            <div className="bg-background-200 rounded-xl px-6 py-4 text-center">
-              <span className="font-display text-primary-500 text-3xl font-bold">
+            <div className="rounded-xl bg-background-200 px-6 py-4 text-center">
+              <span className="font-display text-3xl font-bold text-primary-500">
                 {region.nbPois.toLocaleString(locale)}
               </span>
-              <p className="text-typography-600 text-sm">{t("pois")}</p>
+              <p className="text-sm text-typography-600">{t("pois")}</p>
             </div>
-            <div className="bg-background-200 rounded-xl px-6 py-4 text-center">
-              <span className="font-display text-primary-500 text-3xl font-bold">
+            <div className="rounded-xl bg-background-200 px-6 py-4 text-center">
+              <span className="font-display text-3xl font-bold text-primary-500">
                 {departements.length}
               </span>
-              <p className="text-typography-600 text-sm">
+              <p className="text-sm text-typography-600">
                 {t("departementsCount")}
               </p>
             </div>
           </div>
 
-          <h2 className="font-display text-foreground mt-12 mb-6 text-2xl font-bold">
+          <h2 className="mt-12 mb-6 font-display text-2xl font-bold text-foreground">
             {t("departements")}
           </h2>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div
+            className="
+              grid grid-cols-1 gap-4
+              sm:grid-cols-2
+              lg:grid-cols-3
+            "
+          >
             {departements.map((dept) => (
               <DepartementCard
                 key={dept.slug}

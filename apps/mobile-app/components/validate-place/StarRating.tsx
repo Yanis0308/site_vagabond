@@ -31,7 +31,7 @@ export const StarRating: React.FC<StarRatingProps> = React.memo(
         className={cn(
           "flex flex-row items-center gap-1",
           !withoutBackground &&
-            "bg-brightYellow-100 border-secondary-500 border-2 border-solid px-4 py-2 rounded-[34px]",
+            `rounded-[34px] border-2 border-solid border-secondary-500 bg-brightYellow-100 px-4 py-2`,
           className,
         )}
       >

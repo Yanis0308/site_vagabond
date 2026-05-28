@@ -39,9 +39,7 @@ export const SearchResultItem = ({
   return (
     <TouchableOpacity
       onPress={onPress}
-      className={
-        "flex-row items-center border-b border-background-200 bg-background-50 px-4 py-3"
-      }
+      className={`flex-row items-center border-b border-background-200 bg-background-50 px-4 py-3`}
       activeOpacity={0.5}
       accessibilityRole="button"
       accessibilityLabel={`Sélectionner ${result.name}, ${locationLabel}`}

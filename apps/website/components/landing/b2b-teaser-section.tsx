@@ -40,13 +40,27 @@ export function B2bTeaserSection({
           duration="4s"
           background="#9b4dca"
         >
-          <div className="relative px-8 py-16 text-center text-white md:px-16">
+          <div
+            className="
+              relative px-8 py-16 text-center text-white
+              md:px-16
+            "
+          >
             <div
               aria-hidden="true"
-              className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)] [background-size:40px_40px]"
+              className="
+                absolute inset-0
+                bg-[linear-gradient(rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.05)_1px,transparent_1px)]
+                bg-size-[40px_40px]
+              "
             />
             <div className="relative">
-              <h2 className="font-display text-3xl font-bold md:text-4xl">
+              <h2
+                className="
+                  font-display text-3xl font-bold
+                  md:text-4xl
+                "
+              >
                 {title}
               </h2>
               <p className="mt-4 text-lg text-white/80">{description}</p>
@@ -54,7 +68,9 @@ export function B2bTeaserSection({
                 {featureItems.map((feature, index) => (
                   <span
                     key={index}
-                    className="inline-flex items-center rounded-full bg-white px-3 py-1 text-sm font-medium text-purple-700"
+                    className="
+                      inline-flex items-center rounded-full bg-white px-3 py-1 text-sm font-medium text-purple-700
+                    "
                   >
                     {feature}
                   </span>

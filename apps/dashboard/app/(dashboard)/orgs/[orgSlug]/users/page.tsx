@@ -54,7 +54,7 @@ export default function UsersPage({
       </div>
 
       {error !== null && (
-        <p className="text-destructive text-sm">
+        <p className="text-sm text-destructive">
           Erreur de chargement : {String(error)}
         </p>
       )}
@@ -75,7 +75,7 @@ export default function UsersPage({
               <TableRow>
                 <TableCell
                   colSpan={5}
-                  className="text-muted-foreground text-center"
+                  className="text-center text-muted-foreground"
                 >
                   Aucun user
                 </TableCell>

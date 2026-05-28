@@ -39,7 +39,12 @@ export function FaqSection({
       {enableJsonLd ? <JsonLd data={faqPageSchema(items)} /> : null}
       <div className="mx-auto max-w-5xl">
         {title !== undefined ? (
-          <h2 className="font-display text-foreground mb-10 text-center text-3xl font-bold md:text-4xl">
+          <h2
+            className="
+              mb-10 text-center font-display text-3xl font-bold text-foreground
+              md:text-4xl
+            "
+          >
             {title}
           </h2>
         ) : null}

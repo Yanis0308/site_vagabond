@@ -1,6 +1,7 @@
 import nextCoreWebVitals from "eslint-config-next/core-web-vitals";
 
 import rootConfig from "../../eslint.config.mjs";
+import { tailwindcss } from "../../eslint.frontend.config.mjs";
 
 const nextConfigFiltered = nextCoreWebVitals
   .filter((config) => !config.plugins?.["@typescript-eslint"])
@@ -16,19 +17,7 @@ export default [
   ...rootConfig,
   ...nextConfigFiltered,
 
-  // Tailwind v4: class ordering géré par prettier-plugin-tailwindcss
-  {
-    rules: {
-      "tailwindcss/classnames-order": "off",
-      "tailwindcss/enforces-negative-arbitrary-values": "off",
-      "tailwindcss/enforces-shorthand": "off",
-      "tailwindcss/migration-from-tailwind-2": "off",
-      "tailwindcss/no-arbitrary-value": "off",
-      "tailwindcss/no-custom-classname": "off",
-      "tailwindcss/no-contradicting-classname": "off",
-      "tailwindcss/no-unnecessary-arbitrary-value": "off",
-    },
-  },
+  tailwindcss("app/globals.css"),
 
   // Composants UI générés par shadcn — règles strictes assouplies pour ne pas
   // exiger d'éditer à la main du code que `pnpm dlx shadcn add` réécrit.

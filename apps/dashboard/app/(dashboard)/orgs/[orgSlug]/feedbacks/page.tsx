@@ -71,7 +71,7 @@ export default function FeedbacksPage({
               category: e.target.value as UserFeedbackCategory | "ALL",
             });
           }}
-          className="border-input bg-input/20 rounded-md border px-2 py-1.5 text-sm"
+          className="rounded-md border border-input bg-input/20 px-2 py-1.5 text-sm"
         >
           {CATEGORY_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
@@ -82,7 +82,7 @@ export default function FeedbacksPage({
       </div>
 
       {error !== null && (
-        <p className="text-destructive text-sm">
+        <p className="text-sm text-destructive">
           Erreur de chargement : {String(error)}
         </p>
       )}
@@ -104,7 +104,7 @@ export default function FeedbacksPage({
               <TableRow>
                 <TableCell
                   colSpan={6}
-                  className="text-muted-foreground text-center"
+                  className="text-center text-muted-foreground"
                 >
                   Aucun feedback
                 </TableCell>
@@ -120,7 +120,7 @@ export default function FeedbacksPage({
                     }}
                     className="cursor-pointer"
                   >
-                    <TableCell className="text-muted-foreground whitespace-nowrap">
+                    <TableCell className="whitespace-nowrap text-muted-foreground">
                       {new Date(row.createdAt).toLocaleString("fr-FR")}
                     </TableCell>
                     <TableCell>
@@ -133,7 +133,7 @@ export default function FeedbacksPage({
                     <TableCell className="text-muted-foreground">
                       {row.targetPoiId ?? "—"}
                     </TableCell>
-                    <TableCell className="text-muted-foreground whitespace-nowrap">
+                    <TableCell className="whitespace-nowrap text-muted-foreground">
                       {row.os} {row.appVersion}
                     </TableCell>
                   </TableRow>

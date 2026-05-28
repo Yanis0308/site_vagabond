@@ -48,7 +48,7 @@ export const SeasonalClosureSection = memo(
     }
 
     return (
-      <Box className={cn("bg-white rounded-lg mx-4 mt-6", className)}>
+      <Box className={cn("mx-4 mt-6 rounded-lg bg-white", className)}>
         <CustomText type="rating" className="px-6 py-2 text-primary-700">
           {"Fermeture saisonnière"}
         </CustomText>
