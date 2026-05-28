@@ -1,5 +1,6 @@
 import "./globals.css";
 
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { type Metadata } from "next";
 import { type ReactNode } from "react";
 
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="fr">
       <body>
         <Providers>{children}</Providers>
+        <SpeedInsights />
       </body>
     </html>
   );
