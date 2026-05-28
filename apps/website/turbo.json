@@ -3,6 +3,7 @@
   "extends": ["//"],
   "tasks": {
     "build": {
+      "inputs": ["$TURBO_DEFAULT$", "!.next/**"],
       "passThroughEnv": ["DATABASE_URL", "PAYLOAD_SECRET"]
     }
   }
