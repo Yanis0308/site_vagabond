@@ -32,6 +32,10 @@
     "prettier-check": {
       "outputs": []
     },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
     "lint-fix": {
       "cache": false
     },

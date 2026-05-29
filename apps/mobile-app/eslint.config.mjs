@@ -2,6 +2,7 @@ import rootConfig from "../../eslint.config.mjs";
 import { tailwindcss } from "../../eslint.frontend.config.mjs";
 import expoFlatConfig from "eslint-config-expo/flat.js";
 import i18nextPlugin from "eslint-plugin-i18next";
+import jest from "eslint-plugin-jest";
 import reactCompiler from "eslint-plugin-react-compiler";
 
 // Filter out configs that define @typescript-eslint plugin to avoid "Cannot redefine plugin" error.
@@ -91,6 +92,12 @@ export default [
         },
       ],
     },
+  },
+
+  // Jest plugin for test files (globals + lint rules)
+  {
+    files: ["**/*.test.ts", "**/*.test.tsx"],
+    ...jest.configs["flat/recommended"],
   },
 
   // Ignores (mobile-app specific, root already has **/*.js, **/*.mjs, etc.)

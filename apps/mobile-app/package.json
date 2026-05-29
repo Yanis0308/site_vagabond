@@ -4,7 +4,10 @@
   "main": "index.js",
   "version": "1.0.0",
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
+    }
   },
   "private": true,
   "scripts": {
@@ -13,6 +16,9 @@
     "lint-check": "eslint . --max-warnings 0",
     "lint-check-debug": "eslint . --debug",
     "lint-fix": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "prettier-check": "prettier . --check",
     "prettier-fix": "prettier . --write",
     "develop": "dotenvx run -f .env.local -- sh -c 'expo start --clear --port \"${MOBILE_APP_PORT:-8081}\"'",
@@ -150,6 +156,7 @@
     "eslint-config-expo": "catalog:",
     "eslint-plugin-expo": "^1.0.0",
     "eslint-plugin-i18next": "catalog:",
+    "eslint-plugin-jest": "^29.15.2",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-compiler": "19.1.0-rc.2",

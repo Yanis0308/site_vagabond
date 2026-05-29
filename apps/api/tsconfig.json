@@ -9,6 +9,5 @@
     "esModuleInterop": true,
     "exactOptionalPropertyTypes": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["test/**/*.ts", "test/**/*.js"]
+  "include": ["src/**/*.ts", "vitest.config.ts"]
 }

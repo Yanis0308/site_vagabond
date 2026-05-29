@@ -19,10 +19,12 @@
     "prettier-fix": "prettier . --write",
     "clean": "rimraf dist",
     "prebuild": "pnpm run clean",
-    "test": "pnpm run build && tsc -p test/tsconfig.json && node --test --experimental-test-coverage --loader ts-node/esm test/**/*.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "start": "node --import ./instrument.mjs dist/server.js",
-    "build": "tsc",
-    "develop": "NODE_ENV=development tsc-watch --onSuccess 'node ./dist/server.js'"
+    "build": "tsc -p tsconfig.build.json",
+    "develop": "NODE_ENV=development tsc-watch -p tsconfig.build.json --onSuccess 'node ./dist/server.js'"
   },
   "keywords": [],
   "author": "",
@@ -75,13 +77,13 @@
   "devDependencies": {
     "@types/escape-html": "^1.0.4",
     "@types/node": "catalog:",
-    "c8": "^10.1.2",
+    "@vitest/coverage-v8": "^3.0.0",
     "eslint": "catalog:",
     "fastify-tsconfig": "^2.0.0",
     "pino-pretty": "^13.0.0",
     "rimraf": "^6.0.1",
-    "ts-node": "^10.4.0",
     "tsc-watch": "^6.2.1",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "^3.0.0"
   }
 }
