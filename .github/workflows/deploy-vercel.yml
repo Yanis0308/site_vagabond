@@ -1,0 +1,62 @@
+# Reusable workflow : déploie une app sur Vercel via un token CI (amondnet/vercel-action),
+# SANS l'intégration Git native de Vercel (désactivée par app via vercel.json →
+# git.deploymentEnabled:false). Voir docs/adr/0010-deploiements-vercel-via-github-actions.md.
+#
+# Le build est exécuté SUR Vercel (mode CLI, pas prebuilt) : la build command, l'install
+# command et les variables d'environnement (scopées Production/Preview) restent configurées
+# dans le projet Vercel. On ne pilote ici que le déclencheur et la cible du déploiement.
+# Le monorepo est géré par le "Root Directory" configuré côté projet Vercel.
+
+name: Deploy to Vercel (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      environment-name:
+        description: "Nom de l'environnement GitHub Deployment (preview | dev | production)"
+        type: string
+        required: true
+      vercel-args:
+        description: "Arguments passés à la CLI Vercel (ex. --prod pour la production)"
+        type: string
+        required: false
+        default: ""
+      alias-domains:
+        description: "Domaine(s) à aliaser sur le déploiement (env Dev : alias *.vercel.app stable)"
+        type: string
+        required: false
+        default: ""
+    secrets:
+      VERCEL_TOKEN:
+        required: true
+      VERCEL_ORG_ID:
+        required: true
+      VERCEL_PROJECT_ID:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Lie le job à un environnement GitHub (preview | dev | production) → permet d'appliquer
+    # des règles de protection (reviewers requis, branches autorisées) et de réserver les
+    # secrets Vercel à l'environnement, notamment pour gater la production.
+    environment: ${{ inputs.environment-name }}
+    permissions:
+      contents: read
+      deployments: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # Action tierce épinglée sur un SHA (immutabilité) — voir Dependabot github-actions pour les MAJ.
+      - uses: amondnet/vercel-action@de09aeac2ace6599ec9b11ef87558759a496bac4 # v42
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: ${{ inputs.vercel-args }}
+          alias-domains: ${{ inputs.alias-domains }}
+          github-comment: true
+          github-deployment: true
+          github-deployment-environment: ${{ inputs.environment-name }}

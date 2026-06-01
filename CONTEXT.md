@@ -22,6 +22,22 @@ _Avoid_: admin, back-office, console
 Le serveur Fastify qui sert la donnée applicative à la **Mobile App** et au **Dashboard**. Source de vérité pour `pois`, `boundaries`, `users`, `visited_pois`, etc.
 _Avoid_: backend, serveur
 
+### Environnements de déploiement
+
+S'appliquent indépendamment au **Website** et au **Dashboard** (déploiements séparés). Chaque app vit dans trois environnements distincts :
+
+**Preview**:
+Déploiement éphémère et jetable d'une modification en cours de revue, avant son intégration. Une instance distincte par modification.
+_Avoid_: staging (réservé à un environnement durable)
+
+**Dev**:
+Environnement durable, exposé sur une adresse stable, qui reflète en permanence l'état intégré de référence. Sert à valider l'intégration avant toute mise à disposition des utilisateurs. Distinct de la **Production**.
+_Avoid_: staging, recette, preprod
+
+**Production**:
+L'environnement servi aux utilisateurs réels, sur le domaine public. Mis à jour par une décision **délibérée**, jamais comme effet de bord d'une intégration. Distinct de **Dev**, y compris dans sa configuration.
+_Avoid_: prod, live
+
 ### Identités
 
 **Mobile User**:
