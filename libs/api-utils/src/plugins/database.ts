@@ -5,6 +5,7 @@ import {
   DashboardListingsRepository,
   DashboardUserRepository,
   getDrizzleClient,
+  NotificationEventRepository,
   OrganizationRepository,
   PoiEnrichedRepository,
   PoiRepository,
@@ -38,6 +39,7 @@ export interface DbRepositories {
   visitedPoi: VisitedPoiRepository;
   processingResult: ProcessingResultRepository;
   pushDevice: PushDeviceRepository;
+  notificationEvent: NotificationEventRepository;
   staffTools: StaffToolsRepository;
 }
 
@@ -72,6 +74,7 @@ export default fp(
         visitedPoi: new VisitedPoiRepository(db),
         processingResult: new ProcessingResultRepository(db),
         pushDevice: new PushDeviceRepository(db),
+        notificationEvent: new NotificationEventRepository(db),
         staffTools: new StaffToolsRepository(db),
       };
 

@@ -35,6 +35,21 @@ export function mapWithNullableIsoDate(v: unknown): string | null {
 }
 
 /**
+ * Mapper for SQL results that can be number or null.
+ * Use with .mapWith(mapWithNullableNumber) instead of sql<number | null>.
+ */
+export function mapWithNullableNumber(v: unknown): number | null {
+  if (v === null || v === undefined) return null;
+  if (typeof v === "number") return Number.isNaN(v) ? null : v;
+  if (typeof v === "string") {
+    if (v.trim() === "") return null;
+    const parsed = Number(v);
+    return Number.isNaN(parsed) ? null : parsed;
+  }
+  return null;
+}
+
+/**
  * Creates a mapper for JSONB results validated via AJV against a JSON schema.
  * Use with .mapWith(mapWithJsonSchema(schema)) instead of sql<T>.
  * Validators are cached in memory by schema reference to avoid recompilation.

@@ -164,6 +164,9 @@ export {
   type StaffToolsCompleteZoneRequest,
   StaffToolsCompleteZoneRequestSchema,
   StaffToolsCompleteZoneResponseSchema,
+  type StaffToolsTestNotificationRequest,
+  StaffToolsTestNotificationRequestSchema,
+  StaffToolsTestNotificationResponseSchema,
   StaffToolsValidatePlaceResponseSchema,
 } from "./schemas/api/staff-tools.js";
 export {

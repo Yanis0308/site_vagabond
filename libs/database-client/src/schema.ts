@@ -72,6 +72,14 @@ export type ProcessingStatusEnum =
 export const imageSourceEnum = pgEnum("ImageSourceEnum", ["CAMERA", "GALLERY"]);
 export type ImageSourceEnum = (typeof imageSourceEnum.enumValues)[number];
 
+export const notificationEventStatus = pgEnum("NotificationEventStatusEnum", [
+  "sent",
+  "opened",
+  "failed",
+]);
+export type NotificationEventStatusEnum =
+  (typeof notificationEventStatus.enumValues)[number];
+
 const timestampWithTz = (
   name?: string,
 ): ReturnType<typeof timestamp<string, "date">> =>
@@ -299,6 +307,61 @@ export const pushDevices = pgTable(
       columns: [table.userId],
       foreignColumns: [users.userId],
       name: "push_devices_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("cascade"),
+  ],
+);
+
+export const notificationEvents = pgTable(
+  "notification_events",
+  {
+    id: serial().primaryKey().notNull(),
+    createdAt: created_at,
+    updatedAt: updated_at,
+    notificationId: varchar("notification_id", { length: 50 }).notNull(),
+    userId: varchar("user_id", { length: 1000 }).notNull(),
+    templateKey: varchar("template_key", { length: 100 }).notNull(),
+    channelId: varchar("channel_id", { length: 50 }).notNull(),
+    priority: varchar({ length: 10 }).notNull(),
+    titleRendered: varchar("title_rendered", { length: 500 }).notNull(),
+    bodyRendered: varchar("body_rendered", { length: 2000 }).notNull(),
+    variantIndex: integer("variant_index").notNull(),
+    deepLink: varchar("deep_link", { length: 500 }).notNull(),
+    status: notificationEventStatus().notNull(),
+    failureReason: varchar("failure_reason", { length: 500 }),
+    sentAt: timestampWithTz("sent_at").notNull(),
+    openedAt: timestampWithTz("opened_at"),
+    triggerSource: varchar("trigger_source", { length: 50 }).notNull(),
+    triggerCoords: geometry("trigger_coords", { type: "point", srid: 4326 }),
+  },
+  (table) => [
+    uniqueIndex("notification_events_notification_id_key").using(
+      "btree",
+      table.notificationId.asc().nullsLast().op("text_ops"),
+    ),
+    // Anti-spam caps (per-user, ordered by sent time)
+    index("notification_events_user_id_sent_at_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("text_ops"),
+      table.sentAt.desc().nullsLast().op("timestamptz_ops"),
+    ),
+    // Cooldown per template (per-user + template, ordered by sent time)
+    index("notification_events_user_id_template_key_sent_at_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("text_ops"),
+      table.templateKey.asc().nullsLast().op("text_ops"),
+      table.sentAt.desc().nullsLast().op("timestamptz_ops"),
+    ),
+    // Spatial index on triggerCoords (used for entered_city distance checks)
+    index("notification_events_trigger_coords_idx").using(
+      "gist",
+      table.triggerCoords.asc().nullsLast().op("gist_geometry_ops_2d"),
+    ),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.userId],
+      name: "notification_events_user_id_fkey",
     })
       .onUpdate("cascade")
       .onDelete("cascade"),
@@ -720,6 +783,7 @@ export const usersRelations = relations(users, ({ many, one }) => ({
   userLocations: many(userLocations),
   userFeedbacks: many(userFeedbacks),
   pushDevices: many(pushDevices),
+  notificationEvents: many(notificationEvents),
   appReview: one(appReview, {
     fields: [users.userId],
     references: [appReview.userId],
@@ -732,6 +796,16 @@ export const pushDevicesRelations = relations(pushDevices, ({ one }) => ({
     references: [users.userId],
   }),
 }));
+
+export const notificationEventsRelations = relations(
+  notificationEvents,
+  ({ one }) => ({
+    user: one(users, {
+      fields: [notificationEvents.userId],
+      references: [users.userId],
+    }),
+  }),
+);
 
 export const poiBoundariesRelations = relations(poiBoundaries, ({ one }) => ({
   pois: one(pois, {
