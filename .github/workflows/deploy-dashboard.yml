@@ -1,6 +1,5 @@
-# Déploiement du Dashboard (apps/dashboard) sur Vercel via GitHub Actions.
-# 3 environnements (cf. CONTEXT.md → Environnements de déploiement) :
-#   - Preview    : sur PR, URL éphémère commentée sur la PR
+# Déploiement du Dashboard (apps/dashboard) sur Vercel via GitHub Actions, en mode PREBUILT.
+# 2 environnements (cf. docs/adr/0010-*) :
 #   - Dev        : sur push main, aliasé sur une URL *.vercel.app stable (suit main)
 #   - Production : déclenchement manuel uniquement (workflow_dispatch), build --prod
 # Indépendant de ci-checks.yml (pas de gating). Voir docs/adr/0010-*.
@@ -8,17 +7,6 @@
 name: Deploy Dashboard
 
 on:
-  pull_request:
-    branches: ["main"]
-    paths:
-      - "apps/dashboard/**"
-      - "libs/**"
-      - "pnpm-lock.yaml"
-      - "pnpm-workspace.yaml"
-      - "package.json"
-      - "turbo.json"
-      - ".github/workflows/deploy-dashboard.yml"
-      - ".github/workflows/deploy-vercel.yml"
   push:
     branches: ["main"]
     paths:
@@ -33,12 +21,11 @@ on:
   workflow_dispatch:
 
 # Permissions du GITHUB_TOKEN requises par le reusable. Le défaut du repo est restrictif
-# (deployments/pull-requests à 'none') ; sans ce bloc explicite, un reusable ne peut pas élever
-# ses permissions et l'appel échoue. Accordé au niveau caller car un reusable ne fait que restreindre.
+# (deployments à 'none') ; sans ce bloc explicite, un reusable ne peut pas élever ses permissions
+# et l'appel échoue. Accordé au niveau caller car un reusable ne fait que restreindre.
 permissions:
   contents: read
   deployments: write
-  pull-requests: write
 
 # Sérialise les déploiements par type d'événement. Pour le Dev (push main), un nouveau push
 # annule le déploiement précédent encore en cours → l'alias stable ne risque pas de finir
@@ -49,21 +36,12 @@ concurrency:
   cancel-in-progress: ${{ github.event_name != 'workflow_dispatch' }}
 
 jobs:
-  preview:
-    if: github.event_name == 'pull_request'
-    uses: ./.github/workflows/deploy-vercel.yml
-    with:
-      environment-name: preview
-    secrets:
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_DASHBOARD }}
-
   dev:
     if: github.event_name == 'push'
     uses: ./.github/workflows/deploy-vercel.yml
     with:
       environment-name: dev
+      vercel-environment: preview
       # TODO: remplacer par l'alias *.vercel.app fixe réel du Dev Dashboard.
       alias-domains: dev-vagagond-dashboard.vercel.app
     secrets:
@@ -78,7 +56,8 @@ jobs:
     uses: ./.github/workflows/deploy-vercel.yml
     with:
       environment-name: production
-      vercel-args: --prod
+      vercel-environment: production
+      production: true
     secrets:
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

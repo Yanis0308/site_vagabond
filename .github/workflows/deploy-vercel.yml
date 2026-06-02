@@ -1,10 +1,15 @@
-# Reusable workflow : déploie une app sur Vercel via un token CI (amondnet/vercel-action),
-# SANS l'intégration Git native de Vercel (désactivée par app via vercel.json →
-# git.deploymentEnabled:false). Voir docs/adr/0010-deploiements-vercel-via-github-actions.md.
+# Reusable workflow : déploie une app sur Vercel en mode PREBUILT, via la CLI Vercel et un token CI,
+# SANS l'intégration Git native de Vercel (désactivée par app via vercel.json → git.deploymentEnabled:false).
+# Voir docs/adr/0010-deploiements-vercel-via-github-actions.md.
 #
-# Le build est exécuté SUR Vercel (mode CLI, pas prebuilt) : la build command, l'install
-# command et les variables d'environnement (scopées Production/Preview) restent configurées
-# dans le projet Vercel. On ne pilote ici que le déclencheur et la cible du déploiement.
+# Le build tourne sur le runner (`vercel pull` → `vercel build`) et on n'envoie à Vercel que l'artefact
+# (`vercel deploy --prebuilt`) : le cloud build de Vercel n'est jamais invoqué. C'est ce qui permet de
+# déployer depuis un compte non payant (Vercel réserve le build cloud déclenché par CLI/API aux équipes
+# payantes ; sinon le déploiement est bloqué et le step reste figé sur « building… »). Cf. ADR 0010.
+#
+# Les variables d'environnement (scopées par environnement) restent configurées dans le projet Vercel :
+# `vercel pull` les rapatrie dans .vercel/.env.<env>.local, `vercel build` les fige dans le bundle
+# (Next.js gèle les NEXT_PUBLIC_* au build → Dev et Production sont buildés séparément).
 # Le monorepo est géré par le "Root Directory" configuré côté projet Vercel.
 
 name: Deploy to Vercel (reusable)
@@ -13,19 +18,28 @@ on:
   workflow_call:
     inputs:
       environment-name:
-        description: "Nom de l'environnement GitHub Deployment (preview | dev | production)"
+        description: "Nom de l'environnement GitHub Deployment (dev | production)"
         type: string
         required: true
-      vercel-args:
-        description: "Arguments passés à la CLI Vercel (ex. --prod pour la production)"
+      vercel-environment:
+        description: "Cible env Vercel pour pull/build (preview | production). Le Dev est un build 'preview' aliasé."
         type: string
+        required: true
+      production:
+        description: "true → build & deploy en --prod (Production)"
+        type: boolean
         required: false
-        default: ""
+        default: false
       alias-domains:
         description: "Domaine(s) à aliaser sur le déploiement (env Dev : alias *.vercel.app stable)"
         type: string
         required: false
         default: ""
+      run-payload-migrate:
+        description: "true → exécute `payload migrate` (release) après build, avant deploy (Website uniquement)"
+        type: boolean
+        required: false
+        default: false
     secrets:
       VERCEL_TOKEN:
         required: true
@@ -37,26 +51,75 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    # Lie le job à un environnement GitHub (preview | dev | production) → permet d'appliquer
-    # des règles de protection (reviewers requis, branches autorisées) et de réserver les
-    # secrets Vercel à l'environnement, notamment pour gater la production.
+    # Garde-fou : un déploiement bloqué/anormal ne doit plus faire tourner le job indéfiniment.
+    timeout-minutes: 10
+    # Lie le job à un environnement GitHub (dev | production) → règles de protection (reviewers,
+    # branches autorisées) et secrets Vercel réservés à l'environnement, notamment pour gater la prod.
     environment: ${{ inputs.environment-name }}
     permissions:
       contents: read
       deployments: write
-      pull-requests: write
+    # Le CLI Vercel lit ces variables pour lier le projet sans interaction (génère .vercel/project.json).
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
     steps:
       - uses: actions/checkout@v4
 
-      # Action tierce épinglée sur un SHA (immutabilité) — voir Dependabot github-actions pour les MAJ.
-      - uses: amondnet/vercel-action@de09aeac2ace6599ec9b11ef87558759a496bac4 # v42
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: ${{ inputs.vercel-args }}
-          alias-domains: ${{ inputs.alias-domains }}
-          github-comment: true
-          github-deployment: true
-          github-deployment-environment: ${{ inputs.environment-name }}
+          node-version: "22.x"
+          cache: "pnpm"
+
+      # CLI Vercel récente requise pour `vercel build`/`deploy --prebuilt`.
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel env (${{ inputs.vercel-environment }})
+        run: vercel pull --yes --environment=${{ inputs.vercel-environment }} --token=$VERCEL_TOKEN
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      # Build SUR le runner (pas dans le cloud Vercel). La build command est fixée côté app
+      # (apps/website/vercel.json → buildCommand sans `payload migrate`) ; la migration est un
+      # step release séparé ci-dessous (build ≠ release).
+      - name: Build (Vercel, prebuilt)
+        run: vercel build ${{ inputs.production && '--prod' || '' }} --token=$VERCEL_TOKEN
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      # Release : applique les migrations Payload AVANT que le nouveau code ne serve. DATABASE_URL /
+      # PAYLOAD_SECRET proviennent de l'env Vercel rapatrié par `vercel pull` (.vercel/.env.<env>.local) —
+      # aucun secret GitHub supplémentaire. Suppose que la base est joignable depuis les runners GitHub.
+      - name: Run Payload migrations (${{ inputs.vercel-environment }})
+        if: inputs.run-payload-migrate
+        # `--conditions react-server` : payload.config.ts tire `server-only` (via lib/config/private.ts),
+        # qui throw s'il est chargé hors contexte Server Component. Même condition que le script `build`.
+        run: |
+          set -a
+          . ".vercel/.env.${{ inputs.vercel-environment }}.local"
+          set +a
+          NODE_OPTIONS='--conditions react-server' pnpm --filter @vagabond/website exec payload migrate
+
+      # Déploiement de l'artefact prebuilt (.vercel/output produit par `vercel build` ci-dessus).
+      # `vercel deploy --prebuilt` uploade l'output déjà construit et n'invoque JAMAIS le build cloud
+      # de Vercel — c'est ce qui garde le déploiement gratuit (pas de build cloud réservé aux équipes payantes).
+      - name: Deploy (prebuilt)
+        id: deploy
+        run: |
+          url="$(vercel deploy --prebuilt ${{ inputs.production && '--prod' || '' }} --token="$VERCEL_TOKEN" | tail -n1)"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Deployed: $url"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      # Env Dev : aliase le déploiement preview sur l'URL *.vercel.app stable (suit main).
+      - name: Alias stable (Dev)
+        if: inputs.alias-domains != ''
+        run: vercel alias set "$DEPLOY_URL" "$ALIAS_DOMAIN" --token="$VERCEL_TOKEN"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          DEPLOY_URL: ${{ steps.deploy.outputs.url }}
+          ALIAS_DOMAIN: ${{ inputs.alias-domains }}
