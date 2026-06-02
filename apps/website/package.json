@@ -9,7 +9,7 @@
     "ci": "payload migrate && pnpm build",
     "start": "next start",
     "typescript-check": "tsc --noEmit",
-    "lint-check": "eslint . --max-warnings 0",
+    "lint-check": "node ../../scripts/eslint-retry.mjs . --max-warnings 0",
     "lint-fix": "eslint . --fix",
     "prettier-fix": "prettier . --write",
     "prettier-check": "prettier . --check",

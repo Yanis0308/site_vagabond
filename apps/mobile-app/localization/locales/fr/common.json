@@ -83,7 +83,7 @@
   "user_feedback": {
     "map": {
       "modal": {
-        "title": "Ton avis nous aide à améliorer Vagabond 🙌",
+        "title": "Ton avis compte 🙌",
         "subtitle": "Ça prend moins de 10 secondes.",
         "type_label": "Type de feedback",
         "message_label": "Ton message",
@@ -182,7 +182,7 @@
     "place_suggestion": {
       "button_a11y_label": "Suggérer un lieu manquant",
       "modal": {
-        "title": "Un lieu à recommander aux autres Vagabonds ? 🙌",
+        "title": "Un lieu à recommander ?",
         "subtitle": "C'est très important pour la communauté !",
         "place_name_label": "Nom du lieu (obligatoire)",
         "place_name_placeholder": "Nom du lieu",

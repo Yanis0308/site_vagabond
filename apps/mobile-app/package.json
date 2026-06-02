@@ -48,7 +48,7 @@
     "@expo/config-plugins": "~54.0.4",
     "@expo/html-elements": "^0.12.5",
     "@expo/vector-icons": "^15.0.3",
-    "@gluestack-ui/core": "^3.0.10",
+    "@gluestack-ui/core": "^3.0.22",
     "@gluestack-ui/nativewind": "^0.0.2",
     "@gluestack-ui/nativewind-utils": "^1.0.28",
     "@gluestack-ui/utils": "^3.0.11",

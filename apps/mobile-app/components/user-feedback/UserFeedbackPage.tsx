@@ -119,7 +119,7 @@ export const UserFeedbackPage = ({
             onPress={submitAction}
             disabled={isPending || isSubmitDisabled}
             className={cn(
-              "min-w-16",
+              "min-w-16 pl-6",
               (isPending || isSubmitDisabled) && "opacity-50",
             )}
           >
