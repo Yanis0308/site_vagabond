@@ -141,7 +141,11 @@ pnpm develop
 pnpx expo-doctor@latest
 ```
 
-### Builds iOS
+### Builds EAS (iOS et Android)
+
+Les builds EAS (cloud et local, **iOS et Android**) exécutent `eas-build-post-install`, qui lance `pnpm build:libs` à la racine du monorepo pour compiler `@vagabond/shared-utils` (`dist/` n’est pas versionné).
+
+#### iOS
 
 ```bash
 # Simulateur (local) - utilise .env.local
@@ -169,7 +173,7 @@ pnpm build-local-ios-prd
 pnpm build-cloud-ios-prd
 ```
 
-### Builds Android
+#### Android
 
 ```bash
 # Development build (local) - utilise .env.local

@@ -84,7 +84,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     name: parsedConfig.data.appName, // For Expo Go and standalone app
     slug: "mobile-app", // For Expo EAS project
     owner: "vagabond-app", // Expo account name
-    version: "1.1.0",
+    version: "1.2.0",
     // OTA runtime policy is always 1.0.0 for development / preview
     // and fingerprint for production (hashes of native code + app.config.ts + package.json + pnpm-lock.yaml)
     runtimeVersion: parsedConfig.data.runtimeConfig.isDevEnv
