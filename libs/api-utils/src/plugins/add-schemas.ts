@@ -8,7 +8,8 @@ export default fp(
       try {
         // Fastify need $id in Schema so we only
         if ("$id" in schema && typeof schema.$id === "string") {
-          fastify.log.info(`Adding schema: '${schema.$id}'`);
+          // Uncomment to debug schema addition
+          //fastify.log.info(`Adding schema: '${schema.$id}'`);
           fastify.addSchema(schema);
         } else {
           throw new Error(
@@ -24,6 +25,9 @@ export default fp(
         throw error;
       }
     });
+    fastify.log.info(
+      `Added ${Object.values(allJsonSchemas).length} schemas to Fastify`,
+    );
   },
   {
     name: "add-schemas",
