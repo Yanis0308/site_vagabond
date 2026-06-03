@@ -43,10 +43,17 @@ export const getDrizzleClient = async (): Promise<
   });
 
   const db = drizzle(pool, { schema, casing: "snake_case" });
-  await migrate(db, {
-    migrationsFolder: join(__dirname, "migrations"),
-    migrationsSchema: "public",
-  });
+  logger.info("Running database migrations");
+  try {
+    await migrate(db, {
+      migrationsFolder: join(__dirname, "migrations"),
+      migrationsSchema: "public",
+    });
+  } catch (err) {
+    logger.error({ err }, "Database migration failed");
+    throw err;
+  }
+  logger.info("Database migrations completed");
 
   return Object.assign(db, {
     close: async () => {
