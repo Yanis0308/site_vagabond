@@ -1,3 +1,36 @@
+-- Pre-fix: redefine normalize_search_text before ALTER TABLE triggers recompilation.
+-- Without this, ALTER TABLE "boundaries" ALTER COLUMN crashes with
+-- "function unaccent(text) does not exist" because the search_path at
+-- function-recompile time does not include the schema where unaccent lives.
+-- (The permanent fix lands in 0026; this block makes 0025 safe on any fresh env.)
+CREATE SCHEMA IF NOT EXISTS extensions;
+--> statement-breakpoint
+CREATE OR REPLACE FUNCTION public.normalize_search_text(input_text TEXT)
+RETURNS TEXT
+LANGUAGE plpgsql
+IMMUTABLE
+SET search_path = ''
+AS $$
+BEGIN
+  RETURN pg_catalog.regexp_replace(
+    pg_catalog.lower(extensions.unaccent(input_text)),
+    '[^a-z0-9]', '', 'g'
+  );
+END;
+$$;
+--> statement-breakpoint
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM pg_extension e
+        JOIN pg_namespace n ON e.extnamespace = n.oid
+        WHERE e.extname = 'unaccent' AND n.nspname = 'public'
+    ) THEN
+        ALTER EXTENSION unaccent SET SCHEMA extensions;
+    END IF;
+END $$;
+--> statement-breakpoint
 CREATE TABLE "user_period_scores" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"user_id" varchar(1000) NOT NULL,
