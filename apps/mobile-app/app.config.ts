@@ -136,7 +136,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.READ_MEDIA_IMAGES",
         "android.permission.POST_NOTIFICATIONS",
       ],
       package: parsedConfig.data.packageAndBundleIdentifier,

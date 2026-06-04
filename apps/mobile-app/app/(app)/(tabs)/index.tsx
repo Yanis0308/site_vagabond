@@ -222,12 +222,10 @@ export default function MapsTab(): ReactElement {
         source: "gallery",
       });
     }
-    const photoPermission =
-      Platform.OS === "ios"
-        ? PERMISSIONS.IOS.PHOTO_LIBRARY
-        : PERMISSIONS.ANDROID.READ_MEDIA_IMAGES;
-    const status = await request(photoPermission);
-    if (status !== RESULTS.GRANTED && status !== RESULTS.LIMITED) {
+    // Expo's helper, not READ_MEDIA_IMAGES: requests nothing on iOS andAndroid 13+
+    // (system Photo Picker) and only legacy storage access on Android <= 12.
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== ImagePicker.PermissionStatus.GRANTED) {
       Alert.alert(
         "Permission refusée",
         "Nous avons besoin d'accéder à votre galerie",
