@@ -27,7 +27,7 @@ Pour le **typage** de `period_type`, le choix `text` (couplé à une union TypeS
 ## Consequences
 
 - **Transaction étendue** dans `visitedPoi.repository.create()` : INSERT visited_poi + UPSERT user_period_scores (une ligne par période active) + UPDATE pois.visit_count, dans un seul `db.transaction(...)`.
-- **Backfill obligatoire** au moment du déploiement : un script `scripts/reconcile-counts.ts` recalcule l'état initial depuis `visited_pois`. Exécuté en transaction `SERIALIZABLE` avec `TRUNCATE` pour gérer les écritures concurrentes pendant la durée (~quelques secondes).
+- **Backfill obligatoire** au moment du déploiement : la requête de réconciliation documentée dans [`docs/reconcile-user-period-scores.md`](../reconcile-user-period-scores.md) recalcule l'état initial depuis `visited_pois`. Exécutée en transaction `SERIALIZABLE` avec `TRUNCATE` pour gérer les écritures concurrentes pendant la durée (~quelques secondes).
 - **Surface de drift** : si un code futur INSERT directement dans `visited_pois` en bypassant le repository, les compteurs divergent. Mitigation : revue PR + script de réconciliation en filet de sécurité périodique.
 - **Doublon `pois.visit_count`** non couvert par cette table : il reste une colonne simple sur `pois`. Si demain on veut « POIs les plus visités ce mois-ci », on créera `poi_period_scores` au même pattern. YAGNI pour l'instant.
 - **Pattern réplicable** : si d'autres entités demandent des agrégats temporels (par ex. activité par **Boundary** par période), on instancie une table `<entity>_period_scores` au même modèle.
