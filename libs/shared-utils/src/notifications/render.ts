@@ -32,7 +32,10 @@ export const renderTemplate = (
   // `NOTIFICATION_TEMPLATE_KEYS.includes(value as NotificationTemplateKey)`).
   const template = NOTIFICATION_TEMPLATES[key];
 
-  for (const requiredVar of template.requiredVariables) {
+  // Widened to `string[]`: no current template declares required variables, so
+  // the const-narrowed element type is `never`. The guard stays generic for
+  // future templates that reintroduce `{placeholder}` variables.
+  for (const requiredVar of template.requiredVariables as readonly string[]) {
     const value = variables[requiredVar];
     if (value === undefined || value === "") {
       logger.warn(

@@ -2,7 +2,6 @@ export const NOTIFICATION_TEMPLATE_KEYS = [
   "first_place_prompt",
   "inactive_2d",
   "inactive_7d",
-  "entered_city",
 ] as const;
 
 export type NotificationTemplateKey =

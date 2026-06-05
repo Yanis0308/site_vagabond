@@ -62,24 +62,4 @@ export const NOTIFICATION_TEMPLATES = {
       { title: "On remet la machine en route ?", body: "" },
     ],
   },
-  entered_city: {
-    key: "entered_city",
-    channelId: "proximity",
-    priority: "HIGH",
-    cooldownHours: 24,
-    deepLink: HOME_DEEP_LINK,
-    requiredVariables: ["ville"],
-    triggerSource: "cron:entered_city",
-    kpiEvent: "city_session",
-    variants: [
-      {
-        title: "Bienvenue à {ville} 👀",
-        body: "De nouveaux lieux à découvrir ici.",
-      },
-      { title: "Nouveau terrain de jeu : {ville}", body: "" },
-      { title: "Tu es à {ville} ? Profites-en pour explorer !", body: "" },
-      { title: "{ville} cache de beaux spots…", body: "" },
-      { title: "Découvre {ville} autrement avec Vagabond.", body: "" },
-    ],
-  },
 } as const satisfies Record<NotificationTemplateKey, NotificationTemplate>;

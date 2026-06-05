@@ -36,8 +36,8 @@ export interface OrchestratorCandidate {
   template: NotificationTemplate;
   variables: Record<string, string>;
   /**
-   * Trigger coords if the candidate is location-based (e.g. `entered_city`).
-   * Persisted on the resulting `notification_events` row by the sender.
+   * Trigger coords if the candidate is location-based. Persisted on the
+   * resulting `notification_events` row by the sender.
    */
   triggerCoords: { latitude: number; longitude: number } | null;
 }

@@ -20,6 +20,16 @@ const DEAD_TOKEN_CODES = new Set<string>([
   "messaging/invalid-argument",
 ]);
 
+/**
+ * FCM/firebase-admin error codes meaning "token bucket exhausted at project
+ * level" (HTTP 429 RESOURCE_EXHAUSTED). When seen, the dispatch batch should
+ * short-circuit instead of grilling the remaining candidates — the bucket
+ * refills minute-by-minute and the next cron tick will retry.
+ */
+const QUOTA_EXCEEDED_CODES = new Set<string>([
+  "messaging/message-rate-exceeded",
+]);
+
 export interface SendNotificationInput {
   userId: string;
   candidate: OrchestratorCandidate;
@@ -27,8 +37,18 @@ export interface SendNotificationInput {
 }
 
 export type SendNotificationOutcome =
-  | { status: "sent"; notificationId: string; deliveredTo: number }
-  | { status: "failed"; notificationId: string; reason: string }
+  | {
+      status: "sent";
+      notificationId: string;
+      deliveredTo: number;
+      rateLimited: boolean;
+    }
+  | {
+      status: "failed";
+      notificationId: string;
+      reason: string;
+      rateLimited: boolean;
+    }
   | { status: "skipped"; reason: "render_failed" | "no_active_devices" };
 
 interface DeviceSendResult {
@@ -278,6 +298,9 @@ export const sendNotification = async (
     const joined = failureCodes.join(",").slice(0, 500);
     failureReason = joined === "" ? "all_devices_failed" : joined;
   }
+  const rateLimited = failureCodes.some((code) =>
+    QUOTA_EXCEEDED_CODES.has(code),
+  );
 
   await fastify.dbRepositories.notificationEvent.insert({
     notificationId,
@@ -305,10 +328,16 @@ export const sendNotification = async (
         deliveredTo: successes,
         totalDevices: devices.length,
         deadTokensCleaned: deadTokens.length,
+        rateLimited,
       },
       "notification_sent",
     );
-    return { status: "sent", notificationId, deliveredTo: successes };
+    return {
+      status: "sent",
+      notificationId,
+      deliveredTo: successes,
+      rateLimited,
+    };
   }
 
   log.warn(
@@ -319,6 +348,7 @@ export const sendNotification = async (
       totalDevices: devices.length,
       failureCodes,
       failures,
+      rateLimited,
     },
     "notification_failed",
   );
@@ -326,5 +356,6 @@ export const sendNotification = async (
     status: "failed",
     notificationId,
     reason: failureReason ?? "all_devices_failed",
+    rateLimited,
   };
 };

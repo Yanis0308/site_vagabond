@@ -13,8 +13,7 @@ export type NotificationPriority = (typeof NOTIFICATION_PRIORITIES)[number];
 export type NotificationTriggerSource =
   | "cron:first_place_prompt"
   | "cron:inactive_2d"
-  | "cron:inactive_7d"
-  | "cron:entered_city";
+  | "cron:inactive_7d";
 
 export interface NotificationTemplateVariant {
   title: string;

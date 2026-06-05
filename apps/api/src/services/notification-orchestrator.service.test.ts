@@ -199,7 +199,7 @@ describe("selectNextNotification — cooldown par template", () => {
   });
 
   it("bloque si lastSent < cooldownHours", () => {
-    const template = makeTemplate("entered_city", "HIGH", 24);
+    const template = makeTemplate("inactive_7d", "HIGH", 24);
     const ctx = baseCtx({
       stats: {
         ...baseStats(),
@@ -213,7 +213,7 @@ describe("selectNextNotification — cooldown par template", () => {
   });
 
   it("accepte si lastSent = cooldownHours pile (limite inclusive)", () => {
-    const template = makeTemplate("entered_city", "HIGH", 24);
+    const template = makeTemplate("inactive_7d", "HIGH", 24);
     const ctx = baseCtx({
       stats: {
         ...baseStats(),
@@ -275,7 +275,7 @@ describe("selectNextNotification — recent session & bypass HIGH", () => {
 
 describe("selectNextNotification — priorité de la raison de rejet", () => {
   it("renvoie `cooldown` plutôt que `recent_session` quand les deux raisons s'appliquent", () => {
-    const cooldownTemplate = makeTemplate("entered_city", "MEDIUM", 24);
+    const cooldownTemplate = makeTemplate("inactive_7d", "MEDIUM", 24);
     const sessionTemplate = makeTemplate("inactive_2d", "MEDIUM", 24);
     const ctx = baseCtx({
       stats: {
@@ -360,7 +360,7 @@ describe("selectNextNotification — edges", () => {
   });
 
   it("préserve les triggerCoords du candidat sélectionné", () => {
-    const template = makeTemplate("entered_city", "HIGH", 24);
+    const template = makeTemplate("inactive_7d", "HIGH", 24);
     const coords = { latitude: 48.8566, longitude: 2.3522 };
     const result = selectNextNotification(
       [makeCandidate(template, coords)],

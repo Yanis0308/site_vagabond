@@ -5,6 +5,7 @@ export * from "./repositories/dashboard-app-review.repository.js";
 export * from "./repositories/dashboard-feedback.repository.js";
 export * from "./repositories/dashboard-listings.repository.js";
 export * from "./repositories/dashboard-user.repository.js";
+export * from "./repositories/notification-candidate.repository.js";
 export * from "./repositories/notification-event.repository.js";
 export * from "./repositories/organization.repository.js";
 export * from "./repositories/poi.repository.js";

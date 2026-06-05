@@ -8,13 +8,8 @@ import { and, count, desc, eq, gte, ne, sql } from "drizzle-orm";
 
 import { type DrizzleClient } from "../drizzleClient.js";
 import { notificationEvents } from "../schema.js";
-import { mapWithNullableNumber } from "../sqlMappers.js";
 
 export type NotificationEventStatus = "sent" | "opened" | "failed";
-
-// Référence typée vers la clé du template `entered_city`. Si la clé est
-// renommée côté `@vagabond/shared-utils`, TypeScript casse ici.
-const ENTERED_CITY_TEMPLATE_KEY: NotificationTemplateKey = "entered_city";
 
 export interface NotificationEventInsertInput {
   notificationId: string;
@@ -31,12 +26,6 @@ export interface NotificationEventInsertInput {
   sentAt: Date;
   triggerSource: NotificationTriggerSource;
   triggerCoords: { latitude: number; longitude: number } | null;
-}
-
-export interface LastEnteredCityTrigger {
-  sentAt: Date;
-  longitude: number | null;
-  latitude: number | null;
 }
 
 export class NotificationEventRepository {
@@ -91,7 +80,7 @@ export class NotificationEventRepository {
    */
   async countSinceForUser(userId: string, since: Date): Promise<number> {
     const [row] = await this.db
-      .select({ value: count() })
+      .select({ value: count().mapWith(Number) })
       .from(notificationEvents)
       .where(
         and(
@@ -155,7 +144,7 @@ export class NotificationEventRepository {
     templateKey: NotificationTemplateKey,
   ): Promise<number> {
     const [row] = await this.db
-      .select({ value: count() })
+      .select({ value: count().mapWith(Number) })
       .from(notificationEvents)
       .where(
         and(
@@ -164,43 +153,5 @@ export class NotificationEventRepository {
         ),
       );
     return row?.value ?? 0;
-  }
-
-  /**
-   * Last `entered_city` trigger for a user (most recent sentAt, excluding
-   * failed events). Returns the trigger coords as raw lat/lon so the caller
-   * can run a distance check. Returns null when there is no prior trigger.
-   */
-  async getLastEnteredCityTrigger(
-    userId: string,
-  ): Promise<LastEnteredCityTrigger | null> {
-    const [row] = await this.db
-      .select({
-        sentAt: notificationEvents.sentAt,
-        longitude: sql`ST_X(${notificationEvents.triggerCoords})`.mapWith(
-          mapWithNullableNumber,
-        ),
-        latitude: sql`ST_Y(${notificationEvents.triggerCoords})`.mapWith(
-          mapWithNullableNumber,
-        ),
-      })
-      .from(notificationEvents)
-      .where(
-        and(
-          eq(notificationEvents.userId, userId),
-          eq(notificationEvents.templateKey, ENTERED_CITY_TEMPLATE_KEY),
-          ne(notificationEvents.status, "failed"),
-        ),
-      )
-      .orderBy(desc(notificationEvents.sentAt))
-      .limit(1);
-    if (row === undefined) {
-      return null;
-    }
-    return {
-      sentAt: row.sentAt,
-      longitude: row.longitude,
-      latitude: row.latitude,
-    };
   }
 }

@@ -353,7 +353,7 @@ export const notificationEvents = pgTable(
       table.templateKey.asc().nullsLast().op("text_ops"),
       table.sentAt.desc().nullsLast().op("timestamptz_ops"),
     ),
-    // Spatial index on triggerCoords (used for entered_city distance checks)
+    // Spatial index on triggerCoords (location-based trigger distance checks)
     index("notification_events_trigger_coords_idx").using(
       "gist",
       table.triggerCoords.asc().nullsLast().op("gist_geometry_ops_2d"),
