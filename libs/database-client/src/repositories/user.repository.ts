@@ -1,4 +1,4 @@
-import { getUserDisplayName, logger } from "@vagabond/shared-utils";
+import { getUserDisplayName } from "@vagabond/shared-utils";
 import {
   and,
   asc,
@@ -6,6 +6,7 @@ import {
   desc,
   eq,
   exists,
+  getTableColumns,
   gt,
   gte,
   max,
@@ -166,117 +167,47 @@ export class UserRepository {
     userId: string,
     userInfo: Omit<UserInfo, "nickname" | "isPrivate">,
   ): Promise<{ user: DbUser; isNew: boolean }> {
-    try {
-      return await this.db.transaction(
-        async (tx) => {
-          // Lock the row for this user to prevent race conditions
-          const existingUser = await tx.query.users.findFirst({
-            where: eq(users.userId, userId),
-            columns: { userId: true, oauthProviders: true, createdAt: true },
-          });
+    // Merge oauth providers in SQL: dedup of existing array + incoming array.
+    // COALESCE handles the NULL case on first insert paths.
+    const mergedOauthProviders = sql`ARRAY(
+      SELECT DISTINCT unnest(
+        COALESCE(${users.oauthProviders}, '{}'::varchar[]) || excluded.oauth_providers
+      )
+    )`;
 
-          const isNew = existingUser === undefined;
-
-          const newOauthProviders =
-            existingUser?.oauthProviders !== null &&
-            existingUser?.oauthProviders !== undefined
-              ? Array.from(
-                  new Set([
-                    ...existingUser.oauthProviders,
-                    ...userInfo.oauthProviders,
-                  ]),
-                )
-              : userInfo.oauthProviders;
-
-          const [dbUser] = await tx
-            .insert(users)
-            .values({
-              userId: userId,
-              ...userInfo,
-              oauthProviders: newOauthProviders,
-            })
-            .onConflictDoUpdate({
-              target: users.userId,
-              set: {
-                ...userInfo,
-                oauthProviders: newOauthProviders,
-              },
-            })
-            .returning();
-
-          if (dbUser === undefined) {
-            throw new Error("Failed to upsert user");
-          }
-
-          return {
-            user: {
-              ...dbUser,
-              fullName: getUserDisplayName(dbUser.fullName, dbUser.email),
-            },
-            isNew,
-          };
+    const [row] = await this.db
+      .insert(users)
+      .values({ userId, ...userInfo })
+      .onConflictDoUpdate({
+        target: users.userId,
+        set: {
+          ...userInfo,
+          oauthProviders: mergedOauthProviders,
+          // Drizzle's $onUpdate doesn't fire in onConflictDoUpdate's set
+          updatedAt: new Date(),
         },
-        {
-          isolationLevel: "serializable",
-        },
-      );
-    } catch (error) {
-      // Handle concurrent update error - this happens when multiple requests
-      // try to update the same user simultaneously
+      })
+      .returning({
+        ...getTableColumns(users),
+        // xmax = 0 ⇒ pure INSERT (this caller is the row creator).
+        // xmax > 0 ⇒ ON CONFLICT DO UPDATE fired. Under concurrency Postgres
+        // guarantees exactly one writer sees xmax = 0, so this is race-free.
+        // https://www.postgresql.org/docs/current/ddl-system-columns.html
+        isNew: sql`xmax = 0`.mapWith(Boolean),
+      });
 
-      // Debug logging to understand error structure
-      if (error instanceof Error) {
-        logger.info(
-          `upsertUser error - Type: ${error.constructor.name}, Message: ${error.message.substring(0, 200)}`,
-        );
-        if (error.cause instanceof Error) {
-          logger.info(
-            `upsertUser error cause - Message: ${error.cause.message}`,
-          );
-        }
-      }
-
-      const isConcurrentUpdateError =
-        error instanceof Error &&
-        (error.message.includes(
-          "could not serialize access due to concurrent update",
-        ) ||
-          (error.cause instanceof Error &&
-            error.cause.message.includes(
-              "could not serialize access due to concurrent update",
-            )));
-
-      if (isConcurrentUpdateError) {
-        logger.warn(
-          `Concurrent update detected for user ${userId}, fetching existing user instead`,
-        );
-
-        // Fetch the existing user since another transaction already updated it
-        const existingUser = await this.db.query.users.findFirst({
-          where: eq(users.userId, userId),
-        });
-
-        if (existingUser === undefined) {
-          throw new Error(
-            `User ${userId} not found after concurrent update error`,
-          );
-        }
-
-        return {
-          user: {
-            ...existingUser,
-            fullName: getUserDisplayName(
-              existingUser.fullName,
-              existingUser.email,
-            ),
-          },
-          isNew: false,
-        };
-      }
-
-      // Re-throw any other errors
-      throw error;
+    if (row === undefined) {
+      throw new Error("Failed to upsert user");
     }
+
+    const { isNew, ...dbUser } = row;
+    return {
+      user: {
+        ...dbUser,
+        fullName: getUserDisplayName(dbUser.fullName, dbUser.email),
+      },
+      isNew,
+    };
   }
 
   async getPublicUserInfo(userId: string): Promise<PublicUserInfo | null> {
