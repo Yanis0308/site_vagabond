@@ -45,6 +45,79 @@ le `DROP TABLE IF EXISTS` ci-dessous.
 > Les tables `*_import` sont **laissées en place** après le run (pratique pour
 > debug) et **écrasées au run suivant** (le `DROP IF EXISTS` les recrée).
 
+### DDL des tables de staging
+
+À exécuter **sur DEV** avant le transfert (ou laisser l'assistant DBeaver gérer
+via « Drop/Create target table »). Ce sont de simples **tampons** : on réplique
+les types des tables live (mêmes enums / géométries, pour que les
+`INSERT … SELECT` de l'étape 2 passent sans cast) mais **sans contrainte** (pas de
+PK, FK, NOT NULL, ni défaut). Les invariants sont (re)validés au merge contre les
+tables live. Les types enum/PostGIS référencés (`"PoiSourceEnum"`, etc.) existent
+déjà en base (créés par les migrations).
+
+```sql
+-- pois -> pois_import
+DROP TABLE IF EXISTS pois_import;
+CREATE TABLE pois_import (
+  id              varchar(1000),
+  created_at      timestamptz,
+  updated_at      timestamptz,
+  source          "PoiSourceEnum",
+  source_id       varchar(1000),
+  coords          geometry(Point, 4326),
+  disabled        boolean,
+  disabled_reason varchar(1000),
+  filter_level    "PoiFilterLevelEnum",
+  visit_count     integer
+);
+
+-- poi_data -> poi_data_import
+DROP TABLE IF EXISTS poi_data_import;
+CREATE TABLE poi_data_import (
+  id            integer,
+  created_at    timestamptz,
+  updated_at    timestamptz,
+  name          varchar(1000),
+  description   varchar(1000),
+  raw_info      jsonb,
+  source        "PoiDataSourceEnum",
+  source_id     varchar(1000),
+  language      "LanguageEnum",
+  poi_id        varchar(1000),
+  nb_of_tags    integer,
+  main_category varchar(100),
+  categories    jsonb
+);
+
+-- poi_boundaries -> poi_boundaries_import
+DROP TABLE IF EXISTS poi_boundaries_import;
+CREATE TABLE poi_boundaries_import (
+  id          integer,
+  created_at  timestamptz,
+  updated_at  timestamptz,
+  poi_id      varchar(1000),
+  boundary_id varchar(1000)
+);
+
+-- boundaries -> boundaries_import (seulement si les zones ont changé)
+DROP TABLE IF EXISTS boundaries_import;
+CREATE TABLE boundaries_import (
+  id               varchar(1000),
+  created_at       timestamptz,
+  updated_at       timestamptz,
+  name             varchar(1000),
+  boundary_level   "BoundaryLevelEnum",
+  raw_info         jsonb,
+  parent_id        varchar(1000),
+  display_point    geometry(Point, 4326),
+  place_type       varchar(100),
+  population        integer,
+  is_capital       boolean,
+  importance_score double precision,
+  way_area         double precision
+);
+```
+
 ## Étape 2 — Fusion (SQL à exécuter sur DEV)
 
 > **⚠️ Tout en upsert (pas de `DELETE`), parents avant enfants.** Depuis la
