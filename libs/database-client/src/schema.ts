@@ -80,6 +80,14 @@ export const notificationEventStatus = pgEnum("NotificationEventStatusEnum", [
 export type NotificationEventStatusEnum =
   (typeof notificationEventStatus.enumValues)[number];
 
+export const notificationOpenSourceEnum = pgEnum("NotificationOpenSourceEnum", [
+  "foreground",
+  "background",
+  "cold_start",
+]);
+export type NotificationOpenSourceEnum =
+  (typeof notificationOpenSourceEnum.enumValues)[number];
+
 const timestampWithTz = (
   name?: string,
 ): ReturnType<typeof timestamp<string, "date">> =>
@@ -346,6 +354,7 @@ export const notificationEvents = pgTable(
     failureReason: varchar("failure_reason", { length: 500 }),
     sentAt: timestampWithTz("sent_at").notNull(),
     openedAt: timestampWithTz("opened_at"),
+    openSource: notificationOpenSourceEnum("open_source"),
     triggerSource: varchar("trigger_source", { length: 50 }).notNull(),
     triggerCoords: geometry("trigger_coords", { type: "point", srid: 4326 }),
   },

@@ -6,6 +6,8 @@ import { AppReviewAlreadyExistsError } from "@vagabond/database-client";
 import {
   EmptyResponseSchema,
   ErrorResponseSchema,
+  TrackNotificationOpenBodySchema,
+  TrackNotificationOpenParamsSchema,
   UpdateUserMeRequestSchema,
   UserAppReviewRequestSchema,
   UserPublicInfoResponseSchema,
@@ -172,6 +174,34 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           }
         })();
       }
+
+      return await reply.status(200).send({ data: {} });
+    },
+  );
+  fastify.post(
+    "/me/notifications/:notificationId/open",
+    {
+      schema: {
+        tags: ["users"],
+        params: TrackNotificationOpenParamsSchema,
+        body: TrackNotificationOpenBodySchema,
+        security: [{ bearerAuth: [] }],
+        response: {
+          200: EmptyResponseSchema,
+        },
+      },
+    },
+    async function (request, reply) {
+      const { user } = asMobileRequest(request);
+      const { userId } = user.db;
+      const { notificationId } = request.params;
+      const { source } = request.body;
+
+      await fastify.dbRepositories.notificationEvent.markOpened(
+        userId,
+        notificationId,
+        source !== undefined ? { openSource: source } : {},
+      );
 
       return await reply.status(200).send({ data: {} });
     },

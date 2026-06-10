@@ -11,6 +11,8 @@ import { notificationEvents } from "../schema.js";
 
 export type NotificationEventStatus = "sent" | "opened" | "failed";
 
+export type NotificationOpenSource = "foreground" | "background" | "cold_start";
+
 export interface NotificationEventInsertInput {
   notificationId: string;
   userId: string;
@@ -54,17 +56,29 @@ export class NotificationEventRepository {
   }
 
   /**
-   * Set status='opened' and openedAt=now() for a given (userId, notificationId).
-   * Idempotent: only writes when openedAt is still NULL.
+   * Set status='opened', openedAt=now() and (optionally) openSource for a given
+   * (userId, notificationId). Idempotent: only writes when openedAt is still NULL,
+   * so the first call wins chronologically (regardless of source). Callers
+   * should expect a cold_start open to be dropped if a foreground open landed
+   * earlier — acceptable in V0 since foreground tracking is not active yet
+   * (will land in PR7 alongside the toast CTA). If we ever need cold_start to
+   * win over foreground, this should be promoted to a source-priority compare.
    */
   async markOpened(
     userId: string,
     notificationId: string,
-    now: Date = new Date(),
+    options: { now?: Date; openSource?: NotificationOpenSource } = {},
   ): Promise<void> {
+    const now = options.now ?? new Date();
     await this.db
       .update(notificationEvents)
-      .set({ status: "opened", openedAt: now })
+      .set({
+        status: "opened",
+        openedAt: now,
+        ...(options.openSource !== undefined
+          ? { openSource: options.openSource }
+          : {}),
+      })
       .where(
         and(
           eq(notificationEvents.userId, userId),

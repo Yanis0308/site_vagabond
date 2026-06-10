@@ -5,6 +5,7 @@ import { type ReactElement } from "react";
 // l'appel du hook et le rendu de <PushPermissionPrePromptModal /> plus bas.
 // import { PushPermissionPrePromptModal } from "@/components/notifications/PushPermissionPrePromptModal";
 import { defaultScreenOptions } from "@/constants/ScreenOptions";
+import { useNotificationOpenListener } from "@/hooks/other/useNotificationOpenListener";
 import { usePushDeviceRegistration } from "@/hooks/other/usePushDeviceRegistration";
 // import { usePushPermissionPrompt } from "@/hooks/other/usePushPermissionPrompt";
 import { useStartupPhotoRecovery } from "@/hooks/other/useStartupPhotoRecovery";
@@ -20,6 +21,8 @@ export default function RootLayout(): ReactElement | null {
   useStartupPhotoRecovery();
   // Synchronise le token FCM avec l'API au mount et à chaque rotation
   usePushDeviceRegistration();
+  // Écoute les notifs FCM (background / cold-start → track + nav ; foreground → atom)
+  useNotificationOpenListener();
   // TEMP: pré-prompt in-app pour les notifications désactivé temporairement.
   // const pushPermissionPrompt = usePushPermissionPrompt();
 

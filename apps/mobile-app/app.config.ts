@@ -96,7 +96,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     },
     orientation: "portrait",
     icon: "./assets/images/full-icon.png",
-    scheme: "vagabond-app", // URL Scheme to open the app, here vagabond://mylinkexample
+    scheme: "vagabond-app", // URL scheme used by deep links (e.g. vagabond-app://(app)/(tabs))
     userInterfaceStyle: "light", // For light / dark mode
     ios: {
       bundleIdentifier: parsedConfig.data.packageAndBundleIdentifier,

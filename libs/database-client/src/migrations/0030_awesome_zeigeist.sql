@@ -1,0 +1,2 @@
+CREATE TYPE "public"."NotificationOpenSourceEnum" AS ENUM('foreground', 'background', 'cold_start');--> statement-breakpoint
+ALTER TABLE "notification_events" ADD COLUMN "open_source" "NotificationOpenSourceEnum";

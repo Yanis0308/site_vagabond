@@ -1,7 +1,7 @@
 import { type NotificationTemplateKey } from "./template-keys.js";
 import { type NotificationTemplate } from "./types.js";
 
-const HOME_DEEP_LINK = "vagabond://(app)/(tabs)";
+const HOME_DEEP_LINK = "vagabond-app://(app)/(tabs)";
 
 // V0 : tous les templates pointent vers la home. Les deep links profonds
 // (POI, profil, leaderboard, …) arriveront en V1 avec les nouveaux triggers.

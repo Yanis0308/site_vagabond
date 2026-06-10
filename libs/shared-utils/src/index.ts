@@ -138,6 +138,14 @@ export {
   UserLocationRequestSchema,
 } from "./schemas/api/location.js";
 export {
+  type NotificationOpenSource,
+  NotificationOpenSourceSchema,
+  type TrackNotificationOpenBody,
+  TrackNotificationOpenBodySchema,
+  type TrackNotificationOpenParams,
+  TrackNotificationOpenParamsSchema,
+} from "./schemas/api/notifications.js";
+export {
   GetPoiEnrichedResponseSchema,
   type PoiEnrichedData,
   PoiEnrichedDataSchema,
