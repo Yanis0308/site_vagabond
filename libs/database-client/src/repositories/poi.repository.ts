@@ -30,6 +30,15 @@ export class PoiRepository {
       .onConflictDoNothing({ target: [pois.source, pois.sourceId] });
   }
 
+  async existsActiveById(poiId: string): Promise<boolean> {
+    const result = await this.db
+      .select({ id: pois.id })
+      .from(pois)
+      .where(and(eq(pois.id, poiId), eq(pois.disabled, false)))
+      .limit(1);
+    return result.length > 0;
+  }
+
   async manyDisable(ids: string[], reason: string): Promise<unknown> {
     return await this.db
       .update(pois)
@@ -89,7 +98,8 @@ export class PoiRepository {
       })
       .from(pois)
       .innerJoin(poiData, eq(pois.id, poiData.poiId))
-      .where(eq(pois.id, poiId))
+      // POI désactivé (disparu d'OSM) => non trouvé (la route renvoie 404).
+      .where(and(eq(pois.id, poiId), eq(pois.disabled, false)))
       .limit(1);
 
     const resultPoi = result[0];
@@ -118,7 +128,7 @@ export class PoiRepository {
         longitude: sql`ST_X(${pois.coords}::geometry)`.mapWith(Number),
       })
       .from(pois)
-      .where(eq(pois.id, poiId))
+      .where(and(eq(pois.id, poiId), eq(pois.disabled, false)))
       .limit(1);
 
     return result[0];

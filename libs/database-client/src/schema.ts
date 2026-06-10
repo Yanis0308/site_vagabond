@@ -209,6 +209,13 @@ export const visitedPois = pgTable(
     })
       .onUpdate("cascade")
       .onDelete("restrict"),
+    foreignKey({
+      columns: [table.poiId],
+      foreignColumns: [pois.id],
+      name: "visited_pois_poi_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("no action"),
   ],
 );
 
@@ -259,6 +266,13 @@ export const poiData = pgTable(
       table.sourceId.asc().nullsLast().op("enum_ops"),
       table.language.asc().nullsLast().op("text_ops"),
     ),
+    foreignKey({
+      columns: [table.poiId],
+      foreignColumns: [pois.id],
+      name: "poi_data_poi_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("no action"),
   ],
 );
 
@@ -466,13 +480,16 @@ export const poiBoundaries = pgTable(
       "btree",
       table.boundaryId.asc().nullsLast().op("text_ops"),
     ),
+    // NO ACTION (RESTRICT) comme les autres FK vers pois : aucun POI ne peut être
+    // supprimé tant qu'il a des rattachements de zone (cf. ADR 0011). L'import
+    // supprime des lignes poi_boundaries enfants (sens enfant→parent), non affecté.
     foreignKey({
       columns: [table.poiId],
       foreignColumns: [pois.id],
       name: "poi_boundaries_poi_id_fkey",
     })
       .onUpdate("cascade")
-      .onDelete("cascade"),
+      .onDelete("no action"),
     foreignKey({
       columns: [table.boundaryId],
       foreignColumns: [boundaries.id],
@@ -584,13 +601,17 @@ export const userFeedbacks = pgTable(
     })
       .onUpdate("cascade")
       .onDelete("cascade"),
+    // NO ACTION (RESTRICT) comme les autres FK vers pois : un POI ciblé par un
+    // feedback ne peut pas être supprimé (cf. ADR 0011). target_poi_id reste
+    // nullable (un feedback peut ne cibler aucun POI) ; la FK ne contraint que les
+    // feedbacks effectivement rattachés à un POI.
     foreignKey({
       columns: [table.targetPoiId],
       foreignColumns: [pois.id],
       name: "user_feedbacks_target_poi_id_fkey",
     })
       .onUpdate("cascade")
-      .onDelete("set null"),
+      .onDelete("no action"),
   ],
 );
 

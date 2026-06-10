@@ -223,6 +223,7 @@ const CityPoisList = memo(
               poiId: vp.poiId,
               name: vp.name,
               coords: vp.coords,
+              isDisabled: vp.isDisabled,
               createdAt: vp.createdAt,
               comment: vp.comment,
               rating: vp.rating,

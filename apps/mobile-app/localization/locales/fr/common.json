@@ -39,6 +39,7 @@
   "cities": "villes",
   "departements": "départements",
   "load_more": "Charger plus",
+  "deleted_place": "Lieu supprimé",
   "review_form": {
     "upload_error_title": "Erreur",
     "upload_error_message": "Impossible d'envoyer la photo. Voulez-vous réessayer ?",

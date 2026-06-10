@@ -128,6 +128,7 @@ export class BoundaryRepository {
             latitude: sql`ST_Y(${pois.coords}::geometry)`.mapWith(Number),
             longitude: sql`ST_X(${pois.coords}::geometry)`.mapWith(Number),
             boundaryId: poiBoundaries.boundaryId,
+            disabled: pois.disabled,
             name: sql`(
               SELECT pd.name FROM ${poiData} pd
               WHERE pd.poi_id = ${visitedPois.poiId}
@@ -154,10 +155,12 @@ export class BoundaryRepository {
           })
           .from(visitedPois)
           .innerJoin(poiBoundaries, eq(poiBoundaries.poiId, visitedPois.poiId))
+          .innerJoin(pois, eq(pois.id, visitedPois.poiId))
           .where(
             and(
               eq(visitedPois.userId, userId),
               inArray(poiBoundaries.boundaryId, relevantZoneIds),
+              eq(pois.disabled, false),
             ),
           )
           .groupBy(poiBoundaries.boundaryId)
@@ -197,7 +200,13 @@ export class BoundaryRepository {
           totalPois: countDistinct(poiBoundaries.poiId).mapWith(Number),
         })
         .from(poiBoundaries)
-        .where(inArray(poiBoundaries.boundaryId, relevantZoneIds))
+        .innerJoin(pois, eq(pois.id, poiBoundaries.poiId))
+        .where(
+          and(
+            inArray(poiBoundaries.boundaryId, relevantZoneIds),
+            eq(pois.disabled, false),
+          ),
+        )
         .groupBy(poiBoundaries.boundaryId),
 
       // Query C: subzone counts — total + completed (Drizzle + raw SQL for FILTER)
@@ -253,6 +262,7 @@ export class BoundaryRepository {
             latitude: row.latitude,
             longitude: row.longitude,
           },
+          isDisabled: row.disabled,
           createdAt: mapWithIsoDate(row.createdAt),
           comment: row.comment,
           rating: row.rating,
@@ -301,7 +311,7 @@ export class BoundaryRepository {
         name: b.name,
         boundary_level: b.boundary_level,
         parent_id: b.parent_id,
-        validated_pois_count: validatedPois.length,
+        validated_pois_count: validatedPois.filter((p) => !p.isDisabled).length,
         validated_pois: validatedPois,
         total_pois_count: totalPoisMap.get(b.id) ?? 0,
         total_subzones_count: subzones?.total ?? 0,
@@ -383,10 +393,12 @@ export class BoundaryRepository {
         })
         .from(visitedPois)
         .innerJoin(poiBoundaries, eq(poiBoundaries.poiId, visitedPois.poiId))
+        .innerJoin(pois, eq(pois.id, visitedPois.poiId))
         .where(
           and(
             eq(visitedPois.userId, userId),
             inArray(poiBoundaries.boundaryId, relevantZoneIds),
+            eq(pois.disabled, false),
           ),
         )
         .groupBy(poiBoundaries.boundaryId),
@@ -412,7 +424,13 @@ export class BoundaryRepository {
           totalPois: countDistinct(poiBoundaries.poiId).mapWith(Number),
         })
         .from(poiBoundaries)
-        .where(inArray(poiBoundaries.boundaryId, relevantZoneIds))
+        .innerJoin(pois, eq(pois.id, poiBoundaries.poiId))
+        .where(
+          and(
+            inArray(poiBoundaries.boundaryId, relevantZoneIds),
+            eq(pois.disabled, false),
+          ),
+        )
         .groupBy(poiBoundaries.boundaryId),
 
       this.db

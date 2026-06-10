@@ -39,6 +39,7 @@
   "cities": "cities",
   "departements": "departments",
   "load_more": "Load more",
+  "deleted_place": "Deleted place",
   "review_form": {
     "upload_error_title": "Error",
     "upload_error_message": "Failed to upload the photo. Would you like to try again?",

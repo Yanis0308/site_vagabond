@@ -2,6 +2,10 @@
 
 ETL pour traiter les données OpenStreetMap et les préparer pour l'API et Mapbox.
 
+> 📄 Réimport des POIs vers une base existante (local → DEV) sans casser les
+> visites : voir [docs/reimport-pois-dbeaver.md](docs/reimport-pois-dbeaver.md)
+> (transfert DBeaver + désactivation des lieux disparus, jamais de `DELETE`).
+
 ## Architecture
 
 ```

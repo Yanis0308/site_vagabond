@@ -15,6 +15,7 @@ import {
   boundaries,
   type BoundaryLevelEnum,
   poiBoundaries,
+  pois,
   visitedPois,
 } from "../schema.js";
 
@@ -26,7 +27,10 @@ export class StaffToolsRepository {
     const result = await this.db
       .selectDistinct({ poiId: poiBoundaries.poiId })
       .from(poiBoundaries)
-      .where(eq(poiBoundaries.boundaryId, boundaryId));
+      .innerJoin(pois, eq(pois.id, poiBoundaries.poiId))
+      .where(
+        and(eq(poiBoundaries.boundaryId, boundaryId), eq(pois.disabled, false)),
+      );
 
     return result.map((r) => r.poiId);
   }

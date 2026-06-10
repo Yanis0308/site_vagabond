@@ -2,6 +2,7 @@ import type { BriefVisitedPoi } from "@vagabond/shared-utils";
 import { router } from "expo-router";
 import { Trash2 } from "lucide-react-native";
 import { memo, type ReactElement } from "react";
+import { useTranslation } from "react-i18next";
 import { Pressable, type ViewStyle } from "react-native";
 
 import { CustomImage } from "@/components/custom-ui/CustomImage";
@@ -38,6 +39,7 @@ export const ProfilePoiItem = memo(
     allowNavigation,
     allowProfileEdit,
   }: ProfilePoiItemProps): ReactElement => {
+    const { t } = useTranslation("common");
     const { setSelectedPlace } = usePlaceSelection();
     const handleDeleteVisitedPoi = useDeleteVisitedPoiWithConfirm(poi.poiId);
     const visitDate = new Date(poi.createdAt).toLocaleDateString("fr-FR", {
@@ -47,7 +49,7 @@ export const ProfilePoiItem = memo(
     });
 
     const handlePress = (): void => {
-      if (!allowNavigation) {
+      if (!allowNavigation || poi.isDisabled) {
         return;
       }
       const poiData: PoiType = {
@@ -93,6 +95,11 @@ export const ProfilePoiItem = memo(
               {poi.name !== undefined && (
                 <CustomText className="font-semibold text-gray-900">
                   {poi.name}
+                </CustomText>
+              )}
+              {poi.isDisabled && (
+                <CustomText className="text-sm font-medium text-gray-400">
+                  {t("deleted_place")}
                 </CustomText>
               )}
               <CustomText className="text-sm text-gray-600">

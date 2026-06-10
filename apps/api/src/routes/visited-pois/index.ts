@@ -47,11 +47,23 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         }),
         response: {
           200: GetVisitedPoisResponseSchema,
+          404: ErrorResponseSchema,
         },
       },
     },
     async function (request, reply) {
       const { poiId } = request.params;
+
+      const poiIsActive =
+        await fastify.dbRepositories.poi.existsActiveById(poiId);
+
+      if (!poiIsActive) {
+        return await reply.status(404).send({
+          statusCode: 404,
+          error: "Not Found",
+          message: "POI not found or disabled",
+        });
+      }
 
       const visitedPois =
         await fastify.dbRepositories.visitedPoi.findByPoiId(poiId);
@@ -106,6 +118,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         body: CreateVisitedPoiRequestSchema,
         response: {
           200: CreateVisitedPoiResponseSchema,
+          404: ErrorResponseSchema,
           409: ErrorResponseSchema,
         },
       },
@@ -114,6 +127,17 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       const { user } = asMobileRequest(request);
       const { poiId } = request.params;
       const { imageKey, imageSource, rating, comment, coords } = request.body;
+
+      const poiIsActive =
+        await fastify.dbRepositories.poi.existsActiveById(poiId);
+
+      if (!poiIsActive) {
+        return await reply.status(404).send({
+          statusCode: 404,
+          error: "Not Found",
+          message: "POI not found or disabled",
+        });
+      }
 
       const visitedPoi =
         await fastify.dbRepositories.visitedPoi.findByPoiAndUser(

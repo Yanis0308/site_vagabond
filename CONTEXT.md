@@ -58,6 +58,39 @@ _Avoid_: zone (en DB / API), territoire, périmètre
 Document Payload CMS du **Website** utilisé pour les pages SEO. Disjoint des **Boundaries** de l'API : pas de FK, pas de synchronisation automatique. À ne pas confondre avec une **Boundary** de niveau `CITY`.
 _Avoid_: city (sauf en code anglophone côté Website)
 
+### Catalogue & visites
+
+**POI** (point of interest) :
+Un lieu du catalogue, dérivé d'OSM, qu'un **Mobile User** peut visiter (`pois`).
+_Avoid_: lieu (ambigu : POI vs Visite vs Boundary), spot, endroit.
+
+**Snapshot d'import** :
+L'ensemble des **POI** produits par le dernier import OSM filtré (table de staging
+`pois_import`). Source de vérité de « ce qui existe » à un instant T.
+_Avoid_: dataset, batch.
+
+**POI désactivé** (_disabled POI_) :
+Un **POI absent du dernier Snapshot d'import** — soit disparu d'OSM, soit écarté
+par nos filtres — **conservé en base** (jamais supprimé) pour préserver l'historique
+des **Visites**. C'est un **état dérivé** (`pois.disabled = true`, raison
+`absent_from_snapshot`), pas un flag de modération.
+_Avoid_: lieu supprimé (terme UI seulement), POI masqué, POI archivé.
+
+**Visite** (UI : « lieu validé ») :
+L'enregistrement qu'un **Mobile User** a visité un **POI** (`visited_pois`). Lien
+protégé par clé étrangère `ON DELETE NO ACTION` (la base refuse de supprimer un POI
+visité — cf. ADR 0011) ; survit à la **désactivation** du POI (qui, elle, ne le
+supprime pas).
+_Avoid_: validation (l'entité est une **Visite**), check-in.
+
+**Complétion de zone** (UI : zone « complétée » / verte) :
+La part des **POI actifs** d'une **Boundary** qu'un **Mobile User** a visités. Les
+**POI désactivés** sont exclus du numérateur **et** du dénominateur (« % de ce qui
+existe aujourd'hui »). Une **Visite** vers un **POI désactivé** reste affichée en
+historique mais ne contribue **pas** à la complétion — à aucun de ses niveaux (POI
+direct comme sous-zone).
+_Avoid_: progression (vague), score (réservé au **Leaderboard**, lui inclut les désactivés).
+
 ### Multi-tenant (Dashboard)
 
 **Organization**:
@@ -70,6 +103,7 @@ _Avoid_: rôle, affiliation
 
 **Boundary Scope**:
 Sous-ensemble de **Boundaries** attaché à une **Organization** pour restreindre sa visibilité sur les données API (POIs, visites, feedbacks, stats). Le scope d'une **Organization** peut être :
+
 - **`ALL`** : visibilité globale (typiquement les **Organizations** `business_type='staff'`).
 - Une liste explicite de **Boundaries** (typiquement de niveau `CITY`) : visibilité restreinte aux entités rattachées à ces **Boundaries** (cas standard d'une **Organization** cliente).
 
@@ -84,11 +118,14 @@ _Avoid_: zone, territoire, périmètre (informels)
 - Une **Organization** possède 0..N **Boundaries** dans son **Boundary Scope** ; une **Boundary** peut être incluse dans 0..N **Boundary Scopes** d'**Organizations** différentes (cardinalité N:M).
 - Un **Dashboard User** possède 1..N **Memberships** ; une **Organization** regroupe 1..N **Memberships** (cardinalité N:M via **Membership**).
 - L'équipe Vagagond interne est elle-même une **Organization** (`business_type='staff'`, **Boundary Scope** = `ALL` → visibilité globale).
+- Un **POI** absent du **Snapshot d'import** courant ⟹ **POI désactivé** ; par construction il n'est donc plus ni sur la carte ni en recherche (qui dérivent du Snapshot).
+- Une **Visite** référence un **POI** via une clé étrangère `ON DELETE NO ACTION` (la base interdit de supprimer un POI visité) et survit à sa désactivation (affichée en historique avec badge « Lieu supprimé », mais exclue du % de complétion ; toujours comptée au leaderboard).
 
 ## Flagged ambiguities
 
 _(aucune en cours — résolutions historiques :)_
 
-- **"zone"** *(résolu)* : reste exclusivement utilisé comme alias UX pour **Boundary** dans l'API et l'UI mobile existantes (`/zones/stats/*`). N'est **pas** utilisé pour désigner une **Organization**.
-- **"office de tourisme"** *(résolu)* : modélisé comme **Organization** de `business_type='tourist_office'`, avec un **Boundary Scope** explicite. Le terme **Tourism Office** est obsolète.
-- **"Dashboard Role"** *(résolu, retiré)* : la sémantique de rôle est portée par `Organization.business_type` (qui définit le type de tenant) + la simple appartenance via **Membership** (qui définit qui peut faire quoi sur quelle org). `dashboard_users.role` est obsolète.
+- **"zone"** _(résolu)_ : reste exclusivement utilisé comme alias UX pour **Boundary** dans l'API et l'UI mobile existantes (`/zones/stats/*`). N'est **pas** utilisé pour désigner une **Organization**.
+- **"office de tourisme"** _(résolu)_ : modélisé comme **Organization** de `business_type='tourist_office'`, avec un **Boundary Scope** explicite. Le terme **Tourism Office** est obsolète.
+- **"Dashboard Role"** _(résolu, retiré)_ : la sémantique de rôle est portée par `Organization.business_type` (qui définit le type de tenant) + la simple appartenance via **Membership** (qui définit qui peut faire quoi sur quelle org). `dashboard_users.role` est obsolète.
+- **"supprimé" vs "désactivé"** _(résolu)_ : l'UI mobile affiche « Lieu supprimé », mais l'entité système est un **POI désactivé** — jamais réellement supprimé. « Supprimé » est réservé à l'affichage utilisateur.

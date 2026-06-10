@@ -80,10 +80,11 @@ function buildBaseQuery(db: DrizzleClient) {
       name: poiData.name,
       longitude: sql`ST_X(${pois.coords}::geometry)`.mapWith(Number),
       latitude: sql`ST_Y(${pois.coords}::geometry)`.mapWith(Number),
+      disabled: pois.disabled,
     })
     .from(visitedPois)
     .leftJoin(users, eq(visitedPois.userId, users.userId))
-    .leftJoin(pois, eq(pois.id, visitedPois.poiId))
+    .innerJoin(pois, eq(pois.id, visitedPois.poiId))
     .leftJoin(poiData, eq(poiData.poiId, visitedPois.poiId));
 }
 
@@ -91,11 +92,18 @@ type BaseRow = Awaited<ReturnType<typeof buildBaseQuery>>[number];
 
 export type VisitedPoiRow = Omit<
   BaseRow,
-  "fullName" | "nickname" | "email" | "name" | "longitude" | "latitude"
+  | "fullName"
+  | "nickname"
+  | "email"
+  | "name"
+  | "longitude"
+  | "latitude"
+  | "disabled"
 > & {
   username: string;
   name?: string;
   coords: { latitude: number; longitude: number };
+  isDisabled: boolean;
 };
 
 export interface VisitedPoiContext {
@@ -111,13 +119,22 @@ export class VisitedPoiRepository {
   constructor(private readonly db: DrizzleClient) {}
 
   private static formatRow(row: BaseRow): VisitedPoiRow {
-    const { fullName, nickname, email, name, longitude, latitude, ...rest } =
-      row;
+    const {
+      fullName,
+      nickname,
+      email,
+      name,
+      longitude,
+      latitude,
+      disabled,
+      ...rest
+    } = row;
     return {
       ...rest,
       username: nickname ?? getUserDisplayName(fullName, email),
       ...(name !== null ? { name } : {}),
       coords: { latitude, longitude },
+      isDisabled: disabled,
     };
   }
 

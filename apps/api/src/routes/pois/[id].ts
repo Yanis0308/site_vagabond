@@ -53,6 +53,17 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       let enrichmentOutcome: EnrichmentOutcome | undefined;
 
       try {
+        const poiIsActive =
+          await fastify.dbRepositories.poi.existsActiveById(poiId);
+
+        if (!poiIsActive) {
+          return await reply.status(404).send({
+            statusCode: 404,
+            error: "Not Found",
+            message: "POI not found",
+          });
+        }
+
         // 1. Check if enriched data already exists (version is already filtered in SQL query)
         const existingEnriched =
           await fastify.dbRepositories.poiEnriched.findByPoiId(poiId);

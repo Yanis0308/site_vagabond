@@ -4,6 +4,7 @@ import {
 } from "@fastify/type-provider-typebox";
 import {
   CursorPaginationQuerySchema,
+  ErrorResponseSchema,
   VisitedPoisV2QuerySchema,
   VisitedPoisV2ResponseSchema,
 } from "@vagabond/shared-utils";
@@ -63,12 +64,24 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         querystring: CursorPaginationQuerySchema,
         response: {
           200: VisitedPoisV2ResponseSchema,
+          404: ErrorResponseSchema,
         },
       },
     },
     async function (request, reply) {
       const { poiId } = request.params;
       const { after, limit } = request.query;
+
+      const poiIsActive =
+        await fastify.dbRepositories.poi.existsActiveById(poiId);
+
+      if (!poiIsActive) {
+        return await reply.status(404).send({
+          statusCode: 404,
+          error: "Not Found",
+          message: "POI not found or disabled",
+        });
+      }
 
       const { items, nextCursor } =
         await fastify.dbRepositories.visitedPoi.findByPoiIdPaginated({
