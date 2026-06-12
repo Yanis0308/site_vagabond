@@ -5,8 +5,6 @@ import {
 
 /** Processing result types — used in API code; DB column stays varchar */
 export const PROCESSING_TYPES = [
-  "scraper-maps",
-  "scraper-web",
   "llm",
   "wikidata",
   "wikipedia",

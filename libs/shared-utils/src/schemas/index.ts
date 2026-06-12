@@ -6,7 +6,6 @@ import { PoiCategoryTypesSchema } from "./api/poi-categories.js";
 import * as poiEnriched from "./api/poi-enriched.js";
 import * as pushDevice from "./api/push-device.js";
 import * as response from "./api/response.js";
-import * as scrape from "./api/scrape.js";
 import * as search from "./api/search.js";
 import * as staffTools from "./api/staff-tools.js";
 import * as upload from "./api/upload.js";
@@ -49,7 +48,6 @@ export const allJsonSchemas = {
   ...leaderboard,
   ...location,
   ...search,
-  ...scrape,
   ...llmProcessors,
   ...appState,
 } as const;

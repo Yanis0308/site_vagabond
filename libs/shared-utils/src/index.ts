@@ -159,11 +159,6 @@ export {
 } from "./schemas/api/push-device.js";
 export { EmptyResponseSchema } from "./schemas/api/response.js";
 export {
-  ScrapeDataScraperQuerySchema,
-  ScrapeDataScraperResponseSchema,
-  ScrapeQuerySchema,
-} from "./schemas/api/scrape.js";
-export {
   type SearchQuery,
   SearchQuerySchema,
   SearchResponseSchema,

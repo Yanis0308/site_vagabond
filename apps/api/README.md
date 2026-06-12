@@ -114,11 +114,6 @@ SLACK_CHANNEL_SIGNUPS=<channel-id>
 SLACK_CHANNEL_POI_VALIDATIONS=<channel-id>
 SLACK_CHANNEL_APP_REVIEWS=<channel-id>
 
-# Data scraper config
-DATA_SCRAPER_URL=http://localhost:3234
-DATA_SCRAPER_BASIC_AUTH_USER=<username>
-DATA_SCRAPER_BASIC_AUTH_PASSWORD=<password>
-
 # Jina API key
 JINA_API_KEY=<jina-api-key>
 
@@ -227,10 +222,9 @@ La documentation Swagger/OpenAPI est disponible à :
 
 L'API enrichit automatiquement les POIs en utilisant plusieurs sources :
 
-1. **Google Maps Scraping** - Via le service Data Scraper
-2. **Jina Web Scraping** - Extraction de contenu web
-3. **Wikimedia** - Données depuis Wikipedia/Wikidata
-4. **LLM** - Enrichissement via Google AI (Gemini) et Groq
+1. **Jina Web Scraping** - Extraction de contenu web
+2. **Wikimedia** - Données depuis Wikipedia/Wikidata
+3. **LLM** - Enrichissement via Google AI (Gemini) et Groq
 
 Le processus d'enrichissement est orchestré par `PoiEnrichmentService` et utilise un système de cache pour éviter les enrichissements multiples.
 

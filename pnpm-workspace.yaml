@@ -14,10 +14,6 @@ allowBuilds:
   esbuild: true
   msw: true
   protobufjs: true
-  # data-scraper n'est plus maintenu — on bloque explicitement le download
-  # Chromium de puppeteer (sinon pnpm 11 erreurs avec ERR_PNPM_IGNORED_BUILDS
-  # tant que l'entry est absente du allowBuilds).
-  puppeteer: false
   sharp: true
   unrs-resolver: true
 

@@ -11,11 +11,11 @@ vagagond-poc/
 ├── apps/
 │   ├── api/              # Fastify 5 backend API
 │   ├── mobile-app/       # React Native + Expo mobile app
-│   ├── data-scraper/     # Google Maps scraper (Puppeteer)
+│   ├── dashboard/        # Next.js 16 admin dashboard
 │   ├── data-manager/     # ETL pipeline (OSM/Mapbox)
 │   └── website/          # Next.js 16 marketing site + Payload CMS
 ├── libs/
-│   ├── api-utils/        # Fastify plugins (shared between api & data-scraper)
+│   ├── api-utils/        # Fastify plugins
 │   ├── database-client/  # Drizzle ORM + PostgreSQL schemas, migrations, repositories
 │   └── shared-utils/     # Common types, Zod/TypeBox schemas, utilities
 ├── patches/              # pnpm patches for ajv & fastify
@@ -31,7 +31,7 @@ vagagond-poc/
 - **Web**: Next.js 16, Payload CMS 3, next-intl, Tailwind CSS 4, shadcn/ui, Motion
 - **Validation**: TypeBox, Zod, AJV
 - **AI/LLM**: @ai-sdk/google, @ai-sdk/groq
-- **Deployment**: Fly.io (API, scraper)
+- **Deployment**: Fly.io (API)
 
 ## Essential Commands
 
@@ -57,7 +57,6 @@ pnpm develop:api         # @vagabond/api
 pnpm develop:dashboard   # @vagabond/dashboard
 pnpm develop:website     # @vagabond/website (requires Docker: cd apps/website && pnpm docker:up first)
 pnpm develop:mobile      # @vagabond/mobile-app
-pnpm develop:scraper     # @vagabond/data-scraper
 
 # Watch des 3 libs en parallèle — à lancer dans un second terminal SI tu vas
 # modifier des libs pendant la session dev. Sinon `develop:<app>` suffit.
@@ -149,7 +148,7 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/):
 type(scope): description
 
 Types: feat, fix, docs, style, refactor, perf, test, chore, ci
-Scopes: api, mobile, website, scraper, db, ui, deps (optional)
+Scopes: api, mobile, website, db, ui, deps (optional)
 Example: feat(api): add endpoint for POI filtering by category
 ```
 
@@ -172,7 +171,7 @@ refactor/VG-123-description
 - `.env.example` exists at root (for SafeQL database URL)
 - Each app may have its own `.env` — never commit `.env` files
 - Node.js 22.12+ required (CI matrix, engines)
-- **Ports** are configurable per app via `.env` (defaults: API `PORT=3000`, website `WEBSITE_PORT=3001`, dashboard `DASHBOARD_PORT=3002`, mobile `MOBILE_APP_PORT=8081`, Postgres host `5432`, scraper `PORT=3234`). See each app's `.env.example`.
+- **Ports** are configurable per app via `.env` (defaults: API `PORT=3000`, website `WEBSITE_PORT=3001`, dashboard `DASHBOARD_PORT=3002`, mobile `MOBILE_APP_PORT=8081`, Postgres host `5432`). See each app's `.env.example`.
 - **Do not read `process.env` in application code** — use each app's config layer (`apps/api/src/plugins/config.ts`, `apps/dashboard/lib/config/public.ts`, `apps/mobile-app/app.config.ts`, etc.). Exceptions: `dotenv.config()` at boot and `NODE_ENV` for dev/prod mode.
 
 ## Common Gotchas

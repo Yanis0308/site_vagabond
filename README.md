@@ -51,10 +51,6 @@ API backend principale basée sur **Fastify** avec **TypeScript**. Fournit les e
 
 Application mobile React Native avec **Expo** et **Expo Router**. Utilise **NativeWind** (Tailwind CSS), **React Query**, **Mapbox**, **Firebase Auth**, **Jotai** pour l'état global, et **i18next** pour l'internationalisation. Supporte iOS et Android avec builds via EAS.
 
-#### [Data Scraper](./apps/data-scraper/README.md)
-
-API de scraping Google Maps utilisant **Puppeteer** et **Fastify**. Extrait les données détaillées des lieux depuis Google Maps en temps réel avec validation TypeBox et gestion robuste du browser.
-
 #### [Data Manager](./apps/data-manager/README.md)
 
 Pipeline ETL pour traiter les données **OpenStreetMap** (PBF) et les préparer pour l'API et **Mapbox**. Utilise **osm2pgsql**, **PostgreSQL**, **Knex**, et génère des fichiers JSONL pour l'import en base et l'upload vers Mapbox Tilesets.
@@ -139,7 +135,6 @@ pnpm install
 ## Déploiement avec fly.io
 
 - **API** : `fly deploy -c api-fly.toml`
-- **Data Scraper** : `fly deploy -c data-scraper-fly.toml`
 
 ---
 
@@ -203,7 +198,6 @@ pnpm develop:api         # @vagabond/api
 pnpm develop:dashboard   # @vagabond/dashboard
 pnpm develop:website     # @vagabond/website
 pnpm develop:mobile      # @vagabond/mobile-app
-pnpm develop:scraper     # @vagabond/data-scraper
 
 # Terminal 2 (optionnel) — watch des libs
 pnpm develop:libs
@@ -343,7 +337,6 @@ Optionnel, spécifie la zone affectée :
 
 - `api` : API backend
 - `mobile` : Application mobile
-- `scraper` : Data scraper
 - `db` : Lié à la base de données
 - `ui` : Interface utilisateur
 - `deps` : Dépendances

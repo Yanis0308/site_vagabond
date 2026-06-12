@@ -141,15 +141,9 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           cityName: poi.cityName ?? null,
         });
 
-        // 5. Process all data sources in parallel (Google Maps + Jina Search+Reader)
+        // 5. Process all data sources in parallel (Jina Search+Reader)
         const processingResults = await enrichmentService.processDataSources(
           poiId,
-          {
-            name: poi.name,
-            latitude: poi.latitude,
-            longitude: poi.longitude,
-            cityName: poi.cityName ?? null,
-          },
           jinaSearchQuery,
           osmTags,
         );
@@ -168,22 +162,14 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
         // 6. Log processing results for monitoring
         enrichmentService.logProcessingResults(poiId, processingResults);
 
-        // 7. Extract and validate Google Maps place
-        const googleMapsPlace = enrichmentService.getGoogleMapsPlaceIfNear(
-          processingResults,
-          poi.latitude,
-          poi.longitude,
-        );
-
-        // 8. Build raw data for LLM
+        // 7. Build raw data for LLM
         const rawData = {
-          googleMapsRawData: googleMapsPlace,
           wikipediaRawData: processingResults.jinaEnriched.wikipediaContent,
           wikidataRawData: processingResults.jinaEnriched.wikidataContent,
           webRawData: processingResults.jinaEnriched.webContent,
         };
 
-        // 9. Process Gemini LLM enrichment
+        // 8. Process Gemini LLM enrichment
         Sentry.addBreadcrumb({
           category: "enrichment",
           message: "LLM enrichment started",
@@ -217,7 +203,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           );
         }
 
-        // 10. Create enriched entry
+        // 9. Create enriched entry
         if (enrichedData === null) {
           enrichmentOutcome = {
             httpStatus: 500,
@@ -248,7 +234,7 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
           });
         }
 
-        // 11. Return enriched data
+        // 10. Return enriched data
         Sentry.addBreadcrumb({
           category: "enrichment",
           message: "Enrichment saved",

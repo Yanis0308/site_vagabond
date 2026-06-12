@@ -27,9 +27,6 @@ const RawConfigSchema = z.object({
   SLACK_CHANNEL_POI_REPORTS: z.string(),
   SLACK_CHANNEL_PLACE_SUGGESTIONS: z.string(),
   SLACK_CHANNEL_USER_FEEDBACK: z.string(),
-  DATA_SCRAPER_URL: z.string(),
-  DATA_SCRAPER_BASIC_AUTH_USER: z.string(),
-  DATA_SCRAPER_BASIC_AUTH_PASSWORD: z.string(),
   JINA_API_KEY: z.string(),
   GEMINI_API_KEY: z.string(),
   GROQ_API_KEY: z.string(),
@@ -76,11 +73,6 @@ export interface Config {
     channelPoiReports: string;
     channelPlaceSuggestions: string;
     channelUserFeedbackByCategory: Record<UserFeedbackCategory, string>;
-  };
-  dataScraper: {
-    url: string;
-    basicAuthUser: string;
-    basicAuthPassword: string;
   };
   jina: {
     apiKey: string;
@@ -165,11 +157,6 @@ export default fp(
             INCOMPREHENSION: rawConfig.SLACK_CHANNEL_USER_FEEDBACK,
             OTHER: rawConfig.SLACK_CHANNEL_USER_FEEDBACK,
           },
-        },
-        dataScraper: {
-          url: rawConfig.DATA_SCRAPER_URL,
-          basicAuthUser: rawConfig.DATA_SCRAPER_BASIC_AUTH_USER,
-          basicAuthPassword: rawConfig.DATA_SCRAPER_BASIC_AUTH_PASSWORD,
         },
         jina: {
           apiKey: rawConfig.JINA_API_KEY,
