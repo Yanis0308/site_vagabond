@@ -29,7 +29,7 @@ export default function ProfileScreen(): ReactElement {
       <ProfileContent
         userData={userData}
         zonesStats={zonesData}
-        showSignOutButton={true}
+        showUserSpecificSections={true}
         allowVisitedPoiNavigation={true}
       />
     </CustomScreenContainer>

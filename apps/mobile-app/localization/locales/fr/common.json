@@ -231,5 +231,13 @@
       "all-time": "Global",
       "monthly": "Mensuel"
     }
+  },
+  "socials": {
+    "title": "Suivez Vagabond",
+    "description": "Rejoignez la communauté et ne ratez aucune nouveauté",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "linkedin": "LinkedIn",
+    "website": "Site web"
   }
 }

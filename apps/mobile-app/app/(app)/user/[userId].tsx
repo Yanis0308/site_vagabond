@@ -42,7 +42,7 @@ export default function UserProfilePage(): ReactElement | null {
       <ProfileContent
         userData={userData}
         zonesStats={zonesData}
-        showSignOutButton={false}
+        showUserSpecificSections={false}
         allowVisitedPoiNavigation={false}
       />
     </CustomScreenContainer>

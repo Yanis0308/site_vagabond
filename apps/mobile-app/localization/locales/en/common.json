@@ -231,5 +231,13 @@
       "all-time": "Global",
       "monthly": "Monthly"
     }
+  },
+  "socials": {
+    "title": "Follow Vagabond",
+    "description": "Join the community and never miss an update",
+    "instagram": "Instagram",
+    "tiktok": "TikTok",
+    "linkedin": "LinkedIn",
+    "website": "Website"
   }
 }

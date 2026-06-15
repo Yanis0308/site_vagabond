@@ -31,4 +31,9 @@ export const shadowStyles = StyleSheet.create({
   onMapComponent: {
     boxShadow: `0px 2px 4px 0px rgba(0, 0, 0, 0.1)`,
   },
+
+  // Social badges on the profile screen
+  socialBadge: {
+    boxShadow: `0px 2px 6px 0px rgba(0, 0, 0, 0.15)`,
+  },
 });

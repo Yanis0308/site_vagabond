@@ -8,6 +8,7 @@ import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileManageNotificationsRow } from "@/components/profile/ProfileManageNotificationsRow";
 import { ProfileOverallProgress } from "@/components/profile/ProfileOverallProgress";
 import { ProfileSignOutButton } from "@/components/profile/ProfileSignOutButton";
+import { ProfileSocialsRow } from "@/components/profile/ProfileSocialsRow";
 import { ProfileStatsGrid } from "@/components/profile/ProfileStatsGrid";
 import { ProfileValidatedPlaces } from "@/components/profile/ProfileValidatedPlaces";
 import type {
@@ -16,6 +17,7 @@ import type {
   Stats,
 } from "@/components/profile/utils";
 import { Box } from "@/components/ui/box";
+import { Divider } from "@/components/ui/divider";
 import { Spinner } from "@/components/ui/spinner";
 import { useProfileComputedData } from "@/hooks/other/useProfileComputedData";
 import { useUsersMe } from "@/hooks/queries/useUsersMe";
@@ -26,6 +28,7 @@ type ProfileSection =
   | { type: "stats"; data: Stats }
   | { type: "validatedPlaces"; data: CountryType[] }
   | { type: "manageNotifications" }
+  | { type: "socials" }
   | { type: "signOut" }
   | { type: "deleteAccount" };
 
@@ -38,14 +41,14 @@ interface ProfileContentProps {
     "email" | "isPrivate"
   > | null;
   zonesStats?: ZoneUserStatV2[];
-  showSignOutButton: boolean;
+  showUserSpecificSections: boolean;
   allowVisitedPoiNavigation: boolean;
 }
 
 export function ProfileContent({
   userData,
   zonesStats,
-  showSignOutButton,
+  showUserSpecificSections,
   allowVisitedPoiNavigation,
 }: ProfileContentProps): ReactElement {
   const { data: currentUser } = useUsersMe();
@@ -70,8 +73,9 @@ export function ProfileContent({
       baseSections.push({ type: "validatedPlaces", data: sortedHierarchy });
     }
 
-    if (showSignOutButton) {
+    if (showUserSpecificSections) {
       baseSections.push({ type: "manageNotifications" });
+      baseSections.push({ type: "socials" });
       baseSections.push({ type: "signOut" });
       baseSections.push({ type: "deleteAccount" });
     }
@@ -81,7 +85,7 @@ export function ProfileContent({
     progress,
     stats,
     sortedHierarchy,
-    showSignOutButton,
+    showUserSpecificSections,
     userData,
     allowProfileEdit,
   ]);
@@ -134,6 +138,14 @@ export function ProfileContent({
           return (
             <Box className="px-4">
               <ProfileManageNotificationsRow />
+            </Box>
+          );
+        case "socials":
+          return (
+            <Box className="px-4">
+              <Divider className="my-0.5 bg-gray-400" />
+              <ProfileSocialsRow />
+              <Divider className="my-0.5 bg-gray-400" />
             </Box>
           );
         case "signOut":
