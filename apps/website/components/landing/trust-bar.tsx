@@ -36,6 +36,12 @@ const LOGOS = [
     width: 260,
     height: 100,
   },
+  {
+    src: "/images/logo-ovhcloud-startup.png",
+    alt: "OVHcloud Startup Program",
+    width: 812,
+    height: 131,
+  },
 ] as const;
 
 export function TrustBar({ label, subtitle }: Props): ReactNode {
