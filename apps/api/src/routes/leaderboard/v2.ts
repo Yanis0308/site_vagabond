@@ -18,13 +18,14 @@ const routes: FastifyPluginCallbackTypebox = (fastify) => {
       },
     },
     async function (request, reply) {
-      const { period, after, limit } = request.query;
+      const { period, after, limit, searchTerm } = request.query;
 
       const { items, nextCursor } =
         await fastify.dbRepositories.user.getLeaderboardV2({
           period,
           after,
           limit,
+          searchTerm,
         });
 
       return await reply.status(200).send({

@@ -200,7 +200,7 @@
   "privacy": {
     "public_label": "Public profile",
     "private_label": "Private profile",
-    "public_hint": "Your photos are visible to other users",
+    "public_hint": "Your photos are visible to other vagabonds",
     "private_hint": "Your photos are only visible to you"
   },
   "notifications": {
@@ -219,6 +219,17 @@
       "title": "Manage notifications",
       "subtitle_granted": "Enabled",
       "subtitle_denied": "Disabled at system level"
+    }
+  },
+  "leaderboard": {
+    "search_placeholder": "Search for a Vagabond",
+    "empty": "No vagabonds in the leaderboard",
+    "result_none": "No vagabonds found - {{period}}",
+    "result_one": "{{count}} vagabond found - {{period}}",
+    "result_other": "{{count}} vagabonds found - {{period}}",
+    "period": {
+      "all-time": "Global",
+      "monthly": "Monthly"
     }
   }
 }

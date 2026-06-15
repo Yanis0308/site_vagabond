@@ -63,6 +63,10 @@ export const LeaderboardUserItem = memo(
       }
     };
 
+    // Un user sans aucun lieu validé n'a pas de rang : on affiche la variante
+    // "état vide" (anciennement un composant dédié dupliqué) plutôt qu'un rang.
+    const isUnranked = user.visitedPoisCount === 0;
+
     const rankEmoji = getRankEmoji(user.rank);
 
     return (
@@ -78,19 +82,25 @@ export const LeaderboardUserItem = memo(
           <HStack className="items-center gap-2">
             {/* Rank */}
             <Box className="w-14 items-center">
-              <CustomText
-                className={`
-                  text-center font-bold
-                  ${getRankColor(user.rank)}
-                  ${getRankTextSize(user.rank)}
-                `}
-                style={{
-                  lineHeight: user.rank < 4 ? 44 : undefined,
-                  textAlignVertical: "center",
-                }}
-              >
-                {rankEmoji ?? `#${user.rank}`}
-              </CustomText>
+              {isUnranked ? (
+                <CustomText className="text-center text-2xl font-bold text-gray-400">
+                  {"—"}
+                </CustomText>
+              ) : (
+                <CustomText
+                  className={`
+                    text-center font-bold
+                    ${getRankColor(user.rank)}
+                    ${getRankTextSize(user.rank)}
+                  `}
+                  style={{
+                    lineHeight: user.rank < 4 ? 44 : undefined,
+                    textAlignVertical: "center",
+                  }}
+                >
+                  {rankEmoji ?? `#${user.rank}`}
+                </CustomText>
+              )}
             </Box>
 
             {/* Avatar */}
@@ -105,9 +115,20 @@ export const LeaderboardUserItem = memo(
               <CustomText className="text-sm font-semibold text-gray-900">
                 {user.nickname ?? user.fullName}
               </CustomText>
-              <CustomText className="text-xs text-gray-600">
-                {`${user.visitedPoisCount} ${user.visitedPoisCount > 1 ? "lieux visités" : "lieu visité"}`}
-              </CustomText>
+              {isUnranked ? (
+                <>
+                  <CustomText className="text-xs font-medium text-gray-600">
+                    {"Aucun lieu validé"}
+                  </CustomText>
+                  <CustomText className="text-xs text-gray-500">
+                    {"Validez un lieu pour entrer dans le classement"}
+                  </CustomText>
+                </>
+              ) : (
+                <CustomText className="text-xs text-gray-600">
+                  {`${user.visitedPoisCount} ${user.visitedPoisCount > 1 ? "lieux visités" : "lieu visité"}`}
+                </CustomText>
+              )}
               <VStack className="gap-0">
                 <CustomText className="text-xs text-gray-500">
                   {`Inscrit le ${registrationDate}`}

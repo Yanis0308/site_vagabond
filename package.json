@@ -21,7 +21,7 @@
     "develop:api": "turbo run develop --filter=@vagabond/api",
     "develop:dashboard": "turbo run develop --filter=@vagabond/dashboard",
     "develop:website": "turbo run develop --filter=@vagabond/website",
-    "develop:mobile": "turbo run develop --filter=@vagabond/mobile-app"
+    "develop:mobile": "turbo run build --filter=@vagabond/mobile-app^... && pnpm --filter=@vagabond/mobile-app run develop"
   },
   "dependencies": {
     "dayjs": "catalog:",

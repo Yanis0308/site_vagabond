@@ -42,14 +42,23 @@ export const getLeaderboard = async (
 // v2 : pagination cursor du top
 export const getLeaderboardV2 = async ({
   period,
+  searchTerm,
   after,
   limit = 20,
 }: {
   period: "all-time" | "monthly";
+  searchTerm?: string;
   after?: string;
   limit?: number;
 }): Promise<LeaderboardV2Response["data"]> => {
-  const searchParams: Record<string, string | number> = { period, limit };
+  const searchParams: Record<string, string | number> = {
+    period,
+    limit,
+  };
+  // Omis quand vide : le schéma exige une longueur minimale, "" classement complet.
+  if (searchTerm !== undefined && searchTerm !== "") {
+    searchParams.searchTerm = searchTerm;
+  }
   if (after !== undefined) searchParams.after = after;
 
   const rawResult = await apiClient

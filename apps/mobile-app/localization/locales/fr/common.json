@@ -200,7 +200,7 @@
   "privacy": {
     "public_label": "Profil public",
     "private_label": "Profil privé",
-    "public_hint": "Vos lieux visités sont visibles par les autres utilisateurs",
+    "public_hint": "Vos lieux visités sont visibles par les autres vagabonds",
     "private_hint": "Vos lieux visités sont uniquement visibles par vous"
   },
   "notifications": {
@@ -219,6 +219,17 @@
       "title": "Gérer les notifications",
       "subtitle_granted": "Activées",
       "subtitle_denied": "Désactivées au niveau système"
+    }
+  },
+  "leaderboard": {
+    "search_placeholder": "Rechercher un vagabond",
+    "empty": "Aucun vagabond dans le classement",
+    "result_none": "Aucun résultat trouvé - {{period}}",
+    "result_one": "{{count}} vagabond trouvé - {{period}}",
+    "result_other": "{{count}} vagabonds trouvés - {{period}}",
+    "period": {
+      "all-time": "Global",
+      "monthly": "Mensuel"
     }
   }
 }

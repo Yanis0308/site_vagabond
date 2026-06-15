@@ -11,7 +11,7 @@ import {
 export const DashboardPoisQuerySchema = Type.Object(
   {
     ...CursorPaginationQuerySchema.properties,
-    search: Type.Optional(Type.String()),
+    search: Type.Optional(Type.String({ maxLength: 128 })),
     filterLevel: Type.Optional(PoiFilterLevelEnumSchema),
     disabled: Type.Optional(Type.Boolean()),
   },

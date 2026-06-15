@@ -48,6 +48,12 @@ export const LeaderboardResponseSchema = ApiResponseSchema(
 export const LeaderboardV2QuerySchema = Type.Object(
   {
     period: LeaderboardPeriodEnumSchema,
+    // Filtre optionnel sur le nom/nickname. Le rang renvoyé reste celui du
+    // classement complet de la période (pas le rang dans les résultats filtrés).
+    // Min 2 caractères pour éviter les requêtes trop larges/peu utiles ; max
+    // borné pour éviter des querystrings/patterns ILIKE démesurés. Omis = pas
+    // de filtre (classement complet).
+    searchTerm: Type.Optional(Type.String({ minLength: 2, maxLength: 128 })),
     ...CursorPaginationQuerySchema.properties,
   },
   { $id: "LeaderboardV2Query" },

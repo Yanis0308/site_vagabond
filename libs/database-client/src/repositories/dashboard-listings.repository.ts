@@ -141,7 +141,7 @@ export class DashboardListingsRepository {
         ? sql`EXISTS (
             SELECT 1 FROM ${poiData} pd
             WHERE pd.poi_id = pois.id
-              AND normalize_search_text(pd.name) ILIKE ${"%" + search.toLowerCase() + "%"}
+              AND normalize_search_text(pd.name) LIKE '%' || normalize_search_text(${search}) || '%'
           )`
         : undefined;
 
@@ -236,9 +236,9 @@ export class DashboardListingsRepository {
     const searchWhere =
       search !== undefined && search.length > 0
         ? sql`(
-            normalize_search_text(${users.fullName}) ILIKE ${"%" + search.toLowerCase() + "%"}
-            OR ${users.email} ILIKE ${"%" + search.toLowerCase() + "%"}
-            OR ${users.nickname} ILIKE ${"%" + search.toLowerCase() + "%"}
+            normalize_search_text(${users.fullName}) LIKE '%' || normalize_search_text(${search}) || '%'
+            OR normalize_search_text(${users.email}) LIKE '%' || normalize_search_text(${search}) || '%'
+            OR normalize_search_text(${users.nickname}) LIKE '%' || normalize_search_text(${search}) || '%'
           )`
         : undefined;
 

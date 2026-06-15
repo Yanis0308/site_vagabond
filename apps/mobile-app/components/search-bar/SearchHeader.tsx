@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, X } from "lucide-react-native";
+import { ArrowLeft } from "lucide-react-native";
 import React, {
   forwardRef,
   type ReactElement,
@@ -13,12 +13,10 @@ import {
   type TextInput,
 } from "react-native";
 
-import { themeColors } from "@/components/ui/gluestack-ui-provider/config";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
+import { SearchInput } from "@/components/custom-ui/SearchInput";
+import { InputIcon } from "@/components/ui/input";
 import { View } from "@/components/ui/view";
 import { useSearchTerm } from "@/stores/searchTermAtom";
-import { shadowStyles } from "@/styles/shadows";
-import { cn } from "@/utils/cn";
 
 interface SearchHeaderProps {
   onBack?: () => void;
@@ -62,11 +60,6 @@ export const SearchHeader = forwardRef<SearchHeaderRef, SearchHeaderProps>(
         inputRef.current?.focus();
       },
     }));
-
-    const handleClear = (): void => {
-      setSearchTerm("");
-      onPress?.();
-    };
 
     const handleBackPress = (): void => {
       inputRef.current?.blur();
@@ -124,79 +117,36 @@ export const SearchHeader = forwardRef<SearchHeaderRef, SearchHeaderProps>(
 
     return (
       <View className="flex-row px-4" onLayout={handleLayoutChange}>
-        <Input
-          variant="rounded"
-          size="lg"
-          className={cn(
-            "flex-1 border border-burntOrange-700 bg-background-50",
-          )}
-          style={[shadowStyles.onMapComponent]}
-          isReadOnly={!editable}
-          onPress={() => {
-            if (!editable) {
-              onPress?.();
-            }
-          }}
-        >
-          {/* Left slot for search icon or back arrow */}
-          {editable ? (
-            <Pressable
-              onPress={handleBackPress}
-              className="pl-3"
-              accessibilityRole="button"
-              accessibilityLabel="Retour"
-              hitSlop={hitSlop}
-            >
-              <InputIcon as={ArrowLeft} />
-            </Pressable>
-          ) : (
-            <InputSlot className="pl-3" pointerEvents="auto">
-              <InputIcon as={Search} />
-            </InputSlot>
-          )}
-
-          <InputField
-            // @ts-expect-error - InputField forwardRef type inference issue with TextInput ref
-            ref={inputRef}
-            value={searchTerm}
-            onChangeText={setSearchTerm}
-            placeholder={placeholder}
-            placeholderTextColor={themeColors.typography[400].hex}
-            accessibilityLabel="Champ de recherche"
-            accessibilityHint={
-              editable
-                ? "Entrez un nom de lieu pour rechercher"
-                : "Appuyez pour rechercher un lieu"
-            }
-            returnKeyType="search"
-            autoCorrect={false}
-            autoCapitalize="none"
-            clearButtonMode="never"
-            editable={editable}
-            pointerEvents={editable ? "auto" : "none"}
-            onSubmitEditing={onSubmitEditing}
-            onPress={() => {
-              if (!editable) {
-                onPress?.();
-              }
-            }}
-            onLayout={handleInputLayout}
-          />
-
-          {/* Right slot for clear button */}
-          {searchTerm.length > 0 && (
-            <InputSlot
-              className="pr-3"
-              onPress={handleClear}
-              accessibilityRole="button"
-              accessibilityLabel="Effacer la recherche"
-              hitSlop={hitSlop}
-              pointerEvents="auto"
-            >
-              <InputIcon as={X} />
-            </InputSlot>
-          )}
-        </Input>
+        <SearchInput
+          ref={inputRef}
+          value={searchTerm}
+          onChangeText={setSearchTerm}
+          placeholder={placeholder}
+          editable={editable}
+          onPress={onPress}
+          onClear={onPress}
+          onSubmitEditing={onSubmitEditing}
+          onLayout={handleInputLayout}
+          accessibilityLabel="Champ de recherche"
+          accessibilityHint={
+            editable
+              ? "Entrez un nom de lieu pour rechercher"
+              : "Appuyez pour rechercher un lieu"
+          }
+          leftSlot={
+            editable ? (
+              <Pressable
+                onPress={handleBackPress}
+                className="pl-3"
+                accessibilityRole="button"
+                accessibilityLabel="Retour"
+                hitSlop={hitSlop}
+              >
+                <InputIcon as={ArrowLeft} />
+              </Pressable>
+            ) : undefined
+          }
+        />
       </View>
     );
   },

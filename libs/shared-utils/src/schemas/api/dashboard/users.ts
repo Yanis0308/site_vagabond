@@ -10,7 +10,7 @@ import {
 export const DashboardUsersQuerySchema = Type.Object(
   {
     ...CursorPaginationQuerySchema.properties,
-    search: Type.Optional(Type.String()),
+    search: Type.Optional(Type.String({ maxLength: 128 })),
   },
   { $id: "DashboardUsersQuery" },
 );

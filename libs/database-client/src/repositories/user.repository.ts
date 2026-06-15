@@ -11,6 +11,7 @@ import {
   gte,
   max,
   or,
+  type SQL,
   sql,
 } from "drizzle-orm";
 
@@ -23,6 +24,7 @@ import {
   users,
   visitedPois,
 } from "../schema.js";
+import { mapWithIsoDate, mapWithNullableIsoDate } from "../sqlMappers.js";
 import { isUniqueConstraintViolationError } from "../utils.js";
 
 interface LeaderboardCursor {
@@ -66,6 +68,19 @@ function leaderboardPeriodToTuple(period: "all-time" | "monthly"): {
   const year = now.getUTCFullYear();
   const month = String(now.getUTCMonth() + 1).padStart(2, "0");
   return { periodType: "monthly", periodKey: `${year}-${month}` };
+}
+
+// Filtre de recherche leaderboard : match insensible à la casse ET aux accents
+// sur le nom affiché, c.-à-d. le nickname s'il existe, sinon le fullName en
+// fallback — exactement ce que l'UI montre (`nickname ?? fullName`). On ne
+// cherche pas l'email pour éviter toute énumération/leak, ni le fullName d'un
+// user qui a déjà un nickname distinct. On normalise les deux côtés via
+// `normalize_search_text` (unaccent + lower + strip des non-alphanumériques),
+// ce qui neutralise au passage les wildcards LIKE (`%`, `_`, `\`) saisis.
+function buildLeaderboardSearchCondition(searchTerm: string): SQL | undefined {
+  const trimmed = searchTerm.trim();
+  if (trimmed === "") return undefined;
+  return sql`normalize_search_text(coalesce(${users.nickname}, ${users.fullName})) LIKE '%' || normalize_search_text(${trimmed}) || '%'`;
 }
 
 export interface UserInfo {
@@ -294,13 +309,34 @@ export class UserRepository {
     period,
     after,
     limit,
+    searchTerm,
   }: {
     period: "all-time" | "monthly";
     after: string | undefined;
     limit: number;
+    searchTerm?: string | undefined;
   }): Promise<{ items: LeaderboardResult; nextCursor: string | null }> {
     const { periodType, periodKey } = leaderboardPeriodToTuple(period);
     const cursor = after !== undefined ? decodeLeaderboardCursor(after) : null;
+
+    const searchCondition =
+      searchTerm !== undefined
+        ? buildLeaderboardSearchCondition(searchTerm)
+        : undefined;
+
+    // Chemin recherche : on filtre les users tout en conservant leur rang dans
+    // le classement COMPLET de la période. ROW_NUMBER() est calculé sur toute
+    // la période (avant le filtre), donc le rang reste absolu et non celui de
+    // la sous-liste filtrée.
+    if (searchCondition !== undefined) {
+      return await this.getLeaderboardV2Filtered({
+        periodType,
+        periodKey,
+        cursor,
+        limit,
+        searchCondition,
+      });
+    }
 
     const rows = await this.db
       .select({
@@ -392,6 +428,100 @@ export class UserRepository {
             ? row.lastVisitedPoiDate.toISOString()
             : null,
         rank: baseRank + idx,
+      })),
+      nextCursor,
+    };
+  }
+
+  // Variante filtrée de getLeaderboardV2. Le rang global de chaque user est
+  // calculé via ROW_NUMBER() sur l'ensemble de la période (CTE `ranked`), puis
+  // on applique le filtre de recherche + la pagination cursor par-dessus —
+  // ainsi un user gardé après filtrage conserve sa position réelle au classement.
+  private async getLeaderboardV2Filtered({
+    periodType,
+    periodKey,
+    cursor,
+    limit,
+    searchCondition,
+  }: {
+    periodType: PeriodType;
+    periodKey: string;
+    cursor: LeaderboardCursor | null;
+    limit: number;
+    searchCondition: SQL;
+  }): Promise<{ items: LeaderboardResult; nextCursor: string | null }> {
+    const ranked = this.db.$with("ranked").as(
+      this.db
+        .select({
+          userId: userPeriodScores.userId,
+          count: userPeriodScores.count,
+          rank: sql`ROW_NUMBER() OVER (ORDER BY ${userPeriodScores.count} DESC, ${userPeriodScores.userId} ASC)`
+            .mapWith(Number)
+            .as("rank"),
+        })
+        .from(userPeriodScores)
+        .where(
+          and(
+            eq(userPeriodScores.periodType, periodType),
+            eq(userPeriodScores.periodKey, periodKey),
+          ),
+        ),
+    );
+
+    const rows = await this.db
+      .with(ranked)
+      .select({
+        userId: users.userId,
+        fullName: users.fullName,
+        nickname: users.nickname,
+        email: users.email,
+        createdAt: sql`${users.createdAt}`.mapWith(mapWithIsoDate),
+        visitedPoisCount: ranked.count,
+        rank: ranked.rank,
+        lastVisitedPoiDate:
+          sql`(SELECT MAX(${visitedPois.createdAt}) FROM ${visitedPois} WHERE ${visitedPois.userId} = ${users.userId})`
+            .mapWith(mapWithNullableIsoDate)
+            .as("last_visited_poi_date"),
+      })
+      .from(ranked)
+      .innerJoin(users, eq(users.userId, ranked.userId))
+      .where(
+        and(
+          searchCondition,
+          cursor !== null
+            ? or(
+                sql`${ranked.count} < ${cursor.score}`,
+                and(
+                  eq(ranked.count, cursor.score),
+                  gt(ranked.userId, cursor.userId),
+                ),
+              )
+            : undefined,
+        ),
+      )
+      .orderBy(desc(ranked.count), asc(ranked.userId))
+      .limit(limit + 1);
+
+    const hasMore = rows.length > limit;
+    const items = hasMore ? rows.slice(0, limit) : rows;
+    const last = items[items.length - 1];
+    const nextCursor =
+      hasMore && last !== undefined
+        ? encodeLeaderboardCursor({
+            score: last.visitedPoisCount,
+            userId: last.userId,
+          })
+        : null;
+
+    return {
+      items: items.map((row) => ({
+        userId: row.userId,
+        fullName: getUserDisplayName(row.fullName, row.email),
+        nickname: row.nickname,
+        visitedPoisCount: row.visitedPoisCount,
+        registrationDate: row.createdAt,
+        lastVisitedPoiDate: row.lastVisitedPoiDate,
+        rank: row.rank,
       })),
       nextCursor,
     };
