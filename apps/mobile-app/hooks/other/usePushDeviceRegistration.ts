@@ -152,7 +152,30 @@ export const usePushDeviceRegistration = (): void => {
     const unsubscribeOnTokenRefresh = onTokenRefresh(
       messaging,
       (token: string): void => {
-        void syncToken(token);
+        void (async (): Promise<void> => {
+          try {
+            // FCM/APNs can produce a token without notification permission
+            // (Android auto-init, iOS auto-register for silent push). Gate the
+            // upsert on the OS permission so we never persist a token for a
+            // user who hasn't opted in.
+            const { status } = await checkNotifications();
+            if (cancelled) {
+              return;
+            }
+            if (status !== RESULTS.GRANTED && status !== RESULTS.LIMITED) {
+              logger(
+                "[PushDeviceRegistration] Permission not granted, skipping token refresh upsert",
+              );
+              return;
+            }
+            await syncToken(token);
+          } catch (error) {
+            logger(
+              "[PushDeviceRegistration] Token refresh upsert failed",
+              error,
+            );
+          }
+        })();
       },
     );
 
