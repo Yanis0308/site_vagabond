@@ -34,6 +34,7 @@ export function HowItWorksSection({ title, steps }: Props): ReactNode {
 
         <div className="flex flex-col gap-8">
           {steps.map((step, index) => {
+            const isReversed = index === 1;
             return (
               <BlurFade key={step.number} delay={index * 0.15}>
                 <div className="relative overflow-hidden rounded-2xl border border-background-300 bg-background-50">
@@ -42,6 +43,7 @@ export function HowItWorksSection({ title, steps }: Props): ReactNode {
                     className={`
                       flex flex-col items-center gap-6 p-8
                       md:flex-row md:gap-10 md:p-10
+                      ${isReversed ? "md:flex-row-reverse" : ""}
                     `}
                   >
                     {/* Number + Icon */}
@@ -55,7 +57,7 @@ export function HowItWorksSection({ title, steps }: Props): ReactNode {
                       >
                         {step.number}
                       </span>
-                      <span className="mt-1 text-left">{step.icon}</span>
+                      <span className="mt-2 text-5xl md:text-3xl">{step.icon}</span>
                     </div>
 
                     {/* Content */}

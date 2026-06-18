@@ -35,7 +35,7 @@ export function FaqSection({
   const rightItems = columns === 2 ? items.slice(midpoint) : [];
 
   return (
-    <section className={cn("px-6 py-20", className)}>
+    <section className={cn("bg-background-50 px-6 py-20", className)}>
       {enableJsonLd ? <JsonLd data={faqPageSchema(items)} /> : null}
       <div className="mx-auto max-w-5xl">
         {title !== undefined ? (

@@ -25,7 +25,7 @@ export function NavTaapLink({
   return (
     <Button
       variant="secondary"
-      size="sm"
+      size="default"
       nativeButton={false}
       className={cn(SHINY_LINK, className)}
       render={

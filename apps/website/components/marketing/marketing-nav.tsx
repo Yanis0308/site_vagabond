@@ -11,7 +11,7 @@ import { NavScrollEffect } from "./nav-scroll-effect";
 import { NavTaapLink } from "./nav-taap-link";
 
 const NAV_LINK_CLASS =
-  "text-typography-600 hover:text-foreground relative cursor-pointer text-sm font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-primary-500 after:transition-all after:duration-300 hover:after:w-full";
+  "text-typography-600 hover:text-foreground relative cursor-pointer text-base font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-primary-500 after:transition-all after:duration-300 hover:after:w-full";
 
 function NavLink({
   href,
@@ -39,7 +39,7 @@ export async function MarketingNav(): Promise<ReactNode> {
             alt="Vagabond"
             width={140}
             height={36}
-            className="h-14 w-auto"
+            className="h-11 w-auto max-w-36 sm:h-12 md:h-14 md:max-w-none"
             priority
           />
         </Link>
@@ -47,8 +47,9 @@ export async function MarketingNav(): Promise<ReactNode> {
         {/* Desktop links */}
         <div
           className="
-            hidden items-center gap-6
+            hidden items-center gap-4
             md:flex
+            lg:gap-6
           "
         >
           <NavLink href="/explorer">{t("explorer")}</NavLink>
@@ -69,7 +70,7 @@ export async function MarketingNav(): Promise<ReactNode> {
           <NavTaapLink
             href={publicEnv.TAAP_IT_DESKTOP_URL}
             surface="nav_desktop"
-            className="px-5"
+            className="px-5 text-base"
           >
             {t("download")}
           </NavTaapLink>

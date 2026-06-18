@@ -53,7 +53,7 @@ export default async function FaqPage(): Promise<ReactNode> {
   ];
 
   return (
-    <>
+    <div className="bg-background-50">
       <section className="px-6 pt-12 pb-4">
         <div className="mx-auto max-w-5xl">
           <BreadcrumbSeo
@@ -84,6 +84,6 @@ export default async function FaqPage(): Promise<ReactNode> {
           enableJsonLd={index === 0}
         />
       ))}
-    </>
+    </div>
   );
 }

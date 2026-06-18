@@ -19,7 +19,7 @@ import { trackTaapDownloadClick } from "@/lib/analytics";
 import { publicEnv } from "@/lib/config/public";
 
 const LINK_CLASS =
-  "text-foreground hover:bg-muted rounded-lg px-3 py-2 text-base font-medium transition-colors";
+  "text-foreground hover:bg-muted rounded-lg px-3 py-2.5 text-lg font-medium transition-colors";
 
 export function MobileNavDrawer(): ReactNode {
   const t = useTranslations("nav");
@@ -69,7 +69,7 @@ export function MobileNavDrawer(): ReactNode {
             target="_blank"
             rel="noopener noreferrer"
             className="
-              mt-4 rounded-lg bg-primary-500 p-3 text-center text-base font-semibold text-primary-foreground
+              mt-4 rounded-lg bg-primary-500 p-3 text-center text-lg font-semibold text-primary-foreground
               transition-colors
               hover:bg-primary-600
             "

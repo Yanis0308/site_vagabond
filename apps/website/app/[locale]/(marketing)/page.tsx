@@ -99,7 +99,7 @@ export default async function HomePage(): Promise<ReactNode> {
   ];
 
   const stats = [
-    { value: 140000, suffix: "+", label: t("statPois") },
+    { value: 140000, suffix: "+", label: t("statPois") ,},
     { value: 36000, suffix: "+", label: t("statVilles") },
     { value: 13, suffix: "", label: t("statRegions") },
     { value: 5, suffix: "/5", label: t("statRating") },

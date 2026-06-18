@@ -58,7 +58,7 @@ export function LocaleSwitcher(): ReactNode {
         disabled={isPending}
         className={cn(
           `
-            flex cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1.5 text-sm font-medium text-typography-600
+            flex min-w-0 cursor-pointer items-center gap-1.5 rounded-lg px-2 py-1.5 text-base font-medium text-typography-600
             transition-colors outline-none
             hover:text-foreground
           `,
@@ -67,7 +67,9 @@ export function LocaleSwitcher(): ReactNode {
         )}
       >
         <span aria-hidden="true">🌐</span>
-        <span>{currentConfig.nativeName}</span>
+        <span className="truncate max-w-24 sm:max-w-none">
+          {currentConfig.nativeName}
+        </span>
         <svg
           width="12"
           height="12"
@@ -108,7 +110,7 @@ export function LocaleSwitcher(): ReactNode {
                     handleLocaleChange(loc);
                   }}
                   className={cn(
-                    `flex cursor-pointer items-center justify-between px-3 py-2 text-sm transition-colors outline-none`,
+                    `flex cursor-pointer items-center justify-between px-3 py-2 text-base transition-colors outline-none`,
                     isCurrent
                       ? "font-semibold text-primary-500"
                       : `
