@@ -19,4 +19,3 @@
 - expo picker mettre et tester shouldDownloadFromNetwork true
 - on a plus l'orientation de la photo dans les exif ?
 - si on a une 404 ne pas retry via react query
-

@@ -70,7 +70,6 @@ pnpm develop:libs
 
 Sous `develop:libs`, modif de `libs/<foo>/src/*.ts` → `tsc --watch` rebuild `dist/` → symlink propage vers les consumers → watcher de l'app détecte. Pas de `pnpm install`.
 
-
 ## Code Quality & Linting
 
 Pre-commit hook (husky) runs `pnpm check-all`. CI runs the same on push/PR to main.
@@ -177,12 +176,12 @@ refactor/VG-123-description
 ## Common Gotchas
 
 1. **Libs watch propagation**: `pnpm develop:<app>` ne watch QUE l'app (les libs sont buildées une fois au démarrage). Si tu modifies les libs pendant la session, ouvre `pnpm develop:libs` dans un terminal séparé — la cascade `tsc --watch` → symlink → app watcher se déclenche automatiquement, sans `pnpm install`.
-3. **Patched dependencies**: `ajv` et `fastify` ont des pnpm patches dans `patches/` (déclarés dans `pnpm-workspace.yaml` → `patchedDependencies`). À surveiller lors des upgrades.
-5. **`pnpm-lock.yaml` regen**: avec pnpm 11, `pnpm install` après suppression du lockfile peut dire "Already up to date" tant que `node_modules/.pnpm/lock.yaml` (cache interne) est cohérent. Force la regen avec :
+2. **Patched dependencies**: `ajv` et `fastify` ont des pnpm patches dans `patches/` (déclarés dans `pnpm-workspace.yaml` → `patchedDependencies`). À surveiller lors des upgrades.
+3. **`pnpm-lock.yaml` regen**: avec pnpm 11, `pnpm install` après suppression du lockfile peut dire "Already up to date" tant que `node_modules/.pnpm/lock.yaml` (cache interne) est cohérent. Force la regen avec :
    ```bash
    rm -rf node_modules apps/*/node_modules libs/*/node_modules pnpm-lock.yaml
    pnpm install --ignore-scripts  # première passe → lockfile
    pnpm install                   # seconde passe → postinstall scripts (puppeteer download, etc.)
    ```
-6. **SafeQL**: Database query validation is configured in `eslint-safeql.config.mjs` — requires a running PostgreSQL for type checking
-7. **The project README is in French** — the team works in French
+4. **SafeQL**: Database query validation is configured in `eslint-safeql.config.mjs` — requires a running PostgreSQL for type checking
+5. **The project README is in French** — the team works in French

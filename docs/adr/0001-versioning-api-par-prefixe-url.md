@@ -11,7 +11,7 @@ Lorsqu'un changement de contrat d'un endpoint de l'**API** doit casser la rétro
 ## Why
 
 - **Lisibilité OpenAPI / Swagger** : les routes v1 et v2 apparaissent côté à côté avec leur propre groupe, navigables sans connaître la culture du projet. Le header versioning est invisible dans le navigateur Swagger sans extension custom.
-- **Découverte simple côté **Mobile App** : le client HTTP centralisé pointe vers `/api/v2/` pour les ressources concernées, vers `/api/` pour le reste. Pas de logique de négociation de version.
+- **Découverte simple côté **Mobile App\*\* : le client HTTP centralisé pointe vers `/api/v2/` pour les ressources concernées, vers `/api/` pour le reste. Pas de logique de négociation de version.
 - **Coexistence robuste** : la **Mobile App** déployée via OTA Expo couvre la majorité des utilisateurs en quelques jours, mais une minorité reste sur l'ancienne version pendant plusieurs semaines (app pas ouverte, network offline). L'endpoint v1 reste fonctionnel pour eux pendant cette fenêtre.
 - **Pattern Fastify natif** : `fastify.register(routes, { prefix: "api/v2/visited-pois" })` est l'idiome standard, sans librairie tierce ni middleware custom.
 

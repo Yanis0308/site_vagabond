@@ -10,7 +10,7 @@ Le **Dashboard** utilise **Supabase Auth** comme provider d'identité, en mode *
 
 ## Why
 
-- **Supabase est déjà dans la stack** : le Postgres applicatif est hébergé chez Supabase (cf. `libs/database-client/src/supabase-cert.ts`), utilisé jusqu'ici comme *pur* provider DB (pas de RLS, pas de Realtime, pas de Storage, pas d'Auth). Activer Supabase Auth n'introduit pas un nouvel acteur dans l'infra — juste un service du provider qu'on a déjà.
+- **Supabase est déjà dans la stack** : le Postgres applicatif est hébergé chez Supabase (cf. `libs/database-client/src/supabase-cert.ts`), utilisé jusqu'ici comme _pur_ provider DB (pas de RLS, pas de Realtime, pas de Storage, pas d'Auth). Activer Supabase Auth n'introduit pas un nouvel acteur dans l'infra — juste un service du provider qu'on a déjà.
 - **Email OTP code natif** : Supabase Auth supporte directement le code 6 chiffres par email (`signInWithOtp({ email, options: { shouldCreateUser: false } })` + `verifyOtp({ email, token, type: "email" })`). C'est l'UX que l'équipe a demandée. Firebase ne le supporte qu'au prix d'une Cloud Function custom et de l'émission de custom tokens — beaucoup d'effort pour reproduire ce que Supabase fait nativement.
 - **Cloisonnement de sécurité** : provider distinct → un compromis sur les clés publiques de la **Mobile App** (largement distribuées dans les bundles iOS/Android) n'ouvre par construction aucun accès à la surface Dashboard.
 - **Pas de collision sémantique en DB** : les UUIDs Supabase et les UIDs Firebase vivent dans des namespaces différents ; séparer en `dashboard_users` est naturel et évite que `roleEnum` (mobile) porte des rôles qui n'existent que côté Dashboard.

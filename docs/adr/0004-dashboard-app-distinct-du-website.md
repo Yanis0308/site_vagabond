@@ -9,7 +9,7 @@ Le **Dashboard** vit dans un nouvel app `apps/dashboard` (Next.js + Tailwind + J
 
 ## Why
 
-- **Blast radius SEO** : le **Website** est public, référencé, multilingue, avec sitemap ouvert. Une erreur de middleware dans un `/admin` cohabité ferait fuiter la donnée interne. Un projet distinct rend l'indexation impossible *par construction* (`noindex` global, accès via Vercel Password Protection ou IP allowlist).
+- **Blast radius SEO** : le **Website** est public, référencé, multilingue, avec sitemap ouvert. Une erreur de middleware dans un `/admin` cohabité ferait fuiter la donnée interne. Un projet distinct rend l'indexation impossible _par construction_ (`noindex` global, accès via Vercel Password Protection ou IP allowlist).
 - **Auth alignée sur la source de données** : le **Website** utilise l'auth native de Payload CMS pour le back-office du CMS ; le **Dashboard** consomme l'**API**, donc s'authentifie contre l'auth de l'**API** (Firebase ID token + `roleEnum`). Cohabiter deux systèmes d'auth dans un même Next.js crée une zone grise sur "quel utilisateur est connecté".
 - **Indépendance de release** : déployer ou rollback le **Dashboard** ne doit pas toucher au site marketing.
 

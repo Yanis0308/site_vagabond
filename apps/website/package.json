@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "develop": "next dev --turbopack -p ${WEBSITE_PORT:-3001}",
+    "develop": "next dev --turbopack -p 3001",
     "build": "NODE_OPTIONS='--conditions react-server' payload generate:importmap && next build",
     "ci": "payload migrate && pnpm build",
     "start": "next start",
