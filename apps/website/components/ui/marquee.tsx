@@ -8,7 +8,6 @@ interface MarqueeProps {
   children: ReactNode;
   className?: string;
   reverse?: boolean;
-  pauseOnHover?: boolean;
   vertical?: boolean;
   repeat?: number;
   gap?: string;
@@ -19,7 +18,6 @@ export function Marquee({
   children,
   className,
   reverse = false,
-  pauseOnHover = false,
   vertical = false,
   repeat = 5,
   gap = "2rem",
@@ -48,7 +46,6 @@ export function Marquee({
             vertical
               ? "animate-marquee-vertical flex-col"
               : "animate-marquee flex-row",
-            pauseOnHover && "group-hover:paused",
             reverse && "direction-[reverse]",
           )}
           style={{ gap: "var(--gap)" }}

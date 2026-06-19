@@ -29,7 +29,7 @@ export function ScreenshotsSection({ title, screenshots }: Props): ReactNode {
           {title}
         </h2>
         <div className="mask-[linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <Marquee pauseOnHover duration="50s" gap="1rem" repeat={4}>
+          <Marquee duration="50s" gap="1rem" repeat={4}>
             {screenshots.map((screenshot) => (
               <div
                 key={screenshot.src}

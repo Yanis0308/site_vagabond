@@ -24,10 +24,14 @@ export function NavTaapLink({
 }: Props): ReactNode {
   return (
     <Button
-      variant="secondary"
+      variant="default"
       size="default"
       nativeButton={false}
-      className={cn(SHINY_LINK, className)}
+      className={cn(
+        SHINY_LINK,
+        "bg-primary-500 text-primary-foreground hover:bg-primary-600",
+        className,
+      )}
       render={
         <a
           href={href}
