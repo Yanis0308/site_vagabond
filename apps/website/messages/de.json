@@ -26,8 +26,8 @@
     "cgu": "Nutzungsbedingungen",
     "faqLink": "FAQ",
     "contact": "Kontakt",
-    "formulaire": "Kontaktformular",
-    "copyright": "© {year} Vagabond · Mit 🎒 in Frankreich gemacht"
+    "copyright": "© {year} Vagabond · Mit 🎒 in Frankreich gemacht",
+    "contactPage": "Kontaktseite"
   },
   "common": {
     "downloadApp": "App herunterladen"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "mit Vagabond",
     "downloadCta": "Lade Vagabond herunter und erkunde diese Region",
     "breadcrumbHome": "Startseite",
-    "breadcrumbExplorer": "Entdecken"
+    "breadcrumbExplorer": "Entdecken",
+    "nearbyTitle": "Beste Orte in meiner Nähe",
+    "nearbyPlaceHidden": "Ort zu entdecken",
+    "nearbyDistanceKm": "{distance} km entfernt",
+    "nearbyGeoLoading": "Standort wird ermittelt…",
+    "nearbyGeoUnavailable": "Standortfreigabe aktivieren, um die Entfernung zu sehen"
   },
   "pro": {
     "heroTitle": "Verwandeln Sie Ihr Reiseziel in einen Spielplatz",

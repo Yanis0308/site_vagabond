@@ -51,10 +51,6 @@ function buildSentryUserFromDbAndToken(params: {
 const PUBLIC_PATHS: Array<string | RegExp> = [
   "/api/live",
   "/api/ready",
-  // String or RegExp
-  //   /^\/api\/public\/.*/, // All paths starting with /api/public/
-  // /^\/documentation.*/, // Documentation if needed
-  ///.*/, All for testing
 ];
 
 export default fp(

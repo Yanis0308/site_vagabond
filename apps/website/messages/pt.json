@@ -26,8 +26,8 @@
     "cgu": "Termos de uso",
     "faqLink": "FAQ",
     "contact": "Contato",
-    "formulaire": "Formulário de contato",
-    "copyright": "© {year} Vagabond · Feito com 🎒 na França"
+    "copyright": "© {year} Vagabond · Feito com 🎒 na França",
+    "contactPage": "Página de contacto"
   },
   "common": {
     "downloadApp": "Baixar o app"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "com Vagabond",
     "downloadCta": "Baixe Vagabond e explore esta região",
     "breadcrumbHome": "Início",
-    "breadcrumbExplorer": "Explorar"
+    "breadcrumbExplorer": "Explorar",
+    "nearbyTitle": "Melhores locais perto de mim",
+    "nearbyPlaceHidden": "Local a descobrir",
+    "nearbyDistanceKm": "{distance} km",
+    "nearbyGeoLoading": "A calcular a sua localização…",
+    "nearbyGeoUnavailable": "Permita a localização para ver a distância"
   },
   "pro": {
     "heroTitle": "Transforme seu destino em um playground",
@@ -176,7 +181,7 @@
     "app7Q": "O Vagabond está disponível fora da França?",
     "app7A": "Atualmente, Vagabond cobre a França metropolitana. A expansão para outros países europeus está prevista.",
     "app8Q": "Como posso reportar um bug ou sugerir uma melhoria?",
-    "app8A": "Entre em contato conosco pelo formulário de contato ou diretamente em contact@vagabond.gg. Lemos e respondemos todas as mensagens.",
+    "app8A": "Entre em contato conosco diretamente em contact@vagabond.gg. Lemos e respondemos todas as mensagens.",
     "catGameplay": "Mapa de raspadinha, desafios e medalhas",
     "gameplay1Q": "Como funciona o mapa de raspadinha?",
     "gameplay1A": "Cada cidade, departamento e região da França está representada no seu mapa pessoal. Valide suas visitas para revelar o mapa progressivamente e acompanhar sua exploração.",

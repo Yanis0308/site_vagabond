@@ -26,8 +26,8 @@
     "cgu": "Condizioni d'uso",
     "faqLink": "FAQ",
     "contact": "Contatto",
-    "formulaire": "Modulo di contatto",
-    "copyright": "© {year} Vagabond · Fatto con 🎒 in Francia"
+    "copyright": "© {year} Vagabond · Fatto con 🎒 in Francia",
+    "contactPage": "Pagina contatti"
   },
   "common": {
     "downloadApp": "Scarica l'app"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "con Vagabond",
     "downloadCta": "Scarica Vagabond ed esplora questa regione",
     "breadcrumbHome": "Home",
-    "breadcrumbExplorer": "Esplora"
+    "breadcrumbExplorer": "Esplora",
+    "nearbyTitle": "I migliori luoghi intorno a me",
+    "nearbyPlaceHidden": "Luogo da scoprire",
+    "nearbyDistanceKm": "{distance} km",
+    "nearbyGeoLoading": "Calcolo della tua posizione…",
+    "nearbyGeoUnavailable": "Consenti la posizione per vedere la distanza"
   },
   "pro": {
     "heroTitle": "Trasforma la tua destinazione in un terreno di gioco",

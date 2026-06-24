@@ -83,7 +83,7 @@ export async function MarketingFooter(): Promise<ReactNode> {
               >
                 contact@vagabond.gg
               </a>
-              <FooterLink href="/contact">{t("formulaire")}</FooterLink>
+              <FooterLink href="/contact">{t("contactPage")}</FooterLink>
             </nav>
           </div>
         </div>

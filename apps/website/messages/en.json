@@ -26,8 +26,8 @@
     "cgu": "Terms of service",
     "faqLink": "FAQ",
     "contact": "Contact",
-    "formulaire": "Contact form",
-    "copyright": "© {year} Vagabond · Made with 🎒 in France"
+    "copyright": "© {year} Vagabond · Made with 🎒 in France",
+    "contactPage": "Contact page"
   },
   "common": {
     "downloadApp": "Download the app"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "with Vagabond",
     "downloadCta": "Download Vagabond and explore this region",
     "breadcrumbHome": "Home",
-    "breadcrumbExplorer": "Explore"
+    "breadcrumbExplorer": "Explore",
+    "nearbyTitle": "Best places near me",
+    "nearbyPlaceHidden": "Place to discover",
+    "nearbyDistanceKm": "{distance} km away",
+    "nearbyGeoLoading": "Getting your location…",
+    "nearbyGeoUnavailable": "Allow location to see distance"
   },
   "pro": {
     "heroTitle": "Turn your destination into a playground",
@@ -176,7 +181,7 @@
     "app7Q": "Is Vagabond available outside France?",
     "app7A": "Currently, Vagabond covers metropolitan France. Expansion to other European countries is planned.",
     "app8Q": "How can I report a bug or suggest an improvement?",
-    "app8A": "Contact us via the contact form or directly at contact@vagabond.gg. We read and respond to every message.",
+    "app8A": "Contact us directly at contact@vagabond.gg. We read and respond to every message.",
     "catGameplay": "Scratch map, challenges & badges",
     "gameplay1Q": "How does the scratch map work?",
     "gameplay1A": "Every city, department, and region in France is represented on your personal map. Validate your visits to progressively reveal the map and track your exploration.",

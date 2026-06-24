@@ -26,8 +26,8 @@
     "cgu": "利用規約",
     "faqLink": "よくある質問",
     "contact": "お問い合わせ",
-    "formulaire": "お問い合わせフォーム",
-    "copyright": "© {year} Vagabond · フランスで 🎒 と共に制作"
+    "copyright": "© {year} Vagabond · フランスで 🎒 と共に制作",
+    "contactPage": "お問い合わせページ"
   },
   "common": {
     "downloadApp": "アプリをダウンロード"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "（Vagabond）",
     "downloadCta": "Vagabond をダウンロードしてこの地方を探索",
     "breadcrumbHome": "ホーム",
-    "breadcrumbExplorer": "探索"
+    "breadcrumbExplorer": "探索",
+    "nearbyTitle": "近くのおすすめスポット",
+    "nearbyPlaceHidden": "発見のスポット",
+    "nearbyDistanceKm": "{distance} km",
+    "nearbyGeoLoading": "現在地を取得中…",
+    "nearbyGeoUnavailable": "距離を表示するには位置情報を許可してください"
   },
   "pro": {
     "heroTitle": "あなたの目的地を遊び場に変えよう",
@@ -176,7 +181,7 @@
     "app7Q": "Vagabond はフランス以外で利用できますか？",
     "app7A": "現在、Vagabond はフランス本土をカバーしています。他のヨーロッパ諸国への拡大が予定されています。",
     "app8Q": "バグの報告や改善提案はどうすればいいですか？",
-    "app8A": "お問い合わせフォームまたは contact@vagabond.gg まで直接ご連絡ください。すべてのメッセージを読み、返信いたします。",
+    "app8A": "contact@vagabond.gg まで直接ご連絡ください。すべてのメッセージを読み、返信いたします。",
     "catGameplay": "スクラッチマップ、チャレンジ＆バッジ",
     "gameplay1Q": "スクラッチマップはどのように機能しますか？",
     "gameplay1A": "フランスのすべての都市、県、地方があなたのパーソナルマップに表示されます。訪問を認証してマップを徐々に明らかにし、探索の進捗を追跡しましょう。",

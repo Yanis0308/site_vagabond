@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { type ReactNode } from "react";
 
 import { BreadcrumbSeo } from "@/components/breadcrumb-seo";
+import { NearbyPlacesGrid } from "@/components/explorer/nearby-places-grid";
 import { FranceMap } from "@/components/france-map";
 import { RegionCard } from "@/components/region-card";
 import { explorerRegionsItemListSchema, JsonLd } from "@/lib/json-ld";
@@ -78,6 +79,18 @@ export default async function ExplorerPage(): Promise<ReactNode> {
               ))}
             </div>
           </div>
+
+          <h2
+            className="
+              mt-16 mb-6 text-center font-display text-3xl font-bold
+              text-foreground
+              md:text-4xl
+            "
+          >
+            {t("nearbyTitle")}
+          </h2>
+
+          <NearbyPlacesGrid />
         </div>
       </section>
     </>

@@ -26,8 +26,8 @@
     "cgu": "이용약관",
     "faqLink": "자주 묻는 질문",
     "contact": "문의하기",
-    "formulaire": "문의 양식",
-    "copyright": "© {year} Vagabond · 프랑스에서 🎒 와 함께 제작"
+    "copyright": "© {year} Vagabond · 프랑스에서 🎒 와 함께 제작",
+    "contactPage": "문의 페이지"
   },
   "common": {
     "downloadApp": "앱 다운로드"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "(Vagabond)",
     "downloadCta": "Vagabond를 다운로드하고 이 레지옹을 탐험하세요",
     "breadcrumbHome": "홈",
-    "breadcrumbExplorer": "탐험"
+    "breadcrumbExplorer": "탐험",
+    "nearbyTitle": "내 주변 최고의 장소",
+    "nearbyPlaceHidden": "발견할 장소",
+    "nearbyDistanceKm": "{distance} km",
+    "nearbyGeoLoading": "위치 확인 중…",
+    "nearbyGeoUnavailable": "거리를 보려면 위치 권한을 허용하세요"
   },
   "pro": {
     "heroTitle": "당신의 여행지를 놀이터로 바꾸세요",
@@ -176,7 +181,7 @@
     "app7Q": "Vagabond는 프랑스 이외에서도 사용할 수 있나요?",
     "app7A": "현재 Vagabond는 프랑스 본토를 다룹니다. 다른 유럽 국가로의 확장이 계획되어 있습니다.",
     "app8Q": "버그를 신고하거나 개선을 제안하려면 어떻게 하나요?",
-    "app8A": "문의 양식이나 contact@vagabond.gg로 직접 연락하세요. 모든 메시지를 읽고 답변드립니다.",
+    "app8A": "contact@vagabond.gg로 직접 연락하세요. 모든 메시지를 읽고 답변드립니다.",
     "catGameplay": "스크래치 지도, 챌린지 & 배지",
     "gameplay1Q": "스크래치 지도는 어떻게 작동하나요?",
     "gameplay1A": "프랑스의 모든 도시, 데파르트망, 레지옹이 당신의 개인 지도에 표시됩니다. 방문을 인증하여 지도를 점차 밝히고 탐험 진행 상황을 추적하세요.",

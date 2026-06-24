@@ -26,8 +26,8 @@
     "cgu": "CGU",
     "faqLink": "FAQ",
     "contact": "Contact",
-    "formulaire": "Formulaire",
-    "copyright": "© {year} Vagabond · Made with 🎒 in France"
+    "copyright": "© {year} Vagabond · Made with 🎒 in France",
+    "contactPage": "Page contact"
   },
   "common": {
     "downloadApp": "Télécharger l'app"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "avec Vagabond",
     "downloadCta": "Télécharge Vagabond et explore cette région",
     "breadcrumbHome": "Accueil",
-    "breadcrumbExplorer": "Explorer"
+    "breadcrumbExplorer": "Explorer",
+    "nearbyTitle": "Les meilleurs lieux autour de moi",
+    "nearbyPlaceHidden": "Lieu à découvrir",
+    "nearbyDistanceKm": "à {distance} km",
+    "nearbyGeoLoading": "Calcul de votre position…",
+    "nearbyGeoUnavailable": "Autorisez la localisation pour voir la distance"
   },
   "pro": {
     "heroTitle": "Transformez votre destination en terrain de jeu",
@@ -176,7 +181,7 @@
     "app7Q": "Vagabond est-il disponible en dehors de la France ?",
     "app7A": "Pour le moment, Vagabond couvre la France métropolitaine. L'expansion vers d'autres pays européens est prévue.",
     "app8Q": "Comment signaler un bug ou proposer une amélioration ?",
-    "app8A": "Contactez-nous via le formulaire de contact ou directement à contact@vagabond.gg. Nous lisons et répondons à chaque message.",
+    "app8A": "Contactez-nous directement à contact@vagabond.gg. Nous lisons et répondons à chaque message.",
     "catGameplay": "Carte à gratter, défis et badges",
     "gameplay1Q": "Comment fonctionne la carte à gratter ?",
     "gameplay1A": "Chaque commune, département et région de France est représenté sur votre carte personnelle. Validez vos visites pour révéler progressivement la carte et suivre votre exploration.",

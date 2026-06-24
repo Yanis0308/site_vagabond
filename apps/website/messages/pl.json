@@ -26,8 +26,8 @@
     "cgu": "Regulamin",
     "faqLink": "FAQ",
     "contact": "Kontakt",
-    "formulaire": "Formularz kontaktowy",
-    "copyright": "© {year} Vagabond · Stworzone z 🎒 we Francji"
+    "copyright": "© {year} Vagabond · Stworzone z 🎒 we Francji",
+    "contactPage": "Strona kontaktowa"
   },
   "common": {
     "downloadApp": "Pobierz aplikację"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "z Vagabond",
     "downloadCta": "Pobierz Vagabond i odkryj ten region",
     "breadcrumbHome": "Strona główna",
-    "breadcrumbExplorer": "Odkrywaj"
+    "breadcrumbExplorer": "Odkrywaj",
+    "nearbyTitle": "Najlepsze miejsca w mojej okolicy",
+    "nearbyPlaceHidden": "Miejsce do odkrycia",
+    "nearbyDistanceKm": "{distance} km stąd",
+    "nearbyGeoLoading": "Ustalanie Twojej lokalizacji…",
+    "nearbyGeoUnavailable": "Zezwól na lokalizację, aby zobaczyć odległość"
   },
   "pro": {
     "heroTitle": "Zamień swój cel podróży w plac zabaw",

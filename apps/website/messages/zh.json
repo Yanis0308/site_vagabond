@@ -26,8 +26,8 @@
     "cgu": "使用条款",
     "faqLink": "常见问题",
     "contact": "联系我们",
-    "formulaire": "联系表单",
-    "copyright": "© {year} Vagabond · 用 🎒 在法国打造"
+    "copyright": "© {year} Vagabond · 用 🎒 在法国打造",
+    "contactPage": "联系页面"
   },
   "common": {
     "downloadApp": "下载应用"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "用 Vagabond",
     "downloadCta": "下载 Vagabond 探索这个大区",
     "breadcrumbHome": "首页",
-    "breadcrumbExplorer": "探索"
+    "breadcrumbExplorer": "探索",
+    "nearbyTitle": "我附近的最佳地点",
+    "nearbyPlaceHidden": "待发现的地点",
+    "nearbyDistanceKm": "{distance} 公里",
+    "nearbyGeoLoading": "正在获取您的位置…",
+    "nearbyGeoUnavailable": "允许定位以查看距离"
   },
   "pro": {
     "heroTitle": "将你的目的地变成游乐场",
@@ -176,7 +181,7 @@
     "app7Q": "Vagabond 在法国以外可用吗？",
     "app7A": "目前，Vagabond 覆盖法国本土。计划扩展到其他欧洲国家。",
     "app8Q": "如何报告漏洞或提出改进建议？",
-    "app8A": "请通过联系表单或直接发送邮件至 contact@vagabond.gg 联系我们。我们会阅读并回复每一条消息。",
+    "app8A": "请直接发送邮件至 contact@vagabond.gg 联系我们。我们会阅读并回复每一条消息。",
     "catGameplay": "刮刮地图、挑战与徽章",
     "gameplay1Q": "刮刮地图是如何运作的？",
     "gameplay1A": "法国的每个城市、省份和大区都显示在你的个人地图上。验证你的到访，逐步揭开地图并追踪你的探索进度。",

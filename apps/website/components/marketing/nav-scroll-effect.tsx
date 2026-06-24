@@ -25,7 +25,7 @@ export function NavScrollEffect({ children }: Props): ReactNode {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        "site-header fixed inset-x-0 top-0 z-50 transition-all duration-300",
         scrolled
           ? "bg-background-100/80 shadow-sm backdrop-blur-xl"
           : "bg-transparent",

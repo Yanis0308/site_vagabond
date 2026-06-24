@@ -70,7 +70,7 @@ export async function MarketingNav(): Promise<ReactNode> {
           <NavTaapLink
             href={publicEnv.TAAP_IT_DESKTOP_URL}
             surface="nav_desktop"
-            className="px-5 text-base"
+            className="px-4 text-sm"
           >
             {t("download")}
           </NavTaapLink>
@@ -84,6 +84,13 @@ export async function MarketingNav(): Promise<ReactNode> {
           "
         >
           <LocaleSwitcher />
+          <NavTaapLink
+            href={publicEnv.TAAP_IT_MOBILE_URL}
+            surface="nav_mobile"
+            className="px-3 text-xs sm:text-sm"
+          >
+            {t("download")}
+          </NavTaapLink>
           <MobileNavDrawer />
         </div>
       </nav>

@@ -15,8 +15,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Link } from "@/i18n/navigation";
-import { trackTaapDownloadClick } from "@/lib/analytics";
 import { publicEnv } from "@/lib/config/public";
+
+import { NavTaapLink } from "./nav-taap-link";
 
 const LINK_CLASS =
   "text-foreground hover:bg-muted rounded-lg px-3 py-2.5 text-lg font-medium transition-colors";
@@ -64,22 +65,14 @@ export function MobileNavDrawer(): ReactNode {
           <Link href="/contact" className={LINK_CLASS} onClick={close}>
             {t("contact")}
           </Link>
-          <a
+          <NavTaapLink
             href={publicEnv.TAAP_IT_MOBILE_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="
-              mt-4 rounded-lg bg-primary-500 p-3 text-center text-lg font-semibold text-primary-foreground
-              transition-colors
-              hover:bg-primary-600
-            "
-            onClick={(): void => {
-              trackTaapDownloadClick("nav_mobile");
-              close();
-            }}
+            surface="nav_mobile"
+            className="mt-4 w-full justify-center p-3 text-lg"
+            onDrawerClose={close}
           >
             {t("download")}
-          </a>
+          </NavTaapLink>
         </nav>
       </SheetContent>
     </Sheet>

@@ -26,8 +26,8 @@
     "cgu": "Condiciones de uso",
     "faqLink": "FAQ",
     "contact": "Contacto",
-    "formulaire": "Formulario de contacto",
-    "copyright": "© {year} Vagabond · Hecho con 🎒 en Francia"
+    "copyright": "© {year} Vagabond · Hecho con 🎒 en Francia",
+    "contactPage": "Página de contacto"
   },
   "common": {
     "downloadApp": "Descargar la app"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "con Vagabond",
     "downloadCta": "Descarga Vagabond y explora esta región",
     "breadcrumbHome": "Inicio",
-    "breadcrumbExplorer": "Explorar"
+    "breadcrumbExplorer": "Explorar",
+    "nearbyTitle": "Mejores lugares cerca de mí",
+    "nearbyPlaceHidden": "Lugar por descubrir",
+    "nearbyDistanceKm": "{distance} km",
+    "nearbyGeoLoading": "Calculando tu ubicación…",
+    "nearbyGeoUnavailable": "Permite la ubicación para ver la distancia"
   },
   "pro": {
     "heroTitle": "Convierte tu destino en un terreno de juego",
@@ -176,7 +181,7 @@
     "app7Q": "¿Vagabond está disponible fuera de Francia?",
     "app7A": "Actualmente, Vagabond cubre la Francia metropolitana. La expansión a otros países europeos está prevista.",
     "app8Q": "¿Cómo puedo reportar un error o sugerir una mejora?",
-    "app8A": "Contáctanos a través del formulario de contacto o directamente en contact@vagabond.gg. Leemos y respondemos cada mensaje.",
+    "app8A": "Contáctanos directamente en contact@vagabond.gg. Leemos y respondemos cada mensaje.",
     "catGameplay": "Mapa rasca, desafíos e insignias",
     "gameplay1Q": "¿Cómo funciona el mapa rasca?",
     "gameplay1A": "Cada ciudad, departamento y región de Francia está representada en tu mapa personal. Valida tus visitas para revelar el mapa progresivamente y seguir tu exploración.",

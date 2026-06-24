@@ -118,22 +118,22 @@ export function HeroSection({
 
         {/* Phone mockup with MagicUI iPhone frame */}
         <div className="flex flex-1 items-center justify-center">
-                      <div
-              className="
+          <div
+            className="
                 absolute top-1/4 left-1/2 h-[400px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br
                 from-primary-400/20 to-secondary-500/15 blur-3xl
               "
-            />
-            <div
-              className="
+          />
+          <div
+            className="
                 relative z-10 w-[280px]
                 md:w-[340px]
               "
-            >
-              <IphoneMockup src="/images/hero-mockup.png" />
-            </div>
+          >
+            <IphoneMockup src="/images/hero-mockup.png" />
           </div>
         </div>
+      </div>
     </section>
   );
 }

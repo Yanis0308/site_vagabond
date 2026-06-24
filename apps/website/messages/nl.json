@@ -26,8 +26,8 @@
     "cgu": "Gebruiksvoorwaarden",
     "faqLink": "FAQ",
     "contact": "Contact",
-    "formulaire": "Contactformulier",
-    "copyright": "© {year} Vagabond · Gemaakt met 🎒 in Frankrijk"
+    "copyright": "© {year} Vagabond · Gemaakt met 🎒 in Frankrijk",
+    "contactPage": "Contactpagina"
   },
   "common": {
     "downloadApp": "Download de app"
@@ -107,7 +107,12 @@
     "villeTitleSuffix": "met Vagabond",
     "downloadCta": "Download Vagabond en verken deze regio",
     "breadcrumbHome": "Home",
-    "breadcrumbExplorer": "Ontdekken"
+    "breadcrumbExplorer": "Ontdekken",
+    "nearbyTitle": "Beste plekken om me heen",
+    "nearbyPlaceHidden": "Plek om te ontdekken",
+    "nearbyDistanceKm": "{distance} km",
+    "nearbyGeoLoading": "Je locatie wordt bepaald…",
+    "nearbyGeoUnavailable": "Sta locatie toe om de afstand te zien"
   },
   "pro": {
     "heroTitle": "Maak van uw bestemming een speeltuin",

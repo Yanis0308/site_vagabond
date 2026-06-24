@@ -14,8 +14,8 @@ export default async function ConfidentialitePage(): Promise<ReactNode> {
       <h2>Données collectées</h2>
       <p>
         Lors de l&apos;utilisation de notre site, nous pouvons collecter les
-        données suivantes : nom, adresse email, organisation (via les
-        formulaires de contact).
+        données suivantes lorsque vous nous contactez par email : nom, adresse
+        email, organisation.
       </p>
 
       <h2>Finalités</h2>

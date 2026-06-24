@@ -57,7 +57,7 @@ export function HowItWorksSection({ title, steps }: Props): ReactNode {
                       >
                         {step.number}
                       </span>
-                      <span className="mt-2 text-5xl md:text-3xl">{step.icon}</span>
+                      <span className="mt-1 text-left">{step.icon}</span>
                     </div>
 
                     {/* Content */}

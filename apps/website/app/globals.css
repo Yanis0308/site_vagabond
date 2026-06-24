@@ -269,3 +269,8 @@
 @utility animate-shiny-text {
   animation: shiny-text 5s infinite;
 }
+
+/* smartbanner.js adds html.smartbanner-show on mobile — keep nav below the banner */
+html.smartbanner-show .site-header {
+  top: 84px;
+}
