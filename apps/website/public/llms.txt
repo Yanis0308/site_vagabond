@@ -3,12 +3,12 @@
 > Vagabond est la première application française de tourisme gamifié qui permet
 > d'explorer la France avec une carte à gratter digitale interactive, des défis
 > géolocalisés, des badges de collection et un carnet de voyage intégré.
-> Disponible gratuitement sur iOS et Android. Plus de 100 000 points d'intérêt
+> Disponible gratuitement sur iOS et Android. Plus de 140 000 points d'intérêt
 > dans toutes les régions de France métropolitaine.
 
 ## Application mobile
 - [Fonctionnalités](https://www.vagabond.gg/): Carte à gratter, défis, badges, carnet de voyage
-- [Explorer la France](https://www.vagabond.gg/explorer): 100 000+ POIs explorables par région, département et commune
+- [Explorer la France](https://www.vagabond.gg/explorer): 140 000+ POIs explorables par région, département et commune
 
 ## Pour les professionnels du tourisme
 - [Vagabond Pro](https://www.vagabond.gg/pro): Solution SaaS pour offices de tourisme et collectivités

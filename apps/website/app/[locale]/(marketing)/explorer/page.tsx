@@ -15,7 +15,7 @@ export const revalidate = 86400;
 export const metadata: Metadata = {
   title: "Explorer la France",
   description:
-    "Découvrez les 100 000+ points d'intérêt de France avec Vagabond. Toutes les régions, départements et villes à explorer.",
+    "Découvrez les 140 000+ points d'intérêt de France avec Vagabond. Toutes les régions, départements et villes à explorer.",
 };
 
 export default async function ExplorerPage(): Promise<ReactNode> {

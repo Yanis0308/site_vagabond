@@ -4,6 +4,14 @@ import { type ReactNode } from "react";
 
 import { BreadcrumbSeo } from "@/components/breadcrumb-seo";
 import { FaqSection } from "@/components/faq-section";
+import { CompetitorComparisonTable } from "@/components/marketing/competitor-comparison-table";
+import {
+  B2C_COMPARE_APPS,
+  B2C_COMPARE_CRITERIA,
+  B2C_COMPARE_MATRIX,
+  toCompareAppKey,
+  toCompareCriterionKey,
+} from "@/lib/faq/b2c-competitor-matrix";
 
 export const metadata: Metadata = {
   title: "FAQ — Questions fréquentes",
@@ -13,6 +21,18 @@ export const metadata: Metadata = {
 
 export default async function FaqPage(): Promise<ReactNode> {
   const t = await getTranslations("faq");
+
+  const apps = B2C_COMPARE_APPS.map((id) => ({
+    id,
+    name: t(`compare${toCompareAppKey(id)}Name`),
+    isHighlight: id === "vagabond",
+  }));
+
+  const criteria = B2C_COMPARE_CRITERIA.map((id) => ({
+    id,
+    label: t(`compareCriterion${toCompareCriterionKey(id)}`),
+    values: B2C_COMPARE_MATRIX[id],
+  }));
 
   const categories = [
     {
@@ -50,6 +70,13 @@ export default async function FaqPage(): Promise<ReactNode> {
         answer: t(`pro${String(i + 1)}A`),
       })),
     },
+    {
+      title: t("catCompare"),
+      items: Array.from({ length: 5 }, (_, i) => ({
+        question: t(`compareFaq${String(i + 1)}Q`),
+        answer: t(`compareFaq${String(i + 1)}A`),
+      })),
+    },
   ];
 
   return (
@@ -84,6 +111,18 @@ export default async function FaqPage(): Promise<ReactNode> {
           enableJsonLd={index === 0}
         />
       ))}
+
+      <CompetitorComparisonTable
+        title={t("compareTitle")}
+        subtitle={t("compareSubtitle")}
+        colCriterion={t("compareColCriterion")}
+        levelLabels={{
+          yes: t("compareYes"),
+          no: t("compareNo"),
+        }}
+        apps={apps}
+        criteria={criteria}
+      />
     </div>
   );
 }

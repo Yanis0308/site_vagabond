@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       template: "%s | Vagabond",
     },
     description:
-      "L'app de tourisme gamifié pour explorer la France. Carte à gratter digitale, 100 000+ lieux à découvrir, défis, badges et carnet de voyage. Gratuit sur iOS et Android.",
+      "L'app de tourisme gamifié pour explorer la France. Carte à gratter digitale, 140 000+ lieux à découvrir, défis, badges et carnet de voyage. Gratuit sur iOS et Android.",
     keywords: [
       "tourisme gamifié",
       "explorer France",

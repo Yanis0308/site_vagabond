@@ -3,6 +3,8 @@ import { type ReactNode } from "react";
 
 import { Link } from "@/i18n/navigation";
 
+import { SocialLinks } from "./social-links";
+
 export async function MarketingFooter(): Promise<ReactNode> {
   const t = await getTranslations("footer");
   const year = new Date().getFullYear();
@@ -88,9 +90,14 @@ export async function MarketingFooter(): Promise<ReactNode> {
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-12 border-t border-white/10 pt-8 text-center text-sm text-background-300">
+        {/* Copyright + social */}
+        <div
+          className="
+            mt-12 flex flex-col items-center gap-4 border-t border-white/10 pt-8 text-center text-sm text-background-300
+          "
+        >
           {t("copyright", { year: String(year) })}
+          <SocialLinks variant="footer" className="gap-3" />
         </div>
       </div>
     </footer>

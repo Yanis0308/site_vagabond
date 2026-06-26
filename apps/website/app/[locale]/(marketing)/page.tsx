@@ -31,7 +31,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Vagabond - Explore la France comme jamais",
     description:
-      "L'app de tourisme gamifié pour explorer la France. Carte à gratter digitale, 100 000+ lieux à découvrir, défis, badges et carnet de voyage. Gratuit sur iOS et Android.",
+      "L'app de tourisme gamifié pour explorer la France. Carte à gratter digitale, 140 000+ lieux à découvrir, défis, badges et carnet de voyage. Gratuit sur iOS et Android.",
     alternates: {
       canonical: siteAbsoluteUrl("/", locale),
       languages: {

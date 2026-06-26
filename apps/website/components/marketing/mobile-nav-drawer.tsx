@@ -18,6 +18,7 @@ import { Link } from "@/i18n/navigation";
 import { publicEnv } from "@/lib/config/public";
 
 import { NavTaapLink } from "./nav-taap-link";
+import { SocialLinks } from "./social-links";
 
 const LINK_CLASS =
   "text-foreground hover:bg-muted rounded-lg px-3 py-2.5 text-lg font-medium transition-colors";
@@ -73,6 +74,7 @@ export function MobileNavDrawer(): ReactNode {
           >
             {t("download")}
           </NavTaapLink>
+          <SocialLinks variant="nav" className="mt-6 justify-center" />
         </nav>
       </SheetContent>
     </Sheet>

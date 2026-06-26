@@ -134,9 +134,6 @@ NEXT_PUBLIC_SITE_URL=https://www.vagabond.gg
 NEXT_PUBLIC_APP_STORE_URL=https://apps.apple.com/fr/app/vagabond-voyage-en-france/id6737132413
 NEXT_PUBLIC_GOOGLE_PLAY_URL=https://play.google.com/store/apps/details?id=com.vagabond.explore.tourism
 
-# Calendly
-NEXT_PUBLIC_CALENDLY_URL=https://calendly.com/...
-
 # CEO LinkedIn
 NEXT_PUBLIC_CEO_LINKEDIN_URL=https://www.linkedin.com/in/...
 
@@ -241,7 +238,7 @@ Payload expose automatiquement une API REST à `/api/*` pour chaque collection.
 
 - **Landing page** - Hero, stats, captures d'écran, carte, trust bar, CTA
 - **FAQ** - Questions fréquentes
-- **Pro (B2B)** - Offre professionnelle avec prise de rendez-vous Calendly
+- **Pro (B2B)** - Offre professionnelle avec prise de rendez-vous HubSpot
 - **Contact** - Page de contact
 
 ### Contenu
@@ -268,7 +265,7 @@ Pages purement statiques, ne changent qu'au prochain déploiement.
 | `/(marketing)/contact`      | Page contact                 |
 | `/(marketing)/faq`          | Foire aux questions          |
 | `/(marketing)/presse`       | Kit presse                   |
-| `/(marketing)/pro`          | Offre B2B + Calendly         |
+| `/(marketing)/pro`          | Offre B2B + HubSpot Meetings |
 | `/(legal)/cgu`              | Conditions générales         |
 | `/(legal)/confidentialite`  | Politique de confidentialité |
 | `/(legal)/mentions-legales` | Mentions légales             |

@@ -42,7 +42,7 @@ export function mobileApplicationSchema(): Record<string, unknown> {
     applicationCategory: "TravelApplication",
     operatingSystem: ["iOS", "Android"],
     description:
-      "Application de tourisme gamifié pour explorer la France. Carte à gratter digitale, 100 000+ POIs, défis géolocalisés, badges et carnet de voyage.",
+      "Application de tourisme gamifié pour explorer la France. Carte à gratter digitale, 140 000+ POIs, défis géolocalisés, badges et carnet de voyage.",
     offers: {
       "@type": "Offer",
       price: "0",

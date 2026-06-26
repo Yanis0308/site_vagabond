@@ -4,6 +4,7 @@ import { type ReactNode } from "react";
 
 import { ContactEmailMailtoLink } from "@/components/contact-email-mailto-link";
 import { CopyEmailButton } from "@/components/copy-email-button";
+import { ContactForm } from "@/components/contact-form";
 import { Link } from "@/i18n/navigation";
 
 export const metadata: Metadata = {
@@ -17,7 +18,7 @@ export default async function ContactPage(): Promise<ReactNode> {
 
   return (
     <section className="px-6 py-16">
-      <div className="mx-auto max-w-2xl text-center">
+      <div className="mx-auto max-w-3xl text-center">
         <h1
           className="
             font-display text-3xl font-bold text-foreground
@@ -27,6 +28,10 @@ export default async function ContactPage(): Promise<ReactNode> {
           {t("title")}
         </h1>
         <p className="mt-4 text-lg text-typography-600">{t("subtitle")}</p>
+
+        <div className="mt-10 w-full">
+          <ContactForm className="w-full text-left" />
+        </div>
 
         <div className="mt-10 rounded-2xl bg-background-200 p-8">
           <p className="text-sm text-typography-600">{t("emailLabel")}</p>

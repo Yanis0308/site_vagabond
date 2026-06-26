@@ -9,6 +9,7 @@ import { LocaleSwitcher } from "./locale-switcher";
 import { MobileNavDrawer } from "./mobile-nav-drawer";
 import { NavScrollEffect } from "./nav-scroll-effect";
 import { NavTaapLink } from "./nav-taap-link";
+import { SocialLinks } from "./social-links";
 
 const NAV_LINK_CLASS =
   "text-typography-600 hover:text-foreground relative cursor-pointer text-base font-medium transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:bg-primary-500 after:transition-all after:duration-300 hover:after:w-full";
@@ -66,6 +67,7 @@ export async function MarketingNav(): Promise<ReactNode> {
             md:flex
           "
         >
+          <SocialLinks variant="nav" />
           <LocaleSwitcher />
           <NavTaapLink
             href={publicEnv.TAAP_IT_DESKTOP_URL}
