@@ -10,11 +10,13 @@ interface PlaceDistance {
   distanceKm: number;
 }
 
+type NearbyDistancesResponse =
+  | { places: PlaceDistance[]; method: "driving" | "straight" }
+  | { error: string };
+
 export async function POST(
   request: NextRequest,
-): Promise<
-  NextResponse<{ places: PlaceDistance[]; method: "driving" | "straight" }>
-> {
+): Promise<NextResponse<NearbyDistancesResponse>> {
   let body: unknown;
 
   try {

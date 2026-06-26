@@ -86,8 +86,8 @@ export function ContactForm({
                 rows={10}
                 className={cn(
                   `
-                    min-h-56 w-full min-w-0 resize-y rounded-4xl border border-input bg-input/30 px-4 py-3
-                    text-base transition-colors outline-none
+                    min-h-56 w-full min-w-0 resize-y rounded-4xl border border-input bg-input/30 px-4 py-3 text-base
+                    transition-colors outline-none
                     placeholder:text-muted-foreground
                     focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50
                     disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50
@@ -99,7 +99,14 @@ export function ContactForm({
               />
             </Field>
             <Field>
-              <Button type="submit" size="lg" className="w-full sm:w-auto">
+              <Button
+                type="submit"
+                size="lg"
+                className="
+                  w-full
+                  sm:w-auto
+                "
+              >
                 {t("formSubmitButton")}
               </Button>
             </Field>

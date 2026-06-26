@@ -40,7 +40,11 @@ export async function MarketingNav(): Promise<ReactNode> {
             alt="Vagabond"
             width={140}
             height={36}
-            className="h-11 w-auto max-w-36 sm:h-12 md:h-14 md:max-w-none"
+            className="
+              h-11 w-auto max-w-36
+              sm:h-12
+              md:h-14 md:max-w-none
+            "
             priority
           />
         </Link>
@@ -89,7 +93,10 @@ export async function MarketingNav(): Promise<ReactNode> {
           <NavTaapLink
             href={publicEnv.TAAP_IT_MOBILE_URL}
             surface="nav_mobile"
-            className="px-3 text-xs sm:text-sm"
+            className="
+              px-3 text-xs
+              sm:text-sm
+            "
           >
             {t("download")}
           </NavTaapLink>

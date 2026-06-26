@@ -1,6 +1,14 @@
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports -- typeof is required to derive LegalMessageKey from messages
+import frMessages from "@/messages/fr.json";
+
+export type LegalMessageKey = Extract<
+  keyof (typeof frMessages)["legal"],
+  string
+>;
+
 export interface LegalSection {
-  titleKey: string;
-  bodyKey: string;
+  titleKey: LegalMessageKey;
+  bodyKey: LegalMessageKey;
 }
 
 export const MENTIONS_SECTIONS: LegalSection[] = [
@@ -39,3 +47,7 @@ export const CGU_SECTIONS: LegalSection[] = [
   { titleKey: "cguChangesTitle", bodyKey: "cguChangesBody" },
   { titleKey: "cguContactTitle", bodyKey: "cguContactBody" },
 ];
+
+export type LegalPageTitleKey = "mentionsTitle" | "confTitle" | "cguTitle";
+
+export type LegalLinkKey = "linkMentions" | "linkConf" | "linkCgu";

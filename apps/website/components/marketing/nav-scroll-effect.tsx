@@ -25,6 +25,8 @@ export function NavScrollEffect({ children }: Props): ReactNode {
   return (
     <header
       className={cn(
+        // Custom class targeted by smart banner offset rules in globals.css
+        // eslint-disable-next-line better-tailwindcss/no-unknown-classes -- globals.css hook
         "site-header fixed inset-x-0 top-0 z-50 transition-all duration-300",
         scrolled
           ? "bg-background-100/80 shadow-sm backdrop-blur-xl"

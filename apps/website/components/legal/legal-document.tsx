@@ -1,25 +1,30 @@
-import { getTranslations } from "next-intl/server";
+import { type getTranslations } from "next-intl/server";
 import { type ReactNode } from "react";
 
 import { BreadcrumbSeo } from "@/components/breadcrumb-seo";
 import { LegalCrossLinks } from "@/components/legal/legal-cross-links";
-import { type LegalSection } from "@/lib/legal/sections";
+import {
+  type LegalPageTitleKey,
+  type LegalSection,
+} from "@/lib/legal-sections";
+
+type LegalTranslator = Awaited<ReturnType<typeof getTranslations>>;
 
 interface Props {
-  titleKey: string;
-  breadcrumbLabelKey: string;
+  t: LegalTranslator;
+  titleKey: LegalPageTitleKey;
+  breadcrumbLabelKey: LegalPageTitleKey;
   sections: LegalSection[];
   currentPage: "mentions" | "conf" | "cgu";
 }
 
-export async function LegalDocument({
+export function LegalDocument({
+  t,
   titleKey,
   breadcrumbLabelKey,
   sections,
   currentPage,
-}: Props): Promise<ReactNode> {
-  const t = await getTranslations("legal");
-
+}: Props): ReactNode {
   return (
     <div className="bg-background-50">
       <section className="px-6 pt-12 pb-16">
@@ -30,11 +35,9 @@ export async function LegalDocument({
               { label: t(breadcrumbLabelKey) },
             ]}
           />
+          <p className="mb-6 text-sm text-typography-500">{t("lastUpdated")}</p>
           <article className="prose max-w-none prose-neutral">
             <h1>{t(titleKey)}</h1>
-            <p className="not-prose text-sm text-typography-500">
-              {t("lastUpdated")}
-            </p>
 
             {sections.map((section) => (
               <section key={section.titleKey}>
@@ -44,7 +47,7 @@ export async function LegalDocument({
             ))}
           </article>
 
-          <LegalCrossLinks currentPage={currentPage} />
+          <LegalCrossLinks t={t} currentPage={currentPage} />
         </div>
       </section>
     </div>

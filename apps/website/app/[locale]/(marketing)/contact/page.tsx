@@ -3,8 +3,8 @@ import { getTranslations } from "next-intl/server";
 import { type ReactNode } from "react";
 
 import { ContactEmailMailtoLink } from "@/components/contact-email-mailto-link";
-import { CopyEmailButton } from "@/components/copy-email-button";
 import { ContactForm } from "@/components/contact-form";
+import { CopyEmailButton } from "@/components/copy-email-button";
 import { Link } from "@/i18n/navigation";
 
 export const metadata: Metadata = {

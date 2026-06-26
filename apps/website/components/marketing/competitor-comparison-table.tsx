@@ -26,13 +26,18 @@ function CompareCell({
   label: string;
 }): ReactNode {
   return (
-    <td className="px-2 py-3 text-center md:px-3">
+    <td
+      className="
+        px-2 py-3 text-center
+        md:px-3
+      "
+    >
       <span
         aria-label={label}
         className={cn(
           "inline-flex size-8 items-center justify-center rounded-full text-base font-semibold",
-          level === "yes" && "bg-primary-100 text-primary-700",
-          level === "no" && "bg-background-200 text-typography-400",
+          level === "yes" && "bg-primary/10 text-primary-700",
+          level === "no" && "bg-background-200 text-typography-500",
         )}
       >
         {level === "yes" ? "✓" : "X"}
@@ -68,19 +73,14 @@ export function CompetitorComparisonTable({
         </BlurFade>
 
         <BlurFade delay={0.1}>
-          <div
-            className="
-              mt-10 overflow-x-auto rounded-2xl border border-background-200 bg-background-50
-              shadow-sm
-            "
-          >
+          <div className="mt-10 overflow-x-auto rounded-2xl border border-background-200 bg-background-50 shadow-sm">
             <table className="w-full min-w-[880px] border-collapse text-left text-sm">
               <thead>
                 <tr className="border-b border-background-200 bg-background-50">
                   <th
                     scope="col"
                     className="
-                      sticky left-0 z-10 bg-background-50 px-4 py-4 font-semibold text-foreground
+                      sticky left-0 z-10 bg-background-50 p-4 font-semibold text-foreground
                       md:px-6
                     "
                   >
@@ -91,7 +91,10 @@ export function CompetitorComparisonTable({
                       key={app.id}
                       scope="col"
                       className={cn(
-                        "px-2 py-4 text-center font-semibold md:px-3",
+                        `
+                          px-2 py-4 text-center font-semibold
+                          md:px-3
+                        `,
                         app.isHighlight === true
                           ? "bg-primary-50/80 text-primary-700"
                           : "text-foreground",
@@ -106,7 +109,10 @@ export function CompetitorComparisonTable({
                 {criteria.map((criterion) => (
                   <tr
                     key={criterion.id}
-                    className="border-b border-background-200 last:border-b-0"
+                    className="
+                      border-b border-background-200
+                      last:border-b-0
+                    "
                   >
                     <th
                       scope="row"

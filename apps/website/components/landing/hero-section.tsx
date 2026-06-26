@@ -51,9 +51,7 @@ export function HeroSection({
           <BlurFade delay={0.05}>
             <Badge
               variant="secondary"
-              className="
-                mb-6 rounded-full bg-secondary-500 px-4 py-1.5 text-sm
-              "
+              className="mb-6 rounded-full bg-secondary-500 px-4 py-1.5 text-sm"
             >
               <AnimatedShinyText>{badge}</AnimatedShinyText>
             </Badge>
@@ -120,15 +118,15 @@ export function HeroSection({
         <div className="flex flex-1 items-center justify-center">
           <div
             className="
-                absolute top-1/4 left-1/2 h-[400px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br
-                from-primary-400/20 to-secondary-500/15 blur-3xl
-              "
+              absolute top-1/4 left-1/2 h-[400px] w-[300px] -translate-x-1/2 rounded-full bg-linear-to-br
+              from-primary-400/20 to-secondary-500/15 blur-3xl
+            "
           />
           <div
             className="
-                relative z-10 w-[280px]
-                md:w-[340px]
-              "
+              relative z-10 w-[280px]
+              md:w-[340px]
+            "
           >
             <IphoneMockup src="/images/hero-mockup.png" />
           </div>

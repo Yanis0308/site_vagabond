@@ -14,6 +14,8 @@ export function CalendlyEmbed({ title, subtitle }: Props): ReactNode {
       <p className="text-sm font-medium text-foreground">{title}</p>
       <p className="text-xs text-typography-500">{subtitle}</p>
       <div
+        // HubSpot Meetings embed requires this class name on the container.
+        // eslint-disable-next-line better-tailwindcss/no-unknown-classes -- HubSpot embed API
         className="meetings-iframe-container min-h-[600px] w-full"
         data-src="https://meetings-eu1.hubspot.com/cyril-bauduin?embed=true"
       />

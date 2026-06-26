@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { type ReactNode } from "react";
 
 import { LegalDocument } from "@/components/legal/legal-document";
-import { CGU_SECTIONS } from "@/lib/legal/sections";
+import { CGU_SECTIONS } from "@/lib/legal-sections";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("legal");
@@ -14,9 +14,12 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function CguPage(): ReactNode {
+export default async function CguPage(): Promise<ReactNode> {
+  const t = await getTranslations("legal");
+
   return (
     <LegalDocument
+      t={t}
       titleKey="cguTitle"
       breadcrumbLabelKey="cguTitle"
       sections={CGU_SECTIONS}

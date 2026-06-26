@@ -30,8 +30,7 @@ export function NavTaapLink({
       nativeButton={false}
       className={cn(
         `
-          inline-flex items-center gap-2.5 rounded-full bg-foreground px-4 py-2.5 text-sm
-          font-medium text-background-50
+          inline-flex items-center gap-2.5 rounded-full bg-foreground px-4 py-2.5 text-sm font-medium text-background-50
           hover:bg-typography-900
         `,
         className,
@@ -48,7 +47,11 @@ export function NavTaapLink({
         />
       }
     >
-      <HugeiconsIcon icon={SmartPhone01Icon} strokeWidth={2} className="size-5" />
+      <HugeiconsIcon
+        icon={SmartPhone01Icon}
+        strokeWidth={2}
+        className="size-5"
+      />
       {children}
     </Button>
   );

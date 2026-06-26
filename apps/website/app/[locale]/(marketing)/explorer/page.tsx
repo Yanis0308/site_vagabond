@@ -82,8 +82,7 @@ export default async function ExplorerPage(): Promise<ReactNode> {
 
           <h2
             className="
-              mt-16 mb-6 text-center font-display text-3xl font-bold
-              text-foreground
+              mt-16 mb-6 text-center font-display text-3xl font-bold text-foreground
               md:text-4xl
             "
           >
